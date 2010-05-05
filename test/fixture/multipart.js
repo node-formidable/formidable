@@ -7,7 +7,7 @@ exports['rfc1867'] =
       '--AaB03x\r\n'+
       'content-disposition: form-data; name="field1"\r\n'+
       '\r\n'+
-      'Joe Blow\r\n'+
+      'Joe Blow\r\nalmost tricked you!\r\n'+
       '--AaB03x\r\n'+
       'content-disposition: form-data; name="pics"; filename="file1.txt"\r\n'+
       'Content-Type: text/plain\r\n'+
@@ -18,7 +18,7 @@ exports['rfc1867'] =
     [ { headers:
         { 'content-disposition': 'form-data; name="field1"'
         }
-      , data: 'Joe Blow'
+      , data: 'Joe Blow\r\nalmost tricked you!'
       }
     , { headers:
         { 'content-disposition': 'form-data; name="pics"; filename="file1.txt"'

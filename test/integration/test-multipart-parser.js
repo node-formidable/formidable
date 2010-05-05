@@ -20,7 +20,7 @@ Object.keys(fixtures).forEach(function(name) {
 
   parser.initWithBoundary(fixture.boundary);
   parser.onPartBegin = function() {
-    part = {headers: {}};
+    part = {headers: {}, data: ''};
     parts.push(part);
     headerField = '';
     headerValue = '';
@@ -28,11 +28,11 @@ Object.keys(fixtures).forEach(function(name) {
 
   parser.onHeaderField = function(b, start, end) {
     var str = b.toString('ascii', start, end);
-    // if (headerValue) {
-    //   part.headers[headerField] = headerValue;
-    //   headerField = '';
-    //   headerValue = '';      
-    // }
+    if (headerValue) {
+      part.headers[headerField] = headerValue;
+      headerField = '';
+      headerValue = '';      
+    }
     headerField += str;
   };
 
@@ -43,7 +43,16 @@ Object.keys(fixtures).forEach(function(name) {
 
   parser.onPartData = function(b, start, end) {
     var str = b.toString('ascii', start, end);
-    p(str);
+    if (headerField) {
+      part.headers[headerField] = headerValue;
+      headerValue = '';
+      headerField = '';
+    }
+    part.data += b.binarySlice(start, end);
+  }
+
+  parser.onEnd = function(b) {
+    p('done');
   }
 
   buffer.write(fixture.raw, 'binary', 0);
@@ -65,7 +74,7 @@ Object.keys(fixtures).forEach(function(name) {
     }
   }
 
-  p()
+  assert.deepEqual(parts, fixture.parts);
 });
 
 // parser.initWithBoundary('AaB03x');
