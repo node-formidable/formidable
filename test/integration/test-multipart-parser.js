@@ -1,5 +1,5 @@
 require('../common');
-var CHUNK_LENGTH = 7
+var CHUNK_LENGTH = 1
   , multipartParser = require('formidable/multipart_parser')
   , MultipartParser = multipartParser.MultipartParser
   , parser = new MultipartParser()
@@ -74,6 +74,7 @@ Object.keys(fixtures).forEach(function(name) {
     }
   }
 
+  p(parts);
   assert.deepEqual(parts, fixture.parts);
 });
 
