@@ -16,7 +16,8 @@ Object.keys(fixtures).forEach(function(name) {
     , parts = []
     , part = null
     , headerField = null
-    , headerValue = null;
+    , headerValue = null
+    , endCalled = false;
 
   parser.initWithBoundary(fixture.boundary);
   parser.onPartBegin = function() {
@@ -52,7 +53,7 @@ Object.keys(fixtures).forEach(function(name) {
   }
 
   parser.onEnd = function() {
-    p('done');
+    endCalled = true;
   }
 
   buffer.write(fixture.raw, 'binary', 0);
@@ -73,6 +74,6 @@ Object.keys(fixtures).forEach(function(name) {
     }
   }
 
-  p(parts);
+  assert.ok(endCalled);
   assert.deepEqual(parts, fixture.parts);
 });
