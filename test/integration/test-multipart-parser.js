@@ -1,5 +1,5 @@
 require('../common');
-var CHUNK_LENGTH = 1
+var CHUNK_LENGTH = 10
   , multipartParser = require('formidable/multipart_parser')
   , MultipartParser = multipartParser.MultipartParser
   , parser = new MultipartParser()
@@ -51,7 +51,7 @@ Object.keys(fixtures).forEach(function(name) {
     part.data += b.binarySlice(start, end);
   }
 
-  parser.onEnd = function(b) {
+  parser.onEnd = function() {
     p('done');
   }
 
@@ -69,7 +69,6 @@ Object.keys(fixtures).forEach(function(name) {
     if (nparsed != chunk.length) {
       puts('-- ERROR --');
       p(chunk.toString('ascii'));
-      p(parser);
       throw new Error(chunk.length+' bytes written, but only '+nparsed+' bytes parsed!');
     }
   }

@@ -10,7 +10,7 @@ var multipartParser = require('formidable/multipart_parser')
       [ 'boundary'
       , 'state'
       , 'flags'
-      , 'boyerMooreShift'
+      , 'boundaryChars'
       , 'index'
       , 'lookbehind'
       ];
@@ -26,10 +26,5 @@ var multipartParser = require('formidable/multipart_parser')
   assert.deepEqual(Array.prototype.slice.call(parser.boundary), [13, 10, 45, 45, 97, 98, 99]);
   assert.equal(parser.state, multipartParser.START);
 
-  assert.equal(parser.boyerMooreShift.length, 256);
-  for (var i = 0; i < parser.boyerMooreShift.length; i++) {
-    assert.equal(parser.boyerMooreShift[i], boundary.length+4);
-  }
-
-  // assert.equal(parser.boyerMooreShift[97], );
+  assert.deepEqual(parser.boundaryChars, {10: true, 13: true, 45: true, 97: true, 98: true, 99: true});
 })();
