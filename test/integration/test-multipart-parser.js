@@ -76,25 +76,3 @@ Object.keys(fixtures).forEach(function(name) {
   p(parts);
   assert.deepEqual(parts, fixture.parts);
 });
-
-// parser.initWithBoundary('AaB03x');
-// parser.onPartBegin = function() {
-//   
-// };
-// parser.onHeaderField = function(b, start, len) {
-//   
-// };
-// parser.onHeaderValue = function(b, start, len) {
-//   
-// };
-// parser.onHeaderParamName = function(b, start, len) {
-//   
-// };
-// parser.onHeaderParamValue = function(b, start, len) {
-//   
-// };
-// parser.onHeadersEnd = function() {
-//   
-// };
-// 
-// parser.write(...);
