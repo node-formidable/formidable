@@ -313,6 +313,16 @@ var formidable = require('formidable')
     assert.equal(partDataEmitted, 1);
     assert.equal(partEndEmitted, 1);
   })();
+
+  (function testEnd() {
+    var emitCalled = 0;
+    form.emit = function(event) {
+      emitCalled++;
+      assert.equal(event, 'end');
+    };
+    parser.onEnd();
+    assert.equal(emitCalled, 1);
+  })();
 })();
 
 (function testInitUrlencoded() {
