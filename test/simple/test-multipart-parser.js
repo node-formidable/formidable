@@ -28,3 +28,13 @@ var multipartParser = require('formidable/multipart_parser')
 
   assert.deepEqual(parser.boundaryChars, {10: true, 13: true, 45: true, 97: true, 98: true, 99: true});
 })();
+
+(function testParserError() {
+  var parser = new MultipartParser()
+    , boundary = 'abc'
+    , buffer = new Buffer(5);
+
+  parser.initWithBoundary(boundary);
+  buffer.write('--ad', 'ascii', 0);
+  assert.equal(parser.write(buffer), 3);
+})();
