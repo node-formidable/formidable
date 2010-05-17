@@ -14,7 +14,8 @@ var formidable = require('formidable')
 
 (function testConstructor() {
   var PROPERTIES =
-      [ 'type'
+      [ 'hadError'
+      , 'type'
       , 'headers'
       , 'encoding'
       , 'bytesTotal'
@@ -121,8 +122,54 @@ var formidable = require('formidable')
 })();
 
 (function testWrite() {
-  var form = new formidable.IncomingForm();
-  form.write();
+  var form = new formidable.IncomingForm()
+    , parser = {}
+    , BUFFER = [1, 2, 3];
+
+  form._parser = parser;
+
+  (function testBasic() {
+    var writeCalled = 0;
+    parser.write = function(buffer) {
+      writeCalled++;
+      assert.strictEqual(buffer, BUFFER);
+      return buffer.length;
+    };
+
+    assert.equal(form.write(BUFFER), BUFFER.length);
+    assert.equal(writeCalled, 1);
+  })();
+
+  (function testParserError() {
+    var writeCalled = 0
+      , errorCalled = 0;
+
+    parser.write = function(buffer) {
+      writeCalled++;
+      assert.strictEqual(buffer, BUFFER);
+      return buffer.length - 1;
+    };
+
+    form._error = function(err) {
+      errorCalled++;
+      assert.ok(err.message.match(/parser error/i));
+    };
+
+    assert.equal(form.write(BUFFER), BUFFER.length - 1);
+    assert.equal(writeCalled, 1);
+    assert.equal(errorCalled, 1);
+  })();
+
+  (function testUninitialized() {
+    form = new formidable.IncomingForm();
+    var errorCalled = 0;
+    form._error = function(err) {
+      errorCalled++;
+      assert.ok(err.message.match(/unintialized parser/i));
+    };
+    form.write(BUFFER);
+    assert.equal(errorCalled, 1);
+  })();
 })();
 
 (function testParseContentType() {
@@ -348,6 +395,12 @@ var formidable = require('formidable')
     assert.strictEqual(err, ERR);
   };
 
+  form._error(ERR);
+  assert.ok(form.hadError);
+  assert.equal(pauseCalled, 1);
+  assert.equal(emitCalled, 1);
+
+  // make sure _error only does its thing once
   form._error(ERR);
   assert.equal(pauseCalled, 1);
   assert.equal(emitCalled, 1);
