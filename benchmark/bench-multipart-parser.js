@@ -8,6 +8,7 @@ var multipartParser = require('formidable/multipart_parser')
   , buffer = createMultipartBuffer(boundary, mb * 1024 * 1024)
   , callbacks =
       { partBegin: -1
+      , partEnd: -1
       , headerField: -1
       , headerValue: -1
       , partData: -1
@@ -28,11 +29,15 @@ parser.onPartBegin = function() {
   callbacks.partBegin++;
 };
 
-parser.onPartData = function(buffer, start, end) {
+parser.onPartData = function() {
   callbacks.partData++;
 };
 
-parser.onEnd = function(buffer, start, end) {
+parser.onPartEnd = function() {
+  callbacks.partEnd++;
+};
+
+parser.onEnd = function() {
   callbacks.end++;
 };
 
@@ -50,7 +55,7 @@ function createMultipartBuffer(boundary, size) {
         '--'+boundary+'\r\n'
       + 'content-disposition: form-data; name="field1"\r\n'
       + '\r\n'
-    , tail = '--'+boundary.length+'--\r\n'
+    , tail = '\r\n--'+boundary+'--\r\n'
     , buffer = new Buffer(size);
 
   buffer.write(head, 'ascii', 0);
