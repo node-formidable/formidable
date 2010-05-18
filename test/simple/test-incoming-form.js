@@ -31,10 +31,10 @@ var formidable = require('formidable')
     , reqMock = {headers: {}}
     , emit = {}
     , callbacks =
-        { writeHeaders: -1
-        , addListener_data: -1
-        , addListener_error: -1
-        };
+      { writeHeaders: -1
+      , addListener_data: -1
+      , addListener_error: -1
+      };
 
   reqMock.addListener = function(event, fn) {
     var cbId = 'addListener_'+event;
