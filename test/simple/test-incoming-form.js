@@ -1,6 +1,8 @@
 require('../common');
 var formidable = require('formidable')
   , events = require('events')
+  , fs = require('fs')
+  , path = require('path')
   , Buffer = require('buffer').Buffer
   , fixtures = require('../fixture/multipart')
   , MultipartParser = require('formidable/multipart_parser').MultipartParser
@@ -17,6 +19,7 @@ var formidable = require('formidable')
       [ 'hadError'
       , 'type'
       , 'headers'
+      , 'uploadDir'
       , 'encoding'
       , 'bytesTotal'
       , 'bytesReceived'
@@ -66,6 +69,16 @@ var formidable = require('formidable')
     assert.equal(pauseCalled, 1);
   })();
 
+  (function testResume() {
+    var resumeCalled = 0;
+    reqMock.resume = function() {
+      resumeCalled++;
+    };
+
+    assert.strictEqual(form.resume(), true);
+    assert.equal(resumeCalled, 1);
+  })();
+
   (function testEmitError() {
     var ERR = new Error('something bad happened')
       , errorCalled = 0;
@@ -98,6 +111,12 @@ var formidable = require('formidable')
   var form = new formidable.IncomingForm();
   assert.strictEqual(form.pause(), false);
 })();
+
+(function testResume() {
+  var form = new formidable.IncomingForm();
+  assert.strictEqual(form.resume(), false);
+})();
+
 
 (function testWriteHeaders() {
   var HEADERS = {}
@@ -461,4 +480,91 @@ var formidable = require('formidable')
     assert.equal(emitCalled, 1);
   })();
 
+  (function testFilePart() {
+    var PART = new events.EventEmitter()
+      , FILE = new events.EventEmitter();
+
+    PART.name = 'my_file';
+    PART.filename = 'sweet.txt';
+    PART.mime = 'sweet.txt';
+
+    FILE.path = form._uploadPath();
+
+    var writeStreamCalled = 0;
+    form._writeStream = function(file) {
+      assert.equal(path.dirname(file), form.uploadDir);
+      writeStreamCalled++;
+      return FILE;
+    };
+
+    form.onPart(PART);
+    assert.equal(writeStreamCalled, 1);
+
+    var writeCalled = 0, BUFFER;
+    FILE.write = function(buffer, cb) {
+      writeCalled++;
+      assert.strictEqual(buffer, BUFFER);
+
+      var resumeCalled = 0;
+      form.resume = function() {
+        resumeCalled++;
+      };
+      cb();
+      assert.equal(resumeCalled, 1);
+    };
+
+    var pauseCalled = 0;
+    form.pause = function() {
+      pauseCalled++;
+    };
+
+    PART.emit('data', BUFFER = new Buffer('test'));
+    assert.equal(writeCalled, 1);
+    assert.equal(pauseCalled, 1);
+
+    var endCalled = 0;
+    FILE.end = function(cb) {
+      endCalled++;
+
+      var emitCalled = 0;
+      form.emit = function(event, field, file) {
+        emitCalled++;
+        assert.equal(event, 'file');
+        assert.deepEqual
+          ( file
+          , { path: FILE.path
+            , filename: PART.filename
+            , mime: PART.mime
+            }
+          );
+      };
+      cb();
+      assert.equal(emitCalled, 1);
+    };
+    PART.emit('end');
+    assert.equal(endCalled, 1);
+  })();
+})();
+
+(function testUploadPath() {
+  var form = new formidable.IncomingForm()
+    , path1 = form._uploadPath()
+    , path2 = form._uploadPath();
+
+  assert.equal(form.uploadDir, '/tmp');
+
+  assert.equal(path.dirname(path1), form.uploadDir);
+  assert.equal(path.dirname(path2), form.uploadDir);
+  assert.notEqual(path1, path2);
+})();
+
+(function testWriteStream() {
+  var form = new formidable.IncomingForm();
+  form.uploadDir = TEST_TMP;
+
+  var file = form._writeStream(form._uploadPath());
+  assert.ok(file instanceof fs.WriteStream);
+  file.end(function() {
+    fs.unlink(file.path);
+  });
 })();

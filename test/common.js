@@ -10,6 +10,7 @@ global.p = sys.p;
 global.assert = require('assert');
 global.TEST_PORT = 13532;
 global.TEST_FIXTURES = path.join(__dirname, 'fixture');
+global.TEST_TMP = path.join(__dirname, 'tmp');
 
 assert.timeout = function(ms) {
   return setTimeout(function() {
