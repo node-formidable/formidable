@@ -7,7 +7,8 @@ A node.js module for dealing with web forms.
 ## Features
 
 * Fast, non-buffering multipart parser
-* Writing files uploads to disk with automatic throttling
+* Automatically writing file uploads to disk
+* Low memory footprint
 * Graceful error handling
 
 ### Todo
@@ -79,6 +80,18 @@ Parses an incoming node.js `request` containing form data. If `cb` is provided, 
     incomingForm.parse(req, function(err, fields, files) {
       // ...
     });
+
+#### incomingForm.onPart(part)
+
+You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events  processing which would occur otherwise, making you fully responsible for handling the processing.
+
+    incomingForm.onPart = function(part) {
+      part.addListener('data', function() {
+        // ...
+      });
+    }
+
+Check the code in this method for further inspiration.
 
 #### Event: 'field' (name, value)
 
