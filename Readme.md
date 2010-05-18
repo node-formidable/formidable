@@ -6,7 +6,7 @@ A node.js module for dealing with web forms.
 
 ## Features
 
-* Fast, non-buffering multipart parser
+* Fast (> 400mb/sec), non-buffering multipart parser
 * Automatically writing file uploads to disk
 * Low memory footprint
 * Graceful error handling
