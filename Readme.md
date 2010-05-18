@@ -100,3 +100,11 @@ Emitted when there is an error processing the incoming form. A request that expe
 #### Event: 'end' ()
 
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
+
+## License
+
+Formidable is licensed under the MIT license.
+
+## Credits
+
+* [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js
