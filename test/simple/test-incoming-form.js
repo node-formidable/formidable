@@ -16,7 +16,8 @@ var formidable = require('formidable')
 
 (function testConstructor() {
   var PROPERTIES =
-      [ 'hadError'
+      [ 'error'
+      , 'ended'
       , 'type'
       , 'headers'
       , 'uploadDir'
@@ -24,6 +25,7 @@ var formidable = require('formidable')
       , 'bytesTotal'
       , 'bytesReceived'
       , '_parser'
+      , '_flushing'
       ]
     , form = new formidable.IncomingForm();
 
@@ -381,13 +383,13 @@ var formidable = require('formidable')
   })();
 
   (function testEnd() {
-    var emitCalled = 0;
-    form.emit = function(event) {
-      emitCalled++;
-      assert.equal(event, 'end');
+    var maybeEndCalled = 0;
+    form._maybeEnd = function(event) {
+      maybeEndCalled++;
     };
     parser.onEnd();
-    assert.equal(emitCalled, 1);
+    assert.equal(maybeEndCalled, 1);
+    assert.ok(form.ended);
   })();
 })();
 
@@ -415,7 +417,7 @@ var formidable = require('formidable')
   };
 
   form._error(ERR);
-  assert.ok(form.hadError);
+  assert.strictEqual(form.error, ERR);
   assert.equal(pauseCalled, 1);
   assert.equal(emitCalled, 1);
 
@@ -499,6 +501,7 @@ var formidable = require('formidable')
 
     form.onPart(PART);
     assert.equal(writeStreamCalled, 1);
+    assert.equal(form._flushing, 1);
 
     var writeCalled = 0, BUFFER;
     FILE.write = function(buffer, cb) {
@@ -538,8 +541,16 @@ var formidable = require('formidable')
             }
           );
       };
+
+      var maybeEndCalled = 0;
+      form._maybeEnd = function() {
+        maybeEndCalled++;
+      };
+
       cb();
       assert.equal(emitCalled, 1);
+      assert.equal(maybeEndCalled, 1);
+      assert.equal(form._flushing, 0);
     };
     PART.emit('end');
     assert.equal(endCalled, 1);
@@ -567,4 +578,27 @@ var formidable = require('formidable')
   file.end(function() {
     fs.unlink(file.path);
   });
+})();
+
+(function testMaybeEnd() {
+  var form = new formidable.IncomingForm();
+
+  var emitCalled = 0;
+  form.emit = function(event) {
+    emitCalled++;
+    assert.equal(event, 'end');
+  };
+
+  form._maybeEnd();
+  assert.equal(emitCalled, 0);
+
+  form.ended = true;
+  form._flushing = 1;
+  form._maybeEnd();
+  assert.equal(emitCalled, 0);
+
+  form.ended = true;
+  form._flushing = 0;
+  form._maybeEnd();
+  assert.equal(emitCalled, 1);
 })();
