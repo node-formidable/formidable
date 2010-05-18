@@ -16,7 +16,7 @@ var formidable = require('formidable')
       , 'uploadDir'
       , 'encoding'
       , 'bytesTotal'
-      , 'bytesReceived'
+      , 'bytesExpected'
       , '_parser'
       , '_flushing'
       ]
@@ -207,7 +207,7 @@ var formidable = require('formidable')
     };
 
     assert.equal(form.write(BUFFER), BUFFER.length);
-    assert.equal(form.bytesReceived, BUFFER.length);
+    assert.equal(form.bytesExpected, BUFFER.length);
     assert.equal(writeCalled, 1);
   })();
 
@@ -227,7 +227,7 @@ var formidable = require('formidable')
     };
 
     assert.equal(form.write(BUFFER), BUFFER.length - 1);
-    assert.equal(form.bytesReceived, BUFFER.length + BUFFER.length - 1);
+    assert.equal(form.bytesExpected, BUFFER.length + BUFFER.length - 1);
     assert.equal(writeCalled, 1);
     assert.equal(errorCalled, 1);
   })();
@@ -314,7 +314,7 @@ var formidable = require('formidable')
 
   form.headers['content-length'] = '8';
   form._parseContentLength();
-  assert.strictEqual(form.bytesReceived, 0);
+  assert.strictEqual(form.bytesExpected, 0);
   assert.strictEqual(form.bytesTotal, 8);
 
   // JS can be evil, lets make sure we are not
