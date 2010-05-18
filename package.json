@@ -1,0 +1,5 @@
+{ "name" : "formidable"
+, "version": "0.1.0"
+, "directories" : { "lib" : "./lib/formidable" }
+, "main" : "./lib/formidable/index"
+}
