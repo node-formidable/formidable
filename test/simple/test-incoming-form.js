@@ -5,14 +5,7 @@ var formidable = require('formidable')
   , path = require('path')
   , Buffer = require('buffer').Buffer
   , fixtures = require('../fixture/multipart')
-  , MultipartParser = require('formidable/multipart_parser').MultipartParser
-  , sb = function(str, encoding) {
-      encoding = encoding || 'utf8';
-      // create a buffer from a string
-      var b = new Buffer(Buffer.byteLength(str, encoding));
-      b.write(str, encoding, 0);
-      return b;
-    };
+  , MultipartParser = require('formidable/multipart_parser').MultipartParser;
 
 (function testConstructor() {
   var PROPERTIES =
@@ -104,6 +97,62 @@ var formidable = require('formidable')
     emit.data(BUFFER);
 
     assert.equal(writeCalled, 1);
+  })();
+
+  (function testWithCallback() {
+    var form = new formidable.IncomingForm()
+      , reqMock = {headers: {}}
+      , parseCalled = 0;
+
+    form.writeHeaders = function() {};
+    reqMock.addListener = function() {return this};
+
+    form.addListener = function(event, cb) {
+      if (event == 'field') {
+        cb('field1', 'foo');
+        cb('field1', 'bar');
+        cb('field2', 'nice');
+      }
+
+      if (event == 'file') {
+        cb('file1', '1');
+        cb('file1', '2');
+        cb('file2', '3');
+      }
+
+      if (event == 'end') {
+        cb();
+      }
+      return this;
+    };
+
+    form.parse(reqMock, function(err, fields, files) {
+      parseCalled++;
+
+      assert.deepEqual(fields, {field1: 'bar', field2: 'nice'});
+      assert.deepEqual(files, {file1: '2', file2: '3'});
+    });
+    assert.equal(parseCalled, 1);
+
+    var ERR = new Error('test');
+    form.addListener = function(event, cb) {
+      if (event == 'field') {
+        cb('foo', 'bar');
+      }
+
+      if (event == 'error') {
+        cb(ERR);
+      }
+      return this;
+    };
+
+    form.parse(reqMock, function(err, fields, files) {
+      parseCalled++;
+
+      assert.strictEqual(err, ERR);
+      assert.deepEqual(fields, {foo: 'bar'});
+    });
+    assert.equal(parseCalled, 2);
   })();
 
   assert.callbacks(callbacks);
@@ -328,14 +377,14 @@ var formidable = require('formidable')
     };
 
     parser.onPartBegin();
-    parser.onHeaderField(sb('content-disposition'), 0, 10);
-    parser.onHeaderField(sb('content-disposition'), 10, 19);
-    parser.onHeaderValue(sb('form-data; name="field1"'), 0, 14);
-    parser.onHeaderValue(sb('form-data; name="field1"'), 14, 24);
-    parser.onHeaderField(sb('foo'), 0, 3);
-    parser.onHeaderValue(sb('bar'), 0, 3);
-    parser.onPartData(sb('hello world'), 0, 5);
-    parser.onPartData(sb('hello world'), 5, 11);
+    parser.onHeaderField(new Buffer('content-disposition'), 0, 10);
+    parser.onHeaderField(new Buffer('content-disposition'), 10, 19);
+    parser.onHeaderValue(new Buffer('form-data; name="field1"'), 0, 14);
+    parser.onHeaderValue(new Buffer('form-data; name="field1"'), 14, 24);
+    parser.onHeaderField(new Buffer('foo'), 0, 3);
+    parser.onHeaderValue(new Buffer('bar'), 0, 3);
+    parser.onPartData(new Buffer('hello world'), 0, 5);
+    parser.onPartData(new Buffer('hello world'), 5, 11);
     parser.onPartEnd();
     assert.equal(onPartCalled, 1);
     assert.equal(partDataEmitted, 2);
@@ -371,11 +420,11 @@ var formidable = require('formidable')
     };
 
     parser.onPartBegin();
-    parser.onHeaderField(sb('content-disposition'), 0, 19);
-    parser.onHeaderValue(sb('form-data; name="field2"; filename="file1.txt"'), 0, 46);
-    parser.onHeaderField(sb('Content-Type'), 0, 12);
-    parser.onHeaderValue(sb('text/plain'), 0, 10);
-    parser.onPartData(sb('... contents of file1.txt ...'), 0, 29);
+    parser.onHeaderField(new Buffer('content-disposition'), 0, 19);
+    parser.onHeaderValue(new Buffer('form-data; name="field2"; filename="file1.txt"'), 0, 46);
+    parser.onHeaderField(new Buffer('Content-Type'), 0, 12);
+    parser.onHeaderValue(new Buffer('text/plain'), 0, 10);
+    parser.onPartData(new Buffer('... contents of file1.txt ...'), 0, 29);
     parser.onPartEnd();
     assert.equal(onPartCalled, 1);
     assert.equal(partDataEmitted, 1);
