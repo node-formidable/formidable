@@ -412,3 +412,53 @@ var formidable = require('formidable')
 
   assert.ok(parser instanceof MultipartParser);
 })();
+
+(function testOnPart() {
+  var form = new formidable.IncomingForm();
+
+  (function testUtf8Field() {
+    var PART = new events.EventEmitter();
+    PART.name = 'my_field';
+
+    var emitCalled = 0;
+    form.emit = function(event, field, value) {
+      emitCalled++;
+      assert.equal(event, 'field');
+      assert.equal(field, 'my_field');
+      assert.equal(value, 'hello world: €');
+    };
+
+    form.onPart(PART);
+    PART.emit('data', new Buffer('hello'));
+    PART.emit('data', new Buffer(' world: '));
+    PART.emit('data', new Buffer([0xE2]));
+    PART.emit('data', new Buffer([0x82, 0xAC]));
+    PART.emit('end');
+
+    assert.equal(emitCalled, 1);
+  })();
+
+  (function testBinaryField() {
+    var PART = new events.EventEmitter();
+    PART.name = 'my_field2';
+
+    var emitCalled = 0;
+    form.emit = function(event, field, value) {
+      emitCalled++;
+      assert.equal(event, 'field');
+      assert.equal(field, 'my_field2');
+      assert.equal(value, 'hello world: '+new Buffer([0xE2, 0x82, 0xAC]).toString('binary'));
+    };
+
+    form.encoding = 'binary';
+    form.onPart(PART);
+    PART.emit('data', new Buffer('hello'));
+    PART.emit('data', new Buffer(' world: '));
+    PART.emit('data', new Buffer([0xE2]));
+    PART.emit('data', new Buffer([0x82, 0xAC]));
+    PART.emit('end');
+
+    assert.equal(emitCalled, 1);
+  })();
+
+})();
