@@ -207,6 +207,7 @@ var formidable = require('formidable')
     };
 
     assert.equal(form.write(BUFFER), BUFFER.length);
+    assert.equal(form.bytesReceived, BUFFER.length);
     assert.equal(writeCalled, 1);
   })();
 
@@ -226,6 +227,7 @@ var formidable = require('formidable')
     };
 
     assert.equal(form.write(BUFFER), BUFFER.length - 1);
+    assert.equal(form.bytesReceived, BUFFER.length + BUFFER.length - 1);
     assert.equal(writeCalled, 1);
     assert.equal(errorCalled, 1);
   })();
