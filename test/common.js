@@ -5,8 +5,15 @@ var path = require('path')
 
 require.paths.unshift(path.dirname(__dirname)+'/lib');
 
+try {
+  global.Gently = require('gently').Gently;
+} catch (e) {
+  throw new Error('this test suite requires node-gently');
+}
 global.puts = sys.puts;
-global.p = sys.p;
+global.p = function() {
+  sys.puts(sys.inspect.apply(null, arguments));
+};
 global.assert = require('assert');
 global.TEST_PORT = 13532;
 global.TEST_FIXTURES = path.join(__dirname, 'fixture');

@@ -5,248 +5,193 @@ var formidable = require('formidable')
   , path = require('path')
   , Buffer = require('buffer').Buffer
   , fixtures = require('../fixture/multipart')
-  , MultipartParser = require('formidable/multipart_parser').MultipartParser;
+  , MultipartParser = require('formidable/multipart_parser').MultipartParser
+  , form
+  , gently;
 
-(function testConstructor() {
-  var PROPERTIES =
-      [ 'error'
-      , 'ended'
-      , 'type'
-      , 'headers'
-      , 'uploadDir'
-      , 'encoding'
-      , 'bytesTotal'
-      , 'bytesExpected'
-      , '_parser'
-      , '_flushing'
-      ]
-    , form = new formidable.IncomingForm();
+function test(test) {
+  gently = new Gently();
+  form = new formidable.IncomingForm();
+  test();
+  gently.verify(test.name);
+}
 
-  assert.properties(form, PROPERTIES);
+test(function constructor() {
+  assert.strictEqual(form.error, null);
+  assert.strictEqual(form.ended, false);
+  assert.strictEqual(form.type, null);
+  assert.strictEqual(form.headers, null);
+  assert.strictEqual(form.uploadDir, '/tmp');
+  assert.strictEqual(form.encoding, 'utf-8');
+  assert.strictEqual(form.bytesTotal, null);
+  assert.strictEqual(form.bytesExpected, null);
+  assert.strictEqual(form._parser, null);
+  assert.strictEqual(form._flushing, 0);
   assert.ok(form instanceof events.EventEmitter);
-})();
+});
 
-(function testParse() {
-  var form = new formidable.IncomingForm()
-    , reqMock = {headers: {}}
-    , emit = {}
-    , callbacks =
-      { writeHeaders: -1
-      , addListener_data: -1
-      , addListener_error: -1
-      };
+test(function parse() {
+  var REQ = {headers: {}}
+    , emit = {};
 
-  reqMock.addListener = function(event, fn) {
-    var cbId = 'addListener_'+event;
-    if (!(cbId in callbacks)) {
-      throw new Error('unexpected event: '+event);
-    }
-    callbacks[cbId]++;
+  gently.expect(form, 'writeHeaders', function(headers) {
+    assert.strictEqual(headers, REQ.headers);
+  });
 
+  var events = ['error', 'data'];
+  gently.expect(REQ, 'addListener', 2, function(event, fn) {
+    assert.equal(event, events.shift());
     emit[event] = fn;
     return this;
-  };
+  });
 
-  form.writeHeaders = function(headers) {
-    callbacks.writeHeaders++;
-    assert.strictEqual(headers, reqMock.headers);
-  };
-
-  form.parse(reqMock);
+  form.parse(REQ);
 
   (function testPause() {
-    var pauseCalled = 0;
-    reqMock.pause = function() {
-      pauseCalled++;
-    };
-
+    gently.expect(REQ, 'pause');
     assert.strictEqual(form.pause(), true);
-    assert.equal(pauseCalled, 1);
   })();
-
+  
   (function testResume() {
-    var resumeCalled = 0;
-    reqMock.resume = function() {
-      resumeCalled++;
-    };
-
+    gently.expect(REQ, 'resume');
     assert.strictEqual(form.resume(), true);
-    assert.equal(resumeCalled, 1);
   })();
-
+  
   (function testEmitError() {
-    var ERR = new Error('something bad happened')
-      , errorCalled = 0;
-
-    form._error = function(err) {
-      errorCalled++;
+    var ERR = new Error('something bad happened');
+    gently.expect(form, '_error',function(err) {
       assert.strictEqual(err, ERR);
-    };
-
+    });
     emit.error(ERR);
-    assert.equal(errorCalled, 1);
   })();
-
+  
   (function testEmitData() {
-    var BUFFER = [1, 2, 3]
-      , writeCalled = 0;
-    form.write = function(buffer) {
-      writeCalled++;
+    var BUFFER = [1, 2, 3];
+    gently.expect(form, 'write', function(buffer) {
       assert.strictEqual(buffer, BUFFER);
-    };
+    });
     emit.data(BUFFER);
-
-    assert.equal(writeCalled, 1);
   })();
-
+  
   (function testWithCallback() {
     var form = new formidable.IncomingForm()
-      , reqMock = {headers: {}}
+      , REQ = {headers: {}}
       , parseCalled = 0;
-
-    form.writeHeaders = function() {};
-    reqMock.addListener = function() {return this};
-
-    form.addListener = function(event, cb) {
+  
+    gently.expect(form, 'writeHeaders');
+    gently.expect(REQ, 'addListener', 2, function() {
+      return this;
+    });
+  
+    gently.expect(form, 'addListener', 4, function(event, fn) {
       if (event == 'field') {
-        cb('field1', 'foo');
-        cb('field1', 'bar');
-        cb('field2', 'nice');
+        fn('field1', 'foo');
+        fn('field1', 'bar');
+        fn('field2', 'nice');
       }
-
+  
       if (event == 'file') {
-        cb('file1', '1');
-        cb('file1', '2');
-        cb('file2', '3');
+        fn('file1', '1');
+        fn('file1', '2');
+        fn('file2', '3');
       }
-
+  
       if (event == 'end') {
-        cb();
+        fn();
       }
       return this;
-    };
-
-    form.parse(reqMock, function(err, fields, files) {
-      parseCalled++;
-
+    });
+  
+    form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
       assert.deepEqual(fields, {field1: 'bar', field2: 'nice'});
       assert.deepEqual(files, {file1: '2', file2: '3'});
+    }));
+  
+    gently.expect(form, 'writeHeaders');
+    gently.expect(REQ, 'addListener', 2, function() {
+      return this;
     });
-    assert.equal(parseCalled, 1);
-
+  
     var ERR = new Error('test');
-    form.addListener = function(event, cb) {
+    gently.expect(form, 'addListener', 3, function(event, fn) {
       if (event == 'field') {
-        cb('foo', 'bar');
+        fn('foo', 'bar');
       }
-
+  
       if (event == 'error') {
-        cb(ERR);
+        fn(ERR);
+        gently.expect(form, 'addListener');
       }
       return this;
-    };
+    });
 
-    form.parse(reqMock, function(err, fields, files) {
-      parseCalled++;
-
+    form.parse(REQ, gently.expect(function parseCbErr(err, fields, files) {
       assert.strictEqual(err, ERR);
       assert.deepEqual(fields, {foo: 'bar'});
-    });
-    assert.equal(parseCalled, 2);
+    }));
   })();
+});
 
-  assert.callbacks(callbacks);
-})();
-
-(function testPause() {
-  var form = new formidable.IncomingForm();
+test(function pause() {
   assert.strictEqual(form.pause(), false);
-})();
+});
 
-(function testResume() {
-  var form = new formidable.IncomingForm();
+test(function resume() {
   assert.strictEqual(form.resume(), false);
-})();
+});
 
 
-(function testWriteHeaders() {
-  var HEADERS = {}
-    , form = new formidable.IncomingForm()
-    , callbacks =
-      { _parseContentLength: -1
-      , _parseContentType: -1
-      };
-
-  form._parseContentLength = function() {
-    callbacks._parseContentLength++;
-  };
-
-  form._parseContentType = function() {
-    callbacks._parseContentType++;
-  };
+test(function writeHeaders() {
+  var HEADERS = {};
+  gently.expect(form, '_parseContentLength');
+  gently.expect(form, '_parseContentType');
 
   form.writeHeaders(HEADERS);
   assert.strictEqual(form.headers, HEADERS);
+});
 
-  assert.callbacks(callbacks);
-})();
-
-(function testWrite() {
-  var form = new formidable.IncomingForm()
-    , parser = {}
+test(function write() {
+  var parser = {}
     , BUFFER = [1, 2, 3];
 
   form._parser = parser;
 
   (function testBasic() {
-    var writeCalled = 0;
-    parser.write = function(buffer) {
-      writeCalled++;
+    gently.expect(parser, 'write', function(buffer) {
       assert.strictEqual(buffer, BUFFER);
       return buffer.length;
-    };
+    });
 
     assert.equal(form.write(BUFFER), BUFFER.length);
     assert.equal(form.bytesExpected, BUFFER.length);
-    assert.equal(writeCalled, 1);
   })();
 
   (function testParserError() {
-    var writeCalled = 0
-      , errorCalled = 0;
-
-    parser.write = function(buffer) {
-      writeCalled++;
+    gently.expect(parser, 'write', function(buffer) {
       assert.strictEqual(buffer, BUFFER);
       return buffer.length - 1;
-    };
+    });
 
-    form._error = function(err) {
-      errorCalled++;
+    gently.expect(form, '_error', function(err) {
       assert.ok(err.message.match(/parser error/i));
-    };
+    });
 
     assert.equal(form.write(BUFFER), BUFFER.length - 1);
     assert.equal(form.bytesExpected, BUFFER.length + BUFFER.length - 1);
-    assert.equal(writeCalled, 1);
-    assert.equal(errorCalled, 1);
   })();
 
   (function testUninitialized() {
-    form = new formidable.IncomingForm();
-    var errorCalled = 0;
-    form._error = function(err) {
-      errorCalled++;
-      assert.ok(err.message.match(/unintialized parser/i));
-    };
-    form.write(BUFFER);
-    assert.equal(errorCalled, 1);
-  })();
-})();
+    delete form._parser;
 
-(function testParseContentType() {
-  var HEADERS = {}
-    , form = new formidable.IncomingForm();
+    gently.expect(form, '_error', function(err) {
+      assert.ok(err.message.match(/unintialized parser/i));
+    });
+    form.write(BUFFER);
+  })();
+});
+
+test(function parseContentType() {
+  var HEADERS = {};
 
   form.headers = {'content-type': 'application/x-www-form-urlencoded'};
   form._parseContentType();
@@ -257,56 +202,44 @@ var formidable = require('formidable')
   form._parseContentType();
   assert.strictEqual(form.type, 'urlencoded');
 
-  var BOUNDARY = '---------------------------57814261102167618332366269'
-    , initMultipartCalled = 0;
+  var BOUNDARY = '---------------------------57814261102167618332366269';
   form.headers = {'content-type': 'multipart/form-data; boundary='+BOUNDARY};
-  form._initMultipart = function(boundary) {
-    initMultipartCalled++;
+
+  gently.expect(form, '_initMultipart', function(boundary) {
     assert.equal(boundary, BOUNDARY);
-  };
+  });
   form._parseContentType();
-  assert.equal(initMultipartCalled, 1);
 
   (function testNoBoundary() {
     form.headers = {'content-type': 'multipart/form-data'};
-    var errorCalled = 0;
-    form._error = function(err) {
-      errorCalled++;
-      assert.ok(err.message.match(/no multipart boundary/i));
-    };
 
+    gently.expect(form, '_error', function(err) {
+      assert.ok(err.message.match(/no multipart boundary/i));
+    });
     form._parseContentType();
-    assert.ok(errorCalled);
   })();
 
   (function testNoContentType() {
     form.headers = {};
-    var errorCalled = 0;
-    form._error = function(err) {
-      errorCalled++;
-      assert.ok(err.message.match(/no content-type/i));
-    };
 
+    gently.expect(form, '_error', function(err) {
+      assert.ok(err.message.match(/no content-type/i));
+    });
     form._parseContentType();
-    assert.ok(errorCalled);
   })();
 
   (function testUnknownContentType() {
     form.headers = {'content-type': 'invalid'};
-    var errorCalled = 0;
-    form._error = function(err) {
-      errorCalled++;
+
+    gently.expect(form, '_error', function(err) {
       assert.ok(err.message.match(/unknown content-type/i));
-    };
-
+    });
     form._parseContentType();
-    assert.ok(errorCalled);
   })();
-})();
+});
 
-(function testParseContentLength() {
-  var HEADERS = {}
-    , form = new formidable.IncomingForm();
+test(function parseContentLength() {
+  var HEADERS = {};
 
   form.headers = {};
   form._parseContentLength();
@@ -321,41 +254,26 @@ var formidable = require('formidable')
   form.headers['content-length'] = '08';
   form._parseContentLength();
   assert.strictEqual(form.bytesTotal, 8);
-})();
+});
 
-(function testInitMultipart() {
-  var form = new formidable.IncomingForm()
-    , BOUNDARY = '123'
-    , parserMock = {}
-    , newParserCalled = 0
-    , initWithBoundaryCalled = 0;
+test(function _initMultipart() {
+  var BOUNDARY = '123'
+    , PARSER = {};
 
-  parserMock.initWithBoundary = function(boundary) {
-    initWithBoundaryCalled++;
+  gently.expect(form, '_newParser', function() {
+    return PARSER;
+  });
+
+  gently.expect(PARSER, 'initWithBoundary', function(boundary) {
     assert.equal(boundary, BOUNDARY);
-  };
-
-  form._newParser = function() {
-    newParserCalled++;
-    return parserMock;
-  };
+  });
 
   form._initMultipart(BOUNDARY);
   assert.equal(form.type, 'multipart');
-  assert.strictEqual(form._parser, parserMock);
-  assert.equal(newParserCalled, 1);
-  assert.equal(initWithBoundaryCalled, 1);
-
-  var parser = form._parser;
+  assert.strictEqual(form._parser, PARSER);
 
   (function testRegularField() {
-    var onPartCalled = 0
-      , partDataEmitted = 0
-      , partEndEmitted = 0;
-
-    form.onPart = function(part) {
-      onPartCalled++;
-
+    gently.expect(form, 'onPart', function(part) {
       assert.deepEqual
         ( part.headers
         , { 'content-disposition': 'form-data; name="field1"'
@@ -364,43 +282,31 @@ var formidable = require('formidable')
         );
       assert.equal(part.name, 'field1');
 
-      part.addListener('data', function(b) {
-        partDataEmitted++;
-        if (partDataEmitted == 1) {
-          assert.equal(b.toString(), 'hello');
-        } else if (partDataEmitted == 2) {
-          assert.equal(b.toString(), ' world');
-        }
+      var strings = ['hello', ' world'];
+      gently.expect(part, 'emit', 2, function(event, b) {
+          assert.equal(event, 'data');
+          assert.equal(b.toString(), strings.shift());
       });
 
-      part.addListener('end', function() {
-        partEndEmitted++;
+      gently.expect(part, 'emit', function(event, b) {
+          assert.equal(event, 'end');
       });
-    };
+    });
 
-    parser.onPartBegin();
-    parser.onHeaderField(new Buffer('content-disposition'), 0, 10);
-    parser.onHeaderField(new Buffer('content-disposition'), 10, 19);
-    parser.onHeaderValue(new Buffer('form-data; name="field1"'), 0, 14);
-    parser.onHeaderValue(new Buffer('form-data; name="field1"'), 14, 24);
-    parser.onHeaderField(new Buffer('foo'), 0, 3);
-    parser.onHeaderValue(new Buffer('bar'), 0, 3);
-    parser.onPartData(new Buffer('hello world'), 0, 5);
-    parser.onPartData(new Buffer('hello world'), 5, 11);
-    parser.onPartEnd();
-    assert.equal(onPartCalled, 1);
-    assert.equal(partDataEmitted, 2);
-    assert.equal(partEndEmitted, 1);
+    PARSER.onPartBegin();
+    PARSER.onHeaderField(new Buffer('content-disposition'), 0, 10);
+    PARSER.onHeaderField(new Buffer('content-disposition'), 10, 19);
+    PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 0, 14);
+    PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 14, 24);
+    PARSER.onHeaderField(new Buffer('foo'), 0, 3);
+    PARSER.onHeaderValue(new Buffer('bar'), 0, 3);
+    PARSER.onPartData(new Buffer('hello world'), 0, 5);
+    PARSER.onPartData(new Buffer('hello world'), 5, 11);
+    PARSER.onPartEnd();
   })();
 
   (function testFileField() {
-    var onPartCalled = 0
-      , partDataEmitted = 0
-      , partEndEmitted = 0;
-
-    form.onPart = function(part) {
-      onPartCalled++;
-
+    gently.expect(form, 'onPart', function(part) {
       assert.deepEqual
         ( part.headers
         , { 'content-disposition': 'form-data; name="field2"; filename="file1.txt"'
@@ -411,94 +317,68 @@ var formidable = require('formidable')
       assert.equal(part.filename, 'file1.txt');
       assert.equal(part.mime, 'text/plain');
 
-      part.addListener('data', function(b) {
-        partDataEmitted++;
+      gently.expect(part, 'emit', function(event, b) {
+        assert.equal(event, 'data');
         assert.equal(b.toString(), '... contents of file1.txt ...');
       });
 
-      part.addListener('end', function() {
-        partEndEmitted++;
+      gently.expect(part, 'emit', function(event, b) {
+          assert.equal(event, 'end');
       });
-    };
+    });
 
-    parser.onPartBegin();
-    parser.onHeaderField(new Buffer('content-disposition'), 0, 19);
-    parser.onHeaderValue(new Buffer('form-data; name="field2"; filename="file1.txt"'), 0, 46);
-    parser.onHeaderField(new Buffer('Content-Type'), 0, 12);
-    parser.onHeaderValue(new Buffer('text/plain'), 0, 10);
-    parser.onPartData(new Buffer('... contents of file1.txt ...'), 0, 29);
-    parser.onPartEnd();
-    assert.equal(onPartCalled, 1);
-    assert.equal(partDataEmitted, 1);
-    assert.equal(partEndEmitted, 1);
+    PARSER.onPartBegin();
+    PARSER.onHeaderField(new Buffer('content-disposition'), 0, 19);
+    PARSER.onHeaderValue(new Buffer('form-data; name="field2"; filename="file1.txt"'), 0, 46);
+    PARSER.onHeaderField(new Buffer('Content-Type'), 0, 12);
+    PARSER.onHeaderValue(new Buffer('text/plain'), 0, 10);
+    PARSER.onPartData(new Buffer('... contents of file1.txt ...'), 0, 29);
+    PARSER.onPartEnd();
   })();
 
   (function testEnd() {
-    var maybeEndCalled = 0;
-    form._maybeEnd = function(event) {
-      maybeEndCalled++;
-    };
-    parser.onEnd();
-    assert.equal(maybeEndCalled, 1);
+    gently.expect(form, '_maybeEnd');
+    PARSER.onEnd();
     assert.ok(form.ended);
   })();
-})();
+});
 
-(function testInitUrlencoded() {
-  var form = new formidable.IncomingForm();
+test(function _initUrlencoded() {
   form._initUrlencoded();
   assert.equal(form.type, 'urlencoded');
-})();
+});
 
-(function testError() {
-  var form = new formidable.IncomingForm()
-    , ERR = new Error('bla')
-    , pauseCalled = 0
-    , emitCalled = 0;
+test(function _error() {
+  var ERR = new Error('bla');
 
-  form.pause = function() {
-    pauseCalled++;
-  };
-
-  form.emit = function(event, err) {
-    emitCalled++;
-
+  gently.expect(form, 'pause');
+  gently.expect(form, 'emit', function(event, err) {
     assert.equal(event, 'error');
     assert.strictEqual(err, ERR);
-  };
+  });
 
   form._error(ERR);
   assert.strictEqual(form.error, ERR);
-  assert.equal(pauseCalled, 1);
-  assert.equal(emitCalled, 1);
 
   // make sure _error only does its thing once
   form._error(ERR);
-  assert.equal(pauseCalled, 1);
-  assert.equal(emitCalled, 1);
-})();
+});
 
-(function testNewParser() {
-  var form = new formidable.IncomingForm()
-    , parser = form._newParser();
-
+test(function _newParser() {
+  var parser = form._newParser();
   assert.ok(parser instanceof MultipartParser);
-})();
+});
 
-(function testOnPart() {
-  var form = new formidable.IncomingForm();
-
+test(function onPart() {
   (function testUtf8Field() {
     var PART = new events.EventEmitter();
     PART.name = 'my_field';
 
-    var emitCalled = 0;
-    form.emit = function(event, field, value) {
-      emitCalled++;
+    gently.expect(form, 'emit', function(event, field, value) {
       assert.equal(event, 'field');
       assert.equal(field, 'my_field');
       assert.equal(value, 'hello world: €');
-    };
+    });
 
     form.onPart(PART);
     PART.emit('data', new Buffer('hello'));
@@ -506,21 +386,17 @@ var formidable = require('formidable')
     PART.emit('data', new Buffer([0xE2]));
     PART.emit('data', new Buffer([0x82, 0xAC]));
     PART.emit('end');
-
-    assert.equal(emitCalled, 1);
   })();
 
   (function testBinaryField() {
     var PART = new events.EventEmitter();
     PART.name = 'my_field2';
 
-    var emitCalled = 0;
-    form.emit = function(event, field, value) {
-      emitCalled++;
+    gently.expect(form, 'emit', function(event, field, value) {
       assert.equal(event, 'field');
       assert.equal(field, 'my_field2');
       assert.equal(value, 'hello world: '+new Buffer([0xE2, 0x82, 0xAC]).toString('binary'));
-    };
+    });
 
     form.encoding = 'binary';
     form.onPart(PART);
@@ -529,8 +405,6 @@ var formidable = require('formidable')
     PART.emit('data', new Buffer([0xE2]));
     PART.emit('data', new Buffer([0x82, 0xAC]));
     PART.emit('end');
-
-    assert.equal(emitCalled, 1);
   })();
 
   (function testFilePart() {
@@ -543,46 +417,27 @@ var formidable = require('formidable')
 
     FILE.path = form._uploadPath();
 
-    var writeStreamCalled = 0;
-    form._writeStream = function(file) {
+    gently.expect(form, '_writeStream', function(file) {
       assert.equal(path.dirname(file), form.uploadDir);
-      writeStreamCalled++;
       return FILE;
-    };
+    });
 
     form.onPart(PART);
-    assert.equal(writeStreamCalled, 1);
     assert.equal(form._flushing, 1);
 
-    var writeCalled = 0, BUFFER;
-    FILE.write = function(buffer, cb) {
-      writeCalled++;
+    var BUFFER;
+    gently.expect(form, 'pause');
+    gently.expect(FILE, 'write', function(buffer, cb) {
       assert.strictEqual(buffer, BUFFER);
-
-      var resumeCalled = 0;
-      form.resume = function() {
-        resumeCalled++;
-      };
+      gently.expect(form, 'resume');
+      // @todo handle cb(new Err)
       cb();
-      assert.equal(resumeCalled, 1);
-    };
-
-    var pauseCalled = 0;
-    form.pause = function() {
-      pauseCalled++;
-    };
+    });
 
     PART.emit('data', BUFFER = new Buffer('test'));
-    assert.equal(writeCalled, 1);
-    assert.equal(pauseCalled, 1);
 
-    var endCalled = 0;
-    FILE.end = function(cb) {
-      endCalled++;
-
-      var emitCalled = 0;
-      form.emit = function(event, field, file) {
-        emitCalled++;
+    gently.expect(FILE, 'end', function(cb) {
+      gently.expect(form, 'emit', function(event, field, file) {
         assert.equal(event, 'file');
         assert.deepEqual
           ( file
@@ -591,26 +446,20 @@ var formidable = require('formidable')
             , mime: PART.mime
             }
           );
-      };
+      });
 
-      var maybeEndCalled = 0;
-      form._maybeEnd = function() {
-        maybeEndCalled++;
-      };
+      gently.expect(form, '_maybeEnd');
 
       cb();
-      assert.equal(emitCalled, 1);
-      assert.equal(maybeEndCalled, 1);
       assert.equal(form._flushing, 0);
-    };
-    PART.emit('end');
-    assert.equal(endCalled, 1);
-  })();
-})();
+    });
 
-(function testUploadPath() {
-  var form = new formidable.IncomingForm()
-    , path1 = form._uploadPath()
+    PART.emit('end');
+  })();
+});
+
+test(function _uploadPath() {
+  var path1 = form._uploadPath()
     , path2 = form._uploadPath();
 
   assert.equal(form.uploadDir, '/tmp');
@@ -618,10 +467,9 @@ var formidable = require('formidable')
   assert.equal(path.dirname(path1), form.uploadDir);
   assert.equal(path.dirname(path2), form.uploadDir);
   assert.notEqual(path1, path2);
-})();
+});
 
-(function testWriteStream() {
-  var form = new formidable.IncomingForm();
+test(function _writeStream() {
   form.uploadDir = TEST_TMP;
 
   var file = form._writeStream(form._uploadPath());
@@ -629,27 +477,21 @@ var formidable = require('formidable')
   file.end(function() {
     fs.unlink(file.path);
   });
-})();
+});
 
-(function testMaybeEnd() {
-  var form = new formidable.IncomingForm();
-
-  var emitCalled = 0;
-  form.emit = function(event) {
-    emitCalled++;
-    assert.equal(event, 'end');
-  };
-
+test(function _maybeEnd() {
+  gently.expect(form, 'emit', 0);
   form._maybeEnd();
-  assert.equal(emitCalled, 0);
 
   form.ended = true;
   form._flushing = 1;
   form._maybeEnd();
-  assert.equal(emitCalled, 0);
+
+  gently.expect(form, 'emit', function(event) {
+    assert.equal(event, 'end');
+  });
 
   form.ended = true;
   form._flushing = 0;
   form._maybeEnd();
-  assert.equal(emitCalled, 1);
-})();
+});
