@@ -10,12 +10,20 @@ A node.js module for dealing with web forms.
 * Automatically writing file uploads to disk
 * Low memory footprint
 * Graceful error handling
+* Very high test coverage
 
 ### Todo
 
 * Support for form/urlencoded
 * Limit buffer size for fields
 * formidable.OutgoingForm
+
+## Installation
+
+Via [npm](http://github.com/isaacs/npm):
+
+    npm install formidable@latest
+
 
 ## Example
 
