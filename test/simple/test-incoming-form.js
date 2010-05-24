@@ -28,6 +28,7 @@ test(function constructor() {
   assert.strictEqual(form._parser, null);
   assert.strictEqual(form._flushing, 0);
   assert.ok(form instanceof events.EventEmitter);
+  assert.equal(form.constructor.name, 'IncomingForm');
 });
 
 test(function parse() {

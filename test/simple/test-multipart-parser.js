@@ -16,6 +16,7 @@ var multipartParser = require('formidable/multipart_parser')
       ];
 
   assert.properties(parser, PROPERTIES);
+  assert.equal(parser.constructor.name, 'MultipartParser');
 })();
 
 (function testInitWithBoundary() {
