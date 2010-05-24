@@ -2,40 +2,38 @@ require('../common');
 var multipartParser = require('formidable/multipart_parser')
   , MultipartParser = multipartParser.MultipartParser
   , events = require('events')
-  , Buffer = require('buffer').Buffer;
+  , Buffer = require('buffer').Buffer
+  , parser;
 
-(function testConstructor() {
-  var parser = new MultipartParser()
-    , PROPERTIES =
-      [ 'boundary'
-      , 'state'
-      , 'flags'
-      , 'boundaryChars'
-      , 'index'
-      , 'lookbehind'
-      ];
+function test(test) {
+  parser = new MultipartParser();
+  test();
+}
 
-  assert.properties(parser, PROPERTIES);
+test(function constructor() {
+  assert.equal(parser.boundary, null);
+  assert.equal(parser.state, 0);
+  assert.equal(parser.flags, 0);
+  assert.equal(parser.boundaryChars, null);
+  assert.equal(parser.index, null);
+  assert.equal(parser.lookbehind, null);
   assert.equal(parser.constructor.name, 'MultipartParser');
-})();
+});
 
-(function testInitWithBoundary() {
-  var parser = new MultipartParser()
-    , boundary = 'abc';
-
+test(function initWithBoundary() {
+  var boundary = 'abc';
   parser.initWithBoundary(boundary);
   assert.deepEqual(Array.prototype.slice.call(parser.boundary), [13, 10, 45, 45, 97, 98, 99]);
   assert.equal(parser.state, multipartParser.START);
 
   assert.deepEqual(parser.boundaryChars, {10: true, 13: true, 45: true, 97: true, 98: true, 99: true});
-})();
+});
 
-(function testParserError() {
-  var parser = new MultipartParser()
-    , boundary = 'abc'
+test(function parserError() {
+  var boundary = 'abc'
     , buffer = new Buffer(5);
 
   parser.initWithBoundary(boundary);
   buffer.write('--ad', 'ascii', 0);
   assert.equal(parser.write(buffer), 3);
-})();
+});
