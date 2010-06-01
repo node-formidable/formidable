@@ -24,6 +24,13 @@ Via [npm](http://github.com/isaacs/npm):
 
     npm install formidable@latest
 
+Manually:
+
+    git clone git://github.com/felixge/node-formidable.git formidable
+    vim my.js
+    # var formidable = require('./formidable');
+
+Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run the unit tests, but you won't need it for just using the library.
 
 ## Example
 
