@@ -371,6 +371,15 @@ test(function _newParser() {
 });
 
 test(function onPart() {
+  var PART = {};
+  gently.expect(form, 'handlePart', function(part) {
+    assert.strictEqual(part, PART);
+  });
+
+  form.onPart(PART);
+});
+
+test(function handlePart() {
   (function testUtf8Field() {
     var PART = new events.EventEmitter();
     PART.name = 'my_field';
@@ -381,7 +390,7 @@ test(function onPart() {
       assert.equal(value, 'hello world: €');
     });
 
-    form.onPart(PART);
+    form.handlePart(PART);
     PART.emit('data', new Buffer('hello'));
     PART.emit('data', new Buffer(' world: '));
     PART.emit('data', new Buffer([0xE2]));
@@ -400,7 +409,7 @@ test(function onPart() {
     });
 
     form.encoding = 'binary';
-    form.onPart(PART);
+    form.handlePart(PART);
     PART.emit('data', new Buffer('hello'));
     PART.emit('data', new Buffer(' world: '));
     PART.emit('data', new Buffer([0xE2]));
@@ -423,7 +432,7 @@ test(function onPart() {
       return FILE;
     });
 
-    form.onPart(PART);
+    form.handlePart(PART);
     assert.equal(form._flushing, 1);
 
     var BUFFER;

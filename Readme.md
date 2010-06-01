@@ -109,6 +109,15 @@ You may overwrite this method if you are interested in directly accessing the mu
       });
     }
 
+If you want to use formidable to only handle certain parts for you, you can do so:
+
+    incomingForm.onPart = function(part) {
+      if (!part.filename) {
+        // let formidable handle all non-file parts
+        incomingForm.handlePart(part);
+      }
+    }
+
 Check the code in this method for further inspiration.
 
 #### Event: 'field' (name, value)
