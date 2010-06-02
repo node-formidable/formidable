@@ -23,7 +23,7 @@ test(function constructor() {
   assert.strictEqual(form.headers, null);
   assert.strictEqual(form.uploadDir, '/tmp');
   assert.strictEqual(form.encoding, 'utf-8');
-  assert.strictEqual(form.bytesTotal, null);
+  assert.strictEqual(form.bytesReceived, null);
   assert.strictEqual(form.bytesExpected, null);
   assert.strictEqual(form._parser, null);
   assert.strictEqual(form._flushing, 0);
@@ -156,6 +156,7 @@ test(function write() {
     , BUFFER = [1, 2, 3];
 
   form._parser = parser;
+  form.bytesExpected = 523423;
 
   (function testBasic() {
     gently.expect(parser, 'write', function(buffer) {
@@ -163,8 +164,14 @@ test(function write() {
       return buffer.length;
     });
 
+    gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
+      assert.equal(event, 'progress');
+      assert.equal(bytesReceived, BUFFER.length);
+      assert.equal(bytesExpected, form.bytesExpected);
+    });
+
     assert.equal(form.write(BUFFER), BUFFER.length);
-    assert.equal(form.bytesExpected, BUFFER.length);
+    assert.equal(form.bytesReceived, BUFFER.length);
   })();
 
   (function testParserError() {
@@ -177,8 +184,10 @@ test(function write() {
       assert.ok(err.message.match(/parser error/i));
     });
 
+    gently.expect(form, 'emit');
+
     assert.equal(form.write(BUFFER), BUFFER.length - 1);
-    assert.equal(form.bytesExpected, BUFFER.length + BUFFER.length - 1);
+    assert.equal(form.bytesReceived, BUFFER.length + BUFFER.length - 1);
   })();
 
   (function testUninitialized() {
@@ -244,17 +253,17 @@ test(function parseContentLength() {
 
   form.headers = {};
   form._parseContentLength();
-  assert.equal(form.bytesTotal, null);
+  assert.strictEqual(form.bytesExpected, null);
 
   form.headers['content-length'] = '8';
   form._parseContentLength();
-  assert.strictEqual(form.bytesExpected, 0);
-  assert.strictEqual(form.bytesTotal, 8);
+  assert.strictEqual(form.bytesReceived, 0);
+  assert.strictEqual(form.bytesExpected, 8);
 
   // JS can be evil, lets make sure we are not
   form.headers['content-length'] = '08';
   form._parseContentLength();
-  assert.strictEqual(form.bytesTotal, 8);
+  assert.strictEqual(form.bytesExpected, 8);
 });
 
 test(function _initMultipart() {

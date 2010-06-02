@@ -85,7 +85,7 @@ Either 'multipart' or 'urlencoded' depending on the incoming request.
 
 #### incomingForm.bytesReceived
 
-The amount of bytes received for this form so far. Useful for rolling your own upload progress bar.
+The amount of bytes received for this form so far.
 
 #### incomingForm.bytesExpected
 
@@ -119,6 +119,10 @@ If you want to use formidable to only handle certain parts for you, you can do s
     }
 
 Check the code in this method for further inspiration.
+
+#### Event: 'progress' (bytesReceived, bytesExpected)
+
+Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
 
 #### Event: 'field' (name, value)
 
