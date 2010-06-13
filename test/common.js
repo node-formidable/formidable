@@ -12,7 +12,7 @@ try {
 }
 global.puts = sys.puts;
 global.p = function() {
-  sys.puts(sys.inspect.apply(null, arguments));
+  sys.error(sys.inspect.apply(null, arguments));
 };
 global.assert = require('assert');
 global.TEST_PORT = 13532;
