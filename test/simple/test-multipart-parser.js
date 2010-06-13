@@ -37,3 +37,14 @@ test(function parserError() {
   buffer.write('--ad', 'ascii', 0);
   assert.equal(parser.write(buffer), 3);
 });
+
+test(function end() {
+  (function testError() {
+    assert.equal(parser.end().message, 'MultipartParser.end(): stream ended unexpectedly');
+  })();
+
+  (function testRegular() {
+    parser.state = multipartParser.END;
+    assert.strictEqual(parser.end(), undefined);
+  })();
+});

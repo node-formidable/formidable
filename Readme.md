@@ -14,9 +14,8 @@ A node.js module for dealing with web forms.
 
 ### Todo
 
-* Support for form/urlencoded
 * Limit buffer size for fields
-* formidable.OutgoingForm
+* Implement QuerystringParser the same way as MultipartParser
 
 ## Installation
 

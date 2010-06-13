@@ -1,5 +1,6 @@
 require('../common');
 var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser')
+  , QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser')
   , EventEmitterStub = GENTLY.stub('events', 'EventEmitter')
   , WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
 
@@ -43,8 +44,8 @@ test(function parse() {
     assert.strictEqual(headers, REQ.headers);
   });
 
-  var events = ['error', 'data'];
-  gently.expect(REQ, 'addListener', 2, function(event, fn) {
+  var events = ['error', 'data', 'end'];
+  gently.expect(REQ, 'addListener', events.length, function(event, fn) {
     assert.equal(event, events.shift());
     emit[event] = fn;
     return this;
@@ -77,7 +78,35 @@ test(function parse() {
     });
     emit.data(BUFFER);
   })();
+
+  (function testEmitEnd() {
+    form._parser = {};
+
+    (function testWithError() {
+      var ERR = new Error('haha');
+      gently.expect(form._parser, 'end', function() {
+        return ERR;
+      });
+
+      gently.expect(form, '_error', function(err) {
+        assert.strictEqual(err, ERR);
+      });
+
+      emit.end();
+    })();
+
+    (function testWithoutError() {
+      gently.expect(form._parser, 'end');
+      emit.end();
+    })();
+
+    (function testAfterError() {
+      form.error = true;
+      emit.end();
+    })();
+  })();
   
+
   (function testWithCallback() {
     gently.expect(EventEmitterStub, 'call');
     var form = new IncomingForm()
@@ -85,7 +114,7 @@ test(function parse() {
       , parseCalled = 0;
   
     gently.expect(form, 'writeHeaders');
-    gently.expect(REQ, 'addListener', 2, function() {
+    gently.expect(REQ, 'addListener', 3, function() {
       return this;
     });
   
@@ -114,7 +143,7 @@ test(function parse() {
     }));
   
     gently.expect(form, 'writeHeaders');
-    gently.expect(REQ, 'addListener', 2, function() {
+    gently.expect(REQ, 'addListener', 3, function() {
       return this;
     });
   
@@ -209,13 +238,13 @@ test(function parseContentType() {
   var HEADERS = {};
 
   form.headers = {'content-type': 'application/x-www-form-urlencoded'};
+  gently.expect(form, '_initUrlencoded');
   form._parseContentType();
-  assert.strictEqual(form.type, 'urlencoded');
 
   // accept anything that has 'urlencoded' in it
   form.headers = {'content-type': 'broken-client/urlencoded-stupid'};
+  gently.expect(form, '_initUrlencoded');
   form._parseContentType();
-  assert.strictEqual(form.type, 'urlencoded');
 
   var BOUNDARY = '---------------------------57814261102167618332366269';
   form.headers = {'content-type': 'multipart/form-data; boundary='+BOUNDARY};
@@ -370,8 +399,33 @@ test(function _initMultipart() {
 });
 
 test(function _initUrlencoded() {
+  var PARSER;
+
+  gently.expect(QuerystringParserStub, 'new', function() {
+    PARSER = this;
+  });
+
   form._initUrlencoded();
   assert.equal(form.type, 'urlencoded');
+  assert.strictEqual(form._parser, PARSER);
+
+  (function testOnField() {
+    var KEY = 'KEY', VAL = 'VAL';
+    gently.expect(form, 'emit', function(field, key, val) {
+      assert.equal(field, 'field');
+      assert.equal(key, KEY);
+      assert.equal(val, VAL);
+    });
+
+    PARSER.onField(KEY, VAL);
+  })();
+
+  (function testOnEnd() {
+    gently.expect(form, '_maybeEnd');
+
+    PARSER.onEnd();
+    assert.equal(form.ended, true);
+  })();
 });
 
 test(function _error() {
