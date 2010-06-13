@@ -6,10 +6,13 @@ var path = require('path')
 require.paths.unshift(path.dirname(__dirname)+'/lib');
 
 try {
-  global.Gently = require('gently').Gently;
+  global.Gently = require('gently');
 } catch (e) {
   throw new Error('this test suite requires node-gently');
 }
+
+global.GENTLY = new Gently();
+
 global.puts = sys.puts;
 global.p = function() {
   sys.error(sys.inspect.apply(null, arguments));

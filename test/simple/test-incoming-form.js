@@ -1,17 +1,21 @@
 require('../common');
-var formidable = require('formidable')
+var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser')
+  , EventEmitterStub = GENTLY.stub('events', 'EventEmitter')
+  , WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
+
+var IncomingForm = require('formidable/incoming_form').IncomingForm
   , events = require('events')
   , fs = require('fs')
   , path = require('path')
   , Buffer = require('buffer').Buffer
   , fixtures = require('../fixture/multipart')
-  , MultipartParser = require('formidable/multipart_parser').MultipartParser
   , form
   , gently;
 
 function test(test) {
   gently = new Gently();
-  form = new formidable.IncomingForm();
+  gently.expect(EventEmitterStub, 'call');
+  form = new IncomingForm();
   test();
   gently.verify(test.name);
 }
@@ -27,7 +31,7 @@ test(function constructor() {
   assert.strictEqual(form.bytesExpected, null);
   assert.strictEqual(form._parser, null);
   assert.strictEqual(form._flushing, 0);
-  assert.ok(form instanceof events.EventEmitter);
+  assert.ok(form instanceof EventEmitterStub);
   assert.equal(form.constructor.name, 'IncomingForm');
 });
 
@@ -75,7 +79,8 @@ test(function parse() {
   })();
   
   (function testWithCallback() {
-    var form = new formidable.IncomingForm()
+    gently.expect(EventEmitterStub, 'call');
+    var form = new IncomingForm()
       , REQ = {headers: {}}
       , parseCalled = 0;
   
@@ -268,13 +273,13 @@ test(function parseContentLength() {
 
 test(function _initMultipart() {
   var BOUNDARY = '123'
-    , PARSER = {};
+    , PARSER;
 
-  gently.expect(form, '_newParser', function() {
-    return PARSER;
+  gently.expect(MultipartParserStub, 'new', function() {
+    PARSER = this;
   });
 
-  gently.expect(PARSER, 'initWithBoundary', function(boundary) {
+  gently.expect(MultipartParserStub.prototype, 'initWithBoundary', function(boundary) {
     assert.equal(boundary, BOUNDARY);
   });
 
@@ -283,7 +288,13 @@ test(function _initMultipart() {
   assert.strictEqual(form._parser, PARSER);
 
   (function testRegularField() {
+    var PART;
+    gently.expect(EventEmitterStub, 'new', function() {
+      PART = this;
+    });
+
     gently.expect(form, 'onPart', function(part) {
+      assert.strictEqual(part, PART);
       assert.deepEqual
         ( part.headers
         , { 'content-disposition': 'form-data; name="field1"'
@@ -316,6 +327,11 @@ test(function _initMultipart() {
   })();
 
   (function testFileField() {
+    var PART;
+    gently.expect(EventEmitterStub, 'new', function() {
+      PART = this;
+    });
+
     gently.expect(form, 'onPart', function(part) {
       assert.deepEqual
         ( part.headers
@@ -372,11 +388,6 @@ test(function _error() {
 
   // make sure _error only does its thing once
   form._error(ERR);
-});
-
-test(function _newParser() {
-  var parser = form._newParser();
-  assert.ok(parser instanceof MultipartParser);
 });
 
 test(function onPart() {
@@ -436,9 +447,9 @@ test(function handlePart() {
 
     FILE.path = form._uploadPath();
 
-    gently.expect(form, '_writeStream', function(file) {
+    gently.expect(WriteStreamStub, 'new', function(file) {
       assert.equal(path.dirname(file), form.uploadDir);
-      return FILE;
+      FILE = this;
     });
 
     form.handlePart(PART);
@@ -478,24 +489,19 @@ test(function handlePart() {
 });
 
 test(function _uploadPath() {
-  var path1 = form._uploadPath()
-    , path2 = form._uploadPath();
-
-  assert.equal(form.uploadDir, '/tmp');
-
-  assert.equal(path.dirname(path1), form.uploadDir);
-  assert.equal(path.dirname(path2), form.uploadDir);
-  assert.notEqual(path1, path2);
-});
-
-test(function _writeStream() {
-  form.uploadDir = TEST_TMP;
-
-  var file = form._writeStream(form._uploadPath());
-  assert.ok(file instanceof fs.WriteStream);
-  file.end(function() {
-    fs.unlink(file.path);
+  var UUID_A, UUID_B;
+  gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
+    assert.equal(uploadDir, form.uploadDir);
+    UUID_A = uuid;
   });
+  form._uploadPath();
+
+  gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
+    UUID_B = uuid;
+  });
+  form._uploadPath();
+
+  assert.notEqual(UUID_A, UUID_B);
 });
 
 test(function _maybeEnd() {
