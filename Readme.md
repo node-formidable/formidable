@@ -78,6 +78,10 @@ The encoding to use for incoming form fields.
 
 The directory for placing file uploads in. You can later on move them using `fs.rename()`.
 
+#### incomingForm.keepExtensions = false
+
+If you want the files written to `incomingForm.uploadDir` to include the extensions of the original files, set this property to `true`.
+
 #### incomingForm.type
 
 Either 'multipart' or 'urlencoded' depending on the incoming request.

@@ -26,6 +26,7 @@ test(function constructor() {
   assert.strictEqual(form.ended, false);
   assert.strictEqual(form.type, null);
   assert.strictEqual(form.headers, null);
+  assert.strictEqual(form.keepExtensions, false);
   assert.strictEqual(form.uploadDir, '/tmp');
   assert.strictEqual(form.encoding, 'utf-8');
   assert.strictEqual(form.bytesReceived, null);
@@ -493,16 +494,20 @@ test(function handlePart() {
 
   (function testFilePart() {
     var PART = new events.EventEmitter()
-      , FILE = new events.EventEmitter();
+      , FILE = new events.EventEmitter()
+      , PATH = '/foo/bar';
 
     PART.name = 'my_file';
     PART.filename = 'sweet.txt';
     PART.mime = 'sweet.txt';
 
-    FILE.path = form._uploadPath();
+    gently.expect(form, '_uploadPath', function(filename) {
+      assert.equal(filename, PART.filename);
+      return PATH;
+    });
 
-    gently.expect(WriteStreamStub, 'new', function(file) {
-      assert.equal(path.dirname(file), form.uploadDir);
+    gently.expect(WriteStreamStub, 'new', function(path) {
+      assert.equal(path, PATH);
       FILE = this;
     });
 
@@ -543,19 +548,39 @@ test(function handlePart() {
 });
 
 test(function _uploadPath() {
-  var UUID_A, UUID_B;
-  gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
-    assert.equal(uploadDir, form.uploadDir);
-    UUID_A = uuid;
-  });
-  form._uploadPath();
+  (function testUniqueId() {
+    var UUID_A, UUID_B;
+    gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
+      assert.equal(uploadDir, form.uploadDir);
+      UUID_A = uuid;
+    });
+    form._uploadPath();
 
-  gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
-    UUID_B = uuid;
-  });
-  form._uploadPath();
+    gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
+      UUID_B = uuid;
+    });
+    form._uploadPath();
 
-  assert.notEqual(UUID_A, UUID_B);
+    assert.notEqual(UUID_A, UUID_B);
+  })();
+
+  (function testFileExtension() {
+    form.keepExtensions = true;
+    var FILENAME = 'foo.jpg'
+      , EXT = '.bar';
+
+    gently.expect(GENTLY.hijacked.path, 'extname', function(filename) {
+      assert.equal(filename, FILENAME);
+      gently.restore(path, 'extname');
+
+      return EXT;
+    });
+
+    gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, name) {
+      assert.equal(path.extname(name), EXT);
+    });
+    form._uploadPath(FILENAME);
+  })();
 });
 
 test(function _maybeEnd() {
