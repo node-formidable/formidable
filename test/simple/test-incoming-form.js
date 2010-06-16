@@ -63,6 +63,19 @@ test(function parse() {
     gently.expect(REQ, 'resume');
     assert.strictEqual(form.resume(), true);
   })();
+
+  (function testResumeException() {
+    var ERR = new Error('dasdsa');
+    gently.expect(REQ, 'resume', function() {
+      throw ERR;
+    });
+
+    gently.expect(form, '_error', function(err) {
+      assert.strictEqual(err, ERR);
+    });
+
+    assert.strictEqual(form.resume(), false);
+  })();
   
   (function testEmitError() {
     var ERR = new Error('something bad happened');
