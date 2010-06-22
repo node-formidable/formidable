@@ -12,7 +12,7 @@ exports['rfc1867'] =
       'content-disposition: form-data; name="pics"; filename="file1.txt"\r\n'+
       'Content-Type: text/plain\r\n'+
       '\r\n'+
-      '... contents of file1.txt ...\r\n'+
+      '... contents of file1.txt ...\r\r\n'+
       '--AaB03x--\r\n'
   , parts:
     [ { headers:
@@ -24,7 +24,7 @@ exports['rfc1867'] =
         { 'content-disposition': 'form-data; name="pics"; filename="file1.txt"'
         , 'Content-Type': 'text/plain'
         }
-      , data: '... contents of file1.txt ...'
+      , data: '... contents of file1.txt ...\r'
       }
     ]
   };
