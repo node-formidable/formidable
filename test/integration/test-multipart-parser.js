@@ -68,10 +68,17 @@ Object.keys(fixtures).forEach(function(name) {
 
     nparsed = parser.write(chunk);
     if (nparsed != chunk.length) {
+      if (fixture.expectError) {
+        return;
+      }
       puts('-- ERROR --');
       p(chunk.toString('ascii'));
       throw new Error(chunk.length+' bytes written, but only '+nparsed+' bytes parsed!');
     }
+  }
+
+  if (fixture.expectError) {
+    throw new Error('expected parse error did not happen');
   }
 
   assert.ok(endCalled);
