@@ -58,13 +58,41 @@ test(function parse() {
     gently.expect(REQ, 'pause');
     assert.strictEqual(form.pause(), true);
   })();
-  
+
+  (function testPauseCriticalException() {
+    form.ended = false;
+
+    var ERR = new Error('dasdsa');
+    gently.expect(REQ, 'pause', function() {
+      throw ERR;
+    });
+
+    gently.expect(form, '_error', function(err) {
+      assert.strictEqual(err, ERR);
+    });
+
+    assert.strictEqual(form.pause(), false);
+  })();
+
+  (function testPauseHarmlessException() {
+    form.ended = true;
+
+    var ERR = new Error('dasdsa');
+    gently.expect(REQ, 'pause', function() {
+      throw ERR;
+    });
+
+    assert.strictEqual(form.pause(), false);
+  })();
+
   (function testResume() {
     gently.expect(REQ, 'resume');
     assert.strictEqual(form.resume(), true);
   })();
 
-  (function testResumeException() {
+  (function testResumeCriticalException() {
+    form.ended = false;
+
     var ERR = new Error('dasdsa');
     gently.expect(REQ, 'resume', function() {
       throw ERR;
@@ -72,6 +100,17 @@ test(function parse() {
 
     gently.expect(form, '_error', function(err) {
       assert.strictEqual(err, ERR);
+    });
+
+    assert.strictEqual(form.resume(), false);
+  })();
+
+  (function testResumeHarmlessException() {
+    form.ended = true;
+
+    var ERR = new Error('dasdsa');
+    gently.expect(REQ, 'resume', function() {
+      throw ERR;
     });
 
     assert.strictEqual(form.resume(), false);
