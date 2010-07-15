@@ -74,6 +74,12 @@ Creates a new incoming form.
 
 The encoding to use for incoming form fields.
 
+#### incomingForm.timeout = 30000
+
+The time in ms after which a stalled upload causes an error. Can be set to
+`false` to disable this feature. The resulting error object will have a
+property `timeout` that is set to `true`.
+
 #### incomingForm.uploadDir = '/tmp'
 
 The directory for placing file uploads in. You can later on move them using `fs.rename()`.

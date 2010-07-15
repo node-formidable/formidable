@@ -29,6 +29,7 @@ test(function constructor() {
   assert.strictEqual(form.keepExtensions, false);
   assert.strictEqual(form.uploadDir, '/tmp');
   assert.strictEqual(form.encoding, 'utf-8');
+  assert.strictEqual(form.timeout, 30000);
   assert.strictEqual(form.bytesReceived, null);
   assert.strictEqual(form.bytesExpected, null);
   assert.strictEqual(form._parser, null);
@@ -38,11 +39,21 @@ test(function constructor() {
 });
 
 test(function parse() {
-  var REQ = {headers: {}}
-    , emit = {};
+  var REQ = {headers: {}, connection: {}}
+    , emit = {}
+    , reqEmit = {};
 
   gently.expect(form, 'writeHeaders', function(headers) {
     assert.strictEqual(headers, REQ.headers);
+  });
+
+  gently.expect(REQ.connection, 'setTimeout', function(timeout) {
+    assert.equal(timeout, form.timeout);
+  });
+
+  gently.expect(REQ.connection, 'addListener', function(event, fn) {
+    assert.equal(event, 'timeout');
+    reqEmit[event] = fn;
   });
 
   var events = ['error', 'data', 'end'];
@@ -115,6 +126,15 @@ test(function parse() {
 
     assert.strictEqual(form.resume(), false);
   })();
+
+  (function testReqEmitTimeout() {
+    gently.expect(form, '_error', function(err) {
+      assert.equal(err.message, 'timeout, no data received for '+form.timeout+'ms');
+      assert.equal(err.timeout, true);
+    });
+
+    reqEmit.timeout();
+  })();
   
   (function testEmitError() {
     var ERR = new Error('something bad happened');
@@ -166,6 +186,8 @@ test(function parse() {
       , REQ = {headers: {}}
       , parseCalled = 0;
   
+    form.timeout = null;
+
     gently.expect(form, 'writeHeaders');
     gently.expect(REQ, 'addListener', 3, function() {
       return this;
