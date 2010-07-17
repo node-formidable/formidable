@@ -31,8 +31,10 @@ test(function constructor() {
   assert.strictEqual(form.encoding, 'utf-8');
   assert.strictEqual(form.bytesReceived, null);
   assert.strictEqual(form.bytesExpected, null);
+  assert.strictEqual(form.maxFieldSize, 2 * 1024 * 1024);
   assert.strictEqual(form._parser, null);
   assert.strictEqual(form._flushing, 0);
+  assert.strictEqual(form._fieldsSize, 0);
   assert.ok(form instanceof EventEmitterStub);
   assert.equal(form.constructor.name, 'IncomingForm');
 });
@@ -548,6 +550,21 @@ test(function handlePart() {
     PART.emit('data', new Buffer([0xE2]));
     PART.emit('data', new Buffer([0x82, 0xAC]));
     PART.emit('end');
+  })();
+
+  (function testFieldSize() {
+    form.maxFieldSize = 8;
+    var PART = new events.EventEmitter();
+    PART.name = 'my_field';
+
+    gently.expect(form, '_error', function(err) {
+      assert.equal(err.message, 'maxFieldSize exceeded, received 9 bytes of field data');
+    });
+
+    form.handlePart(PART);
+    form._fieldsSize = 1;
+    PART.emit('data', new Buffer(7));
+    PART.emit('data', new Buffer(1));
   })();
 
   (function testFilePart() {

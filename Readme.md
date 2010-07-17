@@ -14,7 +14,6 @@ A node.js module for dealing with web forms.
 
 ### Todo
 
-* Limit buffer size for fields
 * Implement QuerystringParser the same way as MultipartParser
 
 ## Installation
@@ -85,6 +84,12 @@ If you want the files written to `incomingForm.uploadDir` to include the extensi
 #### incomingForm.type
 
 Either 'multipart' or 'urlencoded' depending on the incoming request.
+
+#### incomingForm.maxFieldSize = 2 * 1024 * 1024
+
+Limits the amount of memory a field (not file) can allocate in bytes.
+I this value is exceeded, an `'error'` event is emitted. The default
+size is 2MB.
 
 #### incomingForm.bytesReceived
 
