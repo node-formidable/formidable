@@ -15,9 +15,9 @@ Object.keys(fixtures).forEach(function(name) {
 
     , parts = []
     , part = null
-    , headerField = null
-    , headerValue = null
-    , endCalled = false;
+    , headerField
+    , headerValue
+    , endCalled = '';
 
   parser.initWithBoundary(fixture.boundary);
   parser.onPartBegin = function() {
@@ -28,27 +28,21 @@ Object.keys(fixtures).forEach(function(name) {
   };
 
   parser.onHeaderField = function(b, start, end) {
-    var str = b.toString('ascii', start, end);
-    if (headerValue) {
-      part.headers[headerField] = headerValue;
-      headerField = '';
-      headerValue = '';      
-    }
-    headerField += str;
+    headerField += b.toString('ascii', start, end);
   };
 
   parser.onHeaderValue = function(b, start, end) {
-    var str = b.toString('ascii', start, end);
-    headerValue += str;
+    headerValue += b.toString('ascii', start, end);
   }
+
+  parser.onHeaderEnd = function() {
+    part.headers[headerField] = headerValue;
+    headerField = '';
+    headerValue = '';
+  };
 
   parser.onPartData = function(b, start, end) {
     var str = b.toString('ascii', start, end);
-    if (headerField) {
-      part.headers[headerField] = headerValue;
-      headerValue = '';
-      headerField = '';
-    }
     part.data += b.binarySlice(start, end);
   }
 

@@ -401,8 +401,11 @@ test(function _initMultipart() {
     PARSER.onHeaderField(new Buffer('content-disposition'), 10, 19);
     PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 0, 14);
     PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 14, 24);
+    PARSER.onHeaderEnd();
     PARSER.onHeaderField(new Buffer('foo'), 0, 3);
     PARSER.onHeaderValue(new Buffer('bar'), 0, 3);
+    PARSER.onHeaderEnd();
+    PARSER.onHeadersEnd();
     PARSER.onPartData(new Buffer('hello world'), 0, 5);
     PARSER.onPartData(new Buffer('hello world'), 5, 11);
     PARSER.onPartEnd();
@@ -438,8 +441,11 @@ test(function _initMultipart() {
     PARSER.onPartBegin();
     PARSER.onHeaderField(new Buffer('content-disposition'), 0, 19);
     PARSER.onHeaderValue(new Buffer('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sunset.jpg"'), 0, 85);
+    PARSER.onHeaderEnd();
     PARSER.onHeaderField(new Buffer('Content-Type'), 0, 12);
     PARSER.onHeaderValue(new Buffer('text/plain'), 0, 10);
+    PARSER.onHeaderEnd();
+    PARSER.onHeadersEnd();
     PARSER.onPartData(new Buffer('... contents of file1.txt ...'), 0, 29);
     PARSER.onPartEnd();
   })();
