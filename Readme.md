@@ -157,6 +157,10 @@ Emitted when the entire request has been received, and all contained files have 
 
 Formidable is licensed under the MIT license.
 
+## Ports
+
+* [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
+
 ## Credits
 
 * [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js
