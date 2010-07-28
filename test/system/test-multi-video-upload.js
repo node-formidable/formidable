@@ -38,12 +38,16 @@ server.addListener('request', function(req, res) {
 
 server.listen(TEST_PORT, function() {
   var client = http.createClient(TEST_PORT)
-    , headers = {'content-type': 'multipart/form-data; boundary='+BOUNDARY}
+    , stat = fs.statSync(FIXTURE)
+    , headers =
+        { 'content-type': 'multipart/form-data; boundary='+BOUNDARY
+        , 'content-length': stat.size
+        }
     , request = client.request('POST', '/', headers)
     , fixture = new fs.ReadStream(FIXTURE);
 
   fixture
-    .addListener('data', function(b) {;
+    .addListener('data', function(b) {
       request.write(b);
     })
     .addListener('end', function() {
