@@ -4,7 +4,8 @@ var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser')
   , EventEmitterStub = GENTLY.stub('events', 'EventEmitter')
   , WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
 
-var IncomingForm = require('formidable/incoming_form').IncomingForm
+var formidable = require('formidable')
+  , IncomingForm = formidable.IncomingForm
   , events = require('events')
   , fs = require('fs')
   , path = require('path')
@@ -37,6 +38,18 @@ test(function constructor() {
   assert.strictEqual(form._fieldsSize, 0);
   assert.ok(form instanceof EventEmitterStub);
   assert.equal(form.constructor.name, 'IncomingForm');
+
+  (function testSimpleConstructor() {
+    gently.expect(EventEmitterStub, 'call');
+    var form = IncomingForm();
+    assert.ok(form instanceof IncomingForm);
+  })();
+
+  (function testSimpleConstructorShortcut() {
+    gently.expect(EventEmitterStub, 'call');
+    var form = formidable();
+    assert.ok(form instanceof IncomingForm);
+  })();
 });
 
 test(function parse() {
