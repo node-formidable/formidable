@@ -435,12 +435,12 @@ test(function _initMultipart() {
     gently.expect(form, 'onPart', function(part) {
       assert.deepEqual
         ( part.headers
-        , { 'content-disposition': 'form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sunset.jpg"'
+        , { 'content-disposition': 'form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'
           , 'content-type': 'text/plain'
           }
         );
       assert.equal(part.name, 'field2');
-      assert.equal(part.filename, 'Sunset.jpg');
+      assert.equal(part.filename, 'Sun"et.jpg');
       assert.equal(part.mime, 'text/plain');
 
       gently.expect(part, 'emit', function(event, b) {
@@ -455,7 +455,7 @@ test(function _initMultipart() {
 
     PARSER.onPartBegin();
     PARSER.onHeaderField(new Buffer('content-disposition'), 0, 19);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sunset.jpg"'), 0, 85);
+    PARSER.onHeaderValue(new Buffer('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'), 0, 85);
     PARSER.onHeaderEnd();
     PARSER.onHeaderField(new Buffer('Content-Type'), 0, 12);
     PARSER.onHeaderValue(new Buffer('text/plain'), 0, 10);
