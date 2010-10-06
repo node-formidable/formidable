@@ -91,6 +91,26 @@ Limits the amount of memory a field (not file) can allocate in bytes.
 I this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
+#### incomingForm.bindAsList  = [] 
+
+Optional list of field names which should be bound as lists, with multiple items if there are multiple values with that ID in the form data. Field/File will be returned as a list even if there is only one value. 
+
+    > incomingForm.bindAsList = ["addressline","profilepic"];
+    ....
+    > result.addressline
+    ['1066 West Addison St','Chicago']
+    > result.name
+    'Elwood Blues'
+    > result.profilepic
+    [{ path: '/tmp/4FCAACASDWTP'
+      , filename: 'eb.png'
+      , mime: 'image/png'
+    }]
+
+#### incomingForm.bindAllAsList ####
+
+Forces the list binding behaviour for all fields.
+
 #### incomingForm.bytesReceived
 
 The amount of bytes received for this form so far.
