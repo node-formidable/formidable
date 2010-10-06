@@ -233,6 +233,85 @@ test(function parse() {
       assert.deepEqual(fields, {foo: 'bar'});
     }));
   })();
+
+  (function testBindAsList() {
+    gently.expect(EventEmitterStub, 'call');
+    var form = new IncomingForm({bindAsList:["field1","file2","field4"]})
+      , REQ = {headers: {}}
+      , parseCalled = 0;
+  
+    gently.expect(form, 'writeHeaders');
+    gently.expect(REQ, 'addListener', 3, function() {
+      return this;
+    });
+  
+    gently.expect(form, 'addListener', 4, function(event, fn) {
+      if (event == 'field') {
+        fn('field1', 'foo');
+        fn('field1', 'bar');
+        fn('field2', 'nice');
+        fn('field2', 'nicely');
+        fn('field3', 'nicely');
+        fn('field4', 'nicely');
+      }
+  
+      if (event == 'file') {
+        fn('file1', '1');
+        fn('file1', '2');
+        fn('file2', '3');
+      }
+  
+      if (event == 'end') {
+        fn();
+      }
+      return this;
+    });
+  
+    form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
+      assert.deepEqual(fields, {field1: ['foo','bar'], field2: 'nicely', field3: 'nicely',field4:['nicely']});
+      assert.deepEqual(files, {file1: '2', file2: ['3']});
+    }));
+  })();
+
+  (function testBindAllAsList() {
+    gently.expect(EventEmitterStub, 'call');
+    var form = new IncomingForm({bindAllAsList:true})
+      , REQ = {headers: {}}
+      , parseCalled = 0;
+  
+    gently.expect(form, 'writeHeaders');
+    gently.expect(REQ, 'addListener', 3, function() {
+      return this;
+    });
+  
+    gently.expect(form, 'addListener', 4, function(event, fn) {
+      if (event == 'field') {
+        fn('field1', 'foo');
+        fn('field1', 'bar');
+        fn('field2', 'nice');
+        fn('field2', 'nicely');
+        fn('field3', 'nicely');
+        fn('field4', 'nicely');
+      }
+  
+      if (event == 'file') {
+        fn('file1', '1');
+        fn('file1', '2');
+        fn('file2', '3');
+      }
+  
+      if (event == 'end') {
+        fn();
+      }
+      return this;
+    });
+  
+    form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
+      assert.deepEqual(fields, {field1: ['foo','bar'], field2: ['nice','nicely'], field3: ['nicely'],field4:['nicely']});
+      assert.deepEqual(files, {file1: ['1','2'], file2: ['3']});
+    }));
+  })();
+
 });
 
 test(function pause() {
