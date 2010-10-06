@@ -207,7 +207,7 @@ test(function parse() {
   
     form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
       assert.deepEqual(fields, {field1: 'bar', field2: 'nice'});
-      assert.deepEqual(files, {file1: ['1','2'], file2: '3'});
+      assert.deepEqual(files, {file1: '2', file2: '3'});
     }));
   
     gently.expect(form, 'writeHeaders');
