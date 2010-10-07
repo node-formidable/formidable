@@ -98,7 +98,7 @@ Optional list of field names which should be bound as lists, with multiple items
     > incomingForm.bindAsList = ["addressline","profilepic"];
     ....
     > result.addressline
-    ['1066 West Addison St','Chicago']
+    ['1060 West Addison St','Chicago']
     > result.name
     'Elwood Blues'
     > result.profilepic
