@@ -2,7 +2,7 @@ require('../common');
 var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser')
   , QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser')
   , EventEmitterStub = GENTLY.stub('events', 'EventEmitter')
-  , WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
+  , FileStub = GENTLY.stub('./file');
 
 var formidable = require('formidable')
   , IncomingForm = formidable.IncomingForm
@@ -594,9 +594,19 @@ test(function handlePart() {
       return PATH;
     });
 
-    gently.expect(WriteStreamStub, 'new', function(path) {
-      assert.equal(path, PATH);
+    gently.expect(FileStub, 'new', function(properties) {
+      assert.equal(properties.path, PATH);
+      assert.equal(properties.filename, PART.filename);
+      assert.equal(properties.mime, PART.mime);
       FILE = this;
+
+      gently.expect(form, 'emit', function (event, field, file) {
+        assert.equal(event, 'fileBegin');
+        assert.strictEqual(field, PART.name);
+        assert.strictEqual(file, FILE);
+      });
+
+      gently.expect(FILE, 'open');
     });
 
     form.handlePart(PART);
@@ -616,13 +626,7 @@ test(function handlePart() {
     gently.expect(FILE, 'end', function(cb) {
       gently.expect(form, 'emit', function(event, field, file) {
         assert.equal(event, 'file');
-        assert.deepEqual
-          ( file
-          , { path: FILE.path
-            , filename: PART.filename
-            , mime: PART.mime
-            }
-          );
+        assert.strictEqual(file, FILE);
       });
 
       gently.expect(form, '_maybeEnd');

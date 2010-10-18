@@ -9,27 +9,43 @@ var BOUNDARY = '---------------------------10102754414578508781458777923'
 
 server.addListener('request', function(req, res) {
   var form = new formidable.IncomingForm()
-    , files = {};
+    , uploads = {};
 
   form.uploadDir = TEST_TMP;
   form.parse(req);
 
   form
+    .addListener('fileBegin', function(field, file) {
+      assert.equal(field, 'upload');
+
+      var tracker = {file: file, progress: [], ended: false};
+      uploads[file.filename] = tracker;
+      file
+        .on('progress', function(bytesReceived) {
+          tracker.progress.push(bytesReceived);
+          assert.equal(bytesReceived, file.length);
+        })
+        .on('end', function() {
+          tracker.ended = true;
+        });
+    })
     .addListener('field', function(field, value) {
       assert.equal(field, 'title');
       assert.equal(value, '');
     })
     .addListener('file', function(field, file) {
       assert.equal(field, 'upload');
-      files[file.filename] = true;
+      assert.strictEqual(uploads[file.filename].file, file);
     })
     .addListener('end', function() {
-      assert.deepEqual
-        ( files
-        , { 'shortest_video.flv': true
-          , 'shortest_video.mp4' :true
-          }
-        );
+      assert.ok(uploads['shortest_video.flv']);
+      assert.ok(uploads['shortest_video.flv'].ended);
+      assert.ok(uploads['shortest_video.flv'].progress.length > 3);
+      assert.equal(uploads['shortest_video.flv'].progress.slice(-1), uploads['shortest_video.flv'].file.length);
+      assert.ok(uploads['shortest_video.mp4']);
+      assert.ok(uploads['shortest_video.mp4'].ended);
+      assert.ok(uploads['shortest_video.mp4'].progress.length > 3);
+
       server.close();
       res.writeHead(200);
       res.end('good');

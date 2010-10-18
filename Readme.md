@@ -136,14 +136,15 @@ Emitted after each incoming chunk of data that has been parsed. Can be used to r
 
 Emitted whenever a field / value pair has been received.
 
+#### Event: 'fileBegin' (name, file)
+
+Emitted whenever a new file is detected in the upload stream. Use this even if
+you want to stream the file to somewhere else while buffering the upload on
+the file system.
+
 #### Event: 'file' (name, file)
 
-Emitted whenever a field / file pair has been received. `file` is a JS object with the following properties:
-
-    { path: 'the path in the uploadDir this file was written to'
-    , filename: 'the name this file had on the computer of the uploader'
-    , mime: 'the mime type specified by the user agent of the uploader'
-    }
+Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
 
 #### Event: 'error' (err)
 
@@ -152,6 +153,25 @@ Emitted when there is an error processing the incoming form. A request that expe
 #### Event: 'end' ()
 
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
+
+### formdiable.File
+
+#### file.length = 0
+
+The size of the uploade file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
+
+#### file.path = null
+
+The path this file is being written to. You can modify this in the `'fileBegin'` event in
+case you are unhappy with the way formidable generates a temporary path for your files.
+
+#### file.filename = null
+
+The name this file had according to the uploading client.
+
+#### file.mime = null
+
+The mime type of this file, according to the uploading client.
 
 ## License
 
