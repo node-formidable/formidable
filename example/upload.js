@@ -22,15 +22,15 @@ server = http.createServer(function(req, res) {
     form.uploadDir = TEST_TMP;
 
     form
-      .addListener('field', function(field, value) {
+      .on('field', function(field, value) {
         p([field, value]);
         fields.push([field, value]);
       })
-      .addListener('file', function(field, file) {
+      .on('file', function(field, file) {
         p([field, file]);
         files.push([field, file]);
       })
-      .addListener('end', function() {
+      .on('end', function() {
         puts('-> upload done');
         res.writeHead(200, {'content-type': 'text/plain'});
         res.write('received fields:\n\n '+util.inspect(fields));

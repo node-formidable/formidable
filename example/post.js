@@ -19,15 +19,15 @@ server = http.createServer(function(req, res) {
       , fields = [];
 
     form
-      .addListener('error', function(err) {
+      .on('error', function(err) {
         res.writeHead(200, {'content-type': 'text/plain'});
         res.end('error:\n\n'+util.inspect(err));
       })
-      .addListener('field', function(field, value) {
+      .on('field', function(field, value) {
         p([field, value]);
         fields.push([field, value]);
       })
-      .addListener('end', function() {
+      .on('end', function() {
         puts('-> post done');
         res.writeHead(200, {'content-type': 'text/plain'});
         res.end('received fields:\n\n '+util.inspect(fields));

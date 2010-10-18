@@ -61,7 +61,7 @@ test(function parse() {
   });
 
   var events = ['error', 'data', 'end'];
-  gently.expect(REQ, 'addListener', events.length, function(event, fn) {
+  gently.expect(REQ, 'on', events.length, function(event, fn) {
     assert.equal(event, events.shift());
     emit[event] = fn;
     return this;
@@ -182,11 +182,11 @@ test(function parse() {
       , parseCalled = 0;
   
     gently.expect(form, 'writeHeaders');
-    gently.expect(REQ, 'addListener', 3, function() {
+    gently.expect(REQ, 'on', 3, function() {
       return this;
     });
   
-    gently.expect(form, 'addListener', 4, function(event, fn) {
+    gently.expect(form, 'on', 4, function(event, fn) {
       if (event == 'field') {
         fn('field1', 'foo');
         fn('field1', 'bar');
@@ -211,19 +211,19 @@ test(function parse() {
     }));
   
     gently.expect(form, 'writeHeaders');
-    gently.expect(REQ, 'addListener', 3, function() {
+    gently.expect(REQ, 'on', 3, function() {
       return this;
     });
   
     var ERR = new Error('test');
-    gently.expect(form, 'addListener', 3, function(event, fn) {
+    gently.expect(form, 'on', 3, function(event, fn) {
       if (event == 'field') {
         fn('foo', 'bar');
       }
   
       if (event == 'error') {
         fn(ERR);
-        gently.expect(form, 'addListener');
+        gently.expect(form, 'on');
       }
       return this;
     });

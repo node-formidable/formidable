@@ -32,7 +32,7 @@ assert.timeout = function(ms) {
 };
 
 assert.callbacks = function(callbacks) {
-  process.addListener('exit', function() {
+  process.on('exit', function() {
     for (var k in callbacks) {
       assert.equal(0, callbacks[k], (timeout || '')+k+' count off by '+callbacks[k]);
     }

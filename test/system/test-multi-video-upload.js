@@ -7,7 +7,7 @@ var BOUNDARY = '---------------------------10102754414578508781458777923'
   , formidable = require('formidable')
   , server = http.createServer();
 
-server.addListener('request', function(req, res) {
+server.on('request', function(req, res) {
   var form = new formidable.IncomingForm()
     , uploads = {};
 
@@ -15,7 +15,7 @@ server.addListener('request', function(req, res) {
   form.parse(req);
 
   form
-    .addListener('fileBegin', function(field, file) {
+    .on('fileBegin', function(field, file) {
       assert.equal(field, 'upload');
 
       var tracker = {file: file, progress: [], ended: false};
@@ -29,15 +29,15 @@ server.addListener('request', function(req, res) {
           tracker.ended = true;
         });
     })
-    .addListener('field', function(field, value) {
+    .on('field', function(field, value) {
       assert.equal(field, 'title');
       assert.equal(value, '');
     })
-    .addListener('file', function(field, file) {
+    .on('file', function(field, file) {
       assert.equal(field, 'upload');
       assert.strictEqual(uploads[file.filename].file, file);
     })
-    .addListener('end', function() {
+    .on('end', function() {
       assert.ok(uploads['shortest_video.flv']);
       assert.ok(uploads['shortest_video.flv'].ended);
       assert.ok(uploads['shortest_video.flv'].progress.length > 3);
@@ -63,10 +63,10 @@ server.listen(TEST_PORT, function() {
     , fixture = new fs.ReadStream(FIXTURE);
 
   fixture
-    .addListener('data', function(b) {
+    .on('data', function(b) {
       request.write(b);
     })
-    .addListener('end', function() {
+    .on('end', function() {
       request.end();
     });
 });
