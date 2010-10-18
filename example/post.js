@@ -1,6 +1,6 @@
 require('../test/common');
 var http = require('http')
-  , sys = require('sys')
+  , util = require('util')
   , formidable = require('formidable')
   , server;
 
@@ -21,7 +21,7 @@ server = http.createServer(function(req, res) {
     form
       .addListener('error', function(err) {
         res.writeHead(200, {'content-type': 'text/plain'});
-        res.end('error:\n\n'+sys.inspect(err));
+        res.end('error:\n\n'+util.inspect(err));
       })
       .addListener('field', function(field, value) {
         p([field, value]);
@@ -30,7 +30,7 @@ server = http.createServer(function(req, res) {
       .addListener('end', function() {
         puts('-> post done');
         res.writeHead(200, {'content-type': 'text/plain'});
-        res.end('received fields:\n\n '+sys.inspect(fields));
+        res.end('received fields:\n\n '+util.inspect(fields));
       });
     form.parse(req);
   } else {
@@ -40,4 +40,4 @@ server = http.createServer(function(req, res) {
 });
 server.listen(TEST_PORT);
 
-sys.puts('listening on http://localhost:'+TEST_PORT+'/');
+util.puts('listening on http://localhost:'+TEST_PORT+'/');

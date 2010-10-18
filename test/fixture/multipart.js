@@ -1,6 +1,3 @@
-var puts = require('sys').puts;
-var p = require('sys').p;
-
 exports['rfc1867'] =
   { boundary: 'AaB03x'
   , raw:

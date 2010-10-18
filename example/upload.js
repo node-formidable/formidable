@@ -1,6 +1,6 @@
 require('../test/common');
 var http = require('http')
-  , sys = require('sys')
+  , util = require('util')
   , formidable = require('formidable')
   , server;
 
@@ -33,9 +33,9 @@ server = http.createServer(function(req, res) {
       .addListener('end', function() {
         puts('-> upload done');
         res.writeHead(200, {'content-type': 'text/plain'});
-        res.write('received fields:\n\n '+sys.inspect(fields));
+        res.write('received fields:\n\n '+util.inspect(fields));
         res.write('\n\n');
-        res.end('received files:\n\n '+sys.inspect(files));
+        res.end('received files:\n\n '+util.inspect(files));
       });
     form.parse(req);
   } else {
@@ -45,4 +45,4 @@ server = http.createServer(function(req, res) {
 });
 server.listen(TEST_PORT);
 
-sys.puts('listening on http://localhost:'+TEST_PORT+'/');
+util.puts('listening on http://localhost:'+TEST_PORT+'/');

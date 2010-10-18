@@ -43,7 +43,7 @@ Object.keys(fixtures).forEach(function(name) {
 
   parser.onPartData = function(b, start, end) {
     var str = b.toString('ascii', start, end);
-    part.data += b.binarySlice(start, end);
+    part.data += b.slice(start, end);
   }
 
   parser.onEnd = function() {

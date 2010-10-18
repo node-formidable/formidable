@@ -1,9 +1,9 @@
 var path = require('path')
   , fs = require('fs')
-  , sys = require('sys')
   , timeout;
 
 require.paths.unshift(path.dirname(__dirname)+'/lib');
+var util = require('formidable/util');
 
 try {
   global.Gently = require('gently');
@@ -13,9 +13,9 @@ try {
 
 global.GENTLY = new Gently();
 
-global.puts = sys.puts;
+global.puts = util.puts;
 global.p = function() {
-  sys.error(sys.inspect.apply(null, arguments));
+  util.error(util.inspect.apply(null, arguments));
 };
 global.assert = require('assert');
 global.TEST_PORT = 13532;
