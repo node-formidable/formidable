@@ -1,18 +1,18 @@
 require('../test/common');
-var multipartParser = require('formidable/multipart_parser')
-  , MultipartParser = multipartParser.MultipartParser
-  , parser = new MultipartParser()
-  , Buffer = require('buffer').Buffer
-  , boundary = '-----------------------------168072824752491622650073'
-  , mb = 100
-  , buffer = createMultipartBuffer(boundary, mb * 1024 * 1024)
-  , callbacks =
-      { partBegin: -1
-      , partEnd: -1
-      , headerField: -1
-      , headerValue: -1
-      , partData: -1
-      , end: -1
+var multipartParser = require('formidable/multipart_parser'),
+    MultipartParser = multipartParser.MultipartParser,
+    parser = new MultipartParser(),
+    Buffer = require('buffer').Buffer,
+    boundary = '-----------------------------168072824752491622650073',
+    mb = 100,
+    buffer = createMultipartBuffer(boundary, mb * 1024 * 1024),
+    callbacks =
+      { partBegin: -1,
+        partEnd: -1,
+        headerField: -1,
+        headerValue: -1,
+        partData: -1,
+        end: -1,
       };
 
 
@@ -41,10 +41,10 @@ parser.onEnd = function() {
   callbacks.end++;
 };
 
-var start = +new Date()
-  , nparsed = parser.write(buffer)
-  , duration = +new Date - start
-  , mbPerSec = (mb / (duration / 1000)).toFixed(2);
+var start = +new Date(),
+    nparsed = parser.write(buffer),
+    duration = +new Date - start,
+    mbPerSec = (mb / (duration / 1000)).toFixed(2);
 
 p(mbPerSec+' mb/sec');
 
@@ -63,4 +63,8 @@ function createMultipartBuffer(boundary, size) {
   return buffer;
 }
 
-assert.callbacks(callbacks);
+process.on('exit', function() {
+  for (var k in callbacks) {
+    assert.equal(0, callbacks[k], k+' count off by '+callbacks[k]);
+  }
+});

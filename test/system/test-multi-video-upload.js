@@ -1,15 +1,15 @@
 require('../common');
-var BOUNDARY = '---------------------------10102754414578508781458777923'
-  , FIXTURE = TEST_FIXTURES+'/multi_video.upload'
-  , fs = require('fs')
-  , util = require('formidable/util')
-  , http = require('http')
-  , formidable = require('formidable')
-  , server = http.createServer();
+var BOUNDARY = '---------------------------10102754414578508781458777923',
+    FIXTURE = TEST_FIXTURES+'/multi_video.upload',
+    fs = require('fs'),
+    util = require('formidable/util'),
+    http = require('http'),
+    formidable = require('formidable'),
+    server = http.createServer();
 
 server.on('request', function(req, res) {
-  var form = new formidable.IncomingForm()
-    , uploads = {};
+  var form = new formidable.IncomingForm(),
+      uploads = {};
 
   form.uploadDir = TEST_TMP;
   form.parse(req);
@@ -53,14 +53,14 @@ server.on('request', function(req, res) {
 });
 
 server.listen(TEST_PORT, function() {
-  var client = http.createClient(TEST_PORT)
-    , stat = fs.statSync(FIXTURE)
-    , headers =
-        { 'content-type': 'multipart/form-data; boundary='+BOUNDARY
-        , 'content-length': stat.size
-        }
-    , request = client.request('POST', '/', headers)
-    , fixture = new fs.ReadStream(FIXTURE);
+  var client = http.createClient(TEST_PORT),
+      stat = fs.statSync(FIXTURE),
+      headers = {
+        'content-type': 'multipart/form-data; boundary='+BOUNDARY,
+        'content-length': stat.size,
+      }
+      request = client.request('POST', '/', headers),
+      fixture = new fs.ReadStream(FIXTURE);
 
   fixture
     .on('data', function(b) {

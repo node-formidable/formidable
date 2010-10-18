@@ -1,9 +1,9 @@
 require('../common');
-var multipartParser = require('formidable/multipart_parser')
-  , MultipartParser = multipartParser.MultipartParser
-  , events = require('events')
-  , Buffer = require('buffer').Buffer
-  , parser;
+var multipartParser = require('formidable/multipart_parser'),
+    MultipartParser = multipartParser.MultipartParser,
+    events = require('events'),
+    Buffer = require('buffer').Buffer,
+    parser;
 
 function test(test) {
   parser = new MultipartParser();
@@ -30,8 +30,8 @@ test(function initWithBoundary() {
 });
 
 test(function parserError() {
-  var boundary = 'abc'
-    , buffer = new Buffer(5);
+  var boundary = 'abc',
+      buffer = new Buffer(5);
 
   parser.initWithBoundary(boundary);
   buffer.write('--ad', 'ascii', 0);

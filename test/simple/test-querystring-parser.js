@@ -1,8 +1,8 @@
 require('../common');
-var QuerystringParser = require('formidable/querystring_parser').QuerystringParser
-  , Buffer = require('buffer').Buffer
-  , gently
-  , parser;
+var QuerystringParser = require('formidable/querystring_parser').QuerystringParser,
+    Buffer = require('buffer').Buffer,
+    gently,
+    parser;
 
 function test(test) {
   gently = new Gently();

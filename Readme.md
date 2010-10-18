@@ -34,9 +34,9 @@ Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run
 
 Parse an incoming file upload.
 
-    var formidable = require('formidable')
-      , http = require('http')
-      , sys = require('sys');
+    var formidable = require('formidable'),
+        http = require('http')
+        sys = require('sys');
 
     http.createServer(function(req, res) {
       if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
@@ -52,13 +52,13 @@ Parse an incoming file upload.
 
       // show a file upload form
       res.writeHead(200, {'content-type': 'text/html'});
-      res.end
-        ( '<form action="/upload" enctype="multipart/form-data" method="post">'
-        + '<input type="text" name="title"><br>'
-        + '<input type="file" name="upload" multiple="multiple"><br>'
-        + '<input type="submit" value="Upload">'
-        + '</form>'
-        );
+      res.end(
+        '<form action="/upload" enctype="multipart/form-data" method="post">'+
+        '<input type="text" name="title"><br>'+
+        '<input type="file" name="upload" multiple="multiple"><br>'+
+        '<input type="submit" value="Upload">'+
+        '</form>'
+      );
     });
 
 ## API

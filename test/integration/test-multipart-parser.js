@@ -1,23 +1,23 @@
 require('../common');
-var CHUNK_LENGTH = 10
-  , multipartParser = require('formidable/multipart_parser')
-  , MultipartParser = multipartParser.MultipartParser
-  , parser = new MultipartParser()
-  , fixtures = require('../fixture/multipart')
-  , Buffer = require('buffer').Buffer;
+var CHUNK_LENGTH = 10,
+    multipartParser = require('formidable/multipart_parser'),
+    MultipartParser = multipartParser.MultipartParser,
+    parser = new MultipartParser(),
+    fixtures = require('../fixture/multipart'),
+    Buffer = require('buffer').Buffer;
 
 Object.keys(fixtures).forEach(function(name) {
-  var fixture = fixtures[name]
-    , buffer = new Buffer(Buffer.byteLength(fixture.raw, 'binary'))
-    , offset = 0
-    , chunk
-    , nparsed
+  var fixture = fixtures[name],
+      buffer = new Buffer(Buffer.byteLength(fixture.raw, 'binary')),
+      offset = 0,
+      chunk,
+      nparsed,
 
-    , parts = []
-    , part = null
-    , headerField
-    , headerValue
-    , endCalled = '';
+      parts = [],
+      part = null,
+      headerField,
+      headerValue,
+      endCalled = '';
 
   parser.initWithBoundary(fixture.boundary);
   parser.onPartBegin = function() {

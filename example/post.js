@@ -1,22 +1,22 @@
 require('../test/common');
-var http = require('http')
-  , util = require('util')
-  , formidable = require('formidable')
-  , server;
+var http = require('http'),
+    util = require('util'),
+    formidable = require('formidable'),
+    server;
 
 server = http.createServer(function(req, res) {
   if (req.url == '/') {
     res.writeHead(200, {'content-type': 'text/html'});
-    res.end
-      ( '<form action="/post" method="post">'
-      + '<input type="text" name="title"><br>'
-      + '<input type="text" name="data[foo][]"><br>'
-      + '<input type="submit" value="Submit">'
-      + '</form>'
-      )
+    res.end(
+      '<form action="/post" method="post">'+
+      '<input type="text" name="title"><br>'+
+      '<input type="text" name="data[foo][]"><br>'+
+      '<input type="submit" value="Submit">'+
+      '</form>'
+    );
   } else if (req.url == '/post') {
-    var form = new formidable.IncomingForm()
-      , fields = [];
+    var form = new formidable.IncomingForm(),
+        fields = [];
 
     form
       .on('error', function(err) {

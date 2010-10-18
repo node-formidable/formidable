@@ -1,23 +1,23 @@
 require('../test/common');
-var http = require('http')
-  , util = require('util')
-  , formidable = require('formidable')
-  , server;
+var http = require('http'),
+    util = require('util'),
+    formidable = require('formidable'),
+    server;
 
 server = http.createServer(function(req, res) {
   if (req.url == '/') {
     res.writeHead(200, {'content-type': 'text/html'});
-    res.end
-      ( '<form action="/upload" enctype="multipart/form-data" method="post">'
-      + '<input type="text" name="title"><br>'
-      + '<input type="file" name="upload" multiple="multiple"><br>'
-      + '<input type="submit" value="Upload">'
-      + '</form>'
-      )
+    res.end(
+      '<form action="/upload" enctype="multipart/form-data" method="post">'+
+      '<input type="text" name="title"><br>'+
+      '<input type="file" name="upload" multiple="multiple"><br>'+
+      '<input type="submit" value="Upload">'+
+      '</form>'
+    );
   } else if (req.url == '/upload') {
-    var form = new formidable.IncomingForm()
-      , files = []
-      , fields = [];
+    var form = new formidable.IncomingForm(),
+        files = [],
+        fields = [];
 
     form.uploadDir = TEST_TMP;
 

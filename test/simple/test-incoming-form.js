@@ -1,18 +1,18 @@
 require('../common');
-var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser')
-  , QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser')
-  , EventEmitterStub = GENTLY.stub('events', 'EventEmitter')
-  , FileStub = GENTLY.stub('./file');
+var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser'),
+    QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser'),
+    EventEmitterStub = GENTLY.stub('events', 'EventEmitter'),
+    FileStub = GENTLY.stub('./file');
 
-var formidable = require('formidable')
-  , IncomingForm = formidable.IncomingForm
-  , events = require('events')
-  , fs = require('fs')
-  , path = require('path')
-  , Buffer = require('buffer').Buffer
-  , fixtures = require('../fixture/multipart')
-  , form
-  , gently;
+var formidable = require('formidable'),
+    IncomingForm = formidable.IncomingForm,
+    events = require('events'),
+    fs = require('fs'),
+    path = require('path'),
+    Buffer = require('buffer').Buffer,
+    fixtures = require('../fixture/multipart'),
+    form,
+    gently;
 
 function test(test) {
   gently = new Gently();
@@ -130,7 +130,7 @@ test(function parse() {
 
     assert.strictEqual(form.resume(), false);
   })();
-  
+
   (function testEmitError() {
     var ERR = new Error('something bad happened');
     gently.expect(form, '_error',function(err) {
@@ -138,7 +138,7 @@ test(function parse() {
     });
     emit.error(ERR);
   })();
-  
+
   (function testEmitData() {
     var BUFFER = [1, 2, 3];
     gently.expect(form, 'write', function(buffer) {
@@ -173,54 +173,53 @@ test(function parse() {
       emit.end();
     })();
   })();
-  
 
   (function testWithCallback() {
     gently.expect(EventEmitterStub, 'call');
-    var form = new IncomingForm()
-      , REQ = {headers: {}}
-      , parseCalled = 0;
-  
+    var form = new IncomingForm(),
+        REQ = {headers: {}},
+        parseCalled = 0;
+
     gently.expect(form, 'writeHeaders');
     gently.expect(REQ, 'on', 3, function() {
       return this;
     });
-  
+
     gently.expect(form, 'on', 4, function(event, fn) {
       if (event == 'field') {
         fn('field1', 'foo');
         fn('field1', 'bar');
         fn('field2', 'nice');
       }
-  
+
       if (event == 'file') {
         fn('file1', '1');
         fn('file1', '2');
         fn('file2', '3');
       }
-  
+
       if (event == 'end') {
         fn();
       }
       return this;
     });
-  
+
     form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
       assert.deepEqual(fields, {field1: 'bar', field2: 'nice'});
       assert.deepEqual(files, {file1: '2', file2: '3'});
     }));
-  
+
     gently.expect(form, 'writeHeaders');
     gently.expect(REQ, 'on', 3, function() {
       return this;
     });
-  
+
     var ERR = new Error('test');
     gently.expect(form, 'on', 3, function(event, fn) {
       if (event == 'field') {
         fn('foo', 'bar');
       }
-  
+
       if (event == 'error') {
         fn(ERR);
         gently.expect(form, 'on');
@@ -254,8 +253,8 @@ test(function writeHeaders() {
 });
 
 test(function write() {
-  var parser = {}
-    , BUFFER = [1, 2, 3];
+  var parser = {},
+      BUFFER = [1, 2, 3];
 
   form._parser = parser;
   form.bytesExpected = 523423;
@@ -369,8 +368,8 @@ test(function parseContentLength() {
 });
 
 test(function _initMultipart() {
-  var BOUNDARY = '123'
-    , PARSER;
+  var BOUNDARY = '123',
+      PARSER;
 
   gently.expect(MultipartParserStub, 'new', function() {
     PARSER = this;
@@ -581,9 +580,9 @@ test(function handlePart() {
   })();
 
   (function testFilePart() {
-    var PART = new events.EventEmitter()
-      , FILE = new events.EventEmitter()
-      , PATH = '/foo/bar';
+    var PART = new events.EventEmitter(),
+        FILE = new events.EventEmitter(),
+        PATH = '/foo/bar';
 
     PART.name = 'my_file';
     PART.filename = 'sweet.txt';
@@ -658,8 +657,8 @@ test(function _uploadPath() {
 
   (function testFileExtension() {
     form.keepExtensions = true;
-    var FILENAME = 'foo.jpg'
-      , EXT = '.bar';
+    var FILENAME = 'foo.jpg',
+        EXT = '.bar';
 
     gently.expect(GENTLY.hijacked.path, 'extname', function(filename) {
       assert.equal(filename, FILENAME);
