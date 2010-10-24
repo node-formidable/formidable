@@ -35,7 +35,8 @@ Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run
 Parse an incoming file upload.
 
     var formidable = require('formidable'),
-        http = require('http')
+        http = require('http'),
+
         sys = require('sys');
 
     http.createServer(function(req, res) {

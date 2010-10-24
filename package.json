@@ -2,5 +2,5 @@
   "version": "0.9.9",
   "dependencies": {"gently": ">=0.7.0"},
   "directories" : { "lib" : "./lib/formidable" },
-  "main" : "./lib/formidable/index",
+  "main" : "./lib/formidable/index"
 }
