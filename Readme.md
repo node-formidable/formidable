@@ -2,7 +2,13 @@
 
 ## Purpose
 
-A node.js module for dealing with web forms.
+A node.js module for parsing form data, especially file uploads.
+
+## Current status
+
+This module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading
+and encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from
+a big variety of clients and is considered production-ready.
 
 ## Features
 
