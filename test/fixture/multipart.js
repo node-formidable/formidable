@@ -10,7 +10,7 @@ exports['rfc1867'] =
       'Content-Type: text/plain\r\n'+
       '\r\n'+
       '... contents of file1.txt ...\r\r\n'+
-      '--AaB03x--\r\n',
+      '--AaB03x--',
     parts:
     [ { headers: {
           'content-disposition': 'form-data; name="field1"',
