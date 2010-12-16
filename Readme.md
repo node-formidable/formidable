@@ -36,6 +36,8 @@ Manually:
 
 Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run the unit tests, but you won't need it for just using the library.
 
+Note2: Optionaly to make it support varnames of obj[a][] on node.js v0.3 you should have [querystring.node.js](https://github.com/jazzychad/querystring.node.js) installed.
+
 ## Example
 
 Parse an incoming file upload.
