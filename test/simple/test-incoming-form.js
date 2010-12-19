@@ -260,15 +260,15 @@ test(function write() {
   form.bytesExpected = 523423;
 
   (function testBasic() {
-    gently.expect(parser, 'write', function(buffer) {
-      assert.strictEqual(buffer, BUFFER);
-      return buffer.length;
-    });
-
     gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
       assert.equal(event, 'progress');
       assert.equal(bytesReceived, BUFFER.length);
       assert.equal(bytesExpected, form.bytesExpected);
+    });
+
+    gently.expect(parser, 'write', function(buffer) {
+      assert.strictEqual(buffer, BUFFER);
+      return buffer.length;
     });
 
     assert.equal(form.write(BUFFER), BUFFER.length);
@@ -276,6 +276,8 @@ test(function write() {
   })();
 
   (function testParserError() {
+    gently.expect(form, 'emit');
+
     gently.expect(parser, 'write', function(buffer) {
       assert.strictEqual(buffer, BUFFER);
       return buffer.length - 1;
@@ -285,10 +287,8 @@ test(function write() {
       assert.ok(err.message.match(/parser error/i));
     });
 
-    gently.expect(form, 'emit');
-
     assert.equal(form.write(BUFFER), BUFFER.length - 1);
-    assert.equal(form.bytesReceived, BUFFER.length + BUFFER.length - 1);
+    assert.equal(form.bytesReceived, BUFFER.length + BUFFER.length);
   })();
 
   (function testUninitialized() {
