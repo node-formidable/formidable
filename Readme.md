@@ -195,7 +195,7 @@ Emitted when the entire request has been received, and all contained files have 
 
 ### formdiable.File
 
-#### file.length = 0
+#### file.size = 0
 
 The size of the uploade file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
 
@@ -204,13 +204,18 @@ The size of the uploade file in bytes. If the file is still being uploaded (see 
 The path this file is being written to. You can modify this in the `'fileBegin'` event in
 case you are unhappy with the way formidable generates a temporary path for your files.
 
-#### file.filename = null
+#### file.name = null
 
 The name this file had according to the uploading client.
 
-#### file.mime = null
+#### file.type = null
 
 The mime type of this file, according to the uploading client.
+
+#### file.lastModifiedDate = null
+
+A date object (or `null`) containing the time this file was last written to. Mostly
+here for compatiblity with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
 
 ## License
 
