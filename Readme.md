@@ -20,9 +20,9 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
-### v0.9.11 - unreleased
+### v0.9.11
 
-* Emit 'progress' event when receiving data, regardless of parsing it. (Tim Koschützki)
+* Emit `'progress'` event when receiving data, regardless of parsing it. (Tim Koschützki)
 * Use [W3C FileAPI Draft](http://dev.w3.org/2006/webapi/FileAPI/) properties for File class
 
 **Important:** The old property names of the File class will be removed in a
