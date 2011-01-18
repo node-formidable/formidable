@@ -30,81 +30,29 @@ future release.
 
 [See Commits](https://github.com/felixge/node-formidable/compare/v0.9.10...v0.9.11)
 
-### v0.9.10
+### Older releases
 
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.9...v0.9.10)
+These releases were done before starting to maintain the above Changelog:
 
-### v0.9.9
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.8...v0.9.9)
-
-### v0.9.8
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.7...v0.9.8)
-
-### v0.9.7
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.6...v0.9.7)
-
-### v0.9.6
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.5...v0.9.6)
-
-### v0.9.5
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.4...v0.9.5)
-
-### v0.9.4
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.3...v0.9.4)
-
-### v0.9.3
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.2...v0.9.3)
-
-### v0.9.2
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.1...v0.9.2)
-
-### v0.9.1
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.0...v0.9.1)
-
-### v0.9.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.8.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.7.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.6.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.5.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.4.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.3.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.2.0
-
-[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
-
-### v0.1.0
-
-[See Commits](https://github.com/felixge/node-formidable/commits/v0.1.0)
+* [v0.9.10](https://github.com/felixge/node-formidable/compare/v0.9.9...v0.9.10)
+* [v0.9.9](https://github.com/felixge/node-formidable/compare/v0.9.8...v0.9.9)
+* [v0.9.8](https://github.com/felixge/node-formidable/compare/v0.9.7...v0.9.8)
+* [v0.9.7](https://github.com/felixge/node-formidable/compare/v0.9.6...v0.9.7)
+* [v0.9.6](https://github.com/felixge/node-formidable/compare/v0.9.5...v0.9.6)
+* [v0.9.5](https://github.com/felixge/node-formidable/compare/v0.9.4...v0.9.5)
+* [v0.9.4](https://github.com/felixge/node-formidable/compare/v0.9.3...v0.9.4)
+* [v0.9.3](https://github.com/felixge/node-formidable/compare/v0.9.2...v0.9.3)
+* [v0.9.2](https://github.com/felixge/node-formidable/compare/v0.9.1...v0.9.2)
+* [v0.9.1](https://github.com/felixge/node-formidable/compare/v0.9.0...v0.9.1)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+* [v0.1.0](https://github.com/felixge/node-formidable/commits/v0.1.0)
 
 ## Installation
 
