@@ -595,8 +595,8 @@ test(function handlePart() {
 
     gently.expect(FileStub, 'new', function(properties) {
       assert.equal(properties.path, PATH);
-      assert.equal(properties.filename, PART.filename);
-      assert.equal(properties.mime, PART.mime);
+      assert.equal(properties.name, PART.filename);
+      assert.equal(properties.type, PART.mime);
       FILE = this;
 
       gently.expect(form, 'emit', function (event, field, file) {

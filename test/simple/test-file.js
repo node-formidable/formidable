@@ -15,10 +15,10 @@ function test(test) {
 
 test(function constructor() {
   assert.ok(file instanceof EventEmitter);
-  assert.strictEqual(file.length, 0);
+  assert.strictEqual(file.size, 0);
   assert.strictEqual(file.path, null);
-  assert.strictEqual(file.filename, null);
-  assert.strictEqual(file.mime, null);
+  assert.strictEqual(file.name, null);
+  assert.strictEqual(file.type, null);
 
   assert.strictEqual(file._writeStream, null);
 
@@ -55,22 +55,22 @@ test(function write() {
 
     gently.expect(file, 'emit', function (event, bytesWritten) {
       assert.equal(event, 'progress');
-      assert.equal(bytesWritten, file.length);
+      assert.equal(bytesWritten, file.size);
     });
 
     CB_STUB = gently.expect(function writeCb() {
-      assert.equal(file.length, 10);
+      assert.equal(file.size, 10);
     });
 
     cb();
 
     gently.expect(file, 'emit', function (event, bytesWritten) {
       assert.equal(event, 'progress');
-      assert.equal(bytesWritten, file.length);
+      assert.equal(bytesWritten, file.size);
     });
 
     CB_STUB = gently.expect(function writeCb() {
-      assert.equal(file.length, 20);
+      assert.equal(file.size, 20);
     });
 
     cb();
