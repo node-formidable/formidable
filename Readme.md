@@ -18,9 +18,93 @@ a big variety of clients and is considered production-ready.
 * Graceful error handling
 * Very high test coverage
 
-### Todo
+## Changelog
 
-* Implement QuerystringParser the same way as MultipartParser
+### v0.9.11 - unreleased
+
+* Emit 'progress' event when receiving data, regardless of parsing it. (Tim Koschützki)
+* Use [W3C FileAPI Draft](http://dev.w3.org/2006/webapi/FileAPI/) properties for File class
+
+**Important:** The old property names of the File class will be removed in a
+future release.
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.10...v0.9.11)
+
+### v0.9.10
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.9...v0.9.10)
+
+### v0.9.9
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.8...v0.9.9)
+
+### v0.9.8
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.7...v0.9.8)
+
+### v0.9.7
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.6...v0.9.7)
+
+### v0.9.6
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.5...v0.9.6)
+
+### v0.9.5
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.4...v0.9.5)
+
+### v0.9.4
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.3...v0.9.4)
+
+### v0.9.3
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.2...v0.9.3)
+
+### v0.9.2
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.1...v0.9.2)
+
+### v0.9.1
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.0...v0.9.1)
+
+### v0.9.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.8.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.7.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.6.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.5.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.4.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.3.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.2.0
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)
+
+### v0.1.0
+
+[See Commits](https://github.com/felixge/node-formidable/commits/v0.1.0)
 
 ## Installation
 
