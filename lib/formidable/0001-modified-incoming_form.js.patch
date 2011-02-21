@@ -1,0 +1,38 @@
+From d1c88dd5fa28b848647ad51ba67e59a3224c7905 Mon Sep 17 00:00:00 2001
+From: 44gatti <44gatti@gmail.com>
+Date: Tue, 22 Feb 2011 00:20:07 +0100
+Subject: [PATCH] 	modified:   incoming_form.js
+ Added instance configuration via object parameters
+
+---
+ lib/formidable/incoming_form.js |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
+
+diff --git a/lib/formidable/incoming_form.js b/lib/formidable/incoming_form.js
+index b99f0bb..f766f7a 100644
+--- a/lib/formidable/incoming_form.js
++++ b/lib/formidable/incoming_form.js
+@@ -28,7 +28,20 @@ function IncomingForm() {
+   this._parser = null;
+   this._flushing = 0;
+   this._fieldsSize = 0;
++  
++  var apply = function(obj, config){
++    if(obj && config && typeof config == 'object'){
++      for(var param in config){
++        if(typeof obj[param] !== 'undefined'){//apply only if property already exists in constructor    
++          obj[param] = config[param];
++        }
++      }
++    }
++    return obj;
++  };
++  apply(this,config);
+ };
++
+ util.inherits(IncomingForm, EventEmitter);
+ exports.IncomingForm = IncomingForm;
+ 
+-- 
+1.7.1
+
