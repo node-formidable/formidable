@@ -321,6 +321,15 @@ test(function parseContentType() {
   });
   form._parseContentType();
 
+  (function testQuotedBoundary() {
+    form.headers = {'content-type': 'multipart/form-data; boundary="' + BOUNDARY + '"'};
+
+    gently.expect(form, '_initMultipart', function(boundary) {
+      assert.equal(boundary, BOUNDARY);
+    });
+    form._parseContentType();
+  })();
+
   (function testNoBoundary() {
     form.headers = {'content-type': 'multipart/form-data'};
 
