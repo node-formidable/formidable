@@ -608,13 +608,13 @@ test(function handlePart() {
       assert.equal(properties.type, PART.mime);
       FILE = this;
 
+      gently.expect(FILE, 'open');
+
       gently.expect(form, 'emit', function (event, field, file) {
         assert.equal(event, 'fileBegin');
         assert.strictEqual(field, PART.name);
         assert.strictEqual(file, FILE);
       });
-
-      gently.expect(FILE, 'open');
     });
 
     form.handlePart(PART);
