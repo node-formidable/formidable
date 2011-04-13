@@ -20,6 +20,15 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.0
+
+* Add support for multipart boundaries that are quoted strings. (Jeff Craig)
+
+This marks the begin of the development on version 2.0 which will include
+several architecural improvements.
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.11...v1.0.0)
+
 ### v0.9.11
 
 * Emit `'progress'` event when receiving data, regardless of parsing it. (Tim Koschützki)
