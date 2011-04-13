@@ -1,6 +1,14 @@
-{ "name" : "formidable",
-  "version": "0.9.11",
-  "dependencies": {"gently": ">=0.7.0"},
-  "directories" : { "lib" : "./lib/formidable" },
-  "main" : "./lib/formidable/index"
+{
+  "name": "formidable",
+  "version": "1.0.0",
+  "dependencies": {
+    "gently": ">=0.7.0"
+  },
+  "directories": {
+    "lib": "./lib/formidable"
+  },
+  "main": "./lib/formidable/index",
+  "engines": {
+    "node": "*"
+  }
 }
