@@ -1,6 +1,6 @@
-require('../common');
+var common = require('../common');
 var CHUNK_LENGTH = 10,
-    multipartParser = require('formidable/multipart_parser'),
+    multipartParser = require(common.lib + '/multipart_parser'),
     MultipartParser = multipartParser.MultipartParser,
     parser = new MultipartParser(),
     fixtures = require('../fixture/multipart'),

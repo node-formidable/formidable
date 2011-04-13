@@ -1,5 +1,5 @@
-require('../common');
-var QuerystringParser = require('formidable/querystring_parser').QuerystringParser,
+var common = require('../common');
+var QuerystringParser = require(common.lib + '/querystring_parser').QuerystringParser,
     Buffer = require('buffer').Buffer,
     gently,
     parser;

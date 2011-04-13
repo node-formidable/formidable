@@ -1,5 +1,5 @@
-require('../common');
-var multipartParser = require('formidable/multipart_parser'),
+var common = require('../common');
+var multipartParser = require(common.lib + '/multipart_parser'),
     MultipartParser = multipartParser.MultipartParser,
     events = require('events'),
     Buffer = require('buffer').Buffer,

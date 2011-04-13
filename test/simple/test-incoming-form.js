@@ -1,10 +1,10 @@
-require('../common');
+var common = require('../common');
 var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser'),
     QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser'),
     EventEmitterStub = GENTLY.stub('events', 'EventEmitter'),
     FileStub = GENTLY.stub('./file');
 
-var formidable = require('formidable'),
+var formidable = require(common.lib + '/index'),
     IncomingForm = formidable.IncomingForm,
     events = require('events'),
     fs = require('fs'),

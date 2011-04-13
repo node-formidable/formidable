@@ -1,7 +1,7 @@
-require('../common');
+var common = require('../common');
 var WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
 
-var File = require('formidable/file'),
+var File = require(common.lib + '/file'),
     EventEmitter = require('events').EventEmitter,
     file,
     gently;
