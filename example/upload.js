@@ -23,15 +23,15 @@ server = http.createServer(function(req, res) {
 
     form
       .on('field', function(field, value) {
-        p([field, value]);
+        console.log(field, value);
         fields.push([field, value]);
       })
       .on('file', function(field, file) {
-        p([field, file]);
+        console.log(field, file);
         files.push([field, file]);
       })
       .on('end', function() {
-        puts('-> upload done');
+        console.log('-> upload done');
         res.writeHead(200, {'content-type': 'text/plain'});
         res.write('received fields:\n\n '+util.inspect(fields));
         res.write('\n\n');
@@ -45,4 +45,4 @@ server = http.createServer(function(req, res) {
 });
 server.listen(TEST_PORT);
 
-util.puts('listening on http://localhost:'+TEST_PORT+'/');
+console.log('listening on http://localhost:'+TEST_PORT+'/');

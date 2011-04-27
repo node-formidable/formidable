@@ -24,11 +24,11 @@ server = http.createServer(function(req, res) {
         res.end('error:\n\n'+util.inspect(err));
       })
       .on('field', function(field, value) {
-        p([field, value]);
+        console.log(field, value);
         fields.push([field, value]);
       })
       .on('end', function() {
-        puts('-> post done');
+        console.log('-> post done');
         res.writeHead(200, {'content-type': 'text/plain'});
         res.end('received fields:\n\n '+util.inspect(fields));
       });
@@ -40,4 +40,4 @@ server = http.createServer(function(req, res) {
 });
 server.listen(TEST_PORT);
 
-util.puts('listening on http://localhost:'+TEST_PORT+'/');
+console.log('listening on http://localhost:'+TEST_PORT+'/');
