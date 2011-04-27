@@ -20,6 +20,12 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.1
+
+* Fix package.json to refer to proper main directory. (#68, Dean Landolt)
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v1.0.0...v1.0.1)
+
 ### v1.0.0
 
 * Add support for multipart boundaries that are quoted strings. (Jeff Craig)
