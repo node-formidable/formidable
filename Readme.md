@@ -204,6 +204,10 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 
 Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
 
+#### Event: 'aborted'
+
+Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a seperate 'timeout' event (needs a change in the node core).
+
 #### Event: 'end' ()
 
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
