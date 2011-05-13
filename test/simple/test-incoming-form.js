@@ -60,7 +60,7 @@ test(function parse() {
     assert.strictEqual(headers, REQ.headers);
   });
 
-  var events = ['error', 'data', 'end'];
+  var events = ['error', 'aborted', 'data', 'end'];
   gently.expect(REQ, 'on', events.length, function(event, fn) {
     assert.equal(event, events.shift());
     emit[event] = fn;
@@ -139,6 +139,15 @@ test(function parse() {
     emit.error(ERR);
   })();
 
+  (function testEmitAborted() {
+    gently.expect(form, 'emit',function(event) {
+      assert.equal(event, 'aborted');
+    });
+
+    emit.aborted();
+  })();
+
+
   (function testEmitData() {
     var BUFFER = [1, 2, 3];
     gently.expect(form, 'write', function(buffer) {
@@ -181,7 +190,7 @@ test(function parse() {
         parseCalled = 0;
 
     gently.expect(form, 'writeHeaders');
-    gently.expect(REQ, 'on', 3, function() {
+    gently.expect(REQ, 'on', 4, function() {
       return this;
     });
 
@@ -210,7 +219,7 @@ test(function parse() {
     }));
 
     gently.expect(form, 'writeHeaders');
-    gently.expect(REQ, 'on', 3, function() {
+    gently.expect(REQ, 'on', 4, function() {
       return this;
     });
 
