@@ -1,9 +1,10 @@
 {
   "name": "formidable",
   "version": "1.0.1",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "gently": ">=0.7.0"
-  },
+  }
   "directories": {
     "lib": "./lib"
   },
@@ -11,5 +12,4 @@
   "engines": {
     "node": "*"
   },
-  "devDependencies": {}
 }
