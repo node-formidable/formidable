@@ -1,5 +1,5 @@
 require('../test/common');
-var multipartParser = require('formidable/multipart_parser'),
+var multipartParser = require('../lib/multipart_parser'),
     MultipartParser = multipartParser.MultipartParser,
     parser = new MultipartParser(),
     Buffer = require('buffer').Buffer,
@@ -46,7 +46,7 @@ var start = +new Date(),
     duration = +new Date - start,
     mbPerSec = (mb / (duration / 1000)).toFixed(2);
 
-p(mbPerSec+' mb/sec');
+console.log(mbPerSec+' mb/sec');
 
 assert.equal(nparsed, buffer.length);
 
