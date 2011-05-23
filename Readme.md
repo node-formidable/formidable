@@ -20,6 +20,14 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.2
+
+* Exclude node\_modules folder from git
+* Implement new `'aborted'` event
+* Fix files in example folder to work with recent node versions
+
+[See Commits](https://github.com/felixge/node-formidable/compare/v1.0.1...v1.0.2)
+
 ### v1.0.1
 
 * Fix package.json to refer to proper main directory. (#68, Dean Landolt)
