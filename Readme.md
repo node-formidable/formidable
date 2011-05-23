@@ -25,6 +25,7 @@ a big variety of clients and is considered production-ready.
 * Exclude node\_modules folder from git
 * Implement new `'aborted'` event
 * Fix files in example folder to work with recent node versions
+* Make gently a devDependency
 
 [See Commits](https://github.com/felixge/node-formidable/compare/v1.0.1...v1.0.2)
 
