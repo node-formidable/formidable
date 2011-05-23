@@ -4,12 +4,12 @@
   "dependencies": {},
   "devDependencies": {
     "gently": ">=0.7.0"
-  }
+  },
   "directories": {
     "lib": "./lib"
   },
   "main": "./lib/index",
   "engines": {
     "node": "*"
-  },
+  }
 }
