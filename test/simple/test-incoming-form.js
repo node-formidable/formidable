@@ -199,6 +199,8 @@ test(function parse() {
         fn('field1', 'foo');
         fn('field1', 'bar');
         fn('field2', 'nice');
+        fn('fieldArray[]', 'first');
+        fn('fieldArray[]', 'second');
       }
 
       if (event == 'file') {
@@ -214,7 +216,7 @@ test(function parse() {
     });
 
     form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
-      assert.deepEqual(fields, {field1: 'bar', field2: 'nice'});
+      assert.deepEqual(fields, {field1: 'bar', field2: 'nice', fieldArray: ['first','second']});
       assert.deepEqual(files, {file1: '2', file2: '3'});
     }));
 
