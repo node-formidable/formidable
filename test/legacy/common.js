@@ -7,14 +7,14 @@ try {
   throw new Error('this test suite requires node-gently');
 }
 
-exports.lib = path.join(__dirname, '../lib');
+exports.lib = path.join(__dirname, '../../lib');
 
 global.GENTLY = new Gently();
 
 global.assert = require('assert');
 global.TEST_PORT = 13532;
-global.TEST_FIXTURES = path.join(__dirname, 'fixture');
-global.TEST_TMP = path.join(__dirname, 'tmp');
+global.TEST_FIXTURES = path.join(__dirname, '../fixture');
+global.TEST_TMP = path.join(__dirname, '../tmp');
 
 // Stupid new feature in node that complains about gently attaching too many
 // listeners to process 'exit'. This is a workaround until I can think of a

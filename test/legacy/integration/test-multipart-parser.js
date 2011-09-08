@@ -3,7 +3,7 @@ var CHUNK_LENGTH = 10,
     multipartParser = require(common.lib + '/multipart_parser'),
     MultipartParser = multipartParser.MultipartParser,
     parser = new MultipartParser(),
-    fixtures = require('../fixture/multipart'),
+    fixtures = require(TEST_FIXTURES + '/multipart'),
     Buffer = require('buffer').Buffer;
 
 Object.keys(fixtures).forEach(function(name) {
