@@ -4,7 +4,8 @@
   "dependencies": {},
   "devDependencies": {
     "gently": ">=0.7.0",
-    "far": "0.0.7"
+    "far": "0.0.7",
+    "fast-or-slow": "0.0.5"
   },
   "directories": {
     "lib": "./lib"
