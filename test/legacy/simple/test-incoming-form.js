@@ -10,7 +10,7 @@ var formidable = require(common.lib + '/index'),
     fs = require('fs'),
     path = require('path'),
     Buffer = require('buffer').Buffer,
-    fixtures = require('../fixture/multipart'),
+    fixtures = require(TEST_FIXTURES + '/multipart'),
     form,
     gently;
 
