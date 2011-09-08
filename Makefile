@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 test:
-	@find test/legacy/{simple,integration,system}/test-*.js | xargs -n 1 -t node
+	@./test/run.js
 
 clean:
 	rm test/tmp/*
