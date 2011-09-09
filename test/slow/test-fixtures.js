@@ -31,6 +31,7 @@ findit
 
 function addTest(name, fixture) {
   test('fixture: ' + name, function(done) {
+    console.error(this.name);
     uploadFixture(name, function(err, parts) {
       if (err) return done(err);
 
@@ -50,9 +51,15 @@ function uploadFixture(name, cb) {
     form.uploadDir = common.dir.tmp;
     form.parse(req);
 
+    function callback() {
+      var realCallback = cb;
+      cb = function() {};
+      realCallback.apply(null, arguments);
+    }
+
     var parts = [];
     form
-      .on('error', cb)
+      .on('error', callback)
       .on('fileBegin', function(name, value) {
         parts.push({type: 'file', name: name, value: value});
       })
@@ -60,7 +67,7 @@ function uploadFixture(name, cb) {
         parts.push({type: 'field', name: name, value: value});
       })
       .on('end', function() {
-        cb(null, parts);
+        callback(null, parts);
       });
   });
 
