@@ -1,13 +1,10 @@
 var properFilename = '/ \ ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt';
 
 function expect(filename) {
-  return {
-    fields: [{name: 'title', value: 'Weird filename'}],
-    files: [{
-      name: filename,
-      fixture: properFilename,
-    }]
-  };
+  return [
+    {type: 'field', name: 'title', value: 'Weird filename'},
+    {type: 'file', name: filename, fixture: properFilename},
+  ];
 };
 
 module.exports = {
