@@ -18,9 +18,19 @@ test.before(function(done) {
   server.listen(common.port, done);
 });
 
-function testFixture(name, fixture) {
+findit
+  .sync(common.dir.fixture + '/js')
+  .forEach(function(jsPath) {
+    if (!/\.js$/.test(jsPath)) return;
+
+    var group = path.basename(jsPath, '.js');
+    hashish.forEach(require(jsPath), function(fixture, name) {
+      addTest(group + '/' + name, fixture);
+    });
+  });
+
+function addTest(name, fixture) {
   test('fixture: ' + name, function(done) {
-    console.log(this.name);
     uploadFixture(name, function(err, parts) {
       if (err) return done(err);
 
@@ -59,14 +69,3 @@ function uploadFixture(name, cb) {
 
   file.pipe(socket);
 }
-
-findit
-  .sync(common.dir.fixture + '/js')
-  .forEach(function(jsPath) {
-    if (!/\.js$/.test(jsPath)) return;
-
-    var group = path.basename(jsPath, '.js');
-    hashish.forEach(require(jsPath), function(fixture, name) {
-      testFixture(group + '/' + name, fixture);
-    });
-  });
