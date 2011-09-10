@@ -20,6 +20,12 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.3
+
+* Fix problems with utf8 characters (#84) / semicolons in filenames (#58)
+* Small performance improvements
+* New test suite and fixture system
+
 ### v1.0.2
 
 * Exclude node\_modules folder from git
