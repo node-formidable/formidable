@@ -39,6 +39,11 @@ function addTest(name, fixture) {
         var parsedPart = parts[i];
         assert.equal(parsedPart.type, expectedPart.type);
         assert.equal(parsedPart.name, expectedPart.name);
+
+        if (parsedPart.type === 'file') {
+          var filename = parsedPart.value.name;
+          assert.equal(filename, expectedPart.filename);
+        }
       });
 
       done();
