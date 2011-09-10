@@ -13,3 +13,8 @@ exports.port = 13532;
 
 exports.formidable = require('..');
 exports.fastOrSlow = require('fast-or-slow');
+exports.assert = require('assert');
+
+exports.require = function(lib) {
+  return require(exports.dir.lib + '/' + lib);
+};
