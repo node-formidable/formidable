@@ -3,7 +3,7 @@ var properFilename = '/ \ ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ]
 function expect(filename) {
   return [
     {type: 'field', name: 'title', value: 'Weird filename'},
-    {type: 'file', name: filename, fixture: properFilename},
+    {type: 'file', name: 'upload', filename: filename, fixture: properFilename},
   ];
 };
 

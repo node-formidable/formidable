@@ -38,6 +38,7 @@ function addTest(name, fixture) {
       fixture.forEach(function(expectedPart, i) {
         var parsedPart = parts[i];
         assert.equal(parsedPart.type, expectedPart.type);
+        assert.equal(parsedPart.name, expectedPart.name);
       });
 
       done();
