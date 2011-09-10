@@ -5,7 +5,9 @@
   "devDependencies": {
     "gently": "0.8.0",
     "far": "0.0.7",
-    "fast-or-slow": "0.0.5"
+    "fast-or-slow": "0.0.5",
+    "findit": "0.1.1",
+    "hashish": "0.0.4"
   },
   "directories": {
     "lib": "./lib"
