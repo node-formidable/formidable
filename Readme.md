@@ -20,6 +20,10 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.4
+
+* Detect a good default tmp directory regardless of plattform. (#88)
+
 ### v1.0.3
 
 * Fix problems with utf8 characters (#84) / semicolons in filenames (#58)
