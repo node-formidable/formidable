@@ -142,9 +142,11 @@ Creates a new incoming form.
 
 The encoding to use for incoming form fields.
 
-#### incomingForm.uploadDir = '/tmp'
+#### incomingForm.uploadDir = process.env.TMP || '/tmp' || process.cwd()
 
-The directory for placing file uploads in. You can later on move them using `fs.rename()`.
+The directory for placing file uploads in. You can later on move them using
+`fs.rename()`. The default directoy is picked at module load time depending on
+the first existing directory from those listed above.
 
 #### incomingForm.keepExtensions = false
 
