@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "dependencies": {},
   "devDependencies": {
     "gently": "0.8.0",
