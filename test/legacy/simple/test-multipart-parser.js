@@ -40,7 +40,7 @@ test(function parserError() {
 
 test(function end() {
   (function testError() {
-    assert.equal(parser.end().message, 'MultipartParser.end(): stream ended unexpectedly');
+    assert.equal(parser.end().message, 'MultipartParser.end(): stream ended unexpectedly: ' + parser.explain());
   })();
 
   (function testRegular() {
