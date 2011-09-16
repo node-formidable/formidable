@@ -20,6 +20,11 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.5
+
+* Support filename="" in multipart parts
+* Explain unexpected end() errors in parser better
+
 ### v1.0.4
 
 * Detect a good default tmp directory regardless of plattform. (#88)
