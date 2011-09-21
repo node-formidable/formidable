@@ -8,7 +8,7 @@ A node.js module for parsing form data, especially file uploads.
 
 This module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading
 and encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from
-a big variety of clients and is considered production-ready.
+a large variety of clients and is considered production-ready.
 
 ## Features
 
@@ -36,7 +36,7 @@ input fields with value = "".
 
 ### v1.0.4
 
-* Detect a good default tmp directory regardless of plattform. (#88)
+* Detect a good default tmp directory regardless of platform. (#88)
 
 ### v1.0.3
 
@@ -63,8 +63,8 @@ input fields with value = "".
 
 * Add support for multipart boundaries that are quoted strings. (Jeff Craig)
 
-This marks the begin of the development on version 2.0 which will include
-several architecural improvements.
+This marks the beginning of development on version 2.0 which will include
+several architectural improvements.
 
 [See Commits](https://github.com/felixge/node-formidable/compare/v0.9.11...v1.0.0)
 
@@ -150,9 +150,9 @@ Parse an incoming file upload.
 
 ## API
 
-### formdiable.IncomingForm
+### formidable.IncomingForm
 
-#### new formdiable.IncomingForm()
+#### new formidable.IncomingForm()
 
 Creates a new incoming form.
 
@@ -162,8 +162,8 @@ The encoding to use for incoming form fields.
 
 #### incomingForm.uploadDir = process.env.TMP || '/tmp' || process.cwd()
 
-The directory for placing file uploads in. You can later on move them using
-`fs.rename()`. The default directoy is picked at module load time depending on
+The directory for placing file uploads in. You can move them later on using
+`fs.rename()`. The default directory is picked at module load time depending on
 the first existing directory from those listed above.
 
 #### incomingForm.keepExtensions = false
@@ -177,7 +177,7 @@ Either 'multipart' or 'urlencoded' depending on the incoming request.
 #### incomingForm.maxFieldsSize = 2 * 1024 * 1024
 
 Limits the amount of memory a field (not file) can allocate in bytes.
-I this value is exceeded, an `'error'` event is emitted. The default
+If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
 #### incomingForm.bytesReceived
@@ -241,17 +241,17 @@ Emitted when there is an error processing the incoming form. A request that expe
 
 #### Event: 'aborted'
 
-Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a seperate 'timeout' event (needs a change in the node core).
+Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
 
 #### Event: 'end' ()
 
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
 
-### formdiable.File
+### formidable.File
 
 #### file.size = 0
 
-The size of the uploade file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
+The size of the uploaded file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
 
 #### file.path = null
 
@@ -269,7 +269,7 @@ The mime type of this file, according to the uploading client.
 #### file.lastModifiedDate = null
 
 A date object (or `null`) containing the time this file was last written to. Mostly
-here for compatiblity with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
+here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
 
 ## License
 
