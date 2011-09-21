@@ -1,3 +1,3 @@
 module.exports['generic.http'] = [
-  {type: 'file', name: 'upload', filename: 'upload', fixture: 'plain.txt'},
+  {type: 'file', name: 'upload', filename: '', fixture: 'plain.txt'},
 ];
