@@ -20,10 +20,19 @@ a big variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.6
+
+* Do not default to the default to the field name for file uploads where
+  filename="".
+
 ### v1.0.5
 
 * Support filename="" in multipart parts
 * Explain unexpected end() errors in parser better
+
+**Note:** Starting with this version, formidable emits 'file' events for empty
+file input fields. Previously those were incorrectly emitted as regular file
+input fields with value = "".
 
 ### v1.0.4
 
