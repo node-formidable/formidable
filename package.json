@@ -1,6 +1,11 @@
 {
   "name": "formidable",
-  "version": "1.0.6",
+  "version": "1.0.7",
+  "homepage": "https://github.com/felixge/node-formidable",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/felixge/node-formidable.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "gently": "0.8.0",
