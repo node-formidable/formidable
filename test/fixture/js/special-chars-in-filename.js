@@ -1,4 +1,4 @@
-var properFilename = '/ \\ ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt';
+var properFilename = 'funkyfilename.txt';
 
 function expect(filename) {
   return [
