@@ -13,6 +13,9 @@
     "lib": "./lib"
   },
   "main": "./lib/index",
+  "scripts": {
+    "test": "make test"
+  },
   "engines": {
     "node": "*"
   }
