@@ -180,6 +180,12 @@ Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
+#### incomingForm.checksum = false
+
+If you need the files checksum, you can set it to `sha1` or `md5`. The
+checksum calculation is done chunk based, so it should not have a big
+impact on perfomance.
+
 #### incomingForm.bytesReceived
 
 The amount of bytes received for this form so far.
@@ -270,6 +276,11 @@ The mime type of this file, according to the uploading client.
 
 A date object (or `null`) containing the time this file was last written to. Mostly
 here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
+
+#### file.checksum = false
+
+If checksum calculation is activated, you can read the hex digest out of
+this var.
 
 ## License
 
