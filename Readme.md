@@ -1,5 +1,7 @@
 # Formidable
 
+[![Build Status](https://secure.travis-ci.org/felixge/node-formidable.png)](http://travis-ci.org/felixge/node-formidable)
+
 ## Purpose
 
 A node.js module for parsing form data, especially file uploads.
