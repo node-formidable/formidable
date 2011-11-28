@@ -52,6 +52,9 @@ test('IncomingForm', {
 
     var ext = path.extname(form._uploadPath('super.cr2+dsad'));
     assert.equal(ext, '.cr2');
+
+    var ext = path.extname(form._uploadPath('super.bar'));
+    assert.equal(ext, '.bar');
   },
 });
 
