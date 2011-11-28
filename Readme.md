@@ -22,6 +22,17 @@ a large variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.8
+
+* Strip potentially unsafe characters when using `keepExtensions: true`.
+* Switch to utest / urun for testing
+* Add travis build
+
+### v1.0.7
+
+* Remove file from package that was causing problems when installing on windows. (#102)
+* Fix typos in Readme (Jason Davies).
+
 ### v1.0.6
 
 * Do not default to the default to the field name for file uploads where
