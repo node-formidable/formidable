@@ -2,6 +2,7 @@ var common       = require('../common');
 var test         = require('utest');
 var assert       = common.assert;
 var IncomingForm = common.require('incoming_form').IncomingForm;
+var path         = require('path');
 
 var from;
 test('IncomingForm', {
@@ -38,6 +39,19 @@ test('IncomingForm', {
   '#_fileName with utf8 character': function() {
     var filename = 'my&#9731;.txt';
     assert.equal(form._fileName(makeHeader(filename)), 'my☃.txt');
+  },
+
+  '#_uploadPath strips harmful characters from extension when keepExtensions': function() {
+    form.keepExtensions = true;
+
+    var ext = path.extname(form._uploadPath('fine.jpg?foo=bar'));
+    assert.equal(ext, '.jpg');
+
+    var ext = path.extname(form._uploadPath('fine?foo=bar'));
+    assert.equal(ext, '');
+
+    var ext = path.extname(form._uploadPath('super.cr2+dsad'));
+    assert.equal(ext, '.cr2');
   },
 });
 
