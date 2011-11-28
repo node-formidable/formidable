@@ -7,47 +7,52 @@ var net = require('net');
 var assert = require('assert');
 
 var common = require('../common');
-var test = common.fastOrSlow.slow();
 var formidable = common.formidable;
 
-var server;
-test.before(function(done) {
-  if (server) return done();
+var server = http.createServer();
+server.listen(common.port, findFixtures);
 
-  server = http.createServer();
-  server.listen(common.port, done);
-});
+function findFixtures() {
+  var fixtures = [];
+  findit
+    .sync(common.dir.fixture + '/js')
+    .forEach(function(jsPath) {
+      if (!/\.js$/.test(jsPath)) return;
 
-findit
-  .sync(common.dir.fixture + '/js')
-  .forEach(function(jsPath) {
-    if (!/\.js$/.test(jsPath)) return;
-
-    var group = path.basename(jsPath, '.js');
-    hashish.forEach(require(jsPath), function(fixture, name) {
-      addTest(group + '/' + name, fixture);
-    });
-  });
-
-function addTest(name, fixture) {
-  test('fixture: ' + name, function(done) {
-    console.error(this.name);
-    uploadFixture(name, function(err, parts) {
-      if (err) return done(err);
-
-      fixture.forEach(function(expectedPart, i) {
-        var parsedPart = parts[i];
-        assert.equal(parsedPart.type, expectedPart.type);
-        assert.equal(parsedPart.name, expectedPart.name);
-
-        if (parsedPart.type === 'file') {
-          var filename = parsedPart.value.name;
-          assert.equal(filename, expectedPart.filename);
-        }
+      var group = path.basename(jsPath, '.js');
+      hashish.forEach(require(jsPath), function(fixture, name) {
+        fixtures.push({
+          name    : group + '/' + name,
+          fixture : fixture,
+        });
       });
-
-      done();
     });
+
+  testNext(fixtures);
+}
+
+function testNext(fixtures) {
+  var fixture = fixtures.shift();
+  if (!fixture) return server.close();
+
+  var name    = fixture.name;
+  var fixture = fixture.fixture;
+
+  uploadFixture(name, function(err, parts) {
+    if (err) throw err;
+
+    fixture.forEach(function(expectedPart, i) {
+      var parsedPart = parts[i];
+      assert.equal(parsedPart.type, expectedPart.type);
+      assert.equal(parsedPart.name, expectedPart.name);
+
+      if (parsedPart.type === 'file') {
+        var filename = parsedPart.value.name;
+        assert.equal(filename, expectedPart.filename);
+      }
+    });
+
+    testNext(fixtures);
   });
 };
 
