@@ -136,7 +136,7 @@ Parse an incoming file upload.
     var formidable = require('formidable'),
         http = require('http'),
 
-        sys = require('sys');
+        util = require('util');
 
     http.createServer(function(req, res) {
       if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
@@ -145,7 +145,7 @@ Parse an incoming file upload.
         form.parse(req, function(err, fields, files) {
           res.writeHead(200, {'content-type': 'text/plain'});
           res.write('received upload:\n\n');
-          res.end(sys.inspect({fields: fields, files: files}));
+          res.end(util.inspect({fields: fields, files: files}));
         });
         return;
       }
