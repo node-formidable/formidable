@@ -165,43 +165,43 @@ Parse an incoming file upload.
 
 ### formidable.IncomingForm
 
-#### new formidable.IncomingForm()
+__new formidable.IncomingForm()__
 
 Creates a new incoming form.
 
-#### incomingForm.encoding = 'utf-8'
+__incomingForm.encoding = 'utf-8'__
 
 The encoding to use for incoming form fields.
 
-#### incomingForm.uploadDir = process.env.TMP || '/tmp' || process.cwd()
+__incomingForm.uploadDir = process.env.TMP || '/tmp' || process.cwd()__
 
 The directory for placing file uploads in. You can move them later on using
 `fs.rename()`. The default directory is picked at module load time depending on
 the first existing directory from those listed above.
 
-#### incomingForm.keepExtensions = false
+__incomingForm.keepExtensions = false__
 
 If you want the files written to `incomingForm.uploadDir` to include the extensions of the original files, set this property to `true`.
 
-#### incomingForm.type
+__incomingForm.type__
 
 Either 'multipart' or 'urlencoded' depending on the incoming request.
 
-#### incomingForm.maxFieldsSize = 2 * 1024 * 1024
+__incomingForm.maxFieldsSize = 2 * 1024 * 1024__
 
 Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
-#### incomingForm.bytesReceived
+__incomingForm.bytesReceived__
 
 The amount of bytes received for this form so far.
 
-#### incomingForm.bytesExpected
+__incomingForm.bytesExpected__
 
 The expected number of bytes in this form.
 
-#### incomingForm.parse(request, [cb])
+__incomingForm.parse(request, [cb])__
 
 Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:
 
@@ -209,7 +209,7 @@ Parses an incoming node.js `request` containing form data. If `cb` is provided, 
       // ...
     });
 
-#### incomingForm.onPart(part)
+__incomingForm.onPart(part)__
 
 You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events  processing which would occur otherwise, making you fully responsible for handling the processing.
 
@@ -230,56 +230,56 @@ If you want to use formidable to only handle certain parts for you, you can do s
 
 Check the code in this method for further inspiration.
 
-#### Event: 'progress' (bytesReceived, bytesExpected)
+__Event: 'progress' (bytesReceived, bytesExpected)__
 
 Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
 
-#### Event: 'field' (name, value)
+__Event: 'field' (name, value)__
 
 Emitted whenever a field / value pair has been received.
 
-#### Event: 'fileBegin' (name, file)
+__Event: 'fileBegin' (name, file)__
 
 Emitted whenever a new file is detected in the upload stream. Use this even if
 you want to stream the file to somewhere else while buffering the upload on
 the file system.
 
-#### Event: 'file' (name, file)
+__Event: 'file' (name, file)__
 
 Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
 
-#### Event: 'error' (err)
+__Event: 'error' (err)__
 
 Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
 
-#### Event: 'aborted'
+__Event: 'aborted'__
 
 Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
 
-#### Event: 'end' ()
+__Event: 'end' ()__
 
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
 
 ### formidable.File
 
-#### file.size = 0
+__file.size = 0__
 
 The size of the uploaded file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
 
-#### file.path = null
+__file.path = null__
 
 The path this file is being written to. You can modify this in the `'fileBegin'` event in
 case you are unhappy with the way formidable generates a temporary path for your files.
 
-#### file.name = null
+__file.name = null__
 
 The name this file had according to the uploading client.
 
-#### file.type = null
+__file.type = null__
 
 The mime type of this file, according to the uploading client.
 
-#### file.lastModifiedDate = null
+__file.lastModifiedDate = null__
 
 A date object (or `null`) containing the time this file was last written to. Mostly
 here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
