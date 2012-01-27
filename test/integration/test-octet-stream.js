@@ -27,16 +27,19 @@ var server = http.createServer(function(req, res) {
     });
 });
 
-var port = common.port + 1;
+var port = common.port;
 
-server.listen(port);
+server.listen(port, function(err){
+    assert.equal(err, null);
 
-var request = http.request({
-    port: port,
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/octet-stream'
-    }
+    var request = http.request({
+        port: port,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/octet-stream'
+        }
+    });
+
+    fs.createReadStream(testFilePath).pipe(request);
 });
 
-fs.createReadStream(testFilePath).pipe(request);
