@@ -22,6 +22,12 @@ a large variety of clients and is considered production-ready.
 
 ## Changelog
 
+### v1.0.9
+
+* Emit progress when content length header parsed (Tim Koschützki)
+* Fix Readme syntax due to GitHub changes (goob)
+* Replace references to old 'sys' module in Readme with 'util' (Peter Sugihara)
+
 ### v1.0.8
 
 * Strip potentially unsafe characters when using `keepExtensions: true`.
