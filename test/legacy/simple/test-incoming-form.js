@@ -372,15 +372,26 @@ test(function parseContentLength() {
 
   form.headers = {};
   form._parseContentLength();
+  assert.strictEqual(form.bytesReceived, null);
   assert.strictEqual(form.bytesExpected, null);
 
   form.headers['content-length'] = '8';
+  gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
+    assert.equal(event, 'progress');
+    assert.equal(bytesReceived, 0);
+    assert.equal(bytesExpected, 8);
+  });
   form._parseContentLength();
   assert.strictEqual(form.bytesReceived, 0);
   assert.strictEqual(form.bytesExpected, 8);
 
   // JS can be evil, lets make sure we are not
   form.headers['content-length'] = '08';
+  gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
+    assert.equal(event, 'progress');
+    assert.equal(bytesReceived, 0);
+    assert.equal(bytesExpected, 8);
+  });
   form._parseContentLength();
   assert.strictEqual(form.bytesExpected, 8);
 });
