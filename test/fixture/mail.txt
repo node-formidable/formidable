@@ -1,0 +1,89 @@
+Return-Path: <andris.reinman@gmail.com>
+Received: from andris-desktop.lan (87-119-170-102.tll.elisa.ee [87.119.170.102])
+        by mx.google.com with ESMTPS id z55sm3472728eeh.3.2010.10.07.06.41.50
+        (version=TLSv1/SSLv3 cipher=RC4-MD5);
+        Thu, 07 Oct 2010 06:41:51 -0700 (PDT)
+Message-Id: <BAFE6D0E-AE53-4698-9072-AD1C9BF966AB@gmail.com>
+From: Andris Reinman <andris.reinman@gmail.com>
+To: andris@kreata.ee
+Content-Type: multipart/alternative; boundary=Apple-Mail-2-1061547935
+Mime-Version: 1.0 (Apple Message framework v936)
+Subject: =?ISO-8859-4?Q?Simple_test_message_with_special_characters_like_?=
+ =?ISO-8859-4?Q?=B9_and_=F5?=
+Date: Thu, 7 Oct 2010 16:41:49 +0300
+X-Mailer: Apple Mail (2.936)
+
+
+--Apple-Mail-2-1061547935
+Content-Type: text/plain;
+	charset=ISO-8859-4;
+	format=flowed;
+	delsp=yes
+Content-Transfer-Encoding: quoted-printable
+
+This is a simple e-mail with a) special characters (=F6=E4=F5=FC), b) =
+HTML =20
+alternative and c) attachments
+
+
+--Apple-Mail-2-1061547935
+Content-Type: multipart/related;
+	boundary=Apple-Mail-3-1061547936;
+	type="text/html"
+
+
+--Apple-Mail-3-1061547936
+Content-Type: text/html;
+	charset="ISO-8859-4"
+Content-Transfer-Encoding: quoted-printable
+
+<html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
+-webkit-line-break: after-white-space; ">This is a simple e-mail with a) =
+special characters (=F6=E4=F5=FC), b) <b>HTML</b> alternative and c) =
+attachments<div><br></div><div><img height=3D"23" width=3D"154" =
+apple-width=3D"yes" apple-height=3D"yes" =
+src=3D"cid:4F26D18A-86BF-47CB-B58F-BFDCD36030FF@lan"></div></body></html>=
+
+--Apple-Mail-3-1061547936
+Content-Disposition: inline;
+	filename=favourite.gif
+Content-Transfer-Encoding: base64
+Content-Type: image/gif;
+	x-unix-mode=0755;
+	name="favourite.gif"
+Content-Id: <4F26D18A-86BF-47CB-B58F-BFDCD36030FF@lan>
+
+R0lGODlhlgAXAOZ/AJmZmb+/v8uieP7ChrGxsZKSkva8gYSEhMrKytuELOexe/fo2NOnetnZ2dLS
+0uzj2+np6YCAgOXl5aysrObYyf66df+ePaioqM6qhdGtiaKiotXV1dvb2/LZwbm5ufDw8NOzlP/6
+9ODg4PWTMf/u3OiscXl5eZWVlc57Kf/z5/Lp4MfHx4+Pj6CgoOPj4/+lSt3d3aWlpf/atPngyMHB
+wdrApvn08LZuJfPu6X19fe6PMHd3d25uburMrry8vPWlVe2ZRbyCSfPt5+3i1uGSQsyHQbd5Pb54
+Muzs7Pj4+Pf395eXl/yXMu3t7dbW1viVMtWAK/3IksPDw//nz/2YM+7u7vDj1v/ixf/Onfbz7+yO
+L/+rV9aEMvWZPf+9e9F9KsR2J8B3LeCVSf+nUP/17PahTf/Vq/GRMPeUMfPz8/DLpuzHop6entKh
+cfTgy/Dp4/ju5PX19fn5+fLy8u/v7/T09Pv7+/b29vr6+vz8/P7+/v39/dHR0f+ZM////////yH5
+BAEAAH8ALAAAAACWABcAAAf/gH+Cg4SFhoeIiYV1HHyOj5CRko6Mk5aWlZeaj5mbmoqgoaKEG3R+
+p6ipqqt+fKWssKyuSHi1tre4uXizur26fKPBwoV8fnrHyMnKy3oOxczQy37OeEjW19jZ2njU2t7f
+3MPiwc/R5sfOxufR03x2dPDx8vP0ds7v9Pn59oWsJCSsErGqUyfgID569ihcyFCEC4YQ9zhKGHHh
+kCEVFepxlGeOx48gGzQASTIPR5IkKVBA+dFkv1VRohg8xAoGjJl/EGZUOIHAzj3OKGbMkGFnMz55
+CCpdWufCBKZL8zhLClUpBgxVCUp9qerFC5xcU61YgRNhnrNo05o4kLatSbNu/9EaKRL37EakcfLq
+3bt2r9+3efz6nStYr0tCq6b06TNllUBVHwIE+OD4oJ66eRrwOCACc1DMFG4kcFP36J47qFOndrCZ
+g2rVQPmcfp06dIIOtFEDDXtqwOIBlWmqaiC5QfCceuwoX768xQ4WHphLnyiduQAwWgxUV353dm42
+zz3kviNR9vg717OPl1iIDJYB8AdYWGwh/gAsZBLJESFSpBTJUvTXgAhyEILQck0QoMGCGqxVAAAE
+XLAgAU0sR51yQoAgwIYCHAHFCF0owMCGIAjBnSN7KKEiBAoy6CCEMUwIgYrlpajiGxpy6CGIIpL4
+Bo3AICbDfIsVaaQFMvghEP8ENEjm5JMB0ACBkpbdIsUOOUQQwQEsLLEECwdsicAtE91SQxgoQAFF
+AjowwYQOCUDBRQ+2dJfEnUnQgKWWXHoJpph41ohnEmemuWabb8Y5Z6BBDnIKCWMYaeQYAFEpXB0r
+QOnkCgVZmtMecoQaqgsnsFDACUsAAMASJ2gAgaihOgMqrFaIocMITzCxGBNPlLEArLHNKiqppqKq
+KquuAisrrHLUemuuu/b6q6i7IXZKCBVI2kcFIaDymB95bKDpBnl4e5CwoqYxwYOqqupBHczKgWK8
+WZQwAhVGVmADszXGqy677b7L77zM1ntvvvsC26ggqSgmaWPmCndKZFBSFvH/p4Pi2cABJ7QLgAgZ
+34liyElQkAAaRs4Qcnl66LJxx+26kMtdLediMspFzjDzwn+kEoW2Ml0cFgya3nSxbComreIEJgAM
+AA1KJy1r1CpigMIZRg5AdWzJVce001JUd1TX0mVwtZFRiO1AWFv85lsfW6TyrR8IFEdcAAjIfW5u
+EeRQQAA+dBxDbijmFsQXIxhgwBNU/EAby9sd4Ldkgot9oXSHjzDA4o1bzlUKfbxwxSlXvNBHCkJb
+64cSAazQxClNZKrE0d6lJgEPBTSAmhMAFAABbbLS9sANROB2RwdAjKDCa1y7BQHuMJzVQO9VtDW2
+W28QP8NZyI8Ah/Vrq26G4RfdohKCF2ak7ugpEjhhRyp2OCHB0YH55UELVexVxQQrCMaRYCBoAw72
+goMSrOEvE3GLDzQQh7TUgQAIsF4C21KDNtggLTZQgBok+DlYoO4U35odK0ToKaRARQRZkQBUpgKV
+B2TFhVEJSkQgkJEmQGRsEVFBRuBww/CN44eJQApLhsiSkxDxiHN4i1B+khGaMfEnGwGiFA/hDn1Y
+cR73uKIW7VGOdTCjHerwojR8OMUyOqEJvkijLRxwRjWqkY0Wi4Ucp+GEOM4RFmQsoxTnsAFPbIKP
+ftQEIANpiUESUhKBAAA7
+
+--Apple-Mail-3-1061547936--
+
+--Apple-Mail-2-1061547935--
