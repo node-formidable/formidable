@@ -1,7 +1,9 @@
 {
   "name": "formidable",
   "version": "1.0.9",
-  "dependencies": {},
+  "dependencies": {
+    "multipart-parser": "0.0.1"
+  },
   "devDependencies": {
     "gently": "0.8.0",
     "findit": "0.1.1",

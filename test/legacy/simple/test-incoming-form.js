@@ -284,22 +284,6 @@ test(function write() {
     assert.equal(form.bytesReceived, BUFFER.length);
   })();
 
-  (function testParserError() {
-    gently.expect(form, 'emit');
-
-    gently.expect(parser, 'write', function(buffer) {
-      assert.strictEqual(buffer, BUFFER);
-      return buffer.length - 1;
-    });
-
-    gently.expect(form, '_error', function(err) {
-      assert.ok(err.message.match(/parser error/i));
-    });
-
-    assert.equal(form.write(BUFFER), BUFFER.length - 1);
-    assert.equal(form.bytesReceived, BUFFER.length + BUFFER.length);
-  })();
-
   (function testUninitialized() {
     delete form._parser;
 
@@ -394,110 +378,6 @@ test(function parseContentLength() {
   });
   form._parseContentLength();
   assert.strictEqual(form.bytesExpected, 8);
-});
-
-test(function _initMultipart() {
-  var BOUNDARY = '123',
-      PARSER;
-
-  gently.expect(MultipartParserStub, 'new', function() {
-    PARSER = this;
-  });
-
-  gently.expect(MultipartParserStub.prototype, 'initWithBoundary', function(boundary) {
-    assert.equal(boundary, BOUNDARY);
-  });
-
-  form._initMultipart(BOUNDARY);
-  assert.equal(form.type, 'multipart');
-  assert.strictEqual(form._parser, PARSER);
-
-  (function testRegularField() {
-    var PART;
-    gently.expect(EventEmitterStub, 'new', function() {
-      PART = this;
-    });
-
-    gently.expect(form, 'onPart', function(part) {
-      assert.strictEqual(part, PART);
-      assert.deepEqual
-        ( part.headers
-        , { 'content-disposition': 'form-data; name="field1"'
-          , 'foo': 'bar'
-          }
-        );
-      assert.equal(part.name, 'field1');
-
-      var strings = ['hello', ' world'];
-      gently.expect(part, 'emit', 2, function(event, b) {
-          assert.equal(event, 'data');
-          assert.equal(b.toString(), strings.shift());
-      });
-
-      gently.expect(part, 'emit', function(event, b) {
-          assert.equal(event, 'end');
-      });
-    });
-
-    PARSER.onPartBegin();
-    PARSER.onHeaderField(new Buffer('content-disposition'), 0, 10);
-    PARSER.onHeaderField(new Buffer('content-disposition'), 10, 19);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 0, 14);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 14, 24);
-    PARSER.onHeaderEnd();
-    PARSER.onHeaderField(new Buffer('foo'), 0, 3);
-    PARSER.onHeaderValue(new Buffer('bar'), 0, 3);
-    PARSER.onHeaderEnd();
-    PARSER.onHeadersEnd();
-    PARSER.onPartData(new Buffer('hello world'), 0, 5);
-    PARSER.onPartData(new Buffer('hello world'), 5, 11);
-    PARSER.onPartEnd();
-  })();
-
-  (function testFileField() {
-    var PART;
-    gently.expect(EventEmitterStub, 'new', function() {
-      PART = this;
-    });
-
-    gently.expect(form, 'onPart', function(part) {
-      assert.deepEqual
-        ( part.headers
-        , { 'content-disposition': 'form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'
-          , 'content-type': 'text/plain'
-          }
-        );
-      assert.equal(part.name, 'field2');
-      assert.equal(part.filename, 'Sun"et.jpg');
-      assert.equal(part.mime, 'text/plain');
-
-      gently.expect(part, 'emit', function(event, b) {
-        assert.equal(event, 'data');
-        assert.equal(b.toString(), '... contents of file1.txt ...');
-      });
-
-      gently.expect(part, 'emit', function(event, b) {
-          assert.equal(event, 'end');
-      });
-    });
-
-    PARSER.onPartBegin();
-    PARSER.onHeaderField(new Buffer('content-disposition'), 0, 19);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'), 0, 85);
-    PARSER.onHeaderEnd();
-    PARSER.onHeaderField(new Buffer('Content-Type'), 0, 12);
-    PARSER.onHeaderValue(new Buffer('text/plain'), 0, 10);
-    PARSER.onHeaderEnd();
-    PARSER.onHeadersEnd();
-    PARSER.onPartData(new Buffer('... contents of file1.txt ...'), 0, 29);
-    PARSER.onPartEnd();
-  })();
-
-  (function testEnd() {
-    gently.expect(form, '_maybeEnd');
-    PARSER.onEnd();
-    assert.ok(form.ended);
-  })();
 });
 
 test(function _fileName() {
