@@ -162,7 +162,7 @@ test(function parse() {
     (function testWithError() {
       var ERR = new Error('haha');
       gently.expect(form._parser, 'end', function() {
-        return ERR;
+        throw ERR;
       });
 
       gently.expect(form, '_error', function(err) {
