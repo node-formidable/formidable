@@ -4,18 +4,18 @@ var http       = require('http');
 var assert     = require('assert');
 var formidable = common.formidable;
 
+var files = [];
 var server = http.createServer(function(req, res) {
   var form = new formidable.IncomingForm();
   form.uploadDir = common.dir.tmp;
   form.parse(req);
 
   form
-    .on('file', function(file) {
-      console.log(arguments);
+    .on('file', function(name, file) {
+      files.push(file);
     })
     .on('end', function() {
       res.end('ok');
-      server.close();
     });
 }).listen(common.port, function(err) {
   if (err) throw err;
@@ -31,9 +31,17 @@ var server = http.createServer(function(req, res) {
   };
 
   var req = http.request(options, function(res) {
-    console.log('got res');
+    server.close();
   });
 
   var file = fs.createReadStream(common.dir.fixture + '/mail.txt');
   file.pipe(req);
+});
+
+process.on('exit', function() {
+  assert.equal(files.length, 1);
+
+  var file = files[0];
+  assert.equal(file.size, 1668);
+  assert.equal(file.filename, 'favourite.gif');
 });
