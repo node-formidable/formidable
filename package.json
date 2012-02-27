@@ -2,7 +2,7 @@
   "name": "formidable",
   "version": "1.0.9",
   "dependencies": {
-    "multipart-parser": "0.0.1"
+    "multipart-parser": "git://github.com/felixge/node-multipart-parser.git#118ead"
   },
   "devDependencies": {
     "gently": "0.8.0",
