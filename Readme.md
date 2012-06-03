@@ -294,6 +294,10 @@ __file.lastModifiedDate = null__
 A date object (or `null`) containing the time this file was last written to. Mostly
 here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
 
+__file.hash = null__
+
+If hash calculation was set, you can read the hex digest out of this var.
+
 ## License
 
 Formidable is licensed under the MIT license.
