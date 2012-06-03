@@ -2,6 +2,7 @@ var common = require('../common');
 var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser'),
     QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser'),
     EventEmitterStub = GENTLY.stub('events', 'EventEmitter'),
+    StreamStub = GENTLY.stub('stream', 'Stream'),
     FileStub = GENTLY.stub('./file');
 
 var formidable = require(common.lib + '/index'),
@@ -414,7 +415,7 @@ test(function _initMultipart() {
 
   (function testRegularField() {
     var PART;
-    gently.expect(EventEmitterStub, 'new', function() {
+    gently.expect(StreamStub, 'new', function() {
       PART = this;
     });
 
@@ -456,7 +457,7 @@ test(function _initMultipart() {
 
   (function testFileField() {
     var PART;
-    gently.expect(EventEmitterStub, 'new', function() {
+    gently.expect(StreamStub, 'new', function() {
       PART = this;
     });
 
