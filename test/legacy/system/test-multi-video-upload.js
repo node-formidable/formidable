@@ -12,6 +12,7 @@ server.on('request', function(req, res) {
       uploads = {};
 
   form.uploadDir = TEST_TMP;
+  form.hash = 'sha1';
   form.parse(req);
 
   form
@@ -41,10 +42,12 @@ server.on('request', function(req, res) {
       assert.ok(uploads['shortest_video.flv']);
       assert.ok(uploads['shortest_video.flv'].ended);
       assert.ok(uploads['shortest_video.flv'].progress.length > 3);
+      assert.equal(uploads['shortest_video.flv'].file.hash, 'd6a17616c7143d1b1438ceeef6836d1a09186b3a');
       assert.equal(uploads['shortest_video.flv'].progress.slice(-1), uploads['shortest_video.flv'].file.length);
       assert.ok(uploads['shortest_video.mp4']);
       assert.ok(uploads['shortest_video.mp4'].ended);
       assert.ok(uploads['shortest_video.mp4'].progress.length > 3);
+      assert.equal(uploads['shortest_video.mp4'].file.hash, '937dfd4db263f4887ceae19341dcc8d63bcd557f');
 
       server.close();
       res.writeHead(200);

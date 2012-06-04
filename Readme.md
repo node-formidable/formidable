@@ -199,6 +199,10 @@ Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
+__incomingForm.hash = false__
+
+If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
+
 __incomingForm.bytesReceived__
 
 The amount of bytes received for this form so far.
@@ -289,6 +293,10 @@ __file.lastModifiedDate = null__
 
 A date object (or `null`) containing the time this file was last written to. Mostly
 here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
+
+__file.hash = null__
+
+If hash calculation was set, you can read the hex digest out of this var.
 
 ## License
 
