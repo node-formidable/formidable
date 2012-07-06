@@ -29,7 +29,12 @@ test(function constructor() {
   assert.strictEqual(form.type, null);
   assert.strictEqual(form.headers, null);
   assert.strictEqual(form.keepExtensions, false);
-  assert.strictEqual(form.uploadDir, '/tmp');
+  // Can't assume dir === '/tmp' for portability
+  // assert.strictEqual(form.uploadDir, '/tmp');
+  // Make sure it is a directory instead
+  assert.doesNotThrow(function () {
+    assert(fs.statSync(form.uploadDir).isDirectory());
+  });
   assert.strictEqual(form.encoding, 'utf-8');
   assert.strictEqual(form.bytesReceived, null);
   assert.strictEqual(form.bytesExpected, null);
