@@ -179,7 +179,7 @@ __incomingForm.encoding = 'utf-8'__
 
 The encoding to use for incoming form fields.
 
-__incomingForm.uploadDir = process.env.TMP || '/tmp' || process.cwd()__
+__incomingForm.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd()__
 
 The directory for placing file uploads in. You can move them later on using
 `fs.rename()`. The default directory is picked at module load time depending on
