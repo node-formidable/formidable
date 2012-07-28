@@ -56,6 +56,17 @@ test('IncomingForm', {
     var ext = path.extname(form._uploadPath('super.bar'));
     assert.equal(ext, '.bar');
   },
+  '#_uploadPath with disable rename files (isAutoRename)': function() {
+	  var fileName = "sample.txt";
+
+	  form.isAutoRename = true;
+	  var _path = form._uploadPath(fileName);
+	  assert.notEqual(_path, '/tmp/' + fileName);
+
+	  form.isAutoRename = false;
+	  _path = form._uploadPath(fileName);
+	  assert.equal(_path, '/tmp/' + fileName);
+  }
 });
 
 function makeHeader(filename) {

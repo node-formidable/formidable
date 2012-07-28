@@ -2,3 +2,5 @@
 *.upload
 *.un~
 /node_modules/*
+.idea
+npm-debug.log
