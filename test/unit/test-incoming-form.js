@@ -57,15 +57,27 @@ test('IncomingForm', {
     assert.equal(ext, '.bar');
   },
   '#_uploadPath with disable rename files (isAutoRename)': function() {
-	  var fileName = "sample.txt";
+    var fileName = "sample.txt";
 
-	  form.isAutoRename = true;
-	  var _path = form._uploadPath(fileName);
-	  assert.notEqual(_path, '/tmp/' + fileName);
+    form.isAutoRename = true;
+    var _path = form._uploadPath(fileName);
+    assert.notEqual(_path, '/tmp/' + fileName);
 
-	  form.isAutoRename = false;
-	  _path = form._uploadPath(fileName);
-	  assert.equal(_path, '/tmp/' + fileName);
+    form.isAutoRename = false;
+    _path = form._uploadPath(fileName);
+    assert.equal(_path, '/tmp/' + fileName);
+
+    fileName = "my-photo.jpeg";
+
+    form.isAutoRename = true;
+    var _path = form._uploadPath('../../' + fileName);
+    assert.notEqual(_path, '/tmp/' + fileName);
+    assert.ok(/\/tmp\//.test(_path));
+
+    form.isAutoRename = false;
+    _path = form._uploadPath('../../' + fileName);
+    assert.ok(new RegExp(fileName).test(_path));
+    assert.equal(_path, '/tmp/' + fileName);
   }
 });
 
