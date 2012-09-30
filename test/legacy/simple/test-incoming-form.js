@@ -19,6 +19,7 @@ function test(test) {
   gently = new Gently();
   gently.expect(EventEmitterStub, 'call');
   form = new IncomingForm();
+  form.openedFiles = [];
   test();
   gently.verify(test.name);
 }
