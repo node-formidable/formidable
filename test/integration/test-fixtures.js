@@ -78,12 +78,21 @@ function uploadFixture(name, cb) {
         parts.push({type: 'field', name: name, value: value});
       })
       .on('end', function() {
+        res.write("FormidableSuccess");
+        res.end();
         callback(null, parts);
       });
   });
 
   var socket = net.createConnection(common.port);
   var file = fs.createReadStream(common.dir.fixture + '/http/' + name);
-
+  full_response = "";
+  socket.on('data', function (data) {
+    full_response += data;
+  });
+  socket.on('end', function() {
+    assert(/200/.test(full_response));
+    assert(/FormidableSuccess/.test(full_response));
+  });
   file.pipe(socket);
 }
