@@ -71,8 +71,7 @@ Parse an incoming file upload.
 
 ### Formidable.IncomingForm
 
-    var IncomingForm = formidable.IncomingForm;
-    var form = new IncomingForm();
+    var form = new formidable.IncomingForm()
 
 Creates a new incoming form.
 
