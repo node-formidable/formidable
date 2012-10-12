@@ -14,7 +14,8 @@
   },
   "main": "./lib/index",
   "scripts": {
-    "test": "make test"
+    "test": "node test/run.js",
+    "clean": "rm test/tmp/*"
   },
   "engines": {
     "node": ">=0.8.0 <0.10.0"
