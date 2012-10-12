@@ -45,12 +45,15 @@ Parse an incoming file upload.
     http.createServer(function(req, res) {
       if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
         // parse a file upload
-        var form = new formidable.IncomingForm();
+        var IncomingForm = formidable.IncomingForm;
+        var form = new IncomingForm();
+
         form.parse(req, function(err, fields, files) {
           res.writeHead(200, {'content-type': 'text/plain'});
           res.write('received upload:\n\n');
           res.end(util.inspect({fields: fields, files: files}));
         });
+
         return;
       }
 
@@ -69,59 +72,59 @@ Parse an incoming file upload.
 
 ### Formidable.IncomingForm
 
-
-    var form = new formidable.IncomingForm()
+    var IncomingForm = formidable.IncomingForm;
+    var form = new IncomingForm();
 
 Creates a new incoming form.
 
 
-    form.encoding = 'utf-8'
-    
+    form.encoding = 'utf-8';
+
 Sets encoding for incoming form fields.
 
 
-    form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd()
+    form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
 
 The directory for placing file uploads in. You can move them later on using
 `fs.rename()`. The default directory is picked at module load time depending on
 the first existing directory from those listed above.
 
 
-    form.keepExtensions = false
-    
+    form.keepExtensions = false;
+
 If you want the files written to `form.uploadDir` to include the extensions of the original files, set this property to `true`.
-       
+
 
     form.type
-    
+
 Either 'multipart' or 'urlencoded' depending on the incoming request.
 
 
-    form.maxFieldsSize = 2 * 1024 * 1024
-    
+    form.maxFieldsSize = 2 * 1024 * 1024;
+
 Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
 
 
-    form.hash = false
-    
+    form.hash = false;
+
 If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
 
 
     form.bytesReceived
-    
+
 The amount of bytes received for this form so far.
 
 
     form.bytesExpected
-    
+
 The expected number of bytes in this form.
 
 
-    form.parse(request, [cb])
-    
+    form.parse(request, [cb]);
+
 Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:
 
 
@@ -130,7 +133,7 @@ Parses an incoming node.js `request` containing form data. If `cb` is provided, 
       // ...
     });
 
-    form.onPart(part)
+    form.onPart(part);
 
 You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events  processing which would occur otherwise, making you fully responsible for handling the processing.
 
@@ -189,7 +192,7 @@ If hash calculation was set, you can read the hex digest out of this var.
 
     form.on('progress', function(bytesReceived, bytesExpected) {
     });
-    
+
 Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
 
 
@@ -198,7 +201,7 @@ Emitted after each incoming chunk of data that has been parsed. Can be used to r
 
     form.on('field', function(name, value) {
     });
-    
+
 
 #### 'fileBegin'
 
@@ -206,7 +209,7 @@ Emitted whenever a field / value pair has been received.
 
     form.on('fileBegin', function(name, file) {
     });
-    
+
 
 #### 'file'
 
@@ -218,7 +221,7 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 
     form.on('file', function(name, file) {
     });
-    
+
 
 #### 'error'
 
@@ -230,7 +233,7 @@ Emitted when there is an error processing the incoming form. A request that expe
 
 #### 'aborted'
 
-  
+
 Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
 
     form.on('aborted', function() {
@@ -241,7 +244,7 @@ Emitted when the request was aborted by the user. Right now this can be due to a
 
     form.on('end', function() {
     });
-    
+
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
 
 
