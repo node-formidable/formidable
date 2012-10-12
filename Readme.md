@@ -214,13 +214,15 @@ Emitted whenever a new file is detected in the upload stream. Use this even if
 you want to stream the file to somewhere else while buffering the upload on
 the file system.
 
+Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
+
     form.on('file', function(name, file) {
     });
     
 
 #### 'error'
 
-Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
+Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
 
     form.on('error', function(err) {
     });
@@ -228,15 +230,14 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 
 #### 'aborted'
 
-Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
+  
+Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
 
     form.on('aborted', function() {
     });
 
 
 ##### 'end'
-    
-Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
 
     form.on('end', function() {
     });
