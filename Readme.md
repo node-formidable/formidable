@@ -38,14 +38,14 @@ Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run
 
 Parse an incoming file upload.
 
-    var Formidable = require('formidable'),
+    var formidable = require('formidable'),
         http = require('http'),
         util = require('util');
 
     http.createServer(function(req, res) {
       if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
         // parse a file upload
-        var form = new Formidable.IncomingForm();
+        var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
           res.writeHead(200, {'content-type': 'text/plain'});
           res.write('received upload:\n\n');
@@ -70,7 +70,7 @@ Parse an incoming file upload.
 ### Formidable.IncomingForm
 
 
-    var form = new Formidable.IncomingForm()
+    var form = new formidable.IncomingForm()
 
 Creates a new incoming form.
 
@@ -89,7 +89,7 @@ the first existing directory from those listed above.
 
     form.keepExtensions = false
     
-If you want the files written to `incomingForm.uploadDir` to include the extensions of the original files, set this property to `true`.
+If you want the files written to `form.uploadDir` to include the extensions of the original files, set this property to `true`.
        
 
     form.type
@@ -146,7 +146,7 @@ If you want to use formidable to only handle certain parts for you, you can do s
     form.onPart = function(part) {
       if (!part.filename) {
         // let formidable handle all non-file parts
-        incomingForm.handlePart(part);
+        form.handlePart(part);
       }
     }
 
