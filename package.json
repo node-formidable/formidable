@@ -1,6 +1,7 @@
 {
   "name": "formidable",
   "description": "A node.js module for parsing form data, especially file uploads.",
+  "homepage": "https://github.com/felixge/node-formidable",
   "version": "1.0.11",
   "dependencies": {},
   "devDependencies": {
