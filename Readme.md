@@ -45,8 +45,7 @@ Parse an incoming file upload.
     http.createServer(function(req, res) {
       if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
         // parse a file upload
-        var IncomingForm = formidable.IncomingForm;
-        var form = new IncomingForm();
+        var form = new formidable.IncomingForm();
 
         form.parse(req, function(err, fields, files) {
           res.writeHead(200, {'content-type': 'text/plain'});
