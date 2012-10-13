@@ -24,7 +24,7 @@ server.on('request', function(req, res) {
       file
         .on('progress', function(bytesReceived) {
           tracker.progress.push(bytesReceived);
-          assert.equal(bytesReceived, file.length);
+          assert.equal(bytesReceived, file.size);
         })
         .on('end', function() {
           tracker.ended = true;
@@ -43,7 +43,7 @@ server.on('request', function(req, res) {
       assert.ok(uploads['shortest_video.flv'].ended);
       assert.ok(uploads['shortest_video.flv'].progress.length > 3);
       assert.equal(uploads['shortest_video.flv'].file.hash, 'd6a17616c7143d1b1438ceeef6836d1a09186b3a');
-      assert.equal(uploads['shortest_video.flv'].progress.slice(-1), uploads['shortest_video.flv'].file.length);
+      assert.equal(uploads['shortest_video.flv'].progress.slice(-1), uploads['shortest_video.flv'].file.size);
       assert.ok(uploads['shortest_video.mp4']);
       assert.ok(uploads['shortest_video.mp4'].ended);
       assert.ok(uploads['shortest_video.mp4'].progress.length > 3);
