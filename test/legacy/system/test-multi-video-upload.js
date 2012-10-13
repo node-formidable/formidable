@@ -20,7 +20,7 @@ server.on('request', function(req, res) {
       assert.equal(field, 'upload');
 
       var tracker = {file: file, progress: [], ended: false};
-      uploads[file.filename] = tracker;
+      uploads[file.name] = tracker;
       file
         .on('progress', function(bytesReceived) {
           tracker.progress.push(bytesReceived);
@@ -36,7 +36,7 @@ server.on('request', function(req, res) {
     })
     .on('file', function(field, file) {
       assert.equal(field, 'upload');
-      assert.strictEqual(uploads[file.filename].file, file);
+      assert.strictEqual(uploads[file.name].file, file);
     })
     .on('end', function() {
       assert.ok(uploads['shortest_video.flv']);
