@@ -56,20 +56,17 @@ server.on('request', function(req, res) {
 });
 
 server.listen(TEST_PORT, function() {
-  var client = http.createClient(TEST_PORT),
-      stat = fs.statSync(FIXTURE),
-      headers = {
-        'content-type': 'multipart/form-data; boundary='+BOUNDARY,
-        'content-length': stat.size,
-      }
-      request = client.request('POST', '/', headers),
-      fixture = new fs.ReadStream(FIXTURE);
+  var stat, headers, request, fixture;
 
-  fixture
-    .on('data', function(b) {
-      request.write(b);
-    })
-    .on('end', function() {
-      request.end();
-    });
+  stat = fs.statSync(FIXTURE);
+  request = http.request({
+    port: TEST_PORT,
+    path: '/',
+    method: 'POST',
+    headers: {
+      'content-type': 'multipart/form-data; boundary='+BOUNDARY,
+      'content-length': stat.size,
+    },
+  });
+  fs.createReadStream(FIXTURE).pipe(request);
 });
