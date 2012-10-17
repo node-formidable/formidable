@@ -19,5 +19,9 @@
   "engines": {
     "node": "*"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/felixge/node-formidable.git"
+  },
   "optionalDependencies": {}
 }
