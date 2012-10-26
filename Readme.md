@@ -23,163 +23,164 @@ a large variety of clients and is considered production-ready.
 ## Installation
 
 Via [npm](http://github.com/isaacs/npm):
-
-    npm install formidable@latest
-
+```
+npm install formidable@latest
+```
 Manually:
-
-    git clone git://github.com/felixge/node-formidable.git formidable
-    vim my.js
-    # var formidable = require('./formidable');
+```
+git clone git://github.com/felixge/node-formidable.git formidable
+vim my.js
+# var formidable = require('./formidable');
+```
 
 Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run the unit tests, but you won't need it for just using the library.
 
 ## Example
 
 Parse an incoming file upload.
+```javascript
+var formidable = require('formidable'),
+    http = require('http'),
+    util = require('util');
 
-    var formidable = require('formidable'),
-        http = require('http'),
-        util = require('util');
+http.createServer(function(req, res) {
+  if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
+    // parse a file upload
+    var form = new formidable.IncomingForm();
 
-    http.createServer(function(req, res) {
-      if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
-        // parse a file upload
-        var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+      res.end(util.inspect({fields: fields, files: files}));
+    });
 
-        form.parse(req, function(err, fields, files) {
-          res.writeHead(200, {'content-type': 'text/plain'});
-          res.write('received upload:\n\n');
-          res.end(util.inspect({fields: fields, files: files}));
-        });
+    return;
+  }
 
-        return;
-      }
-
-      // show a file upload form
-      res.writeHead(200, {'content-type': 'text/html'});
-      res.end(
-        '<form action="/upload" enctype="multipart/form-data" method="post">'+
-        '<input type="text" name="title"><br>'+
-        '<input type="file" name="upload" multiple="multiple"><br>'+
-        '<input type="submit" value="Upload">'+
-        '</form>'
-      );
-    }).listen(8080);
-
+  // show a file upload form
+  res.writeHead(200, {'content-type': 'text/html'});
+  res.end(
+    '<form action="/upload" enctype="multipart/form-data" method="post">'+
+    '<input type="text" name="title"><br>'+
+    '<input type="file" name="upload" multiple="multiple"><br>'+
+    '<input type="submit" value="Upload">'+
+    '</form>'
+  );
+}).listen(8080);
+```
 ## API
 
 ### Formidable.IncomingForm
-
-    var form = new formidable.IncomingForm()
-
+```javascript
+var form = new formidable.IncomingForm()
+```
 Creates a new incoming form.
 
-
-    form.encoding = 'utf-8';
-
+```javascript
+form.encoding = 'utf-8';
+```
 Sets encoding for incoming form fields.
 
-
-    form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
-
+```javascript
+form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
+```
 The directory for placing file uploads in. You can move them later on using
 `fs.rename()`. The default directory is picked at module load time depending on
 the first existing directory from those listed above.
 
-
-    form.keepExtensions = false;
-
+```javascript
+form.keepExtensions = false;
+```
 If you want the files written to `form.uploadDir` to include the extensions of the original files, set this property to `true`.
 
-
-    form.type
-
+```javascript
+form.type
+```
 Either 'multipart' or 'urlencoded' depending on the incoming request.
 
-
-    form.maxFieldsSize = 2 * 1024 * 1024;
-
+```javascript
+form.maxFieldsSize = 2 * 1024 * 1024;
+```
 Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
 
-
-    form.hash = false;
-
+```javascript
+form.hash = false;
+```
 If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
 
-
-    form.bytesReceived
-
+```javascript
+form.bytesReceived
+```
 The amount of bytes received for this form so far.
 
-
-    form.bytesExpected
-
+```javascript
+form.bytesExpected
+```
 The expected number of bytes in this form.
 
-
-    form.parse(request, [cb]);
-
+```javascript
+form.parse(request, [cb]);
+```
 Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:
 
 
+```javascript
+form.parse(req, function(err, fields, files) {
+  // ...
+});
 
-    form.parse(req, function(err, fields, files) {
-      // ...
-    });
-
-    form.onPart(part);
-
+form.onPart(part);
+```
 You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events  processing which would occur otherwise, making you fully responsible for handling the processing.
 
-
-    form.onPart = function(part) {
-      part.addListener('data', function() {
-        // ...
-      });
-    }
-
+```javascript
+form.onPart = function(part) {
+  part.addListener('data', function() {
+    // ...
+  });
+}
+```
 If you want to use formidable to only handle certain parts for you, you can do so:
-
-    form.onPart = function(part) {
-      if (!part.filename) {
-        // let formidable handle all non-file parts
-        form.handlePart(part);
-      }
-    }
-
+```javascript
+form.onPart = function(part) {
+  if (!part.filename) {
+    // let formidable handle all non-file parts
+    form.handlePart(part);
+  }
+}
+```
 Check the code in this method for further inspiration.
 
 
 ### Formidable.File
-
-    file.size = 0
-
+```javascript
+file.size = 0
+```
 The size of the uploaded file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
-
-    file.path = null
-
+```javascript
+file.path = null
+```
 The path this file is being written to. You can modify this in the `'fileBegin'` event in
 case you are unhappy with the way formidable generates a temporary path for your files.
-
-    file.name = null
-
+```javascript
+file.name = null
+```
 The name this file had according to the uploading client.
-
-    file.type = null
-
+```javascript
+file.type = null
+```
 The mime type of this file, according to the uploading client.
-
-    file.lastModifiedDate = null
-
+```javascript
+file.lastModifiedDate = null
+```
 A date object (or `null`) containing the time this file was last written to. Mostly
 here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
-
-    file.hash = null
-
+```javascript
+file.hash = null
+```
 If hash calculation was set, you can read the hex digest out of this var.
 
 
@@ -187,27 +188,27 @@ If hash calculation was set, you can read the hex digest out of this var.
 
 
 #### 'progress'
-
-    form.on('progress', function(bytesReceived, bytesExpected) {
-    });
-
+```javascript
+form.on('progress', function(bytesReceived, bytesExpected) {
+});
+```
 Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
 
 
 
 #### 'field'
-
-    form.on('field', function(name, value) {
-    });
-
+```javascript
+form.on('field', function(name, value) {
+});
+```
 
 #### 'fileBegin'
 
 Emitted whenever a field / value pair has been received.
-
-    form.on('fileBegin', function(name, file) {
-    });
-
+```javascript
+form.on('fileBegin', function(name, file) {
+});
+```
 
 #### 'file'
 
@@ -216,33 +217,33 @@ you want to stream the file to somewhere else while buffering the upload on
 the file system.
 
 Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
-
-    form.on('file', function(name, file) {
-    });
-
+```javascript
+form.on('file', function(name, file) {
+});
+```
 
 #### 'error'
 
 Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
-
-    form.on('error', function(err) {
-    });
-
+```javascript
+form.on('error', function(err) {
+});
+```
 
 #### 'aborted'
 
 
 Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
-
-    form.on('aborted', function() {
-    });
-
+```javascript
+form.on('aborted', function() {
+});
+```
 
 ##### 'end'
-
-    form.on('end', function() {
-    });
-
+```javascript
+form.on('end', function() {
+});
+```
 Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
 
 
