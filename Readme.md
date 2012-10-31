@@ -182,6 +182,11 @@ here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/weba
 
 If hash calculation was set, you can read the hex digest out of this var.
 
+#### Formidable.File#toJSON()
+
+  This method returns a JSON-representation of the file, allowing you to
+  `JSON.stringify()` the file which is useful for logging and responding
+  to requests.
 
 ### Events
 
