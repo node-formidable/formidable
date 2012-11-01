@@ -183,6 +183,11 @@ file.hash = null
 ```
 If hash calculation was set, you can read the hex digest out of this var.
 
+#### Formidable.File#toJSON()
+
+  This method returns a JSON-representation of the file, allowing you to
+  `JSON.stringify()` the file which is useful for logging and responding
+  to requests.
 
 ### Events
 
