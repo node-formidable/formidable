@@ -13,3 +13,7 @@ module.exports['blank.gif.http'] = [
 module.exports['binaryfile.tar.gz.http'] = [
   {type: 'file', name: 'file', filename: 'binaryfile.tar.gz', fixture: 'binaryfile.tar.gz'}
 ];
+
+module.exports['plain.txt.http'] = [
+  {type: 'file', name: 'file', filename: 'plain.txt', fixture: 'plain.txt'}
+];
