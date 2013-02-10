@@ -62,15 +62,15 @@ test(function parse() {
   var REQ = {headers: {}}
     , emit = {};
 
-  gently.expect(form, 'writeHeaders', function(headers) {
-    assert.strictEqual(headers, REQ.headers);
-  });
-
   var events = ['error', 'aborted', 'data', 'end'];
   gently.expect(REQ, 'on', events.length, function(event, fn) {
     assert.equal(event, events.shift());
     emit[event] = fn;
     return this;
+  });
+
+  gently.expect(form, 'writeHeaders', function(headers) {
+    assert.strictEqual(headers, REQ.headers);
   });
 
   form.parse(REQ);
@@ -195,7 +195,6 @@ test(function parse() {
         REQ = {headers: {}},
         parseCalled = 0;
 
-    gently.expect(form, 'writeHeaders');
     gently.expect(REQ, 'on', 4, function() {
       return this;
     });
@@ -219,12 +218,12 @@ test(function parse() {
       return this;
     });
 
-    form.parse(REQ, gently.expect(function parseCbOk(err, fields, files) {
+    var parseCbOk = function (err, fields, files) {
       assert.deepEqual(fields, {field1: 'bar', field2: 'nice'});
       assert.deepEqual(files, {file1: '2', file2: '3'});
-    }));
-
+    };
     gently.expect(form, 'writeHeaders');
+    form.parse(REQ, parseCbOk);
     gently.expect(REQ, 'on', 4, function() {
       return this;
     });
@@ -238,14 +237,15 @@ test(function parse() {
       if (event == 'error') {
         fn(ERR);
         gently.expect(form, 'on');
+        gently.expect(form, 'writeHeaders');
       }
       return this;
     });
 
-    form.parse(REQ, gently.expect(function parseCbErr(err, fields, files) {
+    form.parse(REQ, function parseCbErr(err, fields, files) {
       assert.strictEqual(err, ERR);
       assert.deepEqual(fields, {foo: 'bar'});
-    }));
+    });
   })();
 });
 
