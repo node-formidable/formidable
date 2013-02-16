@@ -78,6 +78,7 @@ function uploadFixture(name, cb) {
         parts.push({type: 'field', name: name, value: value});
       })
       .on('end', function() {
+        res.end('OK');
         callback(null, parts);
       });
   });
@@ -85,5 +86,9 @@ function uploadFixture(name, cb) {
   var socket = net.createConnection(common.port);
   var file = fs.createReadStream(common.dir.fixture + '/http/' + name);
 
-  file.pipe(socket);
+  file.pipe(socket, {end: false});
+  socket.on('data', function () {
+    socket.end();
+  });
+
 }
