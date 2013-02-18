@@ -149,6 +149,7 @@ test(function parse() {
     gently.expect(form, 'emit',function(event) {
       assert.equal(event, 'aborted');
     });
+    gently.expect(form, '_error');
 
     emit.aborted();
   })();
