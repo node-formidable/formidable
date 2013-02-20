@@ -255,6 +255,34 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
+### v1.0.12
+
+* Emit error on aborted connections (Eugene Girshov)
+* Add support for empty requests (Eugene Girshov)
+* Fix name/filename handling in Content-Disposition (jesperp)
+* Tolerate malformed closing boundary in multipart (Eugene Girshov) 
+* Ignore preamble in multipart messages (Eugene Girshov)
+* Add support for application/json (Mike Frey, Carlos Rodriguez)
+* Add support for Base64 encoding (Elmer Bulthuis)
+* Add File#toJSON (TJ Holowaychuk) 
+* Remove support for Node.js 0.4 & 0.6 (Andrew Kelley)
+* Documentation improvements (Sven Lito, Andre Azevedo)
+* Add support for application/octet-stream (Ion Lupascu, Chris Scribner)
+* Use os.tmpDir() to get tmp directory (Andrew Kelley)
+* Improve package.json (Andrew Kelley, Sven Lito)
+* Fix benchmark script (Andrew Kelley)
+* Fix scope issue in incoming_forms (Sven Lito)
+* Fix file handle leak on error (OrangeDog)
+
+### v1.0.11
+
+* Calculate checksums for incoming files (sreuter)
+* Add definition parameters to "IncomingForm" as an argument (Math-)
+
+### v1.0.10
+
+* Make parts to be proper Streams (Matt Robenolt)
+
 ### v1.0.9
 
 * Emit progress when content length header parsed (Tim Koschützki)
