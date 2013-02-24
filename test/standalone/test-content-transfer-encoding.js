@@ -39,7 +39,10 @@ server.listen(0, function() {
   });
   req.on('response', function (res) {
     assert.equal(res.statusCode, 500);
-    server.close();
+    res.on('data', function () {});
+    res.on('end', function () {
+      server.close();
+    });
   });
   req.end(body);
 });
