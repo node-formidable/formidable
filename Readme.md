@@ -154,6 +154,16 @@ form.onPart = function(part) {
 ```
 Check the code in this method for further inspiration.
 
+```
+form.filterPart(part);
+````
+You may overwrite this method if you want to select file to upload.
+```
+form.filterPart = function(part) {
+  // Accept only images files.
+  return /^image\/(jpeg|png|gif)$/.exec(part.mime);
+}
+```
 
 ### Formidable.File
 ```javascript
