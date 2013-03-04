@@ -105,6 +105,11 @@ Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
+```javascript
+form.maxFields = 0;
+```
+Limits the number of fields that the querystring parser will decode. Defaults
+to 0 (unlimited).
 
 ```javascript
 form.hash = false;
