@@ -378,9 +378,12 @@ test(function parseContentLength() {
   var HEADERS = {};
 
   form.headers = {};
+  gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
+    assert.equal(event, 'progress');
+    assert.equal(bytesReceived, 0);
+    assert.equal(bytesExpected, 0);
+  });
   form._parseContentLength();
-  assert.strictEqual(form.bytesReceived, null);
-  assert.strictEqual(form.bytesExpected, null);
 
   form.headers['content-length'] = '8';
   gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
