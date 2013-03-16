@@ -260,16 +260,27 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
+### v1.0.13
+
+* Only update hash if update method exists (Sven Lito)
+* According to travis v0.10 needs to go quoted (Sven Lito)
+* Bumping build node versions (Sven Lito)
+* Change the default to 1000, to match the new Node behaviour. (OrangeDog)
+* Add ability to control maxKeys in the querystring parser. (OrangeDog)
+* Adjust test case to work with node 0.9.x (Eugene Girshov)
+* Update package.json (Sven Lito)
+* Path adjustment according to eb4468b (Markus Ast)
+
 ### v1.0.12
 
 * Emit error on aborted connections (Eugene Girshov)
 * Add support for empty requests (Eugene Girshov)
 * Fix name/filename handling in Content-Disposition (jesperp)
-* Tolerate malformed closing boundary in multipart (Eugene Girshov) 
+* Tolerate malformed closing boundary in multipart (Eugene Girshov)
 * Ignore preamble in multipart messages (Eugene Girshov)
 * Add support for application/json (Mike Frey, Carlos Rodriguez)
 * Add support for Base64 encoding (Elmer Bulthuis)
-* Add File#toJSON (TJ Holowaychuk) 
+* Add File#toJSON (TJ Holowaychuk)
 * Remove support for Node.js 0.4 & 0.6 (Andrew Kelley)
 * Documentation improvements (Sven Lito, Andre Azevedo)
 * Add support for application/octet-stream (Ion Lupascu, Chris Scribner)
