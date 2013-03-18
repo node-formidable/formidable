@@ -265,6 +265,7 @@ Emitted when the entire request has been received, and all contained files have 
 * Only update hash if update method exists (Sven Lito)
 * According to travis v0.10 needs to go quoted (Sven Lito)
 * Bumping build node versions (Sven Lito)
+* Additional fix for empty requests (Eugene Girshov)
 * Change the default to 1000, to match the new Node behaviour. (OrangeDog)
 * Add ability to control maxKeys in the querystring parser. (OrangeDog)
 * Adjust test case to work with node 0.9.x (Eugene Girshov)
