@@ -50,15 +50,16 @@ test(function write() {
       };
 
   file._writeStream = {};
+  assert.equal(file.size, 0);
+
+  gently.expect(file, 'emit', function (event, bytesWritten) {
+    assert.ok(file.lastModifiedDate instanceof Date);
+    assert.equal(event, 'progress');
+    assert.equal(bytesWritten, file.size);
+  });
 
   gently.expect(file._writeStream, 'write', function (buffer, cb) {
     assert.strictEqual(buffer, BUFFER);
-
-    gently.expect(file, 'emit', function (event, bytesWritten) {
-      assert.ok(file.lastModifiedDate instanceof Date);
-      assert.equal(event, 'progress');
-      assert.equal(bytesWritten, file.size);
-    });
 
     CB_STUB = gently.expect(function writeCb() {
       assert.equal(file.size, 10);
@@ -66,13 +67,8 @@ test(function write() {
 
     cb();
 
-    gently.expect(file, 'emit', function (event, bytesWritten) {
-      assert.equal(event, 'progress');
-      assert.equal(bytesWritten, file.size);
-    });
-
     CB_STUB = gently.expect(function writeCb() {
-      assert.equal(file.size, 20);
+      assert.equal(file.size, 10);
     });
 
     cb();
