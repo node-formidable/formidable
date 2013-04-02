@@ -16,7 +16,7 @@
     "request": "~2.16.6",
     "mkdirp": "~0.3.5"
   },
-  "main": "index.js",
+  "main": "./lib/incoming_form.js",
   "scripts": {
     "test": "mocha --reporter spec --recursive test/test.js"
   },

@@ -1,5 +1,5 @@
 var assert = require('assert')
-  , MultipartParser = require('../lib/multipart_parser')
+  , MultipartParser = require('../lib/parser')
   , parser = new MultipartParser()
   , boundary = '-----------------------------168072824752491622650073'
   , mb = 100
