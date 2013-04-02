@@ -1,11 +1,12 @@
-var assert = require('assert');
-var common = require('../common');
-var formidable = require('../../lib/index');
-var http = require('http');
+var assert = require('assert')
+  , formidable = require('../../')
+  , http = require('http')
+  , path = require('path')
+  , TMP_PATH = path.join(__dirname, '..', 'tmp')
 
 var server = http.createServer(function(req, res) {
   var form = new formidable.IncomingForm();
-  form.uploadDir = common.dir.tmp;
+  form.uploadDir = TMP_PATH;
   form.on('end', function () {
     throw new Error('Unexpected "end" event');
   });

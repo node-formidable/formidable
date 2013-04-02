@@ -1,33 +1,26 @@
 {
   "name": "formidable",
-  "description": "A node.js module for parsing form data, especially file uploads.",
-  "homepage": "https://github.com/felixge/node-formidable",
+  "description": "multipart/form-data parser which supports streaming",
+  "keywords": [
+    "file",
+    "upload",
+    "formidable",
+    "stream",
+    "s3"
+  ],
   "version": "1.0.13",
   "devDependencies": {
-    "gently": "0.8.0",
     "findit": "0.1.1",
     "hashish": "0.0.4",
-    "urun": "~0.0.6",
-    "utest": "0.0.3",
-    "request": "~2.11.4"
+    "mocha": "~1.8.2",
+    "request": "~2.16.6",
+    "mkdirp": "~0.3.5"
   },
-  "directories": {
-    "lib": "./lib"
-  },
-  "main": "./lib/index",
+  "main": "index.js",
   "scripts": {
-    "test": "node test/run.js",
-    "clean": "rm test/tmp/*"
+    "test": "mocha --reporter spec --recursive test/test.js"
   },
   "engines": {
     "node": ">=0.8.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/felixge/node-formidable.git"
-  },
-  "bugs": {
-    "url": "http://github.com/felixge/node-formidable/issues"
-  },
-  "optionalDependencies": {}
+  }
 }

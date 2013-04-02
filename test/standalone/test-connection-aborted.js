@@ -1,7 +1,7 @@
 var assert = require('assert');
 var http = require('http');
 var net = require('net');
-var formidable = require('../../lib/index');
+var formidable = require('../../');
 
 var server = http.createServer(function (req, res) {
   var form = new formidable.IncomingForm();
