@@ -1,8 +1,5 @@
+[![Build Status](https://travis-ci.org/superjoe30/node-multiparty.png?branch=master)](https://travis-ci.org/superjoe30/node-multiparty)
 # multiparty
-
-[![Build Status](https://secure.travis-ci.org/superjoe30/node-multiparty.png?branch=master)](http://travis-ci.org/superjoe30/node-multiparty)
-
-## Purpose
 
 Parse http requests with content-type `multipart/form-data`, also known as file uploads.
 
