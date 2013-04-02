@@ -1,9 +1,9 @@
-var http = require('http'),
-    util = require('util'),
-    multiparty = require('../'),
-    server;
+var http = require('http')
+  , util = require('util')
+  , multiparty = require('../')
+  , PORT = process.env.PORT || 27372
 
-server = http.createServer(function(req, res) {
+var server = http.createServer(function(req, res) {
   if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
@@ -40,6 +40,6 @@ server = http.createServer(function(req, res) {
     res.end('404');
   }
 });
-server.listen(9999);
-
-console.log('listening on http://localhost:'+9999+'/');
+server.listen(PORT, function() {
+  console.info('listening on http://0.0.0.0:'+9999+'/');
+});
