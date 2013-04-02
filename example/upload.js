@@ -1,4 +1,3 @@
-require('../test/common');
 var http = require('http'),
     util = require('util'),
     multiparty = require('../'),
