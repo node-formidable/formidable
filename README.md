@@ -8,9 +8,10 @@ A node.js module for parsing form data, especially file uploads.
 
 ## Current status
 
-This module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading
-and encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from
-a large variety of clients and is considered production-ready.
+This module was developed for [Transloadit](http://transloadit.com/), a
+service focused on uploading and encoding images and videos. It has been
+battle-tested against hundreds of GB of file uploads from a large variety
+of clients and is considered production-ready.
 
 ## Features
 
@@ -22,23 +23,15 @@ a large variety of clients and is considered production-ready.
 
 ## Installation
 
-Via [npm](http://github.com/isaacs/npm):
 ```
-npm install formidable@latest
+npm install --save formidable
 ```
-Manually:
-```
-git clone git://github.com/felixge/node-formidable.git formidable
-vim my.js
-# var formidable = require('./formidable');
-```
-
-Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run the unit tests, but you won't need it for just using the library.
 
 ## Example
 
 Parse an incoming file upload.
-```javascript
+
+```js
 var formidable = require('formidable'),
     http = require('http'),
     util = require('util');
@@ -68,71 +61,72 @@ http.createServer(function(req, res) {
   );
 }).listen(8080);
 ```
+
 ## API
 
 ### Formidable.IncomingForm
-```javascript
+```js
 var form = new formidable.IncomingForm()
 ```
 Creates a new incoming form.
 
-```javascript
+```js
 form.encoding = 'utf-8';
 ```
 Sets encoding for incoming form fields.
 
-```javascript
+```js
 form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
 ```
 The directory for placing file uploads in. You can move them later on using
 `fs.rename()`. The default directory is picked at module load time depending on
 the first existing directory from those listed above.
 
-```javascript
+```js
 form.keepExtensions = false;
 ```
 If you want the files written to `form.uploadDir` to include the extensions of the original files, set this property to `true`.
 
-```javascript
+```js
 form.type
 ```
 Either 'multipart' or 'urlencoded' depending on the incoming request.
 
-```javascript
+```js
 form.maxFieldsSize = 2 * 1024 * 1024;
 ```
 Limits the amount of memory a field (not file) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
-```javascript
+```js
 form.maxFields = 0;
 ```
 Limits the number of fields that the querystring parser will decode. Defaults
 to 0 (unlimited).
 
-```javascript
+```js
 form.hash = false;
 ```
 If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
 
-```javascript
+```js
 form.bytesReceived
 ```
 The amount of bytes received for this form so far.
 
-```javascript
+```js
 form.bytesExpected
 ```
 The expected number of bytes in this form.
 
-```javascript
+```js
 form.parse(request, [cb]);
 ```
 Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:
 
 
-```javascript
+```js
 form.parse(req, function(err, fields, files) {
   // ...
 });
@@ -141,7 +135,7 @@ form.onPart(part);
 ```
 You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events  processing which would occur otherwise, making you fully responsible for handling the processing.
 
-```javascript
+```js
 form.onPart = function(part) {
   part.addListener('data', function() {
     // ...
@@ -149,7 +143,7 @@ form.onPart = function(part) {
 }
 ```
 If you want to use formidable to only handle certain parts for you, you can do so:
-```javascript
+```js
 form.onPart = function(part) {
   if (!part.filename) {
     // let formidable handle all non-file parts
@@ -161,29 +155,29 @@ Check the code in this method for further inspiration.
 
 
 ### Formidable.File
-```javascript
+```js
 file.size = 0
 ```
 The size of the uploaded file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
-```javascript
+```js
 file.path = null
 ```
 The path this file is being written to. You can modify this in the `'fileBegin'` event in
 case you are unhappy with the way formidable generates a temporary path for your files.
-```javascript
+```js
 file.name = null
 ```
 The name this file had according to the uploading client.
-```javascript
+```js
 file.type = null
 ```
 The mime type of this file, according to the uploading client.
-```javascript
+```js
 file.lastModifiedDate = null
 ```
 A date object (or `null`) containing the time this file was last written to. Mostly
 here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
-```javascript
+```js
 file.hash = null
 ```
 If hash calculation was set, you can read the hex digest out of this var.
@@ -198,7 +192,7 @@ If hash calculation was set, you can read the hex digest out of this var.
 
 
 #### 'progress'
-```javascript
+```js
 form.on('progress', function(bytesReceived, bytesExpected) {
 });
 ```
@@ -207,7 +201,7 @@ Emitted after each incoming chunk of data that has been parsed. Can be used to r
 
 
 #### 'field'
-```javascript
+```js
 form.on('field', function(name, value) {
 });
 ```
@@ -215,7 +209,7 @@ form.on('field', function(name, value) {
 #### 'fileBegin'
 
 Emitted whenever a field / value pair has been received.
-```javascript
+```js
 form.on('fileBegin', function(name, file) {
 });
 ```
@@ -227,7 +221,7 @@ you want to stream the file to somewhere else while buffering the upload on
 the file system.
 
 Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
-```javascript
+```js
 form.on('file', function(name, file) {
 });
 ```
@@ -235,7 +229,7 @@ form.on('file', function(name, file) {
 #### 'error'
 
 Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
-```javascript
+```js
 form.on('error', function(err) {
 });
 ```
@@ -244,13 +238,13 @@ form.on('error', function(err) {
 
 
 Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
-```javascript
+```js
 form.on('aborted', function() {
 });
 ```
 
 ##### 'end'
-```javascript
+```js
 form.on('end', function() {
 });
 ```
