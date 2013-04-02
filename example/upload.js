@@ -1,11 +1,11 @@
 require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('formidable'),
+    multiparty = require('../'),
     server;
 
 server = http.createServer(function(req, res) {
-  if (req.url == '/') {
+  if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
       '<form action="/upload" enctype="multipart/form-data" method="post">'+
@@ -14,12 +14,10 @@ server = http.createServer(function(req, res) {
       '<input type="submit" value="Upload">'+
       '</form>'
     );
-  } else if (req.url == '/upload') {
-    var form = new formidable.IncomingForm(),
+  } else if (req.url === '/upload') {
+    var form = new multiparty.IncomingForm(),
         files = [],
         fields = [];
-
-    form.uploadDir = TEST_TMP;
 
     form
       .on('field', function(field, value) {
@@ -43,6 +41,6 @@ server = http.createServer(function(req, res) {
     res.end('404');
   }
 });
-server.listen(TEST_PORT);
+server.listen(9999);
 
-console.log('listening on http://localhost:'+TEST_PORT+'/');
+console.log('listening on http://localhost:'+9999+'/');

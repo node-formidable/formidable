@@ -1,11 +1,13 @@
 require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('formidable'),
+    multiparty = require('../'),
     server;
 
+var TEST_PORT = 9999;
+
 server = http.createServer(function(req, res) {
-  if (req.url == '/') {
+  if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
       '<form action="/post" method="post">'+
@@ -14,8 +16,8 @@ server = http.createServer(function(req, res) {
       '<input type="submit" value="Submit">'+
       '</form>'
     );
-  } else if (req.url == '/post') {
-    var form = new formidable.IncomingForm(),
+  } else if (req.url === '/post') {
+    var form = new multiparty.IncomingForm(),
         fields = [];
 
     form

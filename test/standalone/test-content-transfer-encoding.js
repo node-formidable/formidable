@@ -1,11 +1,11 @@
 var assert = require('assert')
-  , formidable = require('../../')
+  , multiparty = require('../../')
   , http = require('http')
   , path = require('path')
   , TMP_PATH = path.join(__dirname, '..', 'tmp')
 
 var server = http.createServer(function(req, res) {
-  var form = new formidable.IncomingForm();
+  var form = new multiparty.IncomingForm();
   form.uploadDir = TMP_PATH;
   form.on('end', function () {
     throw new Error('Unexpected "end" event');

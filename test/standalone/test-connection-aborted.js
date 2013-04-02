@@ -1,10 +1,10 @@
 var assert = require('assert');
 var http = require('http');
 var net = require('net');
-var formidable = require('../../');
+var multiparty = require('../../');
 
 var server = http.createServer(function (req, res) {
-  var form = new formidable.IncomingForm();
+  var form = new multiparty.IncomingForm();
   var aborted_received = false;
   form.on('aborted', function () {
     aborted_received = true;

@@ -6,7 +6,7 @@ var spawn = require('child_process').spawn
   , http = require('http')
   , net = require('net')
   , assert = require('assert')
-  , formidable = require('../')
+  , multiparty = require('../')
   , mkdirp = require('mkdirp')
   , STANDALONE_PATH = path.join(__dirname, 'standalone')
   , server = http.createServer()
@@ -79,7 +79,7 @@ function createTest(fixture) {
 function uploadFixture(name, cb) {
   server.once('request', function(req, res) {
     var parts = [];
-    var form = new formidable.IncomingForm();
+    var form = new multiparty.IncomingForm();
     form.uploadDir = TMP_PATH;
     form.hash = "sha1";
 

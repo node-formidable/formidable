@@ -1,8 +1,7 @@
 var common = require('../test/common'),
     http = require('http'),
     util = require('util'),
-    formidable = common.formidable,
-    Buffer = require('buffer').Buffer,
+    multiparty = require('../'),
     port = common.port,
     server;
 
@@ -13,7 +12,7 @@ server = http.createServer(function(req, res) {
     return;
   }
 
-  var form = new formidable.IncomingForm(),
+  var form = new multiparty.IncomingForm(),
       fields = {};
 
   form

@@ -1,5 +1,6 @@
 {
-  "name": "formidable",
+  "name": "multiparty",
+  "version": "1.0.13",
   "description": "multipart/form-data parser which supports streaming",
   "keywords": [
     "file",
@@ -8,7 +9,6 @@
     "stream",
     "s3"
   ],
-  "version": "1.0.13",
   "devDependencies": {
     "findit": "0.1.1",
     "hashish": "0.0.4",

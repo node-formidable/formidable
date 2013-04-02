@@ -1,6 +1,6 @@
-# Formidable
+# multiparty
 
-[![Build Status](https://secure.travis-ci.org/superjoe30/node-formidable.png?branch=master)](http://travis-ci.org/superjoe30/node-formidable)
+[![Build Status](https://secure.travis-ci.org/superjoe30/node-multiparty.png?branch=master)](http://travis-ci.org/superjoe30/node-multiparty)
 
 ## Purpose
 
@@ -18,7 +18,7 @@ Parse http requests with content-type `multipart/form-data`, also known as file 
 ## Installation
 
 ```
-npm install --save formidable
+npm install --save multiparty
 ```
 
 ## Example
@@ -26,14 +26,14 @@ npm install --save formidable
 Parse an incoming file upload.
 
 ```js
-var formidable = require('formidable'),
+var multiparty = require('multiparty'),
     http = require('http'),
     util = require('util');
 
 http.createServer(function(req, res) {
   if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
     // parse a file upload
-    var form = new formidable.IncomingForm();
+    var form = new multiparty.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
       res.writeHead(200, {'content-type': 'text/plain'});
@@ -58,9 +58,9 @@ http.createServer(function(req, res) {
 
 ## API
 
-### Formidable.IncomingForm
+### multiparty.IncomingForm
 ```js
-var form = new formidable.IncomingForm()
+var form = new multiparty.IncomingForm()
 ```
 Creates a new incoming form.
 
@@ -136,11 +136,11 @@ form.onPart = function(part) {
   });
 }
 ```
-If you want to use formidable to only handle certain parts for you, you can do so:
+If you want to use multiparty to only handle certain parts for you, you can do so:
 ```js
 form.onPart = function(part) {
   if (!part.filename) {
-    // let formidable handle all non-file parts
+    // let multiparty handle all non-file parts
     form.handlePart(part);
   }
 }
@@ -148,7 +148,7 @@ form.onPart = function(part) {
 Check the code in this method for further inspiration.
 
 
-### Formidable.File
+### multiparty.File
 ```js
 file.size = 0
 ```
@@ -157,7 +157,7 @@ The size of the uploaded file in bytes. If the file is still being uploaded (see
 file.path = null
 ```
 The path this file is being written to. You can modify this in the `'fileBegin'` event in
-case you are unhappy with the way formidable generates a temporary path for your files.
+case you are unhappy with the way multiparty generates a temporary path for your files.
 ```js
 file.name = null
 ```
@@ -176,7 +176,7 @@ file.hash = null
 ```
 If hash calculation was set, you can read the hex digest out of this var.
 
-#### Formidable.File#toJSON()
+#### multiparty.File#toJSON()
 
   This method returns a JSON-representation of the file, allowing you to
   `JSON.stringify()` the file which is useful for logging and responding
