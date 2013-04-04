@@ -16,7 +16,7 @@ Parse http requests with content-type `multipart/form-data`, also known as file 
 ## Installation
 
 ```
-npm install --save multiparty
+npm install multiparty
 ```
 
 ## Usage
