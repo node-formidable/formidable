@@ -355,7 +355,7 @@ Form.prototype.onParsePartData = function(b) {
 }
 
 Form.prototype.onParsePartEnd = function() {
-  this.destStream.end();
+  if (this.destStream) this.destStream.end();
   clearPartVars(this);
 }
 
