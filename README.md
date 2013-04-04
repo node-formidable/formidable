@@ -5,12 +5,13 @@ Parse http requests with content-type `multipart/form-data`, also known as file 
 
 ### Why the fork?
 
- * This module uses the Node.js v0.10 streams properly. It will not create a
-   temp file for you. You could easily stream to S3 using
-   [knox](https://github.com/LearnBoost/knox), for [example]().
- * Less bugs. This code is simpler and has cleaner tests, and does not try to
-   do anything beyond multipart stream parsing.
- * Fast.
+ * This module uses the Node.js v0.10 streams properly, *even in Node.js v0.8*
+ * It will not create a temp file for you unless you want it to.
+ * You can easily stream uploads to s3 with
+   [knox](https://github.com/LearnBoost/knox), for [example](examples/s3.js).
+ * Less bugs. This code is simpler, has all deprecated functionality removed,
+   has cleaner tests, and does not try to do anything beyond multipart stream
+   parsing.
 
 ## Installation
 
@@ -62,28 +63,22 @@ var form = new multiparty.Form(options)
 Creates a new form. Options:
 
  * `encoding` - sets encoding for the incoming form fields. Defaults to `utf8`.
- * `uploadDir` - the directory for placing file uploads in. You can move them
-   later using `fs.rename()`. Defaults to `os.tmpDir()`.
  * `maxFieldSize` - Limits the amount of memory a field (not a file) can
    allocate in bytes. If this value is exceeded, an `error` event is emitted.
    The default size is 2MB.
  * `maxFields` - Limits the number of fields that will be parsed before
    emitting an `error` event. A file counts as a field in this case.
    Defaults to 1000.
- * `hash` - If you want checksums calculated for incoming files, set this to
-   either `sha1` or `md5`. Defaults to off.
  * `autoFields` - Enables `field` events. This is automatically set to `true`
    if you add a `field` listener.
  * `autoFiles` - Enables `file` events. This is automatically set to `true`
    if you add a `file` listener.
-
-#### form.bytesReceived
-
-The amount of bytes received for this form so far.
-
-#### form.bytesExpected
-
-The expected number of bytes in this form.
+ * `uploadDir` - Only relevant when `autoFiles` is `true`. The directory for
+   placing file uploads in. You can move them later using `fs.rename()`.
+   Defaults to `os.tmpDir()`.
+ * `hash` - Only relevant when `autoFiles` is `true`. If you want checksums
+   calculated for incoming files, set this to either `sha1` or `md5`.
+   Defaults to off.
 
 #### form.parse(request, [cb])
 
@@ -97,6 +92,14 @@ form.parse(req, function(err, fields, files) {
 });
 ```
 
+#### form.bytesReceived
+
+The amount of bytes received for this form so far.
+
+#### form.bytesExpected
+
+The expected number of bytes in this form.
+
 ### Events
 
 #### 'error' (err)
@@ -104,12 +107,13 @@ form.parse(req, function(err, fields, files) {
 You definitely want to handle this event. If not your server *will* crash when
 users submit bogus multipart requests!
 
-#### 'part' (fileStream)
+#### 'part' (part)
 
-Emitted when a part is encountered in the request. `fileStream` is a streams2-compatible
+Emitted when a part is encountered in the request. `part` is a
 `ReadableStream`. It also has the following properties:
 
- * `headers` - the headers for this part
+ * `headers` - the headers for this part. For example, you may be interested
+   in `content-type`.
  * `name` - the field name for this part
  * `filename` - only if the part is an incoming file
 
