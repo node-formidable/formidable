@@ -392,7 +392,6 @@ Form.prototype.onParseHeadersEnd = function() {
   }
 
   this.emit('part', this.destStream);
-
   if (this.destStream.filename == null && this.autoFields) {
     handleField(this, this.destStream);
   } else if (this.destStream.filename != null && this.autoFiles) {
@@ -455,7 +454,6 @@ function handleFile(self, fileStream) {
     hashWorkaroundStream = stream.Writable();
     hash = crypto.createHash(self.hash);
     hashWorkaroundStream._write = function(buffer, encoding, callback) {
-      //console.log("write", buffer.toString());
       hash.update(buffer);
       callback();
     };
