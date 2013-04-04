@@ -14,26 +14,19 @@ var server = http.createServer(function(req, res) {
       '</form>'
     );
   } else if (req.url === '/upload') {
-    var form = new multiparty.IncomingForm(),
-        files = [],
-        fields = [];
+    var form = new multiparty.Form();
 
-    form
-      .on('field', function(field, value) {
-        console.log(field, value);
-        fields.push([field, value]);
-      })
-      .on('file', function(field, file) {
-        console.log(field, file);
-        files.push([field, file]);
-      })
-      .on('end', function() {
-        console.log('-> upload done');
-        res.writeHead(200, {'content-type': 'text/plain'});
-        res.write('received fields:\n\n '+util.inspect(fields));
-        res.write('\n\n');
-        res.end('received files:\n\n '+util.inspect(files));
-      });
+    form.parse(req, function(err, fields, files) {
+      if (err) {
+        res.writeHead(400, {'content-type': 'text/plain'});
+        res.end("invalid request: " + err.message);
+        return;
+      }
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received fields:\n\n '+util.inspect(fields));
+      res.write('\n\n');
+      res.end('received files:\n\n '+util.inspect(files));
+    });
     form.parse(req);
   } else {
     res.writeHead(404, {'content-type': 'text/plain'});
@@ -41,5 +34,5 @@ var server = http.createServer(function(req, res) {
   }
 });
 server.listen(PORT, function() {
-  console.info('listening on http://0.0.0.0:'+9999+'/');
+  console.info('listening on http://0.0.0.0:'+PORT+'/');
 });
