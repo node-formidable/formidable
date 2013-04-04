@@ -117,10 +117,6 @@ Emitted when a part is encountered in the request. `part` is a
  * `name` - the field name for this part
  * `filename` - only if the part is an incoming file
 
- By default this is the only data event emitted. If you want multiparty to do
- more work for you, pass a callback to `form.parse()` or set `form.autoFields` and/or
- `form.autoFiles` to `true`.
-
 #### 'aborted'
 
 Emitted when the request is aborted. This event will be followed shortly
