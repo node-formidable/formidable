@@ -24,12 +24,12 @@ npm install --save multiparty
 Parse an incoming `multipart/form-data` request.
 
 ```js
-var multiparty = require('multiparty'),
-    http = require('http'),
-    util = require('util');
+var multiparty = require('multiparty')
+  , http = require('http')
+  , util = require('util')
 
 http.createServer(function(req, res) {
-  if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
+  if (req.url === '/upload' && req.method === 'POST') {
     // parse a file upload
     var form = new multiparty.Form();
 
