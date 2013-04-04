@@ -22,9 +22,6 @@ var START = 0
   , PART_END = 10
   , END = 11
 
-  , PART_BOUNDARY = 1
-  , LAST_BOUNDARY = 2
-
   , LF = 10
   , CR = 13
   , SPACE = 32
@@ -253,7 +250,6 @@ Form.prototype._write = function(buffer, encoding, cb) {
           if (self.partBoundaryFlag) {
             index = 0;
             if (c === LF) {
-              // unset the PART_BOUNDARY flag
               self.partBoundaryFlag = false;
               self.onParsePartEnd();
               self.onParsePartBegin();
@@ -321,12 +317,11 @@ Form.prototype.onParsePartBegin = function() {
 }
 
 Form.prototype.onParseHeaderField = function(b) {
-  // TODO: use StringDecoder
-  this.headerField += b.toString(this.encoding);
+  this.headerField += this.headerFieldDecoder.write(b);
 }
 
 Form.prototype.onParseHeaderValue = function(b) {
-  this.headerValue += b.toString(this.encoding);
+  this.headerValue += this.headerValueDecoder.write(b);
 }
 
 Form.prototype.onParseHeaderEnd = function() {
@@ -345,7 +340,9 @@ Form.prototype.onParseHeaderEnd = function() {
     this.partTransferEncoding = this.headerValue.toLowerCase();
   }
 
+  this.headerFieldDecoder = new StringDecoder(this.encoding);
   this.headerField = '';
+  this.headerValueDecoder = new StringDecoder(this.encoding);
   this.headerValue = '';
 }
 
@@ -489,8 +486,10 @@ function clearPartVars(self) {
   self.partTransferEncoding = 'binary';
   self.destStream = null;
 
-  self.headerField = '';
-  self.headerValue = '';
+  self.headerFieldDecoder = new StringDecoder(self.encoding);
+  self.headerField = "";
+  self.headerValueDecoder = new StringDecoder(self.encoding);
+  self.headerValue = "";
 }
 
 function setUpParser(self, boundary) {
