@@ -35,32 +35,41 @@ var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
 
 util.inherits(Form, stream.Writable);
 function Form(options) {
-  stream.Writable.call(this);
+  var self = this;
+  stream.Writable.call(self);
 
   options = options || {};
 
-  this.error = null;
-  this.finished = false;
+  self.error = null;
+  self.finished = false;
 
-  this.autoFields = !!options.autoFields;
-  this.autoFiles = !!options.autoFields;
+  self.autoFields = !!options.autoFields;
+  self.autoFiles = !!options.autoFields;
 
   // TODO: maxFields does nothing
-  this.maxFields = options.maxFields || 1000;
-  this.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
-  this.uploadDir = options.uploadDir || os.tmpDir();
-  this.encoding = options.encoding || 'utf8';
-  this.hash = false;
+  self.maxFields = options.maxFields || 1000;
+  self.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
+  self.uploadDir = options.uploadDir || os.tmpDir();
+  self.encoding = options.encoding || 'utf8';
+  self.hash = false;
 
-  this.bytesReceived = 0;
-  this.bytesExpected = null;
+  self.bytesReceived = 0;
+  self.bytesExpected = null;
 
-  this.openedFiles = [];
-  this.totalFieldSize = 0;
-  this.totalFieldCount = 0;
-  this.flushing = 0;
+  self.openedFiles = [];
+  self.totalFieldSize = 0;
+  self.totalFieldCount = 0;
+  self.flushing = 0;
 
-  if (options.boundary) setUpParser(this, options.boundary);
+  if (options.boundary) setUpParser(self, options.boundary);
+
+  self.on('newListener', function(eventName) {
+    if (eventName === 'file') {
+      self.autoFiles = true;
+    } else if (eventName === 'field') {
+      self.autoFields = true;
+    }
+  });
 }
 
 Form.prototype.parse = function(req, cb) {

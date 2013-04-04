@@ -61,8 +61,6 @@ var form = new multiparty.Form(options)
 ```
 Creates a new form. Options:
 
- * `autoFields` - Enables `field` events. See below.
- * `autoFiles` - Enables `file` events. See below.
  * `encoding` - sets encoding for the incoming form fields. Defaults to `utf8`.
  * `uploadDir` - the directory for placing file uploads in. You can move them
    later using `fs.rename()`. Defaults to `os.tmpDir()`.
@@ -74,6 +72,10 @@ Creates a new form. Options:
    Defaults to 1000.
  * `hash` - If you want checksums calculated for incoming files, set this to
    either `sha1` or `md5`. Defaults to off.
+ * `autoFields` - Enables `field` events. This is automatically set to `true`
+   if you add a `field` listener.
+ * `autoFiles` - Enables `file` events. This is automatically set to `true`
+   if you add a `file` listener.
 
 #### form.bytesReceived
 
@@ -128,9 +130,9 @@ event is emitted. This is typically when you would send your response.
 
 #### 'file' (name, file)
 
-This event is *not* emitted by default. **By default multiparty will not touch
-your hard drive.** To enable it, set `form.autoFiles` to `true` or pass a
-callback to `form.parse()`.
+**By default multiparty will not touch your hard drive.** But if you add this
+listener, multiparty automatically sets `form.autoFiles` to `true` and will
+stream uploads to disk for you. 
 
  * `name` - the field name for this file
  * `file` - an object with these properties:
@@ -142,9 +144,6 @@ If you set the `form.hash` option, then `file` will also contain a `hash`
 property which is the checksum of the file.
 
 #### 'field' (name, value)
-
-This event is *not* emitted by default. To enable it, set `form.autoFields` to
-`true` or pass a callback to `form.parse()`.
 
  * `name` - field name
  * `value` - string field value
