@@ -1,3 +1,7 @@
+### 2.1.0
+
+ * Complete rewrite. See README for changes and new API.
+
 ### v1.0.13
 
 * Only update hash if update method exists (Sven Lito)
