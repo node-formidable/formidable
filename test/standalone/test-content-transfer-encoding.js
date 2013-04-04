@@ -5,8 +5,11 @@ var assert = require('assert')
   , TMP_PATH = path.join(__dirname, '..', 'tmp')
 
 var server = http.createServer(function(req, res) {
-  var form = new multiparty.IncomingForm();
+  var form = new multiparty.Form();
   form.uploadDir = TMP_PATH;
+  form.on('close', function () {
+    throw new Error('Unexpected "close" event');
+  });
   form.on('end', function () {
     throw new Error('Unexpected "end" event');
   });

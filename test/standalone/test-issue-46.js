@@ -22,7 +22,7 @@ var server = http.createServer(function(req, res) {
   }
 
   // Parse form and write results to response.
-  var form = new multiparty.IncomingForm();
+  var form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
     res.writeHead(200, {'content-type': 'text/plain'});
     res.write(JSON.stringify({err: err, fields: fields, files: files}));

@@ -4,7 +4,7 @@ var net = require('net');
 var multiparty = require('../../');
 
 var server = http.createServer(function (req, res) {
-  var form = new multiparty.IncomingForm();
+  var form = new multiparty.Form();
   var aborted_received = false;
   form.on('aborted', function () {
     aborted_received = true;

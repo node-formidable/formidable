@@ -1,6 +1,5 @@
 var assert = require('assert')
-  , MultipartParser = require('../lib/parser')
-  , parser = new MultipartParser()
+  , Form = require('../').Form
   , boundary = '-----------------------------168072824752491622650073'
   , mb = 100
   , buffer = createMultipartBuffer(boundary, mb * 1024 * 1024)
@@ -14,34 +13,34 @@ var callbacks = {
   end: -1,
 };
 
+var form = new Form({ boundary: boundary });
 
-parser.initWithBoundary(boundary);
-parser.onHeaderField = function() {
+hijack('onParseHeaderField', function() {
   callbacks.headerField++;
-};
+});
 
-parser.onHeaderValue = function() {
+hijack('onParseHeaderValue', function() {
   callbacks.headerValue++;
-};
+});
 
-parser.onPartBegin = function() {
+hijack('onParsePartBegin', function() {
   callbacks.partBegin++;
-};
+});
 
-parser.onPartData = function() {
+hijack('onParsePartData', function() {
   callbacks.partData++;
-};
+});
 
-parser.onPartEnd = function() {
+hijack('onParsePartEnd', function() {
   callbacks.partEnd++;
-};
+});
 
-parser.onEnd = function() {
+form.on('finish', function() {
   callbacks.end++;
-};
+});
 
 var start = new Date();
-parser.write(buffer, function(err) {
+form.write(buffer, function(err) {
   var duration = new Date() - start;
   assert.ifError(err);
   var mbPerSec = (mb / (duration / 1000)).toFixed(2);
@@ -65,5 +64,13 @@ function createMultipartBuffer(boundary, size) {
   buffer.write(head, 'ascii', 0);
   buffer.write(tail, 'ascii', buffer.length - tail.length);
   return buffer;
+}
+
+function hijack(name, fn) {
+  var oldFn = form[name];
+  form[name] = function() {
+    fn();
+    return oldFn.apply(this, arguments);
+  };
 }
 

@@ -79,22 +79,24 @@ function createTest(fixture) {
 function uploadFixture(name, cb) {
   server.once('request', function(req, res) {
     var parts = [];
-    var form = new multiparty.IncomingForm();
+    var form = new multiparty.Form({
+      autoFields: true,
+      autoFiles: true,
+    });
     form.uploadDir = TMP_PATH;
     form.hash = "sha1";
 
-    form
-      .on('error', callback)
-      .on('fileBegin', function(name, value) {
-        parts.push({type: 'file', name: name, value: value});
-      })
-      .on('field', function(name, value) {
-        parts.push({type: 'field', name: name, value: value});
-      })
-      .on('end', function() {
-        res.end('OK');
-        callback(null, parts);
-      });
+    form.on('error', callback);
+    form.on('file', function(name, value) {
+      parts.push({type: 'file', name: name, value: value});
+    });
+    form.on('field', function(name, value) {
+      parts.push({type: 'field', name: name, value: value});
+    });
+    form.on('close', function() {
+      res.end('OK');
+      callback(null, parts);
+    });
     form.parse(req);
 
     function callback() {
