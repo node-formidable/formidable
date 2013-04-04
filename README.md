@@ -18,9 +18,9 @@ Parse http requests with content-type `multipart/form-data`, also known as file 
 npm install --save multiparty
 ```
 
-## Example
+## Usage
 
-Parse an incoming file upload.
+Parse an incoming `multipart/form-data` request.
 
 ```js
 var multiparty = require('multiparty'),
@@ -30,7 +30,7 @@ var multiparty = require('multiparty'),
 http.createServer(function(req, res) {
   if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
     // parse a file upload
-    var form = new multiparty.IncomingForm();
+    var form = new multiparty.Form();
 
     form.parse(req, function(err, fields, files) {
       res.writeHead(200, {'content-type': 'text/plain'});
@@ -55,188 +55,97 @@ http.createServer(function(req, res) {
 
 ## API
 
-### multiparty.IncomingForm
+### multiparty.Form
 ```js
-var form = new multiparty.IncomingForm()
+var form = new multiparty.Form(options)
 ```
-Creates a new incoming form.
+Creates a new form. Options:
 
-```js
-form.encoding = 'utf-8';
-```
-Sets encoding for incoming form fields.
+ * `autoFields` - Enables `field` events. See below.
+ * `autoFiles` - Enables `file` events. See below.
+ * `encoding` - sets encoding for the incoming form fields. Defaults to `utf8`.
+ * `uploadDir` - the directory for placing file uploads in. You can move them
+   later using `fs.rename()`. Defaults to `os.tmpDir()`.
+ * `maxFieldSize` - Limits the amount of memory a field (not a file) can
+   allocate in bytes. If this value is exceeded, an `error` event is emitted.
+   The default size is 2MB.
+ * `maxFields` - Limits the number of fields that will be parsed before
+   emitting an `error` event. A file counts as a field in this case.
+   Defaults to 1000.
+ * `hash` - If you want checksums calculated for incoming files, set this to
+   either `sha1` or `md5`. Defaults to off.
 
-```js
-form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
-```
-The directory for placing file uploads in. You can move them later on using
-`fs.rename()`. The default directory is picked at module load time depending on
-the first existing directory from those listed above.
+#### form.bytesReceived
 
-```js
-form.keepExtensions = false;
-```
-If you want the files written to `form.uploadDir` to include the extensions of the original files, set this property to `true`.
-
-```js
-form.type
-```
-Either 'multipart' or 'urlencoded' depending on the incoming request.
-
-```js
-form.maxFieldsSize = 2 * 1024 * 1024;
-```
-Limits the amount of memory a field (not file) can allocate in bytes.
-If this value is exceeded, an `'error'` event is emitted. The default
-size is 2MB.
-
-```js
-form.maxFields = 0;
-```
-Limits the number of fields that the querystring parser will decode. Defaults
-to 0 (unlimited).
-
-```js
-form.hash = false;
-```
-If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
-
-```js
-form.bytesReceived
-```
 The amount of bytes received for this form so far.
 
-```js
-form.bytesExpected
-```
+#### form.bytesExpected
+
 The expected number of bytes in this form.
 
-```js
-form.parse(request, [cb]);
-```
-Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:
+#### form.parse(request, [cb]);
 
+Parses an incoming node.js `request` containing form data. If `cb` is
+provided, `autoFields` and `autoFiles` are set to `true` and all fields and
+files are collected and passed to the callback:
 
 ```js
 form.parse(req, function(err, fields, files) {
   // ...
 });
 
-form.onPart(part);
-```
-You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events  processing which would occur otherwise, making you fully responsible for handling the processing.
-
-```js
-form.onPart = function(part) {
-  part.addListener('data', function() {
-    // ...
-  });
-}
-```
-If you want to use multiparty to only handle certain parts for you, you can do so:
-```js
-form.onPart = function(part) {
-  if (!part.filename) {
-    // let multiparty handle all non-file parts
-    form.handlePart(part);
-  }
-}
-```
-Check the code in this method for further inspiration.
-
-
-### multiparty.File
-```js
-file.size = 0
-```
-The size of the uploaded file in bytes. If the file is still being uploaded (see `'fileBegin'` event), this property says how many bytes of the file have been written to disk yet.
-```js
-file.path = null
-```
-The path this file is being written to. You can modify this in the `'fileBegin'` event in
-case you are unhappy with the way multiparty generates a temporary path for your files.
-```js
-file.name = null
-```
-The name this file had according to the uploading client.
-```js
-file.type = null
-```
-The mime type of this file, according to the uploading client.
-```js
-file.lastModifiedDate = null
-```
-A date object (or `null`) containing the time this file was last written to. Mostly
-here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
-```js
-file.hash = null
-```
-If hash calculation was set, you can read the hex digest out of this var.
-
-#### multiparty.File#toJSON()
-
-  This method returns a JSON-representation of the file, allowing you to
-  `JSON.stringify()` the file which is useful for logging and responding
-  to requests.
-
 ### Events
 
+#### 'error' (err)
 
-#### 'progress'
-```js
-form.on('progress', function(bytesReceived, bytesExpected) {
-});
-```
-Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
+You definitely want to handle this event. If not your server *will* crash when
+users submit bogus multipart requests!
 
+#### 'part' (fileStream)
 
+Emitted when a part is encountered in the request. `fileStream` is a streams2-compatible
+`ReadableStream`. It also has the following properties:
 
-#### 'field'
-```js
-form.on('field', function(name, value) {
-});
-```
+ * `headers` - the headers for this part
+ * `name` - the field name for this part
+ * `filename` - only if the part is an incoming file
 
-#### 'fileBegin'
-
-Emitted whenever a field / value pair has been received.
-```js
-form.on('fileBegin', function(name, file) {
-});
-```
-
-#### 'file'
-
-Emitted whenever a new file is detected in the upload stream. Use this even if
-you want to stream the file to somewhere else while buffering the upload on
-the file system.
-
-Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
-```js
-form.on('file', function(name, file) {
-});
-```
-
-#### 'error'
-
-Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
-```js
-form.on('error', function(err) {
-});
-```
+ By default this is the only data event emitted. If you want multiparty to do
+ more work for you, pass a callback to `form.parse()` or set `form.autoFields` and/or
+ `form.autoFiles` to `true`.
 
 #### 'aborted'
 
+Emitted when the request is aborted. This event will be followed shortly
+by an `error` event. In practice you do not need to handle this event.
 
-Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
-```js
-form.on('aborted', function() {
-});
-```
+#### 'progress' (bytesReceived, bytesExpected)
 
-##### 'end'
-```js
-form.on('end', function() {
-});
-```
-Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
+#### 'close'
+
+Emitted after all parts have been parsed and emitted. Not emitted if an `error`
+event is emitted. This is typically when you would send your response.
+
+#### 'file' (name, file)
+
+This event is *not* emitted by default. **By default multiparty will not touch
+your hard drive.** To enable it, set `form.autoFiles` to `true` or pass a
+callback to `form.parse()`.
+
+ * `name` - the field name for this file
+ * `file` - an object with these properties:
+   - `originalFilename` - the filename that the user reports for the file
+   - `path` - the absolute path of the uploaded file on disk
+   - `headers - the HTTP headers that were sent along with this file
+
+If you set the `form.hash` option, then `file` will also contain a `hash`
+property which is the checksum of the file.
+
+#### 'field' (name, value)
+
+This event is *not* emitted by default. To enable it, set `form.autoFields` to
+`true` or pass a callback to `form.parse()`.
+
+ * `name` - field name
+ * `value` - string field value
+

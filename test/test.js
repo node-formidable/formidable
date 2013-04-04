@@ -66,7 +66,7 @@ function createTest(fixture) {
 
         if (parsedPart.type === 'file') {
           var file = parsedPart.value;
-          assert.equal(file.name, expectedPart.filename);
+          assert.equal(file.originalFilename, expectedPart.filename);
           if(expectedPart.sha1) assert.equal(file.hash, expectedPart.sha1);
         }
       });

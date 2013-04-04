@@ -45,6 +45,7 @@ function Form(options) {
   this.autoFields = !!options.autoFields;
   this.autoFiles = !!options.autoFields;
 
+  // TODO: maxFields does nothing
   this.maxFields = options.maxFields || 1000;
   this.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
   this.uploadDir = options.uploadDir || os.tmpDir();
@@ -56,6 +57,7 @@ function Form(options) {
 
   this.openedFiles = [];
   this.totalFieldSize = 0;
+  this.totalFieldCount = 0;
   this.flushing = 0;
 
   if (options.boundary) setUpParser(this, options.boundary);
@@ -334,8 +336,6 @@ Form.prototype.onParseHeaderEnd = function() {
       this.partName = m[1];
     }
     this.partFilename = parseFilename(this.headerValue);
-  } else if (this.headerField === 'content-type') {
-    this.partMime = this.headerValue;
   } else if (this.headerField === 'content-transfer-encoding') {
     this.partTransferEncoding = this.headerValue.toLowerCase();
   }
@@ -376,8 +376,14 @@ Form.prototype.onParseHeadersEnd = function() {
   this.destStream.headers = this.partHeaders;
   this.destStream.name = this.partName;
   this.destStream.filename = this.partFilename;
-  this.destStream.mime = this.partMime;
+  this.totalFieldCount += 1;
+  if (this.totalFieldCount >= this.maxFields) {
+    error(this, new Error("maxFields " + this.maxFields + " exceeded."));
+    return;
+  }
+
   this.emit('part', this.destStream);
+
   if (this.destStream.filename == null && this.autoFields) {
     handleField(this, this.destStream);
   } else if (this.destStream.filename != null && this.autoFiles) {
@@ -426,9 +432,9 @@ function maybeClose(self) {
 function handleFile(self, fileStream) {
   beginFlush(self);
   var file = {
-    name: fileStream.filename,
+    originalFilename: fileStream.filename,
     path: uploadPath(self.uploadDir, fileStream.filename),
-    mime: fileStream.mime,
+    headers: fileStream.headers,
   };
   file.ws = fs.createWriteStream(file.path);
   self.openedFiles.push(file);
@@ -482,7 +488,6 @@ function clearPartVars(self) {
   self.partHeaders = {};
   self.partName = null;
   self.partFilename = null;
-  self.partMime = null;
   self.partTransferEncoding = 'binary';
   self.destStream = null;
 
