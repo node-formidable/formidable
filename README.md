@@ -85,7 +85,7 @@ The amount of bytes received for this form so far.
 
 The expected number of bytes in this form.
 
-#### form.parse(request, [cb]);
+#### form.parse(request, [cb])
 
 Parses an incoming node.js `request` containing form data. If `cb` is
 provided, `autoFields` and `autoFiles` are set to `true` and all fields and
@@ -95,6 +95,7 @@ files are collected and passed to the callback:
 form.parse(req, function(err, fields, files) {
   // ...
 });
+```
 
 ### Events
 
