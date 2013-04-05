@@ -1,4 +1,10 @@
-### 2.1.0
+### 2.1.1
+
+ * fix uploads larger than 2KB
+ * fix both s3 and upload example
+ * add part.byteCount and part.byteOffset
+
+### 2.1.0 (recalled)
 
  * Complete rewrite. See README for changes and new API.
 
