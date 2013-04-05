@@ -12,6 +12,18 @@ var s3Client = knox.createClient({
   bucket: process.env.S3_BUCKET,
 });
 
+var Writable = require('readable-stream').Writable;
+util.inherits(ByteCounter, Writable);
+function ByteCounter(options) {
+  Writable.call(this, options);
+  this.bytes = 0;
+}
+
+ByteCounter.prototype._write = function(chunk, encoding, cb) {
+  this.bytes += chunk.length;
+  cb();
+};
+
 var server = http.createServer(function(req, res) {
   if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
@@ -25,7 +37,6 @@ var server = http.createServer(function(req, res) {
   } else if (req.url === '/upload') {
     var headers = {
       'x-amz-acl': 'public-read',
-      'Content-Length': req.headers['content-length'],
     };
     var form = new multiparty.Form();
     var batch = new Batch();
@@ -50,11 +61,18 @@ var server = http.createServer(function(req, res) {
       var destPath = results[0]
         , part = results[1];
 
+      var counter = new ByteCounter();
+      part.pipe(counter); // need this until knox upgrades to streams2
+      headers['Content-Length'] = part.byteCount;
       s3Client.putStream(part, destPath, headers, function(err, s3Response) {
         if (err) throw err;
         res.statusCode = s3Response.statusCode;
         s3Response.pipe(res);
         console.log("https://s3.amazonaws.com/" + process.env.S3_BUCKET + destPath);
+      });
+      part.on('end', function() {
+        console.log("part end");
+        console.log("size", counter.bytes);
       });
     });
     form.on('close', onEnd);

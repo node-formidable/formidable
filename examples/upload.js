@@ -27,7 +27,6 @@ var server = http.createServer(function(req, res) {
       res.write('\n\n');
       res.end('received files:\n\n '+util.inspect(files));
     });
-    form.parse(req);
   } else {
     res.writeHead(404, {'content-type': 'text/plain'});
     res.end('404');

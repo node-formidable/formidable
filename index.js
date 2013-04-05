@@ -32,6 +32,7 @@ var START = 0
 
 var CONTENT_TYPE_RE = /^multipart\/(form-data|related);\s+boundary=(?:"([^"]+)"|([^;]+))$/i;
 var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
+var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 
 util.inherits(Form, stream.Writable);
 function Form(options) {
@@ -46,7 +47,6 @@ function Form(options) {
   self.autoFields = !!options.autoFields;
   self.autoFiles = !!options.autoFields;
 
-  // TODO: maxFields does nothing
   self.maxFields = options.maxFields || 1000;
   self.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
   self.uploadDir = options.uploadDir || os.tmpDir();
@@ -215,7 +215,7 @@ Form.prototype._write = function(buffer, encoding, cb) {
         break;
       case HEADERS_ALMOST_DONE:
         if (c !== LF) return cb(new Error("Expected LF Received " + c));
-        var err = self.onParseHeadersEnd();
+        var err = self.onParseHeadersEnd(i + 1);
         if (err) return cb(err);
         state = PART_DATA_START;
         break;
@@ -304,14 +304,17 @@ Form.prototype._write = function(buffer, encoding, cb) {
     }
   }
 
-  if (self.headerFieldMark) {
+  if (self.headerFieldMark != null) {
     self.onParseHeaderField(buffer.slice(self.headerFieldMark));
+    self.headerFieldMark = 0;
   }
-  if (self.headerValueMark) {
+  if (self.headerValueMark != null) {
     self.onParseHeaderValue(buffer.slice(self.headerValueMark));
+    self.headerValueMark = 0;
   }
-  if (self.partDataMark) {
+  if (self.partDataMark != null) {
     self.onParsePartData(buffer.slice(self.partDataMark));
+    self.partDataMark = 0;
   }
 
   self.index = index;
@@ -368,7 +371,7 @@ Form.prototype.onParsePartEnd = function() {
   clearPartVars(this);
 }
 
-Form.prototype.onParseHeadersEnd = function() {
+Form.prototype.onParseHeadersEnd = function(offset) {
   switch(this.partTransferEncoding){
     case 'binary':
     case '7bit':
@@ -385,6 +388,12 @@ Form.prototype.onParseHeadersEnd = function() {
   this.destStream.headers = this.partHeaders;
   this.destStream.name = this.partName;
   this.destStream.filename = this.partFilename;
+  this.destStream.byteOffset = this.bytesReceived + offset;
+  var partContentLength = this.destStream.headers['content-length'];
+  this.destStream.byteCount = partContentLength ?
+    parseInt(partContentLength, 10) :
+    (this.bytesExpected - this.destStream.byteOffset -
+     this.boundary.length - LAST_BOUNDARY_SUFFIX_LEN);
   this.totalFieldCount += 1;
   if (this.totalFieldCount >= this.maxFields) {
     error(this, new Error("maxFields " + this.maxFields + " exceeded."));

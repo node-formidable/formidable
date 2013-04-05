@@ -7,6 +7,8 @@ Parse http requests with content-type `multipart/form-data`, also known as file 
 
  * This module uses the Node.js v0.10 streams properly, *even in Node.js v0.8*
  * It will not create a temp file for you unless you want it to.
+ * Counts bytes and does math to help you figure out the `Content-Length` of
+   each part.
  * You can easily stream uploads to s3 with
    [knox](https://github.com/LearnBoost/knox), for [example](examples/s3.js).
  * Less bugs. This code is simpler, has all deprecated functionality removed,
@@ -116,6 +118,12 @@ Emitted when a part is encountered in the request. `part` is a
    in `content-type`.
  * `name` - the field name for this part
  * `filename` - only if the part is an incoming file
+ * `byteOffset` - the byte offset of this part in the request body
+ * `byteCount` - assuming that this is the last part in the request,
+   this is the size of this part in bytes. You could use this, for
+   example, to set the `Content-Length` header if uploading to S3.
+   If the part had a `Content-Length` header then that value is used
+   here instead.
 
 #### 'aborted'
 

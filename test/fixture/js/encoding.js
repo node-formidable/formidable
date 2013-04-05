@@ -22,3 +22,9 @@ module.exports['plain.txt.http'] = [
   {type: 'file', name: 'file', filename: 'plain.txt', fixture: 'plain.txt',
   sha1: 'b31d07bac24ac32734de88b3687dddb10e976872'}
 ];
+
+module.exports['pf1y5.png.http'] = [
+  {type: 'field', name: 'path'},
+  {type: 'file', name: 'upload', filename: 'pf1y5.png', fixture: 'pf1y5.png',
+  sha1: '805cc640c5b182e86f2b5c8ebf34ecf063cd34fd'}
+];
