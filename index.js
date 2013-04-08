@@ -61,6 +61,9 @@ function Form(options) {
   self.totalFieldCount = 0;
   self.flushing = 0;
 
+  self.backpressure = false;
+  self.writeCbs = [];
+
   if (options.boundary) setUpParser(self, options.boundary);
 
   self.on('newListener', function(eventName) {
@@ -323,7 +326,11 @@ Form.prototype._write = function(buffer, encoding, cb) {
   self.bytesReceived += buffer.length;
   self.emit('progress', self.bytesReceived, self.bytesExpected);
 
-  cb();
+  if (self.backpressure) {
+    self.writeCbs.push(cb);
+  } else {
+    cb();
+  }
 };
 
 Form.prototype.onParsePartBegin = function() {
@@ -360,9 +367,9 @@ Form.prototype.onParseHeaderEnd = function() {
 
 Form.prototype.onParsePartData = function(b) {
   if (this.partTransferEncoding === 'base64') {
-    this.destStream.write(b.toString('ascii'), 'base64');
+    this.backpressure = ! this.destStream.write(b.toString('ascii'), 'base64');
   } else {
-    this.destStream.write(b);
+    this.backpressure = ! this.destStream.write(b);
   }
 }
 
@@ -372,40 +379,52 @@ Form.prototype.onParsePartEnd = function() {
 }
 
 Form.prototype.onParseHeadersEnd = function(offset) {
-  switch(this.partTransferEncoding){
+  var self = this;
+  switch(self.partTransferEncoding){
     case 'binary':
     case '7bit':
     case '8bit':
-    this.partTransferEncoding = 'binary';
+    self.partTransferEncoding = 'binary';
     break;
 
     case 'base64': break;
     default:
-    return new Error("unknown transfer-encoding: " + this.partTransferEncoding);
+    return new Error("unknown transfer-encoding: " + self.partTransferEncoding);
   }
 
-  this.destStream = new stream.PassThrough();
-  this.destStream.headers = this.partHeaders;
-  this.destStream.name = this.partName;
-  this.destStream.filename = this.partFilename;
-  this.destStream.byteOffset = this.bytesReceived + offset;
-  var partContentLength = this.destStream.headers['content-length'];
-  this.destStream.byteCount = partContentLength ?
+  self.destStream = new stream.PassThrough();
+  self.destStream.on('drain', function() {
+    flushWriteCbs(self);
+  });
+  self.destStream.headers = self.partHeaders;
+  self.destStream.name = self.partName;
+  self.destStream.filename = self.partFilename;
+  self.destStream.byteOffset = self.bytesReceived + offset;
+  var partContentLength = self.destStream.headers['content-length'];
+  self.destStream.byteCount = partContentLength ?
     parseInt(partContentLength, 10) :
-    (this.bytesExpected - this.destStream.byteOffset -
-     this.boundary.length - LAST_BOUNDARY_SUFFIX_LEN);
-  this.totalFieldCount += 1;
-  if (this.totalFieldCount >= this.maxFields) {
-    error(this, new Error("maxFields " + this.maxFields + " exceeded."));
+    (self.bytesExpected - self.destStream.byteOffset -
+     self.boundary.length - LAST_BOUNDARY_SUFFIX_LEN);
+  self.totalFieldCount += 1;
+  if (self.totalFieldCount >= self.maxFields) {
+    error(self, new Error("maxFields " + self.maxFields + " exceeded."));
     return;
   }
 
-  this.emit('part', this.destStream);
-  if (this.destStream.filename == null && this.autoFields) {
-    handleField(this, this.destStream);
-  } else if (this.destStream.filename != null && this.autoFiles) {
-    handleFile(this, this.destStream);
+  self.emit('part', self.destStream);
+  if (self.destStream.filename == null && self.autoFields) {
+    handleField(self, self.destStream);
+  } else if (self.destStream.filename != null && self.autoFiles) {
+    handleFile(self, self.destStream);
   }
+}
+
+function flushWriteCbs(self) {
+  self.writeCbs.forEach(function(cb) {
+    process.nextTick(cb);
+  });
+  self.writeCbs = [];
+  self.backpressure = false;
 }
 
 function getBytesExpected(headers) {
