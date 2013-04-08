@@ -456,19 +456,11 @@ function handleFile(self, fileStream) {
   file.ws = fs.createWriteStream(file.path);
   self.openedFiles.push(file);
   fileStream.pipe(file.ws);
-  var hashWorkaroundStream
-    , hash = null;
+  var hash = null;
   if (self.hash) {
-    // workaround stream because https://github.com/joyent/node/issues/5216
-    hashWorkaroundStream = stream.Writable();
     hash = crypto.createHash(self.hash);
-    hashWorkaroundStream._write = function(buffer, encoding, callback) {
-      hash.update(buffer);
-      callback();
-    };
-    fileStream.pipe(hashWorkaroundStream);
+    fileStream.pipe(hash, {end: false});
   }
-  if (file.hash) fileStream.pipe(file.hash);
   file.ws.on('error', function(err) {
     error(self, err);
   });
