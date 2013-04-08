@@ -3,6 +3,7 @@ var http = require('http')
   , multiparty = require('../')
   , knox = require('knox')
   , Batch = require('batch')
+  , StreamCounter = require('stream-counter')
   , PORT = process.env.PORT || 27372
 
 var s3Client = knox.createClient({
@@ -11,18 +12,6 @@ var s3Client = knox.createClient({
   secret: process.env.S3_SECRET,
   bucket: process.env.S3_BUCKET,
 });
-
-var Writable = require('readable-stream').Writable;
-util.inherits(ByteCounter, Writable);
-function ByteCounter(options) {
-  Writable.call(this, options);
-  this.bytes = 0;
-}
-
-ByteCounter.prototype._write = function(chunk, encoding, cb) {
-  this.bytes += chunk.length;
-  cb();
-};
 
 var server = http.createServer(function(req, res) {
   if (req.url === '/') {
@@ -61,7 +50,7 @@ var server = http.createServer(function(req, res) {
       var destPath = results[0]
         , part = results[1];
 
-      var counter = new ByteCounter();
+      var counter = new StreamCounter();
       part.pipe(counter); // need this until knox upgrades to streams2
       headers['Content-Length'] = part.byteCount;
       s3Client.putStream(part, destPath, headers, function(err, s3Response) {
