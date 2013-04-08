@@ -1,6 +1,6 @@
 {
   "name": "multiparty",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "multipart/form-data parser which supports streaming",
   "keywords": [
     "file",

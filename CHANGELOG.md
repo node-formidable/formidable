@@ -1,3 +1,8 @@
+### 2.1.2
+
+ * proper backpressure support
+ * update s3 example
+
 ### 2.1.1
 
  * fix uploads larger than 2KB
