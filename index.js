@@ -493,7 +493,6 @@ function handleFile(self, fileStream) {
     };
     fileStream.pipe(hashWorkaroundStream);
   }
-  if (file.hash) fileStream.pipe(file.hash);
   file.ws.on('error', function(err) {
     error(self, err);
   });
