@@ -1,3 +1,7 @@
+### 2.1.3
+
+ * add `file.size`
+
 ### 2.1.2
 
  * proper backpressure support
