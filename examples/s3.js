@@ -3,7 +3,6 @@ var http = require('http')
   , multiparty = require('../')
   , knox = require('knox')
   , Batch = require('batch')
-  , StreamCounter = require('stream-counter')
   , PORT = process.env.PORT || 27372
 
 var s3Client = knox.createClient({
@@ -50,18 +49,12 @@ var server = http.createServer(function(req, res) {
       var destPath = results[0]
         , part = results[1];
 
-      var counter = new StreamCounter();
-      part.pipe(counter); // need this until knox upgrades to streams2
       headers['Content-Length'] = part.byteCount;
       s3Client.putStream(part, destPath, headers, function(err, s3Response) {
         if (err) throw err;
         res.statusCode = s3Response.statusCode;
         s3Response.pipe(res);
         console.log("https://s3.amazonaws.com/" + process.env.S3_BUCKET + destPath);
-      });
-      part.on('end', function() {
-        console.log("part end");
-        console.log("size", counter.bytes);
       });
     });
     form.on('close', onEnd);
