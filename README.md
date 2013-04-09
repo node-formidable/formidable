@@ -24,7 +24,7 @@ npm install multiparty
 ## Usage
 
  * See [examples](examples).
- * Using express or connect? See (connect-multiparty)[https://github.com/superjoe30/connect-multiparty]
+ * Using express or connect? See [connect-multiparty](https://github.com/superjoe30/connect-multiparty)
 
 Parse an incoming `multipart/form-data` request.
 
