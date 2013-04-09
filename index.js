@@ -153,11 +153,11 @@ Form.prototype._write = function(buffer, encoding, cb) {
         /* falls through */
       case START_BOUNDARY:
         if (index === boundaryLength - 2) {
-          if (c !== CR) return cb(new Error("Expected CR Received " + c));
+          if (c !== CR) return error(self, new Error("Expected CR Received " + c));
           index++;
           break;
         } else if (index === boundaryLength - 1) {
-          if (c !== LF) return cb(new Error("Expected LF Received " + c));
+          if (c !== LF) return error(self, new Error("Expected LF Received " + c));
           index = 0;
           self.onParsePartBegin();
           state = HEADER_FIELD_START;
@@ -185,7 +185,7 @@ Form.prototype._write = function(buffer, encoding, cb) {
         if (c === COLON) {
           if (index === 1) {
             // empty header field
-            cb(new Error("Empty header field"));
+            error(self, new Error("Empty header field"));
             return;
           }
           self.onParseHeaderField(buffer.slice(self.headerFieldMark, i));
@@ -196,7 +196,8 @@ Form.prototype._write = function(buffer, encoding, cb) {
 
         cl = lower(c);
         if (cl < A || cl > Z) {
-          cb(new Error("Expected alphabetic character, received " + c));
+          error(self, new Error("Expected alphabetic character, received " + c));
+          return;
         }
         break;
       case HEADER_VALUE_START:
@@ -214,13 +215,13 @@ Form.prototype._write = function(buffer, encoding, cb) {
         }
         break;
       case HEADER_VALUE_ALMOST_DONE:
-        if (c !== LF) return cb(new Error("Expected LF Received " + c));
+        if (c !== LF) return error(self, new Error("Expected LF Received " + c));
         state = HEADER_FIELD_START;
         break;
       case HEADERS_ALMOST_DONE:
-        if (c !== LF) return cb(new Error("Expected LF Received " + c));
+        if (c !== LF) return error(self, new Error("Expected LF Received " + c));
         var err = self.onParseHeadersEnd(i + 1);
-        if (err) return cb(err);
+        if (err) return error(self, err);
         state = PART_DATA_START;
         break;
       case PART_DATA_START:
@@ -304,7 +305,8 @@ Form.prototype._write = function(buffer, encoding, cb) {
       case END:
         break;
       default:
-        cb(new Error("Parser has invalid state."));
+        error(self, new Error("Parser has invalid state."));
+        return;
     }
   }
 
@@ -446,7 +448,7 @@ function getBytesExpected(headers) {
 }
 
 function error(self, err) {
-  assert.ok(!self.error);
+  assert.ok(!self.error, err.stack);
   self.error = err;
   self.emit('error', err);
   self.openedFiles.forEach(function(file) {
