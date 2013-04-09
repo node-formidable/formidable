@@ -1,3 +1,7 @@
+### 2.1.4
+
+ * fix crash for invalid requests
+
 ### 2.1.3
 
  * add `file.size`
