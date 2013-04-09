@@ -8,6 +8,7 @@ var stream = require('readable-stream')
   , os = require('os')
   , assert = require('assert')
   , StringDecoder = require('string_decoder').StringDecoder
+  , StreamCounter = require('stream-counter')
 
 var START = 0
   , START_BOUNDARY = 1
@@ -481,6 +482,8 @@ function handleFile(self, fileStream) {
   file.ws = fs.createWriteStream(file.path);
   self.openedFiles.push(file);
   fileStream.pipe(file.ws);
+  var counter = new StreamCounter();
+  fileStream.pipe(counter);
   var hashWorkaroundStream
     , hash = null;
   if (self.hash) {
@@ -498,6 +501,7 @@ function handleFile(self, fileStream) {
   });
   fileStream.on('end', function() {
     if (hash) file.hash = hash.digest('hex');
+    file.size = counter.bytes;
     self.emit('file', fileStream.name, file);
     endFlush(self);
   });
