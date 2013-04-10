@@ -501,7 +501,7 @@ function handleFile(self, fileStream) {
   file.ws.on('error', function(err) {
     error(self, err);
   });
-  fileStream.on('end', function() {
+  file.ws.on('close', function() {
     if (hash) file.hash = hash.digest('hex');
     file.size = counter.bytes;
     self.emit('file', fileStream.name, file);
