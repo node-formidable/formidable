@@ -2,8 +2,6 @@
 
 [![Build Status](https://secure.travis-ci.org/felixge/node-formidable.png?branch=master)](http://travis-ci.org/felixge/node-formidable)
 
-See also [multiparty](https://github.com/superjoe30/node-multiparty) - a minimal module which only does multipart parsing and supports streaming without touching your hard disk.
-
 ## Purpose
 
 A node.js module for parsing form data, especially file uploads.
