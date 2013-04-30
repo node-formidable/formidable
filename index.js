@@ -52,7 +52,7 @@ function Form(options) {
   self.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
   self.uploadDir = options.uploadDir || os.tmpDir();
   self.encoding = options.encoding || 'utf8';
-  self.hash = false;
+  self.hash = options.hash || false;
 
   self.bytesReceived = 0;
   self.bytesExpected = null;
