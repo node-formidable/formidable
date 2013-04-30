@@ -1,3 +1,11 @@
+### 2.1.6
+
+ * expose `hash` as an option to `Form`. (thanks wookiehangover)
+
+### 2.1.5
+
+ * fix possible 'close' event before all temp files are done
+
 ### 2.1.4
 
  * fix crash for invalid requests
