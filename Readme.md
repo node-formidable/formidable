@@ -260,6 +260,13 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
+### v1.0.14
+
+* Add failing hash tests. (Ben Trask)
+* Enable hash calculation again (Eugene Girshov)
+* Test for immediate data events (Tim Smart)
+* Re-arrange IncomingForm#parse (Tim Smart)
+
 ### v1.0.13
 
 * Only update hash if update method exists (Sven Lito)
