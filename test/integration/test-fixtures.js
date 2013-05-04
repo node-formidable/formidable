@@ -49,7 +49,6 @@ function testNext(fixtures) {
       if (parsedPart.type === 'file') {
         var file = parsedPart.value;
         assert.equal(file.name, expectedPart.filename);
-        if(expectedPart.size) assert.equal(file.size, expectedPart.size);
         if(expectedPart.sha1) assert.equal(file.hash, expectedPart.sha1);
       }
     });
