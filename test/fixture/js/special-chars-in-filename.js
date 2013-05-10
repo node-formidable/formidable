@@ -5,7 +5,7 @@ function expect(filename) {
     {type: 'field', name: 'title', value: 'Weird filename'},
     {type: 'file', name: 'upload', filename: filename, fixture: properFilename},
   ];
-};
+}
 
 var webkit = " ? % * | \" < > . ? ; ' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt";
 var ffOrIe = " ? % * | \" < > . ☃ ; ' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt";

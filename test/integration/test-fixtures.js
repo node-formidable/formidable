@@ -36,7 +36,7 @@ function testNext(fixtures) {
   if (!fixture) return server.close();
 
   var name    = fixture.name;
-  var fixture = fixture.fixture;
+  fixture = fixture.fixture;
 
   uploadFixture(name, function(err, parts) {
     if (err) throw err;
@@ -55,7 +55,7 @@ function testNext(fixtures) {
 
     testNext(fixtures);
   });
-};
+}
 
 function uploadFixture(name, cb) {
   server.once('request', function(req, res) {

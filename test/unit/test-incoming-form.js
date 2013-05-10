@@ -47,13 +47,13 @@ test('IncomingForm', {
     var ext = path.extname(form._uploadPath('fine.jpg?foo=bar'));
     assert.equal(ext, '.jpg');
 
-    var ext = path.extname(form._uploadPath('fine?foo=bar'));
+    ext = path.extname(form._uploadPath('fine?foo=bar'));
     assert.equal(ext, '');
 
-    var ext = path.extname(form._uploadPath('super.cr2+dsad'));
+    ext = path.extname(form._uploadPath('super.cr2+dsad'));
     assert.equal(ext, '.cr2');
 
-    var ext = path.extname(form._uploadPath('super.bar'));
+    ext = path.extname(form._uploadPath('super.bar'));
     assert.equal(ext, '.bar');
   },
 });

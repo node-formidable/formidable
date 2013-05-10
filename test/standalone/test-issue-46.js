@@ -38,7 +38,7 @@ var server = http.createServer(function(req, res) {
 
   var parts  = [
     {'Content-Disposition': 'form-data; name="foo"', 'body': 'bar'}
-  ]
+  ];
 
   var req = request({method: 'POST', url: url, multipart: parts}, function(e, res, body) {
     var obj = JSON.parse(body);
