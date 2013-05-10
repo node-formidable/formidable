@@ -1,1 +1,1 @@
-require('urun')(__dirname)
+require('urun')(__dirname);

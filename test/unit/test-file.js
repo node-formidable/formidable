@@ -4,7 +4,7 @@ var assert       = common.assert;
 var File = common.require('file');
 
 var file;
-var now = new Date;
+var now = new Date();
 test('IncomingForm', {
   before: function() {
     file = new File({
@@ -15,7 +15,7 @@ test('IncomingForm', {
       lastModifiedDate: now,
       filename: 'cat.png',
       mime: 'image/png'
-    })
+    });
   },
 
   '#toJSON()': function() {
