@@ -1,4 +1,4 @@
-exports['rfc1867'] =
+exports.rfc1867 =
   { boundary: 'AaB03x',
     raw:
       '--AaB03x\r\n'+
@@ -54,7 +54,7 @@ exports['noTrailing\r\n'] =
     ]
   };
 
-exports['emptyHeader'] =
+exports.emptyHeader =
   { boundary: 'AaB03x',
     raw:
       '--AaB03x\r\n'+

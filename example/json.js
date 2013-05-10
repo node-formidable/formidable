@@ -8,8 +8,8 @@ var common = require('../test/common'),
 
 server = http.createServer(function(req, res) {
   if (req.method !== 'POST') {
-    res.writeHead(200, {'content-type': 'text/plain'})
-    res.end('Please POST a JSON payload to http://localhost:'+port+'/')
+    res.writeHead(200, {'content-type': 'text/plain'});
+    res.end('Please POST a JSON payload to http://localhost:'+port+'/');
     return;
   }
 
@@ -50,18 +50,18 @@ var request = http.request({
   console.log('Status:', response.statusCode);
   response.pipe(process.stdout);
   response.on('end', function() {
-    console.log('\n')
+    console.log('\n');
     process.exit();
   });
   // response.on('data', function(chunk) {
   //   data += chunk.toString('utf8');
   // });
   // response.on('end', function() {
-  //   console.log('Response Data:')
+  //   console.log('Response Data:');
   //   console.log(data);
   //   process.exit();
   // });
-})
+});
 
 request.write('{"numbers":[1,2,3,4,5],"nested":{"key":"value"}}');
 request.end();

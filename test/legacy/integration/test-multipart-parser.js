@@ -33,7 +33,7 @@ Object.keys(fixtures).forEach(function(name) {
 
   parser.onHeaderValue = function(b, start, end) {
     headerValue += b.toString('ascii', start, end);
-  }
+  };
 
   parser.onHeaderEnd = function() {
     part.headers[headerField] = headerValue;
@@ -44,11 +44,11 @@ Object.keys(fixtures).forEach(function(name) {
   parser.onPartData = function(b, start, end) {
     var str = b.toString('ascii', start, end);
     part.data += b.slice(start, end);
-  }
+  };
 
   parser.onEnd = function() {
     endCalled = true;
-  }
+  };
 
   buffer.write(fixture.raw, 'binary', 0);
 

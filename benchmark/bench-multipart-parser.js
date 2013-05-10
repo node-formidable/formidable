@@ -44,7 +44,7 @@ parser.onEnd = function() {
 
 var start = +new Date(),
     nparsed = parser.write(buffer),
-    duration = +new Date - start,
+    duration = +new Date() - start,
     mbPerSec = (mb / (duration / 1000)).toFixed(2);
 
 console.log(mbPerSec+' mb/sec');
