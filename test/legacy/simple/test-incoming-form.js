@@ -331,7 +331,7 @@ test(function write() {
     delete form._parser;
 
     gently.expect(form, '_error', function(err) {
-      assert.ok(err.message.match(/unintialized parser/i));
+      assert.ok(err.message.match(/uninitialized parser/i));
     });
     form.write(BUFFER);
   })();
