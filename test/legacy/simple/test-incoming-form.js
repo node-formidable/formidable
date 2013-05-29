@@ -568,7 +568,6 @@ test(function _initUrlencoded() {
 test(function _error() {
   var ERR = new Error('bla');
 
-  gently.expect(form, 'pause');
   gently.expect(form, 'emit', function(event, err) {
     assert.equal(event, 'error');
     assert.strictEqual(err, ERR);
