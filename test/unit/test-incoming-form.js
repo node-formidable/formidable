@@ -55,6 +55,9 @@ test('IncomingForm', {
 
     ext = path.extname(form._uploadPath('super.bar'));
     assert.equal(ext, '.bar');
+
+    ext = path.extname(form._uploadPath('file.aAa'));
+    assert.equal(ext, '.aAa');
   },
 });
 
