@@ -16,3 +16,5 @@ exports.assert     = require('assert');
 exports.require = function(lib) {
   return require(exports.dir.lib + '/' + lib);
 };
+
+process.throwDeprecation = true
