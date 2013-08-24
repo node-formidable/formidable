@@ -545,8 +545,8 @@ function clearPartVars(self) {
 
 function setUpParser(self, boundary) {
   self.boundary = new Buffer(boundary.length + 4);
-  self.boundary.write('\r\n--', 'ascii', 0);
-  self.boundary.write(boundary, 'ascii', 4);
+  self.boundary.write('\r\n--', 0, boundary.length + 4, 'ascii');
+  self.boundary.write(boundary, 4, boundary.length, 'ascii');
   self.lookbehind = new Buffer(self.boundary.length + 8);
   self.state = START;
   self.boundaryChars = {};
