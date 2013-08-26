@@ -1,3 +1,11 @@
+### 2.1.8
+
+ * replace deprecated Buffer.write(). (thanks hueniverse)
+
+### 2.1.7
+
+ * add repository field to package.json
+
 ### 2.1.6
 
  * expose `hash` as an option to `Form`. (thanks wookiehangover)
