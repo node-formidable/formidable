@@ -31,7 +31,7 @@ var START = 0
   , A = 97
   , Z = 122
 
-var CONTENT_TYPE_RE = /^multipart\/(form-data|related);\s+boundary=(?:"([^"]+)"|([^;]+))$/i;
+var CONTENT_TYPE_RE = /^multipart\/(form-data|related);[\s]*boundary=(?:"([^"]+)"|([^;]+))$/i;
 var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
 var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 
