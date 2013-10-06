@@ -1,3 +1,7 @@
+### 2.1.9
+
+ * relax content-type detection regex. (thanks amitaibu)
+
 ### 2.1.8
 
  * replace deprecated Buffer.write(). (thanks hueniverse)
