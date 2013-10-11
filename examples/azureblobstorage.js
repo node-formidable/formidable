@@ -34,7 +34,7 @@ var server = http.createServer(function(req, res) {
 	form.parse(req);
 	
 	res.send('File uploaded successfully');
-    
+   }
 });
 server.listen(PORT, function() {
   console.info('listening on http://0.0.0.0:'+PORT+'/');
