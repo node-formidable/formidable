@@ -139,7 +139,11 @@ Form.prototype.parse = function(req, cb) {
 
     req.removeListener('error', handleError);
     req.removeListener('aborted', onReqAborted);
-    req.unpipe(self);
+    // welp. 0.8 doesn't support unpipe, too bad so sad.
+    // let's drop support for 0.8 soon.
+    if (req.unpipe) {
+      req.unpipe(self);
+    }
     self.openedFiles.forEach(function(file) {
       file.ws.destroy();
       fs.unlink(file.path, function(err) {
