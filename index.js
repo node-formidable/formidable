@@ -6,7 +6,6 @@ var stream = require('readable-stream')
   , crypto = require('crypto')
   , path = require('path')
   , os = require('os')
-  , assert = require('assert')
   , StringDecoder = require('string_decoder').StringDecoder
   , StreamCounter = require('stream-counter')
 
@@ -85,25 +84,21 @@ Form.prototype.parse = function(req, cb) {
     self.autoFiles = true;
   }
 
-  req.on('error', function(err) {
-    error(self, err);
-  });
-  req.on('aborted', function() {
-    self.emit('aborted');
-    error(self, new Error("Request aborted"));
-  });
-
+  self.handleError = handleError;
   self.bytesExpected = getBytesExpected(req.headers);
+
+  req.on('error', handleError);
+  req.on('aborted', onReqAborted);
 
   var contentType = req.headers['content-type'];
   if (!contentType) {
-    error(self, new Error('missing content-type header'));
+    handleError(new Error('missing content-type header'));
     return;
   }
 
   var m = contentType.match(CONTENT_TYPE_RE);
   if (!m) {
-    error(self, new Error('unrecognized content-type: ' + contentType));
+    handleError(new Error('unrecognized content-type: ' + contentType));
     return;
   }
   var boundary = m[2] || m[3];
@@ -130,6 +125,31 @@ Form.prototype.parse = function(req, cb) {
       cb(null, fieldsTable, filesTable, fieldsList, filesList);
     });
   }
+
+  function onReqAborted() {
+    self.emit('aborted');
+    handleError(new Error("Request aborted"));
+  }
+
+  function handleError(err) {
+    if (self.error) {
+      throw new Error("error() called twice. Original: " + self.error.stack + "\n");
+    }
+    self.error = err;
+
+    req.removeListener('error', handleError);
+    req.removeListener('aborted', onReqAborted);
+    req.unpipe(self);
+    self.openedFiles.forEach(function(file) {
+      file.ws.destroy();
+      fs.unlink(file.path, function(err) {
+        // this is already an error condition, ignore 2nd error
+      });
+    });
+
+    self.emit('error', err);
+  }
+
 };
 
 Form.prototype._write = function(buffer, encoding, cb) {
@@ -157,11 +177,11 @@ Form.prototype._write = function(buffer, encoding, cb) {
         /* falls through */
       case START_BOUNDARY:
         if (index === boundaryLength - 2) {
-          if (c !== CR) return error(self, new Error("Expected CR Received " + c));
+          if (c !== CR) return self.handleError(new Error("Expected CR Received " + c));
           index++;
           break;
         } else if (index === boundaryLength - 1) {
-          if (c !== LF) return error(self, new Error("Expected LF Received " + c));
+          if (c !== LF) return self.handleError(new Error("Expected LF Received " + c));
           index = 0;
           self.onParsePartBegin();
           state = HEADER_FIELD_START;
@@ -189,7 +209,7 @@ Form.prototype._write = function(buffer, encoding, cb) {
         if (c === COLON) {
           if (index === 1) {
             // empty header field
-            error(self, new Error("Empty header field"));
+            self.handleError(new Error("Empty header field"));
             return;
           }
           self.onParseHeaderField(buffer.slice(self.headerFieldMark, i));
@@ -200,7 +220,7 @@ Form.prototype._write = function(buffer, encoding, cb) {
 
         cl = lower(c);
         if (cl < A || cl > Z) {
-          error(self, new Error("Expected alphabetic character, received " + c));
+          self.handleError(new Error("Expected alphabetic character, received " + c));
           return;
         }
         break;
@@ -219,13 +239,13 @@ Form.prototype._write = function(buffer, encoding, cb) {
         }
         break;
       case HEADER_VALUE_ALMOST_DONE:
-        if (c !== LF) return error(self, new Error("Expected LF Received " + c));
+        if (c !== LF) return self.handleError(new Error("Expected LF Received " + c));
         state = HEADER_FIELD_START;
         break;
       case HEADERS_ALMOST_DONE:
-        if (c !== LF) return error(self, new Error("Expected LF Received " + c));
+        if (c !== LF) return self.handleError(new Error("Expected LF Received " + c));
         var err = self.onParseHeadersEnd(i + 1);
-        if (err) return error(self, err);
+        if (err) return self.handleError(err);
         state = PART_DATA_START;
         break;
       case PART_DATA_START:
@@ -309,7 +329,7 @@ Form.prototype._write = function(buffer, encoding, cb) {
       case END:
         break;
       default:
-        error(self, new Error("Parser has invalid state."));
+        self.handleError(new Error("Parser has invalid state."));
         return;
     }
   }
@@ -405,6 +425,11 @@ Form.prototype.onParseHeadersEnd = function(offset) {
     return new Error("unknown transfer-encoding: " + self.partTransferEncoding);
   }
 
+  self.totalFieldCount += 1;
+  if (self.totalFieldCount >= self.maxFields) {
+    return new Error("maxFields " + self.maxFields + " exceeded.");
+  }
+
   self.destStream = new stream.PassThrough();
   self.destStream.on('drain', function() {
     flushWriteCbs(self);
@@ -418,11 +443,6 @@ Form.prototype.onParseHeadersEnd = function(offset) {
     parseInt(partContentLength, 10) :
     (self.bytesExpected - self.destStream.byteOffset -
      self.boundary.length - LAST_BOUNDARY_SUFFIX_LEN);
-  self.totalFieldCount += 1;
-  if (self.totalFieldCount >= self.maxFields) {
-    error(self, new Error("maxFields " + self.maxFields + " exceeded."));
-    return;
-  }
 
   self.emit('part', self.destStream);
   if (self.destStream.filename == null && self.autoFields) {
@@ -449,18 +469,6 @@ function getBytesExpected(headers) {
   } else {
     return null;
   }
-}
-
-function error(self, err) {
-  assert.ok(!self.error, err.stack);
-  self.error = err;
-  self.emit('error', err);
-  self.openedFiles.forEach(function(file) {
-    file.ws.destroy();
-    fs.unlink(file.path, function(err) {
-      // this is already an error condition, ignore 2nd error
-    });
-  });
 }
 
 function beginFlush(self) {
@@ -504,7 +512,7 @@ function handleFile(self, fileStream) {
     fileStream.pipe(hashWorkaroundStream);
   }
   file.ws.on('error', function(err) {
-    error(self, err);
+    self.handleError(err);
   });
   file.ws.on('close', function() {
     if (hash) file.hash = hash.digest('hex');
@@ -515,15 +523,15 @@ function handleFile(self, fileStream) {
 }
 
 function handleField(self, fieldStream) {
-  var value = ''
-    , decoder = new StringDecoder(self.encoding);
+  var value = '';
+  var decoder = new StringDecoder(self.encoding);
 
   beginFlush(self);
   fieldStream.on('readable', function() {
     var buffer = fieldStream.read();
     self.totalFieldSize += buffer.length;
     if (self.totalFieldSize > self.maxFieldsSize) {
-      error(self, new Error("maxFieldsSize " + self.maxFieldsSize + " exceeded"));
+      self.handleError(new Error("maxFieldsSize " + self.maxFieldsSize + " exceeded"));
       return;
     }
     value += decoder.write(buffer);
@@ -569,7 +577,7 @@ function setUpParser(self, boundary) {
     {
       self.onParsePartEnd();
     } else if (self.state !== END) {
-      error(self, new Error('stream ended unexpectedly'));
+      self.handleError(new Error('stream ended unexpectedly'));
     }
     self.finished = true;
     maybeClose(self);
