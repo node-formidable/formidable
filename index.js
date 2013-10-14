@@ -111,19 +111,23 @@ Form.prototype.parse = function(req, cb) {
   req.pipe(self);
 
   if (cb) {
-    var fields = {}
-      , files = {};
+    var fieldsTable = {};
+    var filesTable = {};
+    var fieldsList = [];
+    var filesList = [];
     self.on('error', function(err) {
       cb(err);
     });
     self.on('field', function(name, value) {
-      fields[name] = value;
+      fieldsTable[name] = value;
+      fieldsList.push({name: name, value: value});
     });
     self.on('file', function(name, file) {
-      files[name] = file;
+      filesTable[name] = file;
+      filesList.push(file);
     });
     self.on('close', function() {
-      cb(null, fields, files);
+      cb(null, fieldsTable, filesTable, fieldsList, filesList);
     });
   }
 };
@@ -477,6 +481,7 @@ function maybeClose(self) {
 function handleFile(self, fileStream) {
   beginFlush(self);
   var file = {
+    fieldName: fileStream.name,
     originalFilename: fileStream.filename,
     path: uploadPath(self.uploadDir, fileStream.filename),
     headers: fileStream.headers,

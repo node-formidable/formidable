@@ -3,6 +3,10 @@
 
 Parse http requests with content-type `multipart/form-data`, also known as file uploads.
 
+See also [busboy](https://github.com/mscdex/busboy) - a
+[faster](https://github.com/mscdex/dicer/wiki/Benchmarks) alternative
+which may be worth looking into.
+
 ### Why the fork?
 
  * This module uses the Node.js v0.10 streams properly, *even in Node.js v0.8*
@@ -24,7 +28,6 @@ npm install multiparty
 ## Usage
 
  * See [examples](examples).
- * Using express or connect? See [connect-multiparty](https://github.com/superjoe30/connect-multiparty)
 
 Parse an incoming `multipart/form-data` request.
 
@@ -92,10 +95,20 @@ provided, `autoFields` and `autoFiles` are set to `true` and all fields and
 files are collected and passed to the callback:
 
 ```js
-form.parse(req, function(err, fields, files) {
+form.parse(req, function(err, fieldsObject, filesObject, fieldsList, filesList) {
   // ...
 });
 ```
+
+It is often convenient to access a field or file by name. In this situation,
+use `fieldsObject` or `filesObject`. However sometimes, as in the case of a
+`<input type="file" multiple="multiple">` the multipart stream will contain
+multiple files of the same input name, and you are interested in all of them.
+In this case, use `filesList`.
+
+Another example is when you do not care what the field name of a file is; you
+are merely interested in a single upload. In this case, set `maxFields` to 1
+(assuming no other fields expected besides the file) and use `filesList[0]`.
 
 #### form.bytesReceived
 
@@ -148,6 +161,7 @@ stream uploads to disk for you.
 
  * `name` - the field name for this file
  * `file` - an object with these properties:
+   - `fieldName` - same as `name` - the field name for this file
    - `originalFilename` - the filename that the user reports for the file
    - `path` - the absolute path of the uploaded file on disk
    - `headers` - the HTTP headers that were sent along with this file
