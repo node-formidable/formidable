@@ -3,20 +3,13 @@ var http = require('http');
 var net = require('net');
 var multiparty = require('../../');
 
-// remove this if we actually fix the EMFILE thing inside of multiparty
-require('graceful-fs');
-
 var client;
 var attachmentCount = 2000;
 var server = http.createServer(function(req, res) {
   var form = new multiparty.Form({maxFields: 10000});
 
   form.parse(req, function(err, fieldsTable, filesTable, fieldsList, filesList) {
-    if (err) {
-      console.error(err.stack);
-      return;
-    }
-    assert.strictEqual(filesList.length, attachmentCount);
+    assert.strictEqual(err.code, "EMFILE");
     res.end();
     client.end();
     server.close();

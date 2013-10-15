@@ -19,8 +19,7 @@
     "mocha": "~1.8.2",
     "request": "~2.16.6",
     "mkdirp": "~0.3.5",
-    "superagent": "~0.14.1",
-    "graceful-fs": "~2.0.1"
+    "superagent": "~0.14.1"
   },
   "scripts": {
     "test": "mocha --reporter spec --recursive test/test.js"

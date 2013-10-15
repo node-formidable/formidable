@@ -515,26 +515,15 @@ function handleFile(self, fileStream) {
     };
     fileStream.pipe(hashWorkaroundStream);
   }
-  file.ws.on('error', onError);
-  file.ws.on('close', onClose);
-
-  function onError(err) {
-    self.handleError(err);
-    cleanup();
-  }
-
-  function cleanup() {
-    file.ws.removeListener('error', onError);
-    file.ws.removeListener('close', onClose);
-    endFlush(self);
-  }
-
-  function onClose() {
+  file.ws.on('error', function(err) {
+    if (!self.error) self.handleError(err);
+  });
+  file.ws.on('close', function() {
     if (hash) file.hash = hash.digest('hex');
     file.size = counter.bytes;
     self.emit('file', fileStream.name, file);
-    cleanup();
-  }
+    endFlush(self);
+  });
 }
 
 function handleField(self, fieldStream) {
