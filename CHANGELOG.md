@@ -1,3 +1,13 @@
+### 2.2.0
+
+ * additional callback API to support multiple files with same field name
+ * fix assertion crash when max field count is exceeded
+ * fix assertion crash when client aborts an invalid request
+ * (>=v0.10 only) unpipe the request when an error occurs to save resources.
+ * update readable-stream to ~1.1.9
+ * fix assertion crash when EMFILE occurrs
+ * (no more assertions - only 'error' events)
+
 ### 2.1.9
 
  * relax content-type detection regex. (thanks amitaibu)
