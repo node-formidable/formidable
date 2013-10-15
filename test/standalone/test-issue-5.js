@@ -4,7 +4,7 @@ var net = require('net');
 var multiparty = require('../../');
 
 var client;
-var attachmentCount = 2000;
+var attachmentCount = 510;
 var server = http.createServer(function(req, res) {
   var form = new multiparty.Form({maxFields: 10000});
 

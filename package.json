@@ -22,7 +22,7 @@
     "superagent": "~0.14.1"
   },
   "scripts": {
-    "test": "mocha --reporter spec --recursive test/test.js"
+    "test": "ulimit -n 500 && mocha --timeout 4000 --reporter spec --recursive test/test.js"
   },
   "engines": {
     "node": ">=0.8.0"

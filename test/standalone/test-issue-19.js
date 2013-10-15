@@ -9,7 +9,10 @@ var server = http.createServer(function (req, res) {
   form.on('aborted', function () {
     throw new Error("did not expect aborted");
   });
-  form.once('error', function (err) {
+  var first = true;
+  form.on('error', function (err) {
+    assert.ok(first);
+    first = false;
     client.end();
     assert.ok(/maxFields/.test(err.message));
     server.close();

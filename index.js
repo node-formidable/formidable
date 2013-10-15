@@ -132,26 +132,29 @@ Form.prototype.parse = function(req, cb) {
   }
 
   function handleError(err) {
-    if (self.error) {
-      throw new Error("error() called twice. Original: " + self.error.stack + "\n");
-    }
-    self.error = err;
+    var first = !self.error;
+    if (first) {
+      self.error = err;
+      req.removeListener('aborted', onReqAborted);
 
-    req.removeListener('error', handleError);
-    req.removeListener('aborted', onReqAborted);
-    // welp. 0.8 doesn't support unpipe, too bad so sad.
-    // let's drop support for 0.8 soon.
-    if (req.unpipe) {
-      req.unpipe(self);
+      // welp. 0.8 doesn't support unpipe, too bad so sad.
+      // let's drop support for 0.8 soon.
+      if (req.unpipe) {
+        req.unpipe(self);
+      }
     }
+
     self.openedFiles.forEach(function(file) {
       file.ws.destroy();
       fs.unlink(file.path, function(err) {
         // this is already an error condition, ignore 2nd error
       });
     });
+    self.openedFiles = [];
 
-    self.emit('error', err);
+    if (first) {
+      self.emit('error', err);
+    }
   }
 
 };
