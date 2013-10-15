@@ -515,15 +515,26 @@ function handleFile(self, fileStream) {
     };
     fileStream.pipe(hashWorkaroundStream);
   }
-  file.ws.on('error', function(err) {
+  file.ws.on('error', onError);
+  file.ws.on('close', onClose);
+
+  function onError(err) {
     self.handleError(err);
-  });
-  file.ws.on('close', function() {
+    cleanup();
+  }
+
+  function cleanup() {
+    file.ws.removeListener('error', onError);
+    file.ws.removeListener('close', onClose);
+    endFlush(self);
+  }
+
+  function onClose() {
     if (hash) file.hash = hash.digest('hex');
     file.size = counter.bytes;
     self.emit('file', fileStream.name, file);
-    endFlush(self);
-  });
+    cleanup();
+  }
 }
 
 function handleField(self, fieldStream) {
@@ -533,6 +544,8 @@ function handleField(self, fieldStream) {
   beginFlush(self);
   fieldStream.on('readable', function() {
     var buffer = fieldStream.read();
+    if (!buffer) return;
+
     self.totalFieldSize += buffer.length;
     if (self.totalFieldSize > self.maxFieldsSize) {
       self.handleError(new Error("maxFieldsSize " + self.maxFieldsSize + " exceeded"));
