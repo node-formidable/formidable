@@ -122,8 +122,12 @@ The expected number of bytes in this form.
 
 #### 'error' (err)
 
-You definitely want to handle this event. If not your server *will* crash when
-users submit bogus multipart requests!
+Unless you supply a callback to `form.parse`, you definitely want to handle
+this event. Otherwise your server *will* crash when users submit bogus
+multipart requests!
+
+Only one 'error' event can ever be emitted, and if an 'error' event is
+emitted, then 'close' will not be emitted.
 
 #### 'part' (part)
 
