@@ -95,20 +95,16 @@ provided, `autoFields` and `autoFiles` are set to `true` and all fields and
 files are collected and passed to the callback:
 
 ```js
-form.parse(req, function(err, fieldsObject, filesObject, fieldsList, filesList) {
+form.parse(req, function(err, fields, files) {
   // ...
 });
 ```
 
-It is often convenient to access a field or file by name. In this situation,
-use `fieldsObject` or `filesObject`. However sometimes, as in the case of a
-`<input type="file" multiple="multiple">` the multipart stream will contain
-multiple files of the same input name, and you are interested in all of them.
-In this case, use `filesList`.
+`fields` is an object where the property names are field names and the values
+are arrays of field values.
 
-Another example is when you do not care what the field name of a file is; you
-are merely interested in a single upload. In this case, set `maxFields` to 1
-(assuming no other fields expected besides the file) and use `filesList[0]`.
+`files` is an object where the property names are field names and the values
+are arrays of file objects.
 
 #### form.bytesReceived
 

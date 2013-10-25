@@ -106,23 +106,21 @@ Form.prototype.parse = function(req, cb) {
   req.pipe(self);
 
   if (cb) {
-    var fieldsTable = {};
-    var filesTable = {};
-    var fieldsList = [];
-    var filesList = [];
+    var fields = {};
+    var files = {};
     self.on('error', function(err) {
       cb(err);
     });
     self.on('field', function(name, value) {
-      fieldsTable[name] = value;
-      fieldsList.push({name: name, value: value});
+      var fieldsArray = fields[name] || (fields[name] = []);
+      fieldsArray.push(value);
     });
     self.on('file', function(name, file) {
-      filesTable[name] = file;
-      filesList.push(file);
+      var filesArray = files[name] || (files[name] = []);
+      filesArray.push(file);
     });
     self.on('close', function() {
-      cb(null, fieldsTable, filesTable, fieldsList, filesList);
+      cb(null, fields, files);
     });
   }
 
