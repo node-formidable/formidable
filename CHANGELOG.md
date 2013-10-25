@@ -1,3 +1,9 @@
+### 3.0.0
+
+ * form.parse callback API changed in a compatibility-breaking manner.
+   sorry, I know it sucks but the way I had it before is misleading and
+   inconsistent.
+
 ### 2.2.0
 
  * additional callback API to support multiple files with same field name
