@@ -71,7 +71,7 @@ var form = new multiparty.Form(options)
 Creates a new form. Options:
 
  * `encoding` - sets encoding for the incoming form fields. Defaults to `utf8`.
- * `maxFieldSize` - Limits the amount of memory a field (not a file) can
+ * `maxFieldsSize` - Limits the amount of memory a field (not a file) can
    allocate in bytes. If this value is exceeded, an `error` event is emitted.
    The default size is 2MB.
  * `maxFields` - Limits the number of fields that will be parsed before
