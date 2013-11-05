@@ -82,7 +82,7 @@ form.encoding = 'utf-8';
 Sets encoding for incoming form fields.
 
 ```javascript
-form.uploadDir = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
+form.uploadDir = process.env.TMPDIR || process.env.TMP || process.env.TEMP || '/tmp' || process.cwd();
 ```
 The directory for placing file uploads in. You can move them later on using
 `fs.rename()`. The default directory is picked at module load time depending on
