@@ -599,7 +599,7 @@ function uploadPath(baseDir, filename) {
 }
 
 function parseFilename(headerValue) {
-  var m = headerValue.match(/\bfilename="(.*?)"($|; )/i);
+  var m = headerValue.match(/\bfilename="(.*?)"($|; )/i) || headerValue.match(/\bfilename\*=utf-8\'\'(.*?)($|; )/i);
   if (!m) return;
 
   var filename = m[1].substr(m[1].lastIndexOf('\\') + 1);
