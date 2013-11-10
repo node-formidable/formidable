@@ -1,3 +1,7 @@
+### 3.1.0
+
+ * support UTF8 filename in Content-Disposition (thanks baoshan)
+
 ### 3.0.0
 
  * form.parse callback API changed in a compatibility-breaking manner.
