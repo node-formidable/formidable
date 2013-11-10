@@ -599,8 +599,16 @@ function uploadPath(baseDir, filename) {
 }
 
 function parseFilename(headerValue) {
-  var m = headerValue.match(/\bfilename="(.*?)"($|; )/i) || headerValue.match(/\bfilename\*=utf-8\'\'(.*?)($|; )/i);
-  if (!m) return;
+  var m = headerValue.match(/\bfilename="(.*?)"($|; )/i);
+  if (!m) {
+    m = headerValue.match(/\bfilename\*=utf-8\'\'(.*?)($|; )/i);
+    if (m) {
+      m[1] = decodeURI(m[1]);
+    }
+    else {
+      return;
+    }
+  }
 
   var filename = m[1].substr(m[1].lastIndexOf('\\') + 1);
   filename = filename.replace(/%22/g, '"');
