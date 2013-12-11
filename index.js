@@ -487,7 +487,9 @@ function endFlush(self) {
 
 function maybeClose(self) {
   if (!self.flushing && self.finished && !self.error) {
-    self.emit('close');
+    process.nextTick(function() {
+      self.emit('close');
+    });
   }
 }
 
