@@ -1,3 +1,7 @@
+### 3.1.1
+
+ * fix not emitting 'close' after all part 'end' events
+
 ### 3.1.0
 
  * support UTF8 filename in Content-Disposition (thanks baoshan)
