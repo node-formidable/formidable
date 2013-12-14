@@ -129,7 +129,7 @@ The expected number of bytes in this form.
 ```javascript
 form.parse(request, [cb]);
 ```
-Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:
+Parses an incoming node.js `request` containing form data. If `cb` is provided, all fields and files are collected and passed to the callback:
 
 
 ```javascript
