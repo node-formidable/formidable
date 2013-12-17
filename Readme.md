@@ -22,6 +22,8 @@ a large variety of clients and is considered production-ready.
 
 ## Installation
 
+This is a low level package, and if you're using a high level framework such as Express, chances are it's already included in it. You can [read this discussion](http://stackoverflow.com/questions/11295554/how-to-disable-express-bodyparser-for-file-uploads-node-js) about how Formidable is integrated with Express.
+
 Via [npm](http://github.com/isaacs/npm):
 ```
 npm install formidable@latest
