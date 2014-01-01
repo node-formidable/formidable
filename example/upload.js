@@ -1,11 +1,14 @@
 require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('formidable'),
+    formidable = require('../index'),
     server;
 
+var TEST_TMP = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
+var TEST_PORT = process.argv[2] || 3000;
+
 server = http.createServer(function(req, res) {
-  if (req.url == '/') {
+  if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
       '<form action="/upload" enctype="multipart/form-data" method="post">'+
@@ -14,7 +17,7 @@ server = http.createServer(function(req, res) {
       '<input type="submit" value="Upload">'+
       '</form>'
     );
-  } else if (req.url == '/upload') {
+  } else if (req.url === '/upload') {
     var form = new formidable.IncomingForm(),
         files = [],
         fields = [];
