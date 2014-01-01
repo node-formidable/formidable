@@ -1,7 +1,7 @@
 require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('../index'), // Change '../index' to 'formidable' in a real example
+    formidable = require('..'), // Change '..' to 'formidable' in your code
     server;
 
 var TEST_PORT = process.argv[2] || 3000;
