@@ -1,11 +1,13 @@
 require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('formidable'),
+    formidable = require('../index'), // Change '../index' to 'formidable' in a real example
     server;
 
+var TEST_PORT = process.argv[2] || 3000;
+
 server = http.createServer(function(req, res) {
-  if (req.url == '/') {
+  if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
       '<form action="/post" method="post">'+
@@ -14,7 +16,7 @@ server = http.createServer(function(req, res) {
       '<input type="submit" value="Submit">'+
       '</form>'
     );
-  } else if (req.url == '/post') {
+  } else if (req.url === '/post') {
     var form = new formidable.IncomingForm(),
         fields = [];
 
