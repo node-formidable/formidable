@@ -1,7 +1,7 @@
 require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('../index'),
+    formidable = require('../index'), // Change this to require('formidable') in a real example
     server;
 
 var TEST_TMP = process.env.TMP || process.env.TMPDIR || process.env.TEMP || '/tmp' || process.cwd();
