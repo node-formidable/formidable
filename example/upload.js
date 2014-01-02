@@ -18,7 +18,7 @@ server = http.createServer(function(req, res) {
       '</form>'
     );
   } else if (req.url === '/upload') {
-    var form = new formidable.IncomingForm(),
+    var form = new formidable.IncomingForm({noFile: true}),
         files = [],
         fields = [];
 
