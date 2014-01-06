@@ -108,10 +108,10 @@ If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
 ```javascript
-form.maxFields = 0;
+form.maxFields = 1000;
 ```
 Limits the number of fields that the querystring parser will decode. Defaults
-to 0 (unlimited).
+to 1000 (0 for unlimited).
 
 ```javascript
 form.hash = false;
