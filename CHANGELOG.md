@@ -1,3 +1,8 @@
+### 3.1.2
+
+ * exclude test files from npm package (thanks Dag Einar Monsen)
+ * fix incorrectly using autoFields value for autoFiles (thanks RG72)
+
 ### 3.1.1
 
  * fix not emitting 'close' after all part 'end' events
