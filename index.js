@@ -45,7 +45,7 @@ function Form(options) {
   self.finished = false;
 
   self.autoFields = !!options.autoFields;
-  self.autoFiles = !!options.autoFields;
+  self.autoFiles = !!options.autoFiles;
 
   self.maxFields = options.maxFields || 1000;
   self.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
