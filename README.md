@@ -77,6 +77,9 @@ Creates a new form. Options:
  * `maxFields` - Limits the number of fields that will be parsed before
    emitting an `error` event. A file counts as a field in this case.
    Defaults to 1000.
+ * `maxFilesSize` - Only relevant when `autoFiles` is `true`.  Limits the
+   total bytes accepted for all files combined. If this value is exceeded,
+   an `error` event is emitted. The default is `Infinity`.
  * `autoFields` - Enables `field` events. This is automatically set to `true`
    if you add a `field` listener.
  * `autoFiles` - Enables `file` events. This is automatically set to `true`
@@ -158,6 +161,8 @@ event is emitted. This is typically when you would send your response.
 **By default multiparty will not touch your hard drive.** But if you add this
 listener, multiparty automatically sets `form.autoFiles` to `true` and will
 stream uploads to disk for you. 
+
+**The max bytes accepted per request can be specified with `maxFilesSize`.**
 
  * `name` - the field name for this file
  * `file` - an object with these properties:
