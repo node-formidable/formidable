@@ -49,6 +49,7 @@ function Form(options) {
 
   self.maxFields = options.maxFields || 1000;
   self.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
+  self.maxFilesSize = options.maxFilesSize || Infinity;
   self.uploadDir = options.uploadDir || os.tmpDir();
   self.encoding = options.encoding || 'utf8';
   self.hash = options.hash || false;
@@ -59,6 +60,7 @@ function Form(options) {
   self.openedFiles = [];
   self.totalFieldSize = 0;
   self.totalFieldCount = 0;
+  self.totalFileSize = 0;
   self.flushing = 0;
 
   self.backpressure = false;
@@ -143,10 +145,7 @@ Form.prototype.parse = function(req, cb) {
     }
 
     self.openedFiles.forEach(function(file) {
-      file.ws.destroy();
-      fs.unlink(file.path, function(err) {
-        // this is already an error condition, ignore 2nd error
-      });
+      destroyFile(self, file);
     });
     self.openedFiles = [];
 
@@ -493,6 +492,18 @@ function maybeClose(self) {
   }
 }
 
+function destroyFile(self, file) {
+  if (!file.ws) return;
+  file.ws.destroy();
+  file.ws.removeAllListeners('close');
+  if (typeof file.ws.fd !== 'number') return;
+  file.ws.on('close', function() {
+    fs.unlink(file.path, function(err) {
+      if (!self.error) self.handleError(err);
+    });
+  });
+}
+
 function handleFile(self, fileStream) {
   beginFlush(self);
   var file = {
@@ -505,6 +516,7 @@ function handleFile(self, fileStream) {
   self.openedFiles.push(file);
   fileStream.pipe(file.ws);
   var counter = new StreamCounter();
+  var seenBytes = 0;
   fileStream.pipe(counter);
   var hashWorkaroundStream
     , hash = null;
@@ -518,6 +530,15 @@ function handleFile(self, fileStream) {
     };
     fileStream.pipe(hashWorkaroundStream);
   }
+  counter.on('progress', function() {
+    var deltaBytes = counter.bytes - seenBytes;
+    self.totalFileSize += deltaBytes;
+    if (self.totalFileSize > self.maxFilesSize) {
+      if (hashWorkaroundStream) fileStream.unpipe(hashWorkaroundStream);
+      fileStream.unpipe(counter);
+      self.handleError(new Error("maxFilesSize " + self.maxFilesSize + " exceeded"));
+    }
+  });
   file.ws.on('error', function(err) {
     if (!self.error) self.handleError(err);
   });
