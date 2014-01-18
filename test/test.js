@@ -15,6 +15,7 @@ var spawn = require('child_process').spawn
   , TMP_PATH = path.join(__dirname, 'tmp')
 
 mkdirp.sync(TMP_PATH);
+cleanFiles(findit.sync(TMP_PATH));
 
 describe("fixtures", function() {
   before(function(done) {
@@ -41,12 +42,17 @@ describe("standalone", function() {
     .forEach(function(jsPath) {
       if (!/\.js$/.test(jsPath)) return;
       it(path.basename(jsPath, '.js'), function(done) {
-        var child = spawn(process.execPath, [jsPath], { stdio: 'inherit' });
+        var child = spawn(process.execPath, [jsPath], { env: { TMPDIR: TMP_PATH }, stdio: 'inherit' });
         child.on('error', function(err) {
           done(err);
         });
         child.on('exit', function(code) {
           if (code) return done(new Error("exited with code " + code));
+          var fileNames = findit.sync(TMP_PATH);
+          if (fileNames.length) {
+            cleanFiles(fileNames);
+            return done(new Error("failed to clean up auto files: " + fileNames.join(', ')));
+          }
           done();
         });
       });
@@ -77,9 +83,16 @@ function createTest(fixture) {
 
 }
 
+function cleanFiles(fileNames) {
+  fileNames.forEach(function(fileName) {
+    fs.unlinkSync(fileName);
+  });
+}
+
 function uploadFixture(name, cb) {
   server.once('request', function(req, res) {
     var parts = [];
+    var fileNames = [];
     var form = new multiparty.Form({
       autoFields: true,
       autoFiles: true,
@@ -90,6 +103,7 @@ function uploadFixture(name, cb) {
     form.on('error', callback);
     form.on('file', function(name, value) {
       parts.push({type: 'file', name: name, value: value});
+      fileNames.push(value.path);
     });
     form.on('field', function(name, value) {
       parts.push({type: 'field', name: name, value: value});
@@ -104,6 +118,7 @@ function uploadFixture(name, cb) {
       var realCallback = cb;
       cb = function() {};
       realCallback.apply(null, arguments);
+      cleanFiles(fileNames);
     }
   });
 

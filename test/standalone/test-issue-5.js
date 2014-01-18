@@ -1,4 +1,5 @@
 var assert = require('assert');
+var fs = require('fs');
 var http = require('http');
 var net = require('net');
 var multiparty = require('../../');
@@ -8,11 +9,14 @@ var attachmentCount = 510;
 var server = http.createServer(function(req, res) {
   var form = new multiparty.Form({maxFields: 10000});
 
-  form.parse(req, function(err, fieldsTable, filesTable, fieldsList, filesList) {
+  form.parse(req, function(err, fields, files) {
     assert.strictEqual(err.code, "EMFILE");
     res.end();
     client.end();
     server.close();
+    files.upload.forEach(function(file) {
+      fs.unlinkSync(file.path);
+    });
   });
 });
 server.listen(function() {

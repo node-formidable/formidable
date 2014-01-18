@@ -3,6 +3,7 @@ var http = require('http')
   , assert = require('assert')
   , superagent = require('superagent')
   , path = require('path')
+  , fs = require('fs')
 
 var server = http.createServer(function(req, res) {
   assert.strictEqual(req.url, '/upload');
@@ -20,6 +21,7 @@ var server = http.createServer(function(req, res) {
   var fileCount = 0;
   form.on('file', function(name, file) {
     fileCount += 1;
+    fs.unlink(file.path, function () {});
   });
 
   form.parse(req, function(err, fields, files) {
