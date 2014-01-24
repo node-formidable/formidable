@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/superjoe30/node-multiparty.png?branch=master)](https://travis-ci.org/superjoe30/node-multiparty)
+[![Build Status](https://travis-ci.org/andrewrk/node-multiparty.png?branch=master)](https://travis-ci.org/andrewrk/node-multiparty)
 # multiparty
 
 Parse http requests with content-type `multipart/form-data`, also known as file uploads.
