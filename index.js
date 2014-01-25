@@ -532,6 +532,7 @@ function handleFile(self, fileStream) {
   }
   counter.on('progress', function() {
     var deltaBytes = counter.bytes - seenBytes;
+    seenBytes += deltaBytes;
     self.totalFileSize += deltaBytes;
     if (self.totalFileSize > self.maxFilesSize) {
       if (hashWorkaroundStream) fileStream.unpipe(hashWorkaroundStream);
