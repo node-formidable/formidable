@@ -1,3 +1,12 @@
+### 3.2.1
+
+ * fix maxFilesSize overcalculation bug (thanks [dougwilson] and
+   [timothysoehnlin])
+
+### 3.2.0
+
+ * add maxFilesSize for autoFiles (thanks [dougwilson])
+
 ### 3.1.2
 
  * exclude test files from npm package (thanks Dag Einar Monsen)
