@@ -1,3 +1,6 @@
+module.exports['empty.http'] = [
+];
+
 module.exports['generic.http'] = [
   {type: 'file', name: 'upload', filename: '', fixture: 'plain.txt',
   sha1: 'b31d07bac24ac32734de88b3687dddb10e976872'},
