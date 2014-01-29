@@ -1,0 +1,6 @@
+POST /upload HTTP/1.1
+Host: localhost:8080
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryi3Xz4TKrYpgIdIpf
+Content-Length: 44
+
+------WebKitFormBoundaryi3Xz4TKrYpgIdIpf--

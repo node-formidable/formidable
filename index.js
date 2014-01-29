@@ -20,7 +20,8 @@ var START = 0
   , PART_DATA_START = 8
   , PART_DATA = 9
   , PART_END = 10
-  , END = 11
+  , CLOSE_BOUNDARY = 11
+  , END = 12
 
   , LF = 10
   , CR = 13
@@ -180,7 +181,11 @@ Form.prototype._write = function(buffer, encoding, cb) {
         state = START_BOUNDARY;
         /* falls through */
       case START_BOUNDARY:
-        if (index === boundaryLength - 2) {
+        if (index === boundaryLength - 2 && c == HYPHEN) {
+          index = 1;
+          state = CLOSE_BOUNDARY;
+          break;
+        } else if (index === boundaryLength - 2) {
           if (c !== CR) return self.handleError(new Error("Expected CR Received " + c));
           index++;
           break;
@@ -285,8 +290,9 @@ Form.prototype._write = function(buffer, encoding, cb) {
             // CR = part boundary
             self.partBoundaryFlag = true;
           } else if (c === HYPHEN) {
-            // HYPHEN = end boundary
-            self.lastBoundaryFlag = true;
+            index = 1;
+            state = CLOSE_BOUNDARY;
+            break;
           } else {
             index = 0;
           }
@@ -299,14 +305,6 @@ Form.prototype._write = function(buffer, encoding, cb) {
               self.onParsePartBegin();
               state = HEADER_FIELD_START;
               break;
-            }
-          } else if (self.lastBoundaryFlag) {
-            if (c === HYPHEN) {
-              self.onParsePartEnd();
-              self.end();
-              state = END;
-            } else {
-              index = 0;
             }
           } else {
             index = 0;
@@ -329,6 +327,17 @@ Form.prototype._write = function(buffer, encoding, cb) {
           i--;
         }
 
+        break;
+      case CLOSE_BOUNDARY:
+        if (c !== HYPHEN) return self.handleError(new Error("Expected HYPHEN Received " + c));
+        if (index === 1) {
+          self.onParsePartEnd();
+          self.end();
+          state = END;
+        } else if (index > 1) {
+          return self.handleError(new Error("Parser has invalid state."));
+        }
+        index++;
         break;
       case END:
         break;
@@ -600,7 +609,6 @@ function setUpParser(self, boundary) {
 
   self.index = null;
   self.partBoundaryFlag = false;
-  self.lastBoundaryFlag = false;
 
   self.on('finish', function() {
     if ((self.state === HEADER_FIELD_START && self.index === 0) ||
