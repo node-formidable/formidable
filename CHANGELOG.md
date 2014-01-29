@@ -1,3 +1,7 @@
+### 3.2.2
+
+ * fix error on empty payloads (thanks [dougwilson])
+
 ### 3.2.1
 
  * fix maxFilesSize overcalculation bug (thanks [dougwilson] and
