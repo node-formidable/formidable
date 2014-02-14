@@ -118,6 +118,11 @@ form.hash = false;
 If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
 
 ```javascript
+form.multiples = false;
+```
+If this option is enabled, when you call `form.parse`, the `files` argument will contain arrays of files for inputs which submit multiple files using the HTML5 `multiple` attribute.
+
+```javascript
 form.bytesReceived
 ```
 The amount of bytes received for this form so far.
