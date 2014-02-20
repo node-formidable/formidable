@@ -1,3 +1,7 @@
+### 3.2.3
+
+ * improve parsing boundary attribute from Content-Type (thanks [dougwilson])
+
 ### 3.2.2
 
  * fix error on empty payloads (thanks [dougwilson])
