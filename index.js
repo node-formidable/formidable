@@ -31,7 +31,8 @@ var START = 0
   , A = 97
   , Z = 122
 
-var CONTENT_TYPE_RE = /^multipart\/(form-data|related);\s*boundary=(?:"([^"]+)"|([^;]+))$/i;
+var CONTENT_TYPE_RE = /^multipart\/(?:form-data|related)(?:;|$)/i;
+var CONTENT_TYPE_PARAM_RE = /;\s*(\S+)=(?:"([^"]+)"|([^;]+))/gi;
 var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
 var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 
@@ -99,12 +100,25 @@ Form.prototype.parse = function(req, cb) {
     return;
   }
 
-  var m = contentType.match(CONTENT_TYPE_RE);
+  var m = CONTENT_TYPE_RE.exec(contentType);
   if (!m) {
     handleError(new Error('unrecognized content-type: ' + contentType));
     return;
   }
-  var boundary = m[2] || m[3];
+
+  var boundary;
+  CONTENT_TYPE_PARAM_RE.lastIndex = m.index + m[0].length - 1;
+  while ((m = CONTENT_TYPE_PARAM_RE.exec(contentType))) {
+    if (m[1].toLowerCase() !== 'boundary') continue;
+    boundary = m[2] || m[3];
+    break;
+  }
+
+  if (!boundary) {
+    handleError(new Error('content-type missing boundary: ' + require('util').inspect(m)));
+    return;
+  }
+
   setUpParser(self, boundary);
   req.pipe(self);
 
