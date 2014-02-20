@@ -1,6 +1,6 @@
 {
   "name": "multiparty",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "multipart/form-data parser which supports streaming",
   "repository": {
     "type": "git",
