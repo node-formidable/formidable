@@ -452,10 +452,10 @@ Form.prototype.onParseHeadersEnd = function(offset) {
   self.destStream.filename = self.partFilename;
   self.destStream.byteOffset = self.bytesReceived + offset;
   var partContentLength = self.destStream.headers['content-length'];
-  self.destStream.byteCount = partContentLength ?
-    parseInt(partContentLength, 10) :
-    (self.bytesExpected - self.destStream.byteOffset -
-     self.boundary.length - LAST_BOUNDARY_SUFFIX_LEN);
+  self.destStream.byteCount = partContentLength ? parseInt(partContentLength, 10) :
+    self.bytesExpected ? (self.bytesExpected - self.destStream.byteOffset -
+      self.boundary.length - LAST_BOUNDARY_SUFFIX_LEN) :
+    undefined;
 
   self.emit('part', self.destStream);
   if (self.destStream.filename == null && self.autoFields) {
