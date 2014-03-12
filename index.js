@@ -195,7 +195,7 @@ Form.prototype._write = function(buffer, encoding, cb) {
         state = START_BOUNDARY;
         /* falls through */
       case START_BOUNDARY:
-        if (index === boundaryLength - 2 && c == HYPHEN) {
+        if (index === boundaryLength - 2 && c === HYPHEN) {
           index = 1;
           state = CLOSE_BOUNDARY;
           break;
