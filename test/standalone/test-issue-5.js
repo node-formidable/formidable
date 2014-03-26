@@ -9,14 +9,11 @@ var attachmentCount = 510;
 var server = http.createServer(function(req, res) {
   var form = new multiparty.Form({maxFields: 10000});
 
-  form.parse(req, function(err, fields, files) {
+  form.parse(req, function(err) {
     assert.strictEqual(err.code, "EMFILE");
     res.end();
     client.end();
     server.close();
-    files.upload.forEach(function(file) {
-      fs.unlinkSync(file.path);
-    });
   });
 });
 server.listen(function() {

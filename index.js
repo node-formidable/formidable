@@ -517,17 +517,17 @@ function maybeClose(self) {
 
 function destroyFile(self, file) {
   if (!file.ws) return;
-  file.ws.destroy();
   file.ws.removeAllListeners('close');
-  if (typeof file.ws.fd !== 'number') return;
   file.ws.on('close', function() {
     fs.unlink(file.path, function(err) {
-      if (!self.error) self.handleError(err);
+      if (err && !self.error) self.handleError(err);
     });
   });
+  file.ws.destroy();
 }
 
 function handleFile(self, fileStream) {
+  if (self.error) return;
   beginFlush(self);
   var file = {
     fieldName: fileStream.name,
@@ -560,6 +560,7 @@ function handleFile(self, fileStream) {
     if (self.totalFileSize > self.maxFilesSize) {
       if (hashWorkaroundStream) fileStream.unpipe(hashWorkaroundStream);
       fileStream.unpipe(counter);
+      fileStream.unpipe(file.ws);
       self.handleError(new Error("maxFilesSize " + self.maxFilesSize + " exceeded"));
     }
   });
