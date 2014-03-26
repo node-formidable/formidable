@@ -1,4 +1,5 @@
 var assert = require('assert');
+var fs = require('fs');
 var http = require('http');
 var net = require('net');
 var multiparty = require('../../');
@@ -13,6 +14,7 @@ var server = http.createServer(function(req, res) {
       return;
     }
     assert.strictEqual(files.image[0].originalFilename, "测试文档")
+    fs.unlinkSync(files.image[0].path);
     res.end();
     client.end();
     server.close();

@@ -1,4 +1,5 @@
 var assert = require('assert');
+var fs = require('fs');
 var http = require('http');
 var net = require('net');
 var multiparty = require('../../');
@@ -31,10 +32,10 @@ var server = http.createServer(function(req, res) {
 
       var filesList = files[name];
       assert.strictEqual(filesList.length, 4);
-      assert.strictEqual(filesList[0].fieldName, "upload");
-      assert.strictEqual(filesList[1].fieldName, "upload");
-      assert.strictEqual(filesList[2].fieldName, "upload");
-      assert.strictEqual(filesList[3].fieldName, "upload");
+      filesList.forEach(function(file){
+        assert.strictEqual(file.fieldName, "upload");
+        fs.unlinkSync(file.path);
+      });
     }
     assert.strictEqual(nameCount, 1);
 
