@@ -1,3 +1,8 @@
+### 3.2.4
+
+ * Keep part.byteCount undefined in chunked encoding (thanks [dougwilson])
+ * Fix temp files not always cleaned up (thanks [dougwilson])
+
 ### 3.2.3
 
  * improve parsing boundary attribute from Content-Type (thanks [dougwilson])
