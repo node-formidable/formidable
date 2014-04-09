@@ -2,3 +2,4 @@
 *.upload
 *.un~
 /node_modules/*
+/.idea/
