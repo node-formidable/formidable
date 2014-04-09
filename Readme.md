@@ -125,7 +125,7 @@ If this option is enabled, when you call `form.parse`, the `files` argument will
 ```javascript
 form.multipleByName = false;
 ```
-If this option is enabled, the call form.parse, argument files will contain arrays of files for cases when the name field will contain []. For example image [], or image [item] [left view]
+If this option is enabled, the call `form.parse`, argument files will contain arrays of `files` for cases when the name field will contain []. For example image [], or image [item] [left view]
 
 ```javascript
 form.bytesReceived
