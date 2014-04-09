@@ -123,6 +123,11 @@ form.multiples = false;
 If this option is enabled, when you call `form.parse`, the `files` argument will contain arrays of files for inputs which submit multiple files using the HTML5 `multiple` attribute.
 
 ```javascript
+form.multipleByName = false;
+```
+If this option is enabled, the call form.parse, argument files will contain arrays of files for cases when the name field will contain []. For example image [], or image [item] [left view]
+
+```javascript
 form.bytesReceived
 ```
 The amount of bytes received for this form so far.
