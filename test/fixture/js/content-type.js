@@ -30,3 +30,15 @@ module.exports['custom.http'] = [
     size: 23,
   }
 ];
+
+
+// to test the regexp modification : it should accepts equal sign in boundary
+module.exports['custom-equal-sign.http'] = [
+  {
+    type: 'file',
+    name: 'file',
+    filename: 'plain.txt',
+    fixture: 'plain.txt',
+    size: 24,
+  }
+];

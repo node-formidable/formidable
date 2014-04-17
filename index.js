@@ -32,7 +32,7 @@ var START = 0
   , Z = 122
 
 var CONTENT_TYPE_RE = /^multipart\/(?:form-data|related)(?:;|$)/i;
-var CONTENT_TYPE_PARAM_RE = /;\s*(\S+)=(?:"([^"]+)"|([^;]+))/gi;
+var CONTENT_TYPE_PARAM_RE = /;\s*([^=]+)=(?:"([^"]+)"|([^;]+))/gi;
 var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
 var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 
