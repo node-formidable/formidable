@@ -1,3 +1,7 @@
+### 3.2.5
+
+ * Support boundary containing equal sign (thanks [garel-a])
+
 ### 3.2.4
 
  * Keep part.byteCount undefined in chunked encoding (thanks [dougwilson])
