@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/andrewrk/node-multiparty.png?branch=master)](https://travis-ci.org/andrewrk/node-multiparty)
-# multiparty
+# multiparty [![Build Status](https://travis-ci.org/andrewrk/node-multiparty.svg?branch=master)](https://travis-ci.org/andrewrk/node-multiparty) [![NPM version](https://badge.fury.io/js/multiparty.svg)](http://badge.fury.io/js/multiparty)
 
 Parse http requests with content-type `multipart/form-data`, also known as file uploads.
 
