@@ -1,3 +1,7 @@
+### 3.2.6
+
+ * Fix maxFields to error on field after max
+
 ### 3.2.5
 
  * Support boundary containing equal sign (thanks [garel-a])
