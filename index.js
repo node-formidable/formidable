@@ -453,7 +453,7 @@ Form.prototype.onParseHeadersEnd = function(offset) {
   }
 
   self.totalFieldCount += 1;
-  if (self.totalFieldCount >= self.maxFields) {
+  if (self.totalFieldCount > self.maxFields) {
     return new Error("maxFields " + self.maxFields + " exceeded.");
   }
 
