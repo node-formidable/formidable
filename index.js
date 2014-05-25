@@ -80,7 +80,9 @@ function Form(options) {
 }
 
 Form.prototype.parse = function(req, cb) {
+  var called = false;
   var self = this;
+  var waitend = true;
 
   // if the user supplies a callback, this implies autoFields and autoFiles
   if (cb) {
@@ -91,7 +93,11 @@ Form.prototype.parse = function(req, cb) {
   self.handleError = handleError;
   self.bytesExpected = getBytesExpected(req.headers);
 
-  req.on('error', handleError);
+  req.on('end', onReqEnd);
+  req.on('error', function(err) {
+    waitend = false;
+    handleError(err);
+  });
   req.on('aborted', onReqAborted);
 
   var contentType = req.headers['content-type'];
@@ -126,6 +132,19 @@ Form.prototype.parse = function(req, cb) {
     var fields = {};
     var files = {};
     self.on('error', function(err) {
+      if (called) return;
+
+      called = true;
+
+      if (waitend && req.readable) {
+        // dump rest of request
+        req.resume();
+        req.once('end', function() {
+          cb(err);
+        });
+        return;
+      }
+
       cb(err);
     });
     self.on('field', function(name, value) {
@@ -142,8 +161,13 @@ Form.prototype.parse = function(req, cb) {
   }
 
   function onReqAborted() {
+    waitend = false;
     self.emit('aborted');
     handleError(new Error("Request aborted"));
+  }
+
+  function onReqEnd() {
+    waitend = false;
   }
 
   function handleError(err) {
@@ -151,12 +175,7 @@ Form.prototype.parse = function(req, cb) {
     if (first) {
       self.error = err;
       req.removeListener('aborted', onReqAborted);
-
-      // welp. 0.8 doesn't support unpipe, too bad so sad.
-      // let's drop support for 0.8 soon.
-      if (req.unpipe) {
-        req.unpipe(self);
-      }
+      req.removeListener('end', onReqEnd);
     }
 
     self.openedFiles.forEach(function(file) {
@@ -172,6 +191,8 @@ Form.prototype.parse = function(req, cb) {
 };
 
 Form.prototype._write = function(buffer, encoding, cb) {
+  if (this.error) return;
+
   var self = this
     , i = 0
     , len = buffer.length

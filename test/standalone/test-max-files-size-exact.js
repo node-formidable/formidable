@@ -20,16 +20,21 @@ var server = http.createServer(function(req, res) {
   form.parse(req, function(err, fields, files) {
     assert.ifError(err);
     assert.ok(fileCount === 1);
-    res.end();
-    server.close();
+    res.end('OK');
   });
 });
 server.listen(function() {
   var url = 'http://localhost:' + server.address().port + '/upload';
   var req = superagent.post(url);
   req.attach('file0', fixture('pf1y5.png'), 'SOG1.JPG');
-  req.on('error', function(){});
+  req.on('error', function(err) {
+    assert.ifError(err);
+  });
   req.end();
+  req.on('response', function(res) {
+    assert.equal(res.statusCode, 200);
+    server.close();
+  });
 });
 
 function fixture(name) {

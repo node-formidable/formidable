@@ -16,18 +16,18 @@ var server = http.createServer(function(req, res) {
     assert.ok(first);
     first = false;
     assert.ok(/maxFilesSize/.test(err.message));
-    server.close();
   });
 
   var fileCount = 0;
   form.on('file', function(name, file) {
     fileCount += 1;
-    fs.unlink(file.path, function() {});
+    fs.unlinkSync(file.path);
   });
 
   form.parse(req, function(err, fields, files) {
     assert.ok(fileCount <= 1);
-    res.end();
+    res.statusCode = 413;
+    res.end('files too large');
   });
 });
 server.listen(function() {
@@ -35,8 +35,14 @@ server.listen(function() {
   var req = superagent.post(url);
   req.attach('file0', fixture('pf1y5.png'), 'SOG1.JPG');
   req.attach('file1', fixture('pf1y5.png'), 'SOG2.JPG');
-  req.on('error', function(){});
+  req.on('error', function(err) {
+    assert.ifError(err);
+  });
   req.end();
+  req.on('response', function(res) {
+    assert.equal(res.statusCode, 413);
+    server.close();
+  });
 });
 
 function fixture(name) {
