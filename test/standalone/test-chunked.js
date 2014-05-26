@@ -28,13 +28,13 @@ server.listen(function() {
     socket.write('\r\n');
     socket.write('7\r\n');
     socket.write('--foo\r\n\r\n');
-    socket.write('56\r\n');
+    socket.write('43\r\n');
     socket.write('Content-Disposition: form-data; name="file"; filename="plain.txt"\r\n\r\n');
     socket.write('12\r\n');
     socket.write('\r\nsome text here\r\n\r\n');
     socket.write('9\r\n');
     socket.write('--foo--\r\n\r\n');
-    socket.end('0\r\n');
+    socket.end('0\r\n\r\n');
     socket.on('close', function () {
       server.close();
     });
