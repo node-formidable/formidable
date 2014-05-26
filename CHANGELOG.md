@@ -1,3 +1,7 @@
+### 3.2.7
+
+ * Fix errors hanging responses in callback-style
+
 ### 3.2.6
 
  * Fix maxFields to error on field after max
