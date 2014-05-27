@@ -130,6 +130,14 @@ Form.prototype.parse = function(req, cb) {
   });
   req.on('aborted', onReqAborted);
 
+  var state = req._readableState;
+  if (req._decoder || (state && (state.encoding || state.decoder))) {
+    // this is a binary protocol
+    // if an encoding is set, input is likely corrupted
+    handleError(new Error('request encoding must not be set'));
+    return;
+  }
+
   var contentType = req.headers['content-type'];
   if (!contentType) {
     handleError(new Error('missing content-type header'));
