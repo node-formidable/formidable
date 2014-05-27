@@ -84,10 +84,40 @@ Form.prototype.parse = function(req, cb) {
   var self = this;
   var waitend = true;
 
-  // if the user supplies a callback, this implies autoFields and autoFiles
   if (cb) {
+    // if the user supplies a callback, this implies autoFields and autoFiles
     self.autoFields = true;
     self.autoFiles = true;
+
+    var fields = {};
+    var files = {};
+    self.on('error', function(err) {
+      if (called) return;
+
+      called = true;
+
+      if (waitend && req.readable) {
+        // dump rest of request
+        req.resume();
+        req.once('end', function() {
+          cb(err);
+        });
+        return;
+      }
+
+      cb(err);
+    });
+    self.on('field', function(name, value) {
+      var fieldsArray = fields[name] || (fields[name] = []);
+      fieldsArray.push(value);
+    });
+    self.on('file', function(name, file) {
+      var filesArray = files[name] || (files[name] = []);
+      filesArray.push(file);
+    });
+    self.on('close', function() {
+      cb(null, fields, files);
+    });
   }
 
   self.handleError = handleError;
@@ -127,38 +157,6 @@ Form.prototype.parse = function(req, cb) {
 
   setUpParser(self, boundary);
   req.pipe(self);
-
-  if (cb) {
-    var fields = {};
-    var files = {};
-    self.on('error', function(err) {
-      if (called) return;
-
-      called = true;
-
-      if (waitend && req.readable) {
-        // dump rest of request
-        req.resume();
-        req.once('end', function() {
-          cb(err);
-        });
-        return;
-      }
-
-      cb(err);
-    });
-    self.on('field', function(name, value) {
-      var fieldsArray = fields[name] || (fields[name] = []);
-      fieldsArray.push(value);
-    });
-    self.on('file', function(name, file) {
-      var filesArray = files[name] || (files[name] = []);
-      filesArray.push(file);
-    });
-    self.on('close', function() {
-      cb(null, fields, files);
-    });
-  }
 
   function onReqAborted() {
     waitend = false;
