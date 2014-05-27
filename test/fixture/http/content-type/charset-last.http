@@ -1,7 +1,7 @@
 POST /upload HTTP/1.1
 Host: localhost:8080
 Content-Type: multipart/form-data; boundary=----TLV0SrKD4z1TRxRhAPUvZ; charset=utf-8
-Content-Length: 221
+Content-Length: 213
 
 ------TLV0SrKD4z1TRxRhAPUvZ
 Content-Disposition: form-data; name="file"; filename="plain.txt"

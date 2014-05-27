@@ -1,7 +1,7 @@
 POST /upload HTTP/1.1
 Host: localhost:8080
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundarytyE4wkKlZ5CQJVTG
-Content-Length: 1000
+Content-Length: 200
 
 ------WebKitFormBoundarytyE4wkKlZ5CQJVTG
 Content-Disposition: form-data; name="upload"; filename=""

@@ -48,7 +48,7 @@ server.listen(function() {
   client = net.connect(server.address().port);
 
   client.write("POST /upload HTTP/1.1\r\n" +
-    "Content-Length: 728\r\n" +
+    "Content-Length: 726\r\n" +
     "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryvfUZhxgsZDO7FXLF\r\n" +
     "\r\n" +
     "------WebKitFormBoundaryvfUZhxgsZDO7FXLF\r\n" +
