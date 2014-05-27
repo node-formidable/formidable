@@ -367,7 +367,6 @@ Form.prototype._write = function(buffer, encoding, cb) {
         if (c !== HYPHEN) return self.handleError(new Error("Expected HYPHEN Received " + c));
         if (index === 1) {
           self.onParsePartEnd();
-          self.end();
           state = END;
         } else if (index > 1) {
           return self.handleError(new Error("Parser has invalid state."));
