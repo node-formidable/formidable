@@ -1,3 +1,9 @@
+### 3.2.8
+
+ * Fix developer accidentally corrupting data
+ * Fix handling epilogue in a separate chunk
+ * Fix initial check errors to use supplied callback
+
 ### 3.2.7
 
  * Fix errors hanging responses in callback-style
