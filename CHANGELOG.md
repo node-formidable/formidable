@@ -1,3 +1,8 @@
+### 3.2.9
+
+ * Fix attaching error listeners directly after form.parse
+ * Fix to not synchronously invoke callback to form.parse on error
+
 ### 3.2.8
 
  * Fix developer accidentally corrupting data
