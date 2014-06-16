@@ -134,19 +134,19 @@ Form.prototype.parse = function(req, cb) {
   if (req._decoder || (state && (state.encoding || state.decoder))) {
     // this is a binary protocol
     // if an encoding is set, input is likely corrupted
-    handleError(new Error('request encoding must not be set'));
+    validationError(new Error('request encoding must not be set'));
     return;
   }
 
   var contentType = req.headers['content-type'];
   if (!contentType) {
-    handleError(new Error('missing content-type header'));
+    validationError(new Error('missing content-type header'));
     return;
   }
 
   var m = CONTENT_TYPE_RE.exec(contentType);
   if (!m) {
-    handleError(new Error('unrecognized content-type: ' + contentType));
+    validationError(new Error('unrecognized content-type: ' + contentType));
     return;
   }
 
@@ -159,7 +159,7 @@ Form.prototype.parse = function(req, cb) {
   }
 
   if (!boundary) {
-    handleError(new Error('content-type missing boundary: ' + require('util').inspect(m)));
+    validationError(new Error('content-type missing boundary: ' + require('util').inspect(m)));
     return;
   }
 
@@ -194,6 +194,10 @@ Form.prototype.parse = function(req, cb) {
     }
   }
 
+  function validationError(err) {
+    // handle error on next tick for event listeners to attach
+    process.nextTick(handleError.bind(null, err))
+  }
 };
 
 Form.prototype._write = function(buffer, encoding, cb) {
