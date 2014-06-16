@@ -92,13 +92,70 @@ Creates a new form. Options:
 
 #### form.parse(request, [cb])
 
-Parses an incoming node.js `request` containing form data. If `cb` is
-provided, `autoFields` and `autoFiles` are set to `true` and all fields and
-files are collected and passed to the callback:
+Parses an incoming node.js `request` containing form data.This will cause
+`form` to emit events based off the incoming request.
+
+```js
+var count = 0;
+var form = new multiparty.Form();
+
+// Errors may be emitted
+form.on('error', function(err) {
+  console.log('Error parsing form: ' + err.stack);
+});
+
+// Parts are emitted when parsing the form
+form.on('part', function(part) {
+  // You *must* act on the part by reading it
+  // NOTE: if you want to ignore it, just call "part.resume()"
+
+  if (part.filename === null) {
+    // filename is "null" when this is a field and not a file
+    console.log('got field named ' + part.name);
+    // ignore field's content
+    part.resume();
+  }
+
+  if (part.filename !== null) {
+    // filename is not "null" when this is a file
+    count++;
+    console.log('got file named ' + part.name);
+    // ignore file's content here
+    part.resume();
+  }
+});
+
+// Close emitted after form parsed
+form.on('close', function() {
+  console.log('Upload completed!');
+  res.setHeader('text/plain');
+  res.end('Received ' + count + ' files');
+});
+
+// Parse req
+form.parse(req);
+
+```
+
+If `cb` is provided, `autoFields` and `autoFiles` are set to `true` and all
+fields and files are collected and passed to the callback, removing the need to
+listen to any events on `form`. This is for convenience when wanted to read
+everything, but be careful as this will write all uploaded files to the disk,
+even ones you may not be interested in.
 
 ```js
 form.parse(req, function(err, fields, files) {
-  // ...
+  Object.keys(fields).forEach(function(name) {
+    console.log('got field named ' + name);
+  });
+
+  Object.keys(files).forEach(function(name) {
+    console.log('got file named ' + part.name);
+  });
+
+  console.log('Upload completed!');
+  res.setHeader('text/plain');
+  res.end('Received ' + files.length + ' files');
 });
 ```
 
