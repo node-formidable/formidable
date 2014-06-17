@@ -8,6 +8,7 @@ var server = http.createServer(function(req, resp) {
 
   var partCount = 0;
   form.on('part', function(part) {
+    part.resume();
     partCount++;
     assert.strictEqual(typeof part.byteCount, 'undefined');
   });
@@ -34,7 +35,7 @@ server.listen(function() {
     socket.write('\r\nsome text here\r\n\r\n');
     socket.write('9\r\n');
     socket.write('--foo--\r\n\r\n');
-    socket.end('0\r\n\r\n');
+    socket.write('0\r\n\r\n');
     socket.on('close', function () {
       server.close();
     });

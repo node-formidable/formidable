@@ -506,6 +506,11 @@ Form.prototype.onParseHeadersEnd = function(offset) {
     handleField(self, self.destStream);
   } else if (self.destStream.filename != null && self.autoFiles) {
     handleFile(self, self.destStream);
+  } else {
+    beginFlush(self);
+    self.destStream.on('end', function(){
+      endFlush(self);
+    });
   }
 }
 
@@ -539,9 +544,7 @@ function endFlush(self) {
 
 function maybeClose(self) {
   if (!self.flushing && self.finished && !self.error) {
-    process.nextTick(function() {
-      self.emit('close');
-    });
+    self.emit('close');
   }
 }
 
@@ -558,13 +561,13 @@ function destroyFile(self, file) {
 
 function handleFile(self, fileStream) {
   if (self.error) return;
-  beginFlush(self);
   var file = {
     fieldName: fileStream.name,
     originalFilename: fileStream.filename,
     path: uploadPath(self.uploadDir, fileStream.filename),
     headers: fileStream.headers,
   };
+  beginFlush(self); // flush to write stream
   file.ws = fs.createWriteStream(file.path);
   self.openedFiles.push(file);
   fileStream.pipe(file.ws);
@@ -601,6 +604,10 @@ function handleFile(self, fileStream) {
     if (hash) file.hash = hash.digest('hex');
     file.size = counter.bytes;
     self.emit('file', fileStream.name, file);
+    endFlush(self);
+  });
+  beginFlush(self); // flush from file stream
+  fileStream.on('end', function(){
     endFlush(self);
   });
 }
