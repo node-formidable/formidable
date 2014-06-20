@@ -150,7 +150,7 @@ form.parse(req, function(err, fields, files) {
   });
 
   Object.keys(files).forEach(function(name) {
-    console.log('got file named ' + part.name);
+    console.log('got file named ' + name);
   });
 
   console.log('Upload completed!');
