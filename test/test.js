@@ -1,70 +1,93 @@
-var spawn = require('child_process').spawn
-  , findit = require('findit')
-  , path = require('path')
-  , hashish = require('hashish')
-  , fs = require('fs')
-  , http = require('http')
-  , net = require('net')
-  , assert = require('assert')
-  , multiparty = require('../')
-  , mkdirp = require('mkdirp')
-  , STANDALONE_PATH = path.join(__dirname, 'standalone')
-  , server = http.createServer()
-  , PORT = 13532
-  , FIXTURE_PATH = path.join(__dirname, 'fixture')
-  , TMP_PATH = path.join(__dirname, 'tmp')
+var spawn = require('child_process').spawn;
+var findit = require('findit');
+var path = require('path');
+var Pend = require('pend');
+var rimraf = require('rimraf');
+var fs = require('fs');
+var http = require('http');
+var net = require('net');
+var assert = require('assert');
+var multiparty = require('../');
+var mkdirp = require('mkdirp');
+var STANDALONE_PATH = path.join(__dirname, 'standalone');
+var server = http.createServer();
+var PORT = 13532;
+var FIXTURE_PATH = path.join(__dirname, 'fixture');
+var TMP_PATH = path.join(__dirname, 'tmp');
 
-mkdirp.sync(TMP_PATH);
-cleanFiles(findit.sync(TMP_PATH));
+resetTempDir(startFixtureTests);
 
-describe("fixtures", function() {
-  before(function(done) {
-    server.listen(PORT, done);
+function startFixtureTests() {
+  console.log("Fixture tests:");
+  var walker = findit(path.join(FIXTURE_PATH, 'js'));
+  var pend = new Pend();
+  pend.max = 1;
+  pend.go(function(cb) {
+    server.listen(PORT, cb);
   });
-  var fixtures = [];
-  findit
-    .sync(path.join(FIXTURE_PATH, 'js'))
-    .forEach(function(jsPath) {
-      if (!/\.js$/.test(jsPath)) return;
-      var group = path.basename(jsPath, '.js');
-      hashish.forEach(require(jsPath), function(fixture, name) {
-        it(group + '/' + name, createTest({
-          name    : group + '/' + name,
-          fixture : fixture,
-        }));
-      });
+  walker.on('file', function(jsPath) {
+    if (!/\.js$/.test(jsPath)) return;
+    var group = path.basename(jsPath, '.js');
+    var testInfo = require(jsPath);
+    for (var name in testInfo) {
+      var fixture = testInfo[name];
+      pend.go(createFixtureTest(group + '/' + name, fixture));
+    }
+  });
+  walker.on('end', function() {
+    pend.wait(function(err) {
+      if (err) throw err;
+      server.close(startStandaloneTests);
     });
-});
+  });
+}
 
-describe("standalone", function() {
-  findit
-    .sync(STANDALONE_PATH)
-    .forEach(function(jsPath) {
-      if (!/\.js$/.test(jsPath)) return;
-      it(path.basename(jsPath, '.js'), function(done) {
-        var child = spawn(process.execPath, [jsPath], { env: { TMPDIR: TMP_PATH }, stdio: 'inherit' });
-        child.on('error', function(err) {
-          done(err);
+function startStandaloneTests() {
+  console.log("\nStandalone tests:");
+  var walker = findit(STANDALONE_PATH);
+  var pend = new Pend();
+  pend.max = 1;
+  walker.on('file', function(jsPath) {
+    if (!/\.js$/.test(jsPath)) return;
+    pend.go(function(cb) {
+      var name = path.basename(jsPath, '.js');
+      process.stdout.write(name + "...");
+      var child = spawn(process.execPath, [jsPath], { env: { TMPDIR: TMP_PATH }, stdio: 'inherit' });
+      child.on('error', function(err) {
+        throw err;
+      });
+      child.on('exit', function(code) {
+        if (code) throw new Error("exited with code " + code);
+        var tmpWalker = findit(TMP_PATH);
+        var fileNames = [];
+        tmpWalker.on('file', function(file) {
+          fileNames.push(file);
         });
-        child.on('exit', function(code) {
-          if (code) return done(new Error("exited with code " + code));
-          var fileNames = findit.sync(TMP_PATH);
+        tmpWalker.on('end', function() {
           if (fileNames.length) {
             cleanFiles(fileNames);
-            return done(new Error("failed to clean up auto files: " + fileNames.join(', ')));
+            throw new Error("failed to clean up auto files: " + fileNames.join(', '));
+          } else {
+            console.log("OK");
+            cb();
           }
-          done();
         });
       });
     });
-});
+  });
+  walker.on('end', function() {
+    pend.wait(function(err) {
+      if (err) throw err;
+      console.log("\nAll tests passed.");
+    });
+  });
+}
 
-function createTest(fixture) {
-  var name = fixture.name;
-  fixture = fixture.fixture;
-  return function(done) {
+function createFixtureTest(name, fixture) {
+  return function(cb) {
+    process.stdout.write(name + "...");
     uploadFixture(name, function(err, parts) {
-      if (err) return done(err);
+      if (err) throw err;
       fixture.forEach(function(expectedPart, i) {
         var parsedPart = parts[i];
         assert.equal(parsedPart.type, expectedPart.type);
@@ -77,15 +100,25 @@ function createTest(fixture) {
           if(expectedPart.size) assert.strictEqual(file.size, expectedPart.size);
         }
       });
-      done();
+      console.log("OK");
+      cb();
     });
   };
-
 }
 
 function cleanFiles(fileNames) {
   fileNames.forEach(function(fileName) {
     fs.unlinkSync(fileName);
+  });
+}
+
+function resetTempDir(cb) {
+  rimraf(TMP_PATH, function(err) {
+    if (err) throw err;
+    mkdirp(TMP_PATH, function(err) {
+      if (err) throw err;
+      cb();
+    });
   });
 }
 
