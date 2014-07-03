@@ -14,15 +14,15 @@
     "s3"
   ],
   "devDependencies": {
-    "findit": "0.1.1",
-    "hashish": "0.0.4",
-    "mocha": "~1.8.2",
+    "findit": "~2.0.0",
+    "mkdirp": "~0.5.0",
+    "pend": "~1.1.1",
     "request": "~2.16.6",
-    "mkdirp": "~0.3.5",
-    "superagent": "~0.14.1"
+    "rimraf": "~2.2.8",
+    "superagent": "~0.18.0"
   },
   "scripts": {
-    "test": "ulimit -n 500 && mocha --timeout 4000 --reporter spec --recursive test/test.js"
+    "test": "ulimit -n 500 && node test/test.js"
   },
   "engines": {
     "node": ">=0.8.0"
