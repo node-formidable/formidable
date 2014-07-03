@@ -1,11 +1,11 @@
 ### 3.3.0
 
- * Douglas Christopher Wilson (4):
+ * Douglas Christopher Wilson (1):
    - Always emit close after all parts ended
 
 ### 3.2.10
 
- * Douglas Christopher Wilson (4):
+ * Douglas Christopher Wilson (3):
    - Expand form.parse in README
    - Remove execute bit from files
    - Fix callback hang in node.js 0.8 on errors
