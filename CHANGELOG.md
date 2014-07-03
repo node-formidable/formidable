@@ -1,3 +1,16 @@
+### 3.2.10
+
+ * Douglas Christopher Wilson (4):
+   - Expand form.parse in README
+   - Remove execute bit from files
+   - Fix callback hang in node.js 0.8 on errors
+
+ * Andrew Kelley (1):
+   - tests refactor
+
+ * Thanasis Polychronakis (1):
+   - docs: fix code error in readme
+
 ### 3.2.9
 
  * Fix attaching error listeners directly after form.parse
