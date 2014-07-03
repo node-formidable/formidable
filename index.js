@@ -96,16 +96,19 @@ Form.prototype.parse = function(req, cb) {
 
       called = true;
 
-      if (waitend && req.readable) {
-        // dump rest of request
-        req.resume();
-        req.once('end', function() {
-          cb(err);
-        });
-        return;
-      }
+      // wait for req events to fire
+      process.nextTick(function() {
+        if (waitend && req.readable) {
+          // dump rest of request
+          req.resume();
+          req.once('end', function() {
+            cb(err);
+          });
+          return;
+        }
 
-      cb(err);
+        cb(err);
+      });
     });
     self.on('field', function(name, value) {
       var fieldsArray = fields[name] || (fields[name] = []);
