@@ -1,19 +1,34 @@
+### 3.3.1
+
+ * Andrew Kelley:
+   - tests refactor
+   - update request dev dependency to latest
+   - remove problematic test fixtures
+
+ * Douglas Christopher Wilson:
+   - Remove execute bit from files
+   - Fix callback hang in Node.js 0.8 on errors
+   - tests: remove useless duplicate test. Remove devDependency on request
+
+ * Thanasis Polychronakis:
+   - docs: fix code error in readme
+
 ### 3.3.0
 
- * Douglas Christopher Wilson (1):
+ * Douglas Christopher Wilson:
    - Always emit close after all parts ended
 
 ### 3.2.10
 
- * Douglas Christopher Wilson (3):
+ * Douglas Christopher Wilson:
    - Expand form.parse in README
    - Remove execute bit from files
    - Fix callback hang in node.js 0.8 on errors
 
- * Andrew Kelley (1):
+ * Andrew Kelley:
    - tests refactor
 
- * Thanasis Polychronakis (1):
+ * Thanasis Polychronakis:
    - docs: fix code error in readme
 
 ### 3.2.9
