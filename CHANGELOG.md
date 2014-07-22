@@ -1,7 +1,6 @@
 ### 3.3.1
 
  * Andrew Kelley:
-   - tests refactor
    - update request dev dependency to latest
    - remove problematic test fixtures
 
