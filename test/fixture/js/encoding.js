@@ -52,18 +52,3 @@ module.exports['plain.txt.http'] = [
     size: 23,
   }
 ];
-
-module.exports['pf1y5.png.http'] = [
-  {
-    type: 'field',
-    name: 'path',
-  },
-  {
-    type: 'file',
-    name: 'upload',
-    filename: 'pf1y5.png',
-    fixture: 'pf1y5.png',
-    sha1: '805cc640c5b182e86f2b5c8ebf34ecf063cd34fd',
-    size: 768323,
-  }
-];
