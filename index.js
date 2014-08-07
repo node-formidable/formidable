@@ -89,9 +89,8 @@ Form.prototype.parse = function(req, cb) {
     self.autoFields = true;
     self.autoFiles = true;
 
-    var fields = {};
-    var files = {};
-    self.on('error', function(err) {
+    // wait for request to end before calling cb
+    var end = function (done) {
       if (called) return;
 
       called = true;
@@ -101,12 +100,18 @@ Form.prototype.parse = function(req, cb) {
         if (waitend && req.readable) {
           // dump rest of request
           req.resume();
-          req.once('end', function() {
-            cb(err);
-          });
+          req.once('end', done);
           return;
         }
 
+        done();
+      });
+    };
+
+    var fields = {};
+    var files = {};
+    self.on('error', function(err) {
+      end(function() {
         cb(err);
       });
     });
@@ -119,8 +124,9 @@ Form.prototype.parse = function(req, cb) {
       filesArray.push(file);
     });
     self.on('close', function() {
-      called = true;
-      cb(null, fields, files);
+      end(function() {
+        cb(null, fields, files);
+      });
     });
   }
 
