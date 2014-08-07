@@ -119,6 +119,7 @@ Form.prototype.parse = function(req, cb) {
       filesArray.push(file);
     });
     self.on('close', function() {
+      called = true;
       cb(null, fields, files);
     });
   }
