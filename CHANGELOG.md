@@ -1,16 +1,14 @@
+### 3.3.2
+
+ * Douglas Christopher Wilson:
+   - Do not invoke callback after close 
+   - Share callback ending logic between error and close
+
 ### 3.3.1
 
  * Andrew Kelley:
    - update request dev dependency to latest
    - remove problematic test fixtures
-
- * Douglas Christopher Wilson:
-   - Remove execute bit from files
-   - Fix callback hang in Node.js 0.8 on errors
-   - tests: remove useless duplicate test. Remove devDependency on request
-
- * Thanasis Polychronakis:
-   - docs: fix code error in readme
 
 ### 3.3.0
 
