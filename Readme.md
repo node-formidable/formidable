@@ -204,15 +204,16 @@ If hash calculation was set, you can read the hex digest out of this var.
 
 
 #### 'progress'
+
+Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
 ```javascript
 form.on('progress', function(bytesReceived, bytesExpected) {
 });
 ```
-Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
-
-
 
 #### 'field'
+
+Emitted whenever a field / value pair has been received.
 ```javascript
 form.on('field', function(name, value) {
 });
@@ -220,17 +221,15 @@ form.on('field', function(name, value) {
 
 #### 'fileBegin'
 
-Emitted whenever a field / value pair has been received.
+Emitted whenever a new file is detected in the upload stream. Use this even if
+you want to stream the file to somewhere else while buffering the upload on
+the file system.
 ```javascript
 form.on('fileBegin', function(name, file) {
 });
 ```
 
 #### 'file'
-
-Emitted whenever a new file is detected in the upload stream. Use this even if
-you want to stream the file to somewhere else while buffering the upload on
-the file system.
 
 Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
 ```javascript
@@ -248,7 +247,6 @@ form.on('error', function(err) {
 
 #### 'aborted'
 
-
 Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
 ```javascript
 form.on('aborted', function() {
@@ -256,13 +254,12 @@ form.on('aborted', function() {
 ```
 
 ##### 'end'
+
+Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
 ```javascript
 form.on('end', function() {
 });
 ```
-Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
-
-
 
 ## Changelog
 
