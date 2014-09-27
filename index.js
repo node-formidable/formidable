@@ -673,11 +673,7 @@ function setUpParser(self, boundary) {
   self.partBoundaryFlag = false;
 
   self.on('finish', function() {
-    if ((self.state === HEADER_FIELD_START && self.index === 0) ||
-        (self.state === PART_DATA && self.index === self.boundary.length))
-    {
-      self.onParsePartEnd();
-    } else if (self.state !== END) {
+    if (self.state !== END) {
       self.handleError(new Error('stream ended unexpectedly'));
     }
     self.finished = true;

@@ -21,7 +21,7 @@
     "superagent": "~0.18.0"
   },
   "scripts": {
-    "test": "ulimit -n 500 && node test/test.js"
+    "test": "node test/test.js"
   },
   "engines": {
     "node": ">=0.8.0"
