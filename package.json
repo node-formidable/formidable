@@ -18,7 +18,7 @@
     "mkdirp": "~0.5.0",
     "pend": "~1.1.1",
     "rimraf": "~2.2.8",
-    "superagent": "~0.18.0"
+    "superagent": "~0.20.0"
   },
   "scripts": {
     "test": "node test/test.js"
