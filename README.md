@@ -8,7 +8,7 @@ which may be worth looking into.
 
 ### Why the fork?
 
- * This module uses the Node.js v0.10 streams properly, *even in Node.js v0.8*
+ * This module uses the Node.js v0.10 streams properly
  * It will not create a temp file for you unless you want it to.
  * Counts bytes and does math to help you figure out the `Content-Length` of
    the final part.

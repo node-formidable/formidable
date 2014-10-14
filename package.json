@@ -24,11 +24,10 @@
     "test": "node test/test.js"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.10.20"
   },
   "license": "MIT",
   "dependencies": {
-    "readable-stream": "~1.1.9",
     "stream-counter": "~0.2.0"
   }
 }

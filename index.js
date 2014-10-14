@@ -1,4 +1,4 @@
-var stream = require('readable-stream');
+var stream = require('stream');
 var util = require('util');
 var fs = require('fs');
 var crypto = require('crypto');
@@ -218,20 +218,20 @@ Form.prototype.parse = function(req, cb) {
 Form.prototype._write = function(buffer, encoding, cb) {
   if (this.error) return;
 
-  var self = this
-    , i = 0
-    , len = buffer.length
-    , prevIndex = self.index
-    , index = self.index
-    , state = self.state
-    , lookbehind = self.lookbehind
-    , boundary = self.boundary
-    , boundaryChars = self.boundaryChars
-    , boundaryLength = self.boundary.length
-    , boundaryEnd = boundaryLength - 1
-    , bufferLength = buffer.length
-    , c
-    , cl
+  var self = this;
+  var i = 0;
+  var len = buffer.length;
+  var prevIndex = self.index;
+  var index = self.index;
+  var state = self.state;
+  var lookbehind = self.lookbehind;
+  var boundary = self.boundary;
+  var boundaryChars = self.boundaryChars;
+  var boundaryLength = self.boundary.length;
+  var boundaryEnd = boundaryLength - 1;
+  var bufferLength = buffer.length;
+  var c;
+  var cl;
 
   for (i = 0; i < len; i++) {
     c = buffer[i];

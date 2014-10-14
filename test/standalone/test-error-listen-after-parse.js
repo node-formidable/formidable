@@ -1,8 +1,8 @@
-var multiparty = require('../../')
-  , assert = require('assert')
-  , http = require('http')
-  , net = require('net')
-  , stream = require('readable-stream');
+var multiparty = require('../../');
+var assert = require('assert');
+var http = require('http');
+var net = require('net');
+var stream = require('stream');
 
 var form = new multiparty.Form();
 var req = new stream.Readable();
