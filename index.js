@@ -36,6 +36,9 @@ var CONTENT_TYPE_PARAM_RE = /;\s*([^=]+)=(?:"([^"]+)"|([^;]+))/gi;
 var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
 var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 
+// replace base64 characters with safe-for-filename characters
+var b64Safe = {'/': '_', '+': '-'};
+
 util.inherits(Form, stream.Writable);
 function Form(options) {
   var self = this;
@@ -732,9 +735,22 @@ function setUpParser(self, boundary) {
 
 function uploadPath(baseDir, filename) {
   var ext = path.extname(filename).replace(FILE_EXT_RE, '$1');
-  var name = process.pid + '-' +
-    (Math.random() * 0x100000000 + 1).toString(36) + ext;
+  var name = randoString(18) + ext;
   return path.join(baseDir, name);
+}
+
+function randoString(size) {
+  return rando(size).toString('base64').replace(/[\/\+]/g, function(x) {
+    return b64Safe[x];
+  });
+}
+
+function rando(size) {
+  try {
+    return crypto.randomBytes(size);
+  } catch (err) {
+    return crypto.pseudoRandomBytes(size);
+  }
 }
 
 function parseFilename(headerValue) {
