@@ -47,7 +47,6 @@ function Form(options) {
   options = options || {};
 
   self.error = null;
-  self.finished = false;
 
   self.autoFields = !!options.autoFields;
   self.autoFiles = !!options.autoFiles;
@@ -561,7 +560,7 @@ function endFlush(self) {
 }
 
 function maybeClose(self) {
-  if (self.flushing > 0 || !self.finished || self.error) return;
+  if (self.flushing > 0 || self.error) return;
 
   // go through the emit queue in case any field, file, or part events are
   // waiting to be emitted
@@ -709,12 +708,12 @@ function setUpParser(self, boundary) {
   self.index = null;
   self.partBoundaryFlag = false;
 
+  beginFlush(self);
   self.on('finish', function() {
     if (self.state !== END) {
       self.handleError(new Error('stream ended unexpectedly'));
     }
-    self.finished = true;
-    maybeClose(self);
+    endFlush(self);
   });
 }
 
