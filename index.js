@@ -1,35 +1,33 @@
-exports.Form = Form;
+var stream = require('readable-stream');
+var util = require('util');
+var fs = require('fs');
+var crypto = require('crypto');
+var path = require('path');
+var os = require('os');
+var StringDecoder = require('string_decoder').StringDecoder;
+var StreamCounter = require('stream-counter');
 
-var stream = require('readable-stream')
-  , util = require('util')
-  , fs = require('fs')
-  , crypto = require('crypto')
-  , path = require('path')
-  , os = require('os')
-  , StringDecoder = require('string_decoder').StringDecoder
-  , StreamCounter = require('stream-counter')
+var START = 0;
+var START_BOUNDARY = 1;
+var HEADER_FIELD_START = 2;
+var HEADER_FIELD = 3;
+var HEADER_VALUE_START = 4;
+var HEADER_VALUE = 5;
+var HEADER_VALUE_ALMOST_DONE = 6;
+var HEADERS_ALMOST_DONE = 7;
+var PART_DATA_START = 8;
+var PART_DATA = 9;
+var PART_END = 10;
+var CLOSE_BOUNDARY = 11;
+var END = 12;
 
-var START = 0
-  , START_BOUNDARY = 1
-  , HEADER_FIELD_START = 2
-  , HEADER_FIELD = 3
-  , HEADER_VALUE_START = 4
-  , HEADER_VALUE = 5
-  , HEADER_VALUE_ALMOST_DONE = 6
-  , HEADERS_ALMOST_DONE = 7
-  , PART_DATA_START = 8
-  , PART_DATA = 9
-  , PART_END = 10
-  , CLOSE_BOUNDARY = 11
-  , END = 12
-
-  , LF = 10
-  , CR = 13
-  , SPACE = 32
-  , HYPHEN = 45
-  , COLON = 58
-  , A = 97
-  , Z = 122
+var LF = 10;
+var CR = 13;
+var SPACE = 32;
+var HYPHEN = 45;
+var COLON = 58;
+var A = 97;
+var Z = 122;
 
 var CONTENT_TYPE_RE = /^multipart\/(?:form-data|related)(?:;|$)/i;
 var CONTENT_TYPE_PARAM_RE = /;\s*([^=]+)=(?:"([^"]+)"|([^;]+))/gi;
@@ -38,6 +36,8 @@ var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 
 // replace base64 characters with safe-for-filename characters
 var b64Safe = {'/': '_', '+': '-'};
+
+exports.Form = Form;
 
 util.inherits(Form, stream.Writable);
 function Form(options) {
