@@ -71,8 +71,6 @@ function Form(options) {
 
   self.emitQueue = [];
 
-  if (options.boundary) setUpParser(self, options.boundary);
-
   self.on('newListener', function(eventName) {
     if (eventName === 'file') {
       self.autoFiles = true;
