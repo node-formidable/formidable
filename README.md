@@ -64,9 +64,11 @@ http.createServer(function(req, res) {
 ## API
 
 ### multiparty.Form
+
 ```js
 var form = new multiparty.Form(options)
 ```
+
 Creates a new form. Options:
 
  * `encoding` - sets encoding for the incoming form fields. Defaults to `utf8`.
@@ -79,10 +81,10 @@ Creates a new form. Options:
  * `maxFilesSize` - Only relevant when `autoFiles` is `true`.  Limits the
    total bytes accepted for all files combined. If this value is exceeded,
    an `error` event is emitted. The default is `Infinity`.
- * `autoFields` - Enables `field` events. This is automatically set to `true`
-   if you add a `field` listener.
- * `autoFiles` - Enables `file` events. This is automatically set to `true`
-   if you add a `file` listener.
+ * `autoFields` - Enables `field` events and disables `part` events for fields.
+   This is automatically set to `true` if you add a `field` listener.
+ * `autoFiles` - Enables `file` events and disables `part` events for files.
+   This is automatically set to `true` if you add a `file` listener.
  * `uploadDir` - Only relevant when `autoFiles` is `true`. The directory for
    placing file uploads in. You can move them later using `fs.rename()`.
    Defaults to `os.tmpDir()`.
@@ -134,14 +136,13 @@ form.on('close', function() {
 
 // Parse req
 form.parse(req);
-
 ```
 
 If `cb` is provided, `autoFields` and `autoFiles` are set to `true` and all
 fields and files are collected and passed to the callback, removing the need to
-listen to any events on `form`. This is for convenience when wanted to read
-everything, but be careful as this will write all uploaded files to the disk,
-even ones you may not be interested in.
+listen to any events on `form`. This is for convenience when you want to read
+everything, but be sure to write cleanup code, as this will write all uploaded
+files to the disk, even ones you may not be interested in.
 
 ```js
 form.parse(req, function(err, fields, files) {
@@ -200,6 +201,9 @@ Emitted when a part is encountered in the request. `part` is a
    If the part had a `Content-Length` header then that value is used
    here instead.
 
+Parts for fields are not emitted when `autoFields` is on, and likewise parts
+for files are not emitted when `autoFiles` is on.
+
 #### 'aborted'
 
 Emitted when the request is aborted. This event will be followed shortly
@@ -210,7 +214,12 @@ by an `error` event. In practice you do not need to handle this event.
 #### 'close'
 
 Emitted after all parts have been parsed and emitted. Not emitted if an `error`
-event is emitted. This is typically when you would send your response.
+event is emitted.
+
+If you have `autoFiles` on, this is not fired until all the data has been
+flushed to disk and the file handles have been closed.
+
+This is typically when you would send your response.
 
 #### 'file' (name, file)
 
@@ -235,4 +244,3 @@ property which is the checksum of the file.
 
  * `name` - field name
  * `value` - string field value
-
