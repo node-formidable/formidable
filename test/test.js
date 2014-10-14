@@ -1,5 +1,5 @@
 var spawn = require('child_process').spawn;
-var findit = require('findit');
+var findit = require('findit2');
 var path = require('path');
 var Pend = require('pend');
 var rimraf = require('rimraf');
