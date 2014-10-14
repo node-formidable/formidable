@@ -57,7 +57,6 @@ function Form(options) {
   self.maxFilesSize = options.maxFilesSize || Infinity;
   self.uploadDir = options.uploadDir || os.tmpDir();
   self.encoding = options.encoding || 'utf8';
-  self.hash = options.hash || false;
 
   self.bytesReceived = 0;
   self.bytesExpected = null;
@@ -631,24 +630,11 @@ function handleFile(self, fileStream) {
   var counter = new StreamCounter();
   var seenBytes = 0;
   fileStream.pipe(counter);
-  var hashWorkaroundStream
-    , hash = null;
-  if (self.hash) {
-    // workaround stream because https://github.com/joyent/node/issues/5216
-    hashWorkaroundStream = stream.Writable();
-    hash = crypto.createHash(self.hash);
-    hashWorkaroundStream._write = function(buffer, encoding, callback) {
-      hash.update(buffer);
-      callback();
-    };
-    fileStream.pipe(hashWorkaroundStream);
-  }
   counter.on('progress', function() {
     var deltaBytes = counter.bytes - seenBytes;
     seenBytes += deltaBytes;
     self.totalFileSize += deltaBytes;
     if (self.totalFileSize > self.maxFilesSize) {
-      if (hashWorkaroundStream) fileStream.unpipe(hashWorkaroundStream);
       fileStream.unpipe(counter);
       fileStream.unpipe(file.ws);
       self.handleError(new Error("maxFilesSize " + self.maxFilesSize + " exceeded"));
@@ -658,7 +644,6 @@ function handleFile(self, fileStream) {
     if (!self.error) self.handleError(err);
   });
   file.ws.on('close', function() {
-    if (hash) file.hash = hash.digest('hex');
     file.size = counter.bytes;
     emitAndReleaseHold(function() {
       self.emit('file', fileStream.name, file);

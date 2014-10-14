@@ -1,4 +1,5 @@
 var spawn = require('child_process').spawn;
+var crypto = require('crypto');
 var findit = require('findit2');
 var path = require('path');
 var Pend = require('pend');
@@ -122,28 +123,42 @@ function resetTempDir(cb) {
   });
 }
 
+function computeSha1(o) {
+  return function(cb) {
+    var file = o.value;
+    fs.createReadStream(file.path).pipe(crypto.createHash('sha1')).on('data', function(digest) {
+      fs.unlinkSync(file.path);
+      file.hash = digest.toString('hex');
+      cb();
+    });
+  };
+}
+
 function uploadFixture(name, cb) {
   server.once('request', function(req, res) {
     var parts = [];
-    var fileNames = [];
     var form = new multiparty.Form({
       autoFields: true,
       autoFiles: true,
     });
     form.uploadDir = TMP_PATH;
-    form.hash = "sha1";
+    var pend = new Pend();
 
     form.on('error', callback);
     form.on('file', function(name, value) {
-      parts.push({type: 'file', name: name, value: value});
-      fileNames.push(value.path);
+      var o = {type: 'file', name: name, value: value};
+      parts.push(o);
+      pend.go(computeSha1(o));
     });
     form.on('field', function(name, value) {
       parts.push({type: 'field', name: name, value: value});
     });
     form.on('close', function() {
       res.end('OK');
-      callback(null, parts);
+      pend.wait(function(err) {
+        if (err) throw err;
+        callback(null, parts);
+      });
     });
     form.parse(req);
 
@@ -151,7 +166,6 @@ function uploadFixture(name, cb) {
       var realCallback = cb;
       cb = function() {};
       realCallback.apply(null, arguments);
-      cleanFiles(fileNames);
     }
   });
 

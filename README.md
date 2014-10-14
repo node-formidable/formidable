@@ -88,9 +88,6 @@ Creates a new form. Options:
  * `uploadDir` - Only relevant when `autoFiles` is `true`. The directory for
    placing file uploads in. You can move them later using `fs.rename()`.
    Defaults to `os.tmpDir()`.
- * `hash` - Only relevant when `autoFiles` is `true`. If you want checksums
-   calculated for incoming files, set this to either `sha1` or `md5`.
-   Defaults to off.
 
 #### form.parse(request, [cb])
 
@@ -236,9 +233,6 @@ stream uploads to disk for you.
    - `path` - the absolute path of the uploaded file on disk
    - `headers` - the HTTP headers that were sent along with this file
    - `size` - size of the file in bytes
-
-If you set the `form.hash` option, then `file` will also contain a `hash`
-property which is the checksum of the file.
 
 #### 'field' (name, value)
 
