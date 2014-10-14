@@ -68,6 +68,8 @@ function Form(options) {
   self.backpressure = false;
   self.writeCbs = [];
 
+  self.emitQueue = [];
+
   if (options.boundary) setUpParser(self, options.boundary);
 
   self.on('newListener', function(eventName) {
@@ -511,16 +513,12 @@ Form.prototype.onParseHeadersEnd = function(offset) {
       self.boundary.length - LAST_BOUNDARY_SUFFIX_LEN) :
     undefined;
 
-  self.emit('part', self.destStream);
   if (self.destStream.filename == null && self.autoFields) {
     handleField(self, self.destStream);
   } else if (self.destStream.filename != null && self.autoFiles) {
     handleFile(self, self.destStream);
   } else {
-    beginFlush(self);
-    self.destStream.on('end', function(){
-      endFlush(self);
-    });
+    handlePart(self, self.destStream);
   }
 }
 
@@ -549,13 +547,32 @@ function beginFlush(self) {
 
 function endFlush(self) {
   self.flushing -= 1;
+
+  if (self.flushing < 0) {
+    // if this happens this is a critical bug in multiparty and this stack trace
+    // will help us figure it out.
+    self.handleError(new Error("unexpected endFlush"));
+    return;
+  }
+
   maybeClose(self);
 }
 
 function maybeClose(self) {
-  if (!self.flushing && self.finished && !self.error) {
-    self.emit('close');
-  }
+  if (self.flushing > 0 || !self.finished || self.error) return;
+
+  // go through the emit queue in case any field, file, or part events are
+  // waiting to be emitted
+  holdEmitQueue(self)(function() {
+    // nextTick because the user is listening to part 'end' events and we are
+    // using part 'end' events to decide when to emit 'close'. we add our 'end'
+    // handler before the user gets a chance to add theirs. So we make sure
+    // their 'end' event fires before we emit the 'close' event.
+    // this is covered by test/standalone/test-issue-36
+    process.nextTick(function() {
+      self.emit('close');
+    });
+  });
 }
 
 function destroyFile(self, file) {
@@ -569,6 +586,32 @@ function destroyFile(self, file) {
   file.ws.destroy();
 }
 
+function holdEmitQueue(self) {
+  var o = {cb: null};
+  self.emitQueue.push(o);
+  return function(cb) {
+    o.cb = cb;
+    flushEmitQueue(self);
+  };
+}
+
+function flushEmitQueue(self) {
+  while (self.emitQueue.length > 0 && self.emitQueue[0].cb) {
+    self.emitQueue.shift().cb();
+  }
+}
+
+function handlePart(self, partStream) {
+  beginFlush(self);
+  var emitAndReleaseHold = holdEmitQueue(self);
+  partStream.on('end', function() {
+    endFlush(self);
+  });
+  emitAndReleaseHold(function() {
+    self.emit('part', partStream);
+  });
+}
+
 function handleFile(self, fileStream) {
   if (self.error) return;
   var file = {
@@ -578,6 +621,7 @@ function handleFile(self, fileStream) {
     headers: fileStream.headers,
   };
   beginFlush(self); // flush to write stream
+  var emitAndReleaseHold = holdEmitQueue(self);
   file.ws = fs.createWriteStream(file.path);
   self.openedFiles.push(file);
   fileStream.pipe(file.ws);
@@ -613,7 +657,9 @@ function handleFile(self, fileStream) {
   file.ws.on('close', function() {
     if (hash) file.hash = hash.digest('hex');
     file.size = counter.bytes;
-    self.emit('file', fileStream.name, file);
+    emitAndReleaseHold(function() {
+      self.emit('file', fileStream.name, file);
+    });
     endFlush(self);
   });
   beginFlush(self); // flush from file stream
@@ -627,6 +673,7 @@ function handleField(self, fieldStream) {
   var decoder = new StringDecoder(self.encoding);
 
   beginFlush(self);
+  var emitAndReleaseHold = holdEmitQueue(self);
   fieldStream.on('readable', function() {
     var buffer = fieldStream.read();
     if (!buffer) return;
@@ -640,7 +687,9 @@ function handleField(self, fieldStream) {
   });
 
   fieldStream.on('end', function() {
-    self.emit('field', fieldStream.name, value);
+    emitAndReleaseHold(function() {
+      self.emit('field', fieldStream.name, value);
+    });
     endFlush(self);
   });
 }
