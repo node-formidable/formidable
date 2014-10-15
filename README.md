@@ -99,6 +99,8 @@ var count = 0;
 var form = new multiparty.Form();
 
 // Errors may be emitted
+// Note that if you are listening to 'part' events, the same error may be
+// emitted from the `form` and the `part`.
 form.on('error', function(err) {
   console.log('Error parsing form: ' + err.stack);
 });
@@ -122,6 +124,10 @@ form.on('part', function(part) {
     // ignore file's content here
     part.resume();
   }
+
+  part.on('error', function(err) {
+    // decide what to do
+  });
 });
 
 // Close emitted after form parsed
@@ -182,6 +188,9 @@ multipart requests!
 Only one 'error' event can ever be emitted, and if an 'error' event is
 emitted, then 'close' will not be emitted.
 
+Note that an 'error' event will be emitted both from the `form` and from the
+current `part`.
+
 #### 'part' (part)
 
 Emitted when a part is encountered in the request. `part` is a
@@ -200,6 +209,8 @@ Emitted when a part is encountered in the request. `part` is a
 
 Parts for fields are not emitted when `autoFields` is on, and likewise parts
 for files are not emitted when `autoFiles` is on.
+
+`part` emits 'error' events! Make sure you handle them.
 
 #### 'aborted'
 

@@ -193,6 +193,9 @@ Form.prototype.parse = function(req, cb) {
       self.error = err;
       req.removeListener('aborted', onReqAborted);
       req.removeListener('end', onReqEnd);
+      if (self.destStream) {
+        self.destStream.emit('error', err);
+      }
     }
 
     cleanupOpenFiles(self);
@@ -622,6 +625,9 @@ function handleFile(self, fileStream) {
   };
   beginFlush(self); // flush to write stream
   var emitAndReleaseHold = holdEmitQueue(self);
+  fileStream.on('error', function(err) {
+    self.handleError(err);
+  });
   fs.open(file.path, 'w', function(err, fd) {
     if (err) return self.handleError(err);
     var fdSlicer = new FdSlicer(fd, {autoClose: true});
@@ -662,6 +668,9 @@ function handleField(self, fieldStream) {
 
   beginFlush(self);
   var emitAndReleaseHold = holdEmitQueue(self);
+  fieldStream.on('error', function(err) {
+    self.handleError(err);
+  });
   fieldStream.on('readable', function() {
     var buffer = fieldStream.read();
     if (!buffer) return;
