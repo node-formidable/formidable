@@ -24,7 +24,7 @@
     "test": "node test/test.js"
   },
   "engines": {
-    "node": ">=0.10.20"
+    "node": ">=0.10.17"
   },
   "license": "MIT",
   "dependencies": {
