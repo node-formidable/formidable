@@ -126,7 +126,9 @@ function resetTempDir(cb) {
 function computeSha1(o) {
   return function(cb) {
     var file = o.value;
-    fs.createReadStream(file.path).pipe(crypto.createHash('sha1')).on('data', function(digest) {
+    var hash = fs.createReadStream(file.path).pipe(crypto.createHash('sha1'));
+    hash.read(); // work around pre-https://github.com/joyent/node/commit/4bf1d1007fbd249d1d07b662278a5a34c6be12fd
+    hash.on('data', function(digest) {
       fs.unlinkSync(file.path);
       file.hash = digest.toString('hex');
       cb();
