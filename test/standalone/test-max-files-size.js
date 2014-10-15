@@ -1,9 +1,9 @@
-var http = require('http')
-  , multiparty = require('../../')
-  , assert = require('assert')
-  , superagent = require('superagent')
-  , path = require('path')
-  , fs = require('fs')
+var http = require('http');
+var multiparty = require('../../');
+var assert = require('assert');
+var superagent = require('superagent');
+var path = require('path');
+var fs = require('fs');
 
 var server = http.createServer(function(req, res) {
   assert.strictEqual(req.url, '/upload');
