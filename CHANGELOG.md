@@ -1,3 +1,30 @@
+### 4.0.0 (not yet released)
+
+ * Andrew Kelley:
+   - 'part' events for fields no longer fire if `autoFields` is on.
+   - 'part' events for files no longer fire if `autoFiles` is on.
+   - 'field', 'file', 'part' events are guaranteed to emit in the correct
+     order - the order that the user places the parts in the request.
+     Each `part` 'end' event is guaranteed to emit before the next 'part'
+     event is emitted.
+   - Drop Node.js 0.8.x support.
+   - Remove support for generating the hash digest of a part. If you want this,
+     do it in your own code.
+   - Now `part` objects emit 'error' events. This makes streaming work better
+     since the part stream will emit an error when it is no longer streaming.
+   - More robust `maxFilesSize` implementation. Before it was possible for
+     race conditions to cause more than `maxFilesSize` bytes to get written
+     to disk. That is now fixed.
+   - More robustly random temp file names. Now using 18 bytes of randomness
+     instead of 8.
+   - Better s3 example code.
+   - Delete some unused legacy code.
+   - Update and clarify documentation.
+
+ * Douglas Christopher Wilson:
+   - Require the close boundary. This makes multiparty more RFC-compliant and
+     makes some invalid requests which used to work, now emit an error instead.
+
 ### 3.3.2
 
  * Douglas Christopher Wilson:
