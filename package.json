@@ -29,5 +29,14 @@
   "license": "MIT",
   "dependencies": {
     "fd-slicer": "~0.3.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/andrewrk/node-multiparty/issues"
+  },
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "author": "Andrew Kelley <superjoe30@gmail.com>"
 }
