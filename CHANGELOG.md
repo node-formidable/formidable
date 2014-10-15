@@ -1,4 +1,4 @@
-### 4.0.0 (not yet released)
+### 4.0.0
 
  * Andrew Kelley:
    - 'part' events for fields no longer fire if `autoFields` is on.
