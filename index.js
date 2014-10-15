@@ -5,7 +5,7 @@ var crypto = require('crypto');
 var path = require('path');
 var os = require('os');
 var StringDecoder = require('string_decoder').StringDecoder;
-var StreamCounter = require('stream-counter');
+var FdSlicer = require('fd-slicer');
 
 var START = 0;
 var START_BOUNDARY = 1;
@@ -195,10 +195,7 @@ Form.prototype.parse = function(req, cb) {
       req.removeListener('end', onReqEnd);
     }
 
-    self.openedFiles.forEach(function(file) {
-      destroyFile(self, file);
-    });
-    self.openedFiles = [];
+    cleanupOpenFiles(self);
 
     if (first) {
       self.emit('error', err);
@@ -574,15 +571,19 @@ function maybeClose(self) {
   });
 }
 
-function destroyFile(self, file) {
-  if (!file.ws) return;
-  file.ws.removeAllListeners('close');
-  file.ws.on('close', function() {
+function cleanupOpenFiles(self) {
+  self.openedFiles.forEach(function(file) {
+    if (!file.ws) return;
+
+    // since fd slicer autoClose is true, destroying the only write stream
+    // is guaranteed by the API to close the fd
+    file.ws.destroy();
+
     fs.unlink(file.path, function(err) {
-      if (err && !self.error) self.handleError(err);
+      if (err) self.handleError(err);
     });
   });
-  file.ws.destroy();
+  self.openedFiles = [];
 }
 
 function holdEmitQueue(self) {
@@ -621,35 +622,37 @@ function handleFile(self, fileStream) {
   };
   beginFlush(self); // flush to write stream
   var emitAndReleaseHold = holdEmitQueue(self);
-  file.ws = fs.createWriteStream(file.path);
-  self.openedFiles.push(file);
-  fileStream.pipe(file.ws);
-  var counter = new StreamCounter();
-  var seenBytes = 0;
-  fileStream.pipe(counter);
-  counter.on('progress', function() {
-    var deltaBytes = counter.bytes - seenBytes;
-    seenBytes += deltaBytes;
-    self.totalFileSize += deltaBytes;
-    if (self.totalFileSize > self.maxFilesSize) {
-      fileStream.unpipe(counter);
-      fileStream.unpipe(file.ws);
-      self.handleError(new Error("maxFilesSize " + self.maxFilesSize + " exceeded"));
-    }
-  });
-  file.ws.on('error', function(err) {
-    if (!self.error) self.handleError(err);
-  });
-  file.ws.on('close', function() {
-    file.size = counter.bytes;
-    emitAndReleaseHold(function() {
-      self.emit('file', fileStream.name, file);
+  fs.open(file.path, 'w', function(err, fd) {
+    if (err) return self.handleError(err);
+    var fdSlicer = new FdSlicer(fd, {autoClose: true});
+
+    // end option here guarantees that no more than that amount will be written
+    // or else an error will be emitted
+    file.ws = fdSlicer.createWriteStream({end: self.maxFilesSize - self.totalFileSize});
+
+    // if an error ocurred while we were waiting for fs.open we handle that
+    // cleanup now
+    self.openedFiles.push(file);
+    if (self.error) return cleanupOpenFiles(self);
+
+    var prevByteCount = 0;
+    file.ws.on('error', function(err) {
+      self.handleError(err);
     });
-    endFlush(self);
-  });
-  beginFlush(self); // flush from file stream
-  fileStream.on('end', function(){
-    endFlush(self);
+    file.ws.on('progress', function() {
+      file.size = file.ws.bytesWritten;
+      var delta = file.size - prevByteCount;
+      self.totalFileSize += delta;
+      prevByteCount = file.size;
+    });
+    fdSlicer.on('close', function() {
+      if (self.error) return;
+      emitAndReleaseHold(function() {
+        self.emit('file', fileStream.name, file);
+      });
+      endFlush(self);
+    });
+    fileStream.pipe(file.ws);
   });
 }
 

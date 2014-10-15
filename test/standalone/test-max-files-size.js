@@ -15,7 +15,7 @@ var server = http.createServer(function(req, res) {
   form.on('error', function (err) {
     assert.ok(first);
     first = false;
-    assert.ok(/maxFilesSize/.test(err.message));
+    assert.strictEqual(err.code, 'ETOOBIG');
   });
 
   var fileCount = 0;
