@@ -575,14 +575,12 @@ function maybeClose(self) {
 }
 
 function cleanupOpenFiles(self) {
-  self.openedFiles.forEach(function(file) {
-    if (!file.ws) return;
-
+  self.openedFiles.forEach(function(internalFile) {
     // since fd slicer autoClose is true, destroying the only write stream
     // is guaranteed by the API to close the fd
-    file.ws.destroy();
+    internalFile.ws.destroy();
 
-    fs.unlink(file.path, function(err) {
+    fs.unlink(internalFile.publicFile.path, function(err) {
       if (err) self.handleError(err);
     });
   });
@@ -617,48 +615,53 @@ function handlePart(self, partStream) {
 
 function handleFile(self, fileStream) {
   if (self.error) return;
-  var file = {
+  var publicFile = {
     fieldName: fileStream.name,
     originalFilename: fileStream.filename,
     path: uploadPath(self.uploadDir, fileStream.filename),
     headers: fileStream.headers,
+    size: 0,
+  };
+  var internalFile = {
+    publicFile: publicFile,
+    ws: null,
   };
   beginFlush(self); // flush to write stream
   var emitAndReleaseHold = holdEmitQueue(self);
   fileStream.on('error', function(err) {
     self.handleError(err);
   });
-  fs.open(file.path, 'w', function(err, fd) {
+  fs.open(publicFile.path, 'w', function(err, fd) {
     if (err) return self.handleError(err);
     var fdSlicer = new FdSlicer(fd, {autoClose: true});
 
     // end option here guarantees that no more than that amount will be written
     // or else an error will be emitted
-    file.ws = fdSlicer.createWriteStream({end: self.maxFilesSize - self.totalFileSize});
+    internalFile.ws = fdSlicer.createWriteStream({end: self.maxFilesSize - self.totalFileSize});
 
     // if an error ocurred while we were waiting for fs.open we handle that
     // cleanup now
-    self.openedFiles.push(file);
+    self.openedFiles.push(internalFile);
     if (self.error) return cleanupOpenFiles(self);
 
     var prevByteCount = 0;
-    file.ws.on('error', function(err) {
+    internalFile.ws.on('error', function(err) {
       self.handleError(err);
     });
-    file.ws.on('progress', function() {
-      file.size = file.ws.bytesWritten;
-      var delta = file.size - prevByteCount;
+    internalFile.ws.on('progress', function() {
+      publicFile.size = internalFile.ws.bytesWritten;
+      var delta = publicFile.size - prevByteCount;
       self.totalFileSize += delta;
-      prevByteCount = file.size;
+      prevByteCount = publicFile.size;
     });
     fdSlicer.on('close', function() {
       if (self.error) return;
       emitAndReleaseHold(function() {
-        self.emit('file', fileStream.name, file);
+        self.emit('file', fileStream.name, publicFile);
       });
       endFlush(self);
     });
-    fileStream.pipe(file.ws);
+    fileStream.pipe(internalFile.ws);
   });
 }
 

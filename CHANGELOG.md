@@ -12,6 +12,7 @@
      do it in your own code.
    - Now `part` objects emit 'error' events. This makes streaming work better
      since the part stream will emit an error when it is no longer streaming.
+   - `file` objects no longer have the undocumented `ws` property.
    - More robust `maxFilesSize` implementation. Before it was possible for
      race conditions to cause more than `maxFilesSize` bytes to get written
      to disk. That is now fixed.
