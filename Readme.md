@@ -249,7 +249,7 @@ form.on('error', function(err) {
 #### 'aborted'
 
 
-Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. In the future there will be a separate 'timeout' event (needs a change in the node core).
+Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. After this event is emitted, an `error` event will follow. In the future there will be a separate 'timeout' event (needs a change in the node core).
 ```javascript
 form.on('aborted', function() {
 });
