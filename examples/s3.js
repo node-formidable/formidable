@@ -56,10 +56,6 @@ var server = http.createServer(function(req, res) {
     res.writeHead(404, {'content-type': 'text/plain'});
     res.end('404');
   }
-
-  function onEnd() {
-    throw new Error("no uploaded file");
-  }
 });
 server.listen(PORT, function() {
   console.info('listening on http://0.0.0.0:'+PORT+'/');
