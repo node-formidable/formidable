@@ -102,7 +102,7 @@ Either 'multipart' or 'urlencoded' depending on the incoming request.
 ```javascript
 form.maxFieldsSize = 2 * 1024 * 1024;
 ```
-Limits the amount of memory a field (not file) can allocate in bytes.
+Limits the amount of memory all fields together (except files) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
