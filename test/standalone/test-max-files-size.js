@@ -16,6 +16,7 @@ var server = http.createServer(function(req, res) {
     assert.ok(first);
     first = false;
     assert.strictEqual(err.code, 'ETOOBIG');
+    assert.strictEqual(err.status, 413);
   });
 
   var fileCount = 0;

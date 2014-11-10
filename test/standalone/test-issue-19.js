@@ -15,6 +15,7 @@ var server = http.createServer(function (req, res) {
     first = false;
     client.end();
     assert.ok(/maxFields/.test(err.message));
+    assert.equal(err.status, 413);
     server.close();
   });
   form.on('end', function () {

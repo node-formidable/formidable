@@ -10,6 +10,7 @@ var server = http.createServer(function(req, resp) {
   form.on('error', function (err) {
     assert.ok(err);
     assert.equal(err.message, 'stream ended unexpectedly');
+    assert.equal(err.status, 400);
     errCount += 1;
     resp.end();
   });

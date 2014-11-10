@@ -16,6 +16,7 @@ var server = http.createServer(function(req, res) {
   form.parse(req, function(err, fields, files) {
     assert.ok(err);
     assert.equal(err.message, 'missing content-type header');
+    assert.equal(err.status, 415);
     res.statusCode = 415;
     res.end();
   });

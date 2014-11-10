@@ -16,6 +16,7 @@ var server = http.createServer(function(req, res) {
     assert.ok(first);
     first = false;
     assert.ok(/maxFields/.test(err.message));
+    assert.equal(err.status, 413);
   });
 
   var fieldCount = 0;

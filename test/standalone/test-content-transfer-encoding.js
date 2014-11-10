@@ -14,7 +14,7 @@ var server = http.createServer(function(req, res) {
     throw new Error('Unexpected "end" event');
   });
   form.on('error', function (e) {
-    res.writeHead(500);
+    res.writeHead(e.status || 500);
     res.end(e.message);
   });
   form.parse(req);
@@ -42,7 +42,7 @@ server.listen(0, function() {
     }
   });
   req.on('response', function (res) {
-    assert.equal(res.statusCode, 500);
+    assert.equal(res.statusCode, 400);
     res.on('data', function () {});
     res.on('end', function () {
       server.close();
