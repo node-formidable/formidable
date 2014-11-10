@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "fd-slicer": "~0.3.2"
+    "fd-slicer": "~0.4.0"
   },
   "bugs": {
     "url": "https://github.com/andrewrk/node-multiparty/issues"
