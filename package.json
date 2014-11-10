@@ -18,7 +18,7 @@
     "pend": "~1.1.3",
     "rimraf": "~2.2.8",
     "superagent": "~0.20.0",
-    "findit2": "~2.2.2"
+    "findit2": "~2.2.3"
   },
   "scripts": {
     "test": "node test/test.js"
