@@ -188,6 +188,10 @@ multipart requests!
 Only one 'error' event can ever be emitted, and if an 'error' event is
 emitted, then 'close' will not be emitted.
 
+If the error would correspond to a certain HTTP response code, the `err` object
+will have a `statusCode` property with the value of the suggested HTTP response
+code to send back.
+
 Note that an 'error' event will be emitted both from the `form` and from the
 current `part`.
 
