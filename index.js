@@ -5,7 +5,7 @@ var crypto = require('crypto');
 var path = require('path');
 var os = require('os');
 var StringDecoder = require('string_decoder').StringDecoder;
-var FdSlicer = require('fd-slicer');
+var fdSlicer = require('fd-slicer');
 
 var START = 0;
 var START_BOUNDARY = 1;
@@ -633,11 +633,11 @@ function handleFile(self, fileStream) {
   });
   fs.open(publicFile.path, 'w', function(err, fd) {
     if (err) return self.handleError(err);
-    var fdSlicer = new FdSlicer(fd, {autoClose: true});
+    var slicer = fdSlicer.createFromFd(fd, {autoClose: true});
 
     // end option here guarantees that no more than that amount will be written
     // or else an error will be emitted
-    internalFile.ws = fdSlicer.createWriteStream({end: self.maxFilesSize - self.totalFileSize});
+    internalFile.ws = slicer.createWriteStream({end: self.maxFilesSize - self.totalFileSize});
 
     // if an error ocurred while we were waiting for fs.open we handle that
     // cleanup now
@@ -658,7 +658,7 @@ function handleFile(self, fileStream) {
       self.totalFileSize += delta;
       prevByteCount = publicFile.size;
     });
-    fdSlicer.on('close', function() {
+    slicer.on('close', function() {
       if (self.error) return;
       emitAndReleaseHold(function() {
         self.emit('file', fileStream.name, publicFile);
