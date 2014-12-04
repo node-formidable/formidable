@@ -1,4 +1,4 @@
-# multiparty [![Build Status](https://travis-ci.org/andrewrk/node-multiparty.svg?branch=master)](https://travis-ci.org/andrewrk/node-multiparty) [![NPM version](https://badge.fury.io/js/multiparty.svg)](http://badge.fury.io/js/multiparty)
+# multiparty [![Build Status](https://travis-ci.org/andrewrk/node-multiparty.svg?branch=master)](https://travis-ci.org/andrewrk/node-multiparty)
 
 Parse http requests with content-type `multipart/form-data`, also known as file uploads.
 
@@ -31,9 +31,9 @@ npm install multiparty
 Parse an incoming `multipart/form-data` request.
 
 ```js
-var multiparty = require('multiparty')
-  , http = require('http')
-  , util = require('util')
+var multiparty = require('multiparty');
+var http = require('http');
+var util = require('util');
 
 http.createServer(function(req, res) {
   if (req.url === '/upload' && req.method === 'POST') {
