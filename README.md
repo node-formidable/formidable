@@ -1,4 +1,4 @@
-# multiparty [![Build Status](https://travis-ci.org/andrewrk/node-multiparty.svg?branch=master)](https://travis-ci.org/andrewrk/node-multiparty)
+# multiparty [![Build Status](https://travis-ci.org/andrewrk/node-multiparty.svg?branch=master)](https://travis-ci.org/andrewrk/node-multiparty) [![Coverage Status](https://img.shields.io/coveralls/andrewrk/node-multiparty.svg)](https://coveralls.io/r/andrewrk/node-multiparty)
 
 Parse http requests with content-type `multipart/form-data`, also known as file uploads.
 
