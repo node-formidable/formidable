@@ -1,3 +1,12 @@
+### 4.1.0
+
+ * Douglas Christopher Wilson:
+   - Update dependencies to latest
+   - HTTP-related errors have a `statusCode` field
+
+ * Andrew Kelley:
+   - Refactor tests so that we can have a coverage badge
+
 ### 4.0.0
 
  * Andrew Kelley:
