@@ -21,7 +21,7 @@ var server = http.createServer(function(req, res) {
     form.on('part', function(part) {
 	    if (!part.filename) return;
 		
-		var size = part.byteCount - part.byteOffset;
+		var size = part.byteCount;
 		var name = part.filename;
 		var container = 'blobContainerName';
 		
