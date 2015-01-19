@@ -910,16 +910,13 @@ var standaloneTests = [
     },
   },
   {
-    name: "parse type error",
+    name: "missing content-type error",
     fn: function(cb) {
       var server = http.createServer(function(req, res) {
         assert.strictEqual(req.url, '/upload');
         assert.strictEqual(req.method, 'POST');
 
         var form = new multiparty.Form();
-
-        // this is invalid
-        delete req.headers['content-type'];
 
         form.parse(req, function(err, fields, files) {
           assert.ok(err);
@@ -932,7 +929,43 @@ var standaloneTests = [
       server.listen(function() {
         var url = 'http://localhost:' + server.address().port + '/upload';
         var req = superagent.post(url);
-        req.attach('file0', fixture('pf1y5.png'), 'SOG1.JPG');
+        req.on('error', function(err) {
+          assert.ifError(err);
+        });
+        req.end();
+        req.on('response', function(res) {
+          assert.equal(res.statusCode, 415);
+          server.close(cb);
+        });
+      });
+
+      function fixture(name) {
+        return path.join(FIXTURE_PATH, 'file', name)
+      }
+    },
+  },
+  {
+    name: "unsupported content-type error",
+    fn: function(cb) {
+      var server = http.createServer(function(req, res) {
+        assert.strictEqual(req.url, '/upload');
+        assert.strictEqual(req.method, 'POST');
+
+        var form = new multiparty.Form();
+
+        form.parse(req, function(err, fields, files) {
+          assert.ok(err);
+          assert.equal(err.message, 'unsupported content-type');
+          assert.equal(err.status, 415);
+          res.statusCode = 415;
+          res.end();
+        });
+      });
+      server.listen(function() {
+        var url = 'http://localhost:' + server.address().port + '/upload';
+        var req = superagent.post(url);
+        req.set('Content-Type', 'application/json');
+        req.write('{}');
         req.on('error', function(err) {
           assert.ifError(err);
         });
