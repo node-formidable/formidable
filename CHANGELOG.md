@@ -1,3 +1,8 @@
+### 4.1.1
+
+ * Douglas Christopher Wilson:
+   - Do not clobber existing temporary files
+
 ### 4.1.0
 
  * Douglas Christopher Wilson:
