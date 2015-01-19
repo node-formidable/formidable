@@ -631,7 +631,7 @@ function handleFile(self, fileStream) {
   fileStream.on('error', function(err) {
     self.handleError(err);
   });
-  fs.open(publicFile.path, 'w', function(err, fd) {
+  fs.open(publicFile.path, 'wx', function(err, fd) {
     if (err) return self.handleError(err);
     var slicer = fdSlicer.createFromFd(fd, {autoClose: true});
 
