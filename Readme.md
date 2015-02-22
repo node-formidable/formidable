@@ -204,15 +204,20 @@ If hash calculation was set, you can read the hex digest out of this var.
 
 
 #### 'progress'
+
+Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
+
 ```javascript
 form.on('progress', function(bytesReceived, bytesExpected) {
 });
 ```
-Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
 
 
 
 #### 'field'
+
+Emitted whenever a field / value pair has been received.
+
 ```javascript
 form.on('field', function(name, value) {
 });
@@ -220,7 +225,10 @@ form.on('field', function(name, value) {
 
 #### 'fileBegin'
 
-Emitted whenever a field / value pair has been received.
+Emitted whenever a new file is detected in the upload stream. Use this even if
+you want to stream the file to somewhere else while buffering the upload on
+the file system.
+
 ```javascript
 form.on('fileBegin', function(name, file) {
 });
@@ -228,11 +236,8 @@ form.on('fileBegin', function(name, file) {
 
 #### 'file'
 
-Emitted whenever a new file is detected in the upload stream. Use this even if
-you want to stream the file to somewhere else while buffering the upload on
-the file system.
-
 Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
+
 ```javascript
 form.on('file', function(name, file) {
 });
@@ -241,6 +246,7 @@ form.on('file', function(name, file) {
 #### 'error'
 
 Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
+
 ```javascript
 form.on('error', function(err) {
 });
