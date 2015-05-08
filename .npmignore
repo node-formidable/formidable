@@ -2,3 +2,4 @@ coverage/
 test/ 
 examples/
 .travis.yml
+npm-debug.log
