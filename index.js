@@ -794,7 +794,7 @@ function parseFilename(headerValue) {
   filename = filename.replace(/&#([\d]{4});/g, function(m, code) {
     return String.fromCharCode(code);
   });
-  return filename.substr(filename.lastIndexOf('\\') + 1);;
+  return filename.substr(filename.lastIndexOf('\\') + 1);
 }
 
 function lower(c) {
