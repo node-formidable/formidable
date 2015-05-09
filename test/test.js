@@ -1019,6 +1019,52 @@ var standaloneTests = [
     },
   },
   {
+    name: "empty header field error",
+    fn: function(cb) {
+      var server = http.createServer(function(req, resp) {
+        var form = new multiparty.Form();
+
+        var partCount = 0;
+        form.on('part', function(part) {
+          part.resume();
+          partCount++;
+          assert.strictEqual(typeof part.byteCount, 'undefined');
+        });
+        form.on('error', function(err) {
+          assert.ok(err);
+          assert.equal(err.message, 'Empty header field');
+          assert.equal(err.statusCode, 400);
+          server.close(cb);
+        });
+        form.on('close', function() {
+          throw new Error('Unexpected "close" event');
+        });
+
+        form.parse(req);
+      });
+      server.listen(function() {
+        var socket = net.connect(server.address().port, 'localhost', function () {
+          socket.write('POST / HTTP/1.1\r\n');
+          socket.write('Host: localhost\r\n');
+          socket.write('Connection: close\r\n');
+          socket.write('Content-Type: multipart/form-data; boundary=foo\r\n');
+          socket.write('Transfer-Encoding: chunked\r\n');
+          socket.write('\r\n');
+          socket.write('7\r\n');
+          socket.write('--foo\r\n\r\n');
+          socket.write('46\r\n');
+          socket.write('Content-Disposition: form-data; name="file"; filename="plain.txt"\r\n:\r\n\r\n');
+          socket.write('12\r\n');
+          socket.write('\r\nsome text here\r\n\r\n');
+          socket.write('9\r\n');
+          socket.write('--foo--\r\n\r\n');
+          socket.write('0\r\n\r\n');
+          socket.end();
+        });
+      });
+    },
+  },
+  {
     name: "request encoding",
     fn: function(cb) {
       var server = http.createServer(function(req, res) {
