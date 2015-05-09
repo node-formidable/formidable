@@ -1,3 +1,9 @@
+### 4.1.2
+
+ * Douglas Christopher Wilson:
+   - Do not emit error on part prior to emitting part
+   - Fix filename with quotes truncating from certain clients
+
 ### 4.1.1
 
  * Douglas Christopher Wilson:
