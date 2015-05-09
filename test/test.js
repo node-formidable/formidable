@@ -1143,20 +1143,41 @@ var standaloneTests = [
     fn: function(cb) {
       var server = http.createServer(function (req, res) {
         var form = new multiparty.Form();
-        var gotPartErr;
-        form.on('part', function(part) {
-          part.on('error', function(err) {
-            gotPartErr = err;
+        var pend = new Pend();
+
+        pend.go(function(cb){
+          form.on('part', function(part){
+            part.on('error', function(err){
+              assert.ok(err);
+              assert.equal(err.message, 'stream ended unexpectedly');
+              cb();
+            });
+            part.resume();
           });
-          part.resume();
         });
-        form.on('error', function () {
-          assert.ok(gotPartErr);
+
+        pend.go(function(cb){
+          form.on('field', function(){
+            cb();
+          });
+        });
+
+        pend.go(function(cb){
+          form.on('error', function(err){
+            assert.ok(err);
+            assert.equal(err.message, 'stream ended unexpectedly');
+            cb();
+          });
+        });
+
+        pend.wait(function(){
           server.close(cb);
         });
+
         form.on('close', function () {
           throw new Error('Unexpected "close" event');
         });
+
         form.parse(req);
       }).listen(0, 'localhost', function () {
         var client = net.connect(server.address().port);
