@@ -194,7 +194,7 @@ Form.prototype.parse = function(req, cb) {
       req.removeListener('aborted', onReqAborted);
       req.removeListener('end', onReqEnd);
       if (self.destStream) {
-        self.destStream.emit('error', err);
+        errorEventQueue(self, self.destStream, err);
       }
     }
 
@@ -587,24 +587,47 @@ function cleanupOpenFiles(self) {
   self.openedFiles = [];
 }
 
-function holdEmitQueue(self) {
-  var o = {cb: null};
-  self.emitQueue.push(o);
+function holdEmitQueue(self, eventEmitter) {
+  var item = {cb: null, ee: eventEmitter, err: null};
+  self.emitQueue.push(item);
   return function(cb) {
-    o.cb = cb;
+    item.cb = cb;
     flushEmitQueue(self);
   };
 }
 
+function errorEventQueue(self, eventEmitter, err) {
+  var items = self.emitQueue.filter(function (item) {
+    return item.ee === eventEmitter;
+  });
+
+  if (items.length === 0) {
+    eventEmitter.emit('error', err);
+    return;
+  }
+
+  items.forEach(function (item) {
+    item.err = err;
+  });
+}
+
 function flushEmitQueue(self) {
   while (self.emitQueue.length > 0 && self.emitQueue[0].cb) {
-    self.emitQueue.shift().cb();
+    var item = self.emitQueue.shift();
+
+    // invoke the callback
+    item.cb();
+
+    if (item.err) {
+      // emit the delayed error
+      item.ee.emit('error', item.err);
+    }
   }
 }
 
 function handlePart(self, partStream) {
   beginFlush(self);
-  var emitAndReleaseHold = holdEmitQueue(self);
+  var emitAndReleaseHold = holdEmitQueue(self, partStream);
   partStream.on('end', function() {
     endFlush(self);
   });
@@ -627,7 +650,7 @@ function handleFile(self, fileStream) {
     ws: null,
   };
   beginFlush(self); // flush to write stream
-  var emitAndReleaseHold = holdEmitQueue(self);
+  var emitAndReleaseHold = holdEmitQueue(self, fileStream);
   fileStream.on('error', function(err) {
     self.handleError(err);
   });
@@ -674,7 +697,7 @@ function handleField(self, fieldStream) {
   var decoder = new StringDecoder(self.encoding);
 
   beginFlush(self);
-  var emitAndReleaseHold = holdEmitQueue(self);
+  var emitAndReleaseHold = holdEmitQueue(self, fieldStream);
   fieldStream.on('error', function(err) {
     self.handleError(err);
   });

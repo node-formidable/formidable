@@ -1092,6 +1092,45 @@ var standaloneTests = [
       });
     },
   },
+  {
+    name: "queued part error",
+    fn: function(cb) {
+      var server = http.createServer(function (req, res) {
+        var form = new multiparty.Form();
+        var gotPartErr;
+        form.on('part', function(part) {
+          part.on('error', function(err) {
+            gotPartErr = err;
+          });
+          part.resume();
+        });
+        form.on('error', function () {
+          assert.ok(gotPartErr);
+          server.close(cb);
+        });
+        form.on('close', function () {
+          throw new Error('Unexpected "close" event');
+        });
+        form.parse(req);
+      }).listen(0, 'localhost', function () {
+        var client = net.connect(server.address().port);
+        client.end(
+          "POST / HTTP/1.1\r\n" +
+          "Content-Length: 174\r\n" +
+          "Content-Type: multipart/form-data; boundary=--bounds\r\n" +
+          "\r\n" +
+          "----bounds\r\n" +
+          "Content-Disposition: form-data; name=\"key\"\r\n" +
+          "\r\n" +
+          "hi\r\n" +
+          "----bounds\r\n" +
+          "Content-Disposition: form-data; name=\"upload\"; filename=\"blah1.txt\"\r\n" +
+          "Content-Type: plain/text\r\n" +
+          "\r\n" +
+          "bye");
+      });
+    },
+  },
 ];
 
 resetTempDir(startFixtureTests);
