@@ -789,12 +789,12 @@ function parseFilename(headerValue) {
     }
   }
 
-  var filename = m[1].substr(m[1].lastIndexOf('\\') + 1);
-  filename = filename.replace(/%22/g, '"');
+  var filename = m[1];
+  filename = filename.replace(/%22|\\"/g, '"');
   filename = filename.replace(/&#([\d]{4});/g, function(m, code) {
     return String.fromCharCode(code);
   });
-  return filename;
+  return filename.substr(filename.lastIndexOf('\\') + 1);;
 }
 
 function lower(c) {
