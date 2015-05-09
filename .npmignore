@@ -1,5 +1,6 @@
 coverage/
 test/ 
 examples/
+.jshintrc
 .travis.yml
 npm-debug.log
