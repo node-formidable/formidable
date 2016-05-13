@@ -54,7 +54,7 @@ function Form(options) {
   self.maxFields = options.maxFields || 1000;
   self.maxFieldsSize = options.maxFieldsSize || 2 * 1024 * 1024;
   self.maxFilesSize = options.maxFilesSize || Infinity;
-  self.uploadDir = options.uploadDir || os.tmpDir();
+  self.uploadDir = options.uploadDir || os.tmpdir();
   self.encoding = options.encoding || 'utf8';
 
   self.bytesReceived = 0;

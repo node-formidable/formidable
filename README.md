@@ -87,7 +87,7 @@ Creates a new form. Options:
    This is automatically set to `true` if you add a `file` listener.
  * `uploadDir` - Only relevant when `autoFiles` is `true`. The directory for
    placing file uploads in. You can move them later using `fs.rename()`.
-   Defaults to `os.tmpDir()`.
+   Defaults to `os.tmpdir()`.
 
 #### form.parse(request, [cb])
 
