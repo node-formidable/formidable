@@ -225,7 +225,7 @@ form.on('field', function(name, value) {
 
 #### 'fileBegin'
 
-Emitted whenever a new file is detected in the upload stream. Use this even if
+Emitted whenever a new file is detected in the upload stream. Use this event if
 you want to stream the file to somewhere else while buffering the upload on
 the file system.
 
