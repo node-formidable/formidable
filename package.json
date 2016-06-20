@@ -15,10 +15,10 @@
   ],
   "devDependencies": {
     "findit2": "~2.2.3",
-    "istanbul": "~0.3.4",
-    "mkdirp": "~0.5.0",
+    "istanbul": "~0.4.3",
+    "mkdirp": "~0.5.1",
     "pend": "~1.2.0",
-    "rimraf": "~2.2.8",
+    "rimraf": "~2.5.2",
     "superagent": "~0.21.0"
   },
   "scripts": {
