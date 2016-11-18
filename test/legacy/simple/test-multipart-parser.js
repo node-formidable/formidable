@@ -34,7 +34,7 @@ test(function parserError() {
       buffer = new Buffer(5);
 
   parser.initWithBoundary(boundary);
-  buffer.write('--ad', 'ascii', 0);
+  buffer.write('--ad', 0);
   assert.equal(parser.write(buffer), 5);
 });
 
