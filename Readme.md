@@ -87,7 +87,7 @@ Sets encoding for incoming form fields.
 form.uploadDir = "/my/dir";
 ```
 Sets the directory for placing file uploads in. You can move them later on using
-`fs.rename()`. The default is `os.tmpDir()`.
+`fs.rename()`. The default is `os.tmpdir()`.
 
 ```javascript
 form.keepExtensions = false;
@@ -304,7 +304,7 @@ Emitted when the entire request has been received, and all contained files have 
 * Remove support for Node.js 0.4 & 0.6 (Andrew Kelley)
 * Documentation improvements (Sven Lito, Andre Azevedo)
 * Add support for application/octet-stream (Ion Lupascu, Chris Scribner)
-* Use os.tmpDir() to get tmp directory (Andrew Kelley)
+* Use os.tmpdir() to get tmp directory (Andrew Kelley)
 * Improve package.json (Andrew Kelley, Sven Lito)
 * Fix benchmark script (Andrew Kelley)
 * Fix scope issue in incoming_forms (Sven Lito)
