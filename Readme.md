@@ -1,6 +1,6 @@
 # Formidable
 
-[![Build Status](https://secure.travis-ci.org/felixge/node-formidable.png?branch=master)](http://travis-ci.org/felixge/node-formidable)
+[![Build Status](https://secure.travis-ci.org/pornel/node-formidable.png?branch=master)](http://travis-ci.org/pornel/node-formidable)
 
 ## Purpose
 
