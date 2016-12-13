@@ -4,12 +4,12 @@
   "homepage": "https://github.com/felixge/node-formidable",
   "version": "1.0.17",
   "devDependencies": {
-    "gently": "0.8.0",
-    "findit": "0.1.1",
-    "hashish": "0.0.4",
-    "urun": "~0.0.6",
-    "utest": "0.0.3",
-    "request": "~2.11.4"
+    "gently": "^0.8.0",
+    "findit": "^0.1.2",
+    "hashish": "^0.0.4",
+    "urun": "^0.0.6",
+    "utest": "^0.0.8",
+    "request": "^2.11.4"
   },
   "directories": {
     "lib": "./lib"
