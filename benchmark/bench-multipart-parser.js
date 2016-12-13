@@ -59,8 +59,8 @@ function createMultipartBuffer(boundary, size) {
     , tail = '\r\n--'+boundary+'--\r\n'
     , buffer = new Buffer(size);
 
-  buffer.write(head, 'ascii', 0);
-  buffer.write(tail, 'ascii', buffer.length - tail.length);
+  buffer.write(head, 0, 'ascii');
+  buffer.write(tail, buffer.length - tail.length, 'ascii');
   return buffer;
 }
 
