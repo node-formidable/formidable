@@ -8,6 +8,8 @@ A node.js module for parsing form data, especially file uploads.
 
 ## Current status
 
+**Maintainer Wanted:** Please see https://github.com/felixge/node-formidable/issues/412
+
 This module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading
 and encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from
 a large variety of clients and is considered production-ready.
