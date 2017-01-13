@@ -89,7 +89,7 @@ Sets encoding for incoming form fields.
 form.uploadDir = "/my/dir";
 ```
 Sets the directory for placing file uploads in. You can move them later on using
-`fs.rename()`. The default is `os.tmpDir()`.
+`fs.rename()`. The default is `os.tmpdir()`.
 
 ```javascript
 form.keepExtensions = false;
@@ -273,6 +273,10 @@ Emitted when the entire request has been received, and all contained files have 
 
 
 ## Changelog
+
+### v1.0.15
+
+* Use os.tmpdir() to get tmp directory (Nick Soggin)
 
 ### v1.0.14
 
