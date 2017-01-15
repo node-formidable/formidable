@@ -267,7 +267,7 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
-### Unreleased yet
+### v1.1.1 (2017-01-15)
 
  * Fix DeprecationWarning about os.tmpDir() (Christian)
  * Update `buffer.write` order of arguments for Node 7 (Kornel Lesiński)
@@ -278,7 +278,7 @@ Emitted when the entire request has been received, and all contained files have 
  * Add hash to json if present (Nick Stamas)
  * Add license to package.json (Simen Bekkhus)
 
-### v1.0.14
+### v1.0.14 (2013-05-03)
 
 * Add failing hash tests. (Ben Trask)
 * Enable hash calculation again (Eugene Girshov)
