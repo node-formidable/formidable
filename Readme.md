@@ -34,6 +34,8 @@ Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run
 
 ## Example
 
+<a href="https://runnable.com/#felixge/node-formidable/server.js/launch" target="_blank"><img src="https://runnable.com/external/styles/assets/runnablebtn.png" style="width:67px;height:25px;"></a>
+
 Parse an incoming file upload.
 ```javascript
 var formidable = require('formidable'),
