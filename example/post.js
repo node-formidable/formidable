@@ -1,7 +1,8 @@
-require('../test/common');
+var common = require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('formidable'),
+    formidable = common.formidable,
+    port = common.port,
     server;
 
 server = http.createServer(function(req, res) {
@@ -38,6 +39,6 @@ server = http.createServer(function(req, res) {
     res.end('404');
   }
 });
-server.listen(TEST_PORT);
+server.listen(port);
 
-console.log('listening on http://localhost:'+TEST_PORT+'/');
+console.log('listening on http://localhost:'+port+'/');
