@@ -1,7 +1,9 @@
-require('../test/common');
+var common = require('../test/common');
 var http = require('http'),
     util = require('util'),
-    formidable = require('formidable'),
+    os = require('os'),
+    formidable = common.formidable,
+    port = common.port,
     server;
 
 server = http.createServer(function(req, res) {
@@ -19,7 +21,7 @@ server = http.createServer(function(req, res) {
         files = [],
         fields = [];
 
-    form.uploadDir = TEST_TMP;
+    form.uploadDir = os.tmpdir();
 
     form
       .on('field', function(field, value) {
@@ -43,6 +45,6 @@ server = http.createServer(function(req, res) {
     res.end('404');
   }
 });
-server.listen(TEST_PORT);
+server.listen(port);
 
-console.log('listening on http://localhost:'+TEST_PORT+'/');
+console.log('listening on http://localhost:'+port+'/');

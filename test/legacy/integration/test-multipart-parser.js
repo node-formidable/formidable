@@ -50,7 +50,7 @@ Object.keys(fixtures).forEach(function(name) {
     endCalled = true;
   };
 
-  buffer.write(fixture.raw, 'binary', 0);
+  buffer.write(fixture.raw, 0, undefined, 'binary');
 
   while (offset < buffer.length) {
     if (offset + CHUNK_LENGTH < buffer.length) {
