@@ -102,6 +102,13 @@ If this value is exceeded, an `'error'` event is emitted. The default
 size is 2MB.
 
 ```javascript
+form.maxFileSize = 2 * 1024 * 1024;
+```
+Limits the size of uploaded file.
+If this value is exceeded, an `'error'` event is emitted. The default
+size is 2MB.
+
+```javascript
 form.maxFields = 1000;
 ```
 Limits the number of fields that the querystring parser will decode. Defaults
