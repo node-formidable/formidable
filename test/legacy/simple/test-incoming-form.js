@@ -38,7 +38,7 @@ test(function constructor() {
   assert.strictEqual(form.encoding, 'utf-8');
   assert.strictEqual(form.bytesReceived, null);
   assert.strictEqual(form.bytesExpected, null);
-  assert.strictEqual(form.maxFieldsSize, 2 * 1024 * 1024);
+  assert.strictEqual(form.maxFieldsSize, 20 * 1024 * 1024);
   assert.strictEqual(form._parser, null);
   assert.strictEqual(form._flushing, 0);
   assert.strictEqual(form._fieldsSize, 0);

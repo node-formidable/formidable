@@ -95,18 +95,18 @@ form.type
 Either 'multipart' or 'urlencoded' depending on the incoming request.
 
 ```javascript
-form.maxFieldsSize = 2 * 1024 * 1024;
+form.maxFieldsSize = 20 * 1024 * 1024;
 ```
 Limits the amount of memory all fields together (except files) can allocate in bytes.
 If this value is exceeded, an `'error'` event is emitted. The default
-size is 2MB.
+size is 20MB.
 
 ```javascript
-form.maxFileSize = 2 * 1024 * 1024;
+form.maxFileSize = 200 * 1024 * 1024;
 ```
 Limits the size of uploaded file.
 If this value is exceeded, an `'error'` event is emitted. The default
-size is 2MB.
+size is 200MB.
 
 ```javascript
 form.maxFields = 1000;
