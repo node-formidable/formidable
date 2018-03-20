@@ -274,6 +274,13 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
+### v1.2.1 (2018-03-20)
+
+ * `maxFileSize` option with default of 200MB (Charlike Mike Reagent, Nima Shahri)
+ * Simplified buffering in JSON parser to avoid denial of service attack (Kornel)
+ * Fixed upload file cleanup on aborted requests (liaoweiqiang)
+ * Fixed error handling of closed _writeStream (Vitalii)
+
 ### v1.1.1 (2017-01-15)
 
  * Fix DeprecationWarning about os.tmpDir() (Christian)
