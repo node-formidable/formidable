@@ -1,6 +1,5 @@
 var common = require('../common');
 var QuerystringParser = require(common.lib + '/querystring_parser').QuerystringParser,
-    Buffer = require('buffer').Buffer,
     gently,
     parser;
 
@@ -17,10 +16,10 @@ test(function constructor() {
 });
 
 test(function write() {
-  var a = new Buffer('a=1');
+  var a = Buffer.from('a=1');
   assert.equal(parser.write(a), a.length);
 
-  var b = new Buffer('&b=2');
+  var b = Buffer.from('&b=2');
   parser.write(b);
   assert.equal(parser.buffer, a + b);
 });

@@ -3,7 +3,6 @@ require('../test/common');
 var multipartParser = require('../lib/multipart_parser'),
     MultipartParser = multipartParser.MultipartParser,
     parser = new MultipartParser(),
-    Buffer = require('buffer').Buffer,
     boundary = '-----------------------------168072824752491622650073',
     mb = 100,
     buffer = createMultipartBuffer(boundary, mb * 1024 * 1024),
@@ -57,7 +56,7 @@ function createMultipartBuffer(boundary, size) {
       + 'content-disposition: form-data; name="field1"\r\n'
       + '\r\n'
     , tail = '\r\n--'+boundary+'--\r\n'
-    , buffer = new Buffer(size);
+    , buffer = Buffer.alloc(size);
 
   buffer.write(head, 0, 'ascii');
   buffer.write(tail, buffer.length - tail.length, 'ascii');
