@@ -25,12 +25,10 @@ a large variety of clients and is considered production-ready.
 ## Installation
 
 ```sh
-npm i -S formidable
+npm i formidable
 ```
 
 This is a low-level package, and if you're using a high-level framework it may already be included. However, [Express v4](http://expressjs.com) does not include any multipart handling, nor does [body-parser](https://github.com/expressjs/body-parser).
-
-Note: Formidable requires [gently](http://github.com/felixge/node-gently) to run the unit tests, but you won't need it for just using the library.
 
 ## Example
 
@@ -273,6 +271,10 @@ Emitted when the entire request has been received, and all contained files have 
 
 
 ## Changelog
+
+### v1.2.2 (2019-11-26)
+
+ * Support only node lts and latest
 
 ### v1.2.1 (2018-03-20)
 
