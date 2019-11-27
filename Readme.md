@@ -272,7 +272,7 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
-### v2.0.0 (2019-11-26)
+### v1.2.2 (2019-11-26)
 
  * Support only node lts and latest
 
