@@ -116,7 +116,8 @@ If you want checksums calculated for incoming files, set this to either `'sha1'`
 ```javascript
 form.multiples = false;
 ```
-If this option is enabled, when you call `form.parse`, the `files` argument will contain arrays of files for inputs which submit multiple files using the HTML5 `multiple` attribute.
+If this option is enabled, when you call `form.parse`, the `files` argument will contain arrays of files for inputs which submit multiple files using the HTML5 `multiple` attribute.  
+Also, the `fields` argument will contain arrays of values for fields that have names ending with '[]'. That's basic support, better support should be implemented (ref: [#386](https://github.com/node-formidable/node-formidable/issues/386))
 
 ```javascript
 form.bytesReceived
