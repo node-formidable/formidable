@@ -1,20 +1,14 @@
-# Formidable
+# formidable [![npm version][npmv-img]][npmv-url] [![build status][build-img]][build-url] [![chat on gitter][chat-img]][chat-url] [![MIT license][license-img]][license-url]
 
-[![Build Status](https://travis-ci.org/felixge/node-formidable.svg?branch=master)](https://travis-ci.org/felixge/node-formidable) [![Join the chat at https://gitter.im/node-formidable/Lobby](https://badges.gitter.im/node-formidable/Lobby.svg)](https://gitter.im/node-formidable/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+> A Node.js module for parsing form data, especially file uploads.
 
-## Purpose
+## Status
 
-A Node.js module for parsing form data, especially file uploads.
+This module was initially developed by [**@felixge**](https://github.com/felixge) for [Transloadit](http://transloadit.com/), a service focused on uploading and encoding images and videos. It has been battle-tested against hundreds of GBs of file uploads from a large variety of clients and is considered production-ready and is used in production for years.
 
-## Current status
+Currently, we are few maintainers trying to deal with it. :) New maintainers and contributors are always welcome! Jump on [issue #412](https://github.com/felixge/node-formidable/issues/412) if you are interested.
 
-**Maintainers Wanted:** Please see https://github.com/felixge/node-formidable/issues/412
-
-This module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading
-and encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from
-a large variety of clients and is considered production-ready.
-
-## Features
+## Highlights
 
 * Fast (~500mb/sec), non-buffering multipart parser
 * Automatically writing file uploads to disk
@@ -33,7 +27,8 @@ This is a low-level package, and if you're using a high-level framework it may a
 ## Example
 
 Parse an incoming file upload.
-```javascript
+
+```js
 var formidable = require('formidable'),
     http = require('http'),
     util = require('util');
@@ -343,3 +338,17 @@ Formidable is licensed under the MIT license.
 ## Credits
 
 * [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js
+
+<!-- badges -->
+
+[build-img]: https://badgen.net/travis/node-formidable/node-formidable/master?label=build&icon=travis 
+[build-url]: https://travis-ci.org/node-formidable/node-formidable.svg?branch=master
+
+[npmv-img]: https://badgen.net/npm/v/formidable?icon=npm 
+[npmv-url]: https://npmjs.com/package/formidable
+
+[license-img]: https://badgen.net/npm/license/formidable
+[license-url]: https://github.com/node-formidable/node-formidable/blob/master/LICENSE
+
+[chat-img]: https://badgen.net/badge/chat/on%20gitter/46BC99?icon=gitter
+[chat-url]: https://gitter.im/node-formidable/Lobby
