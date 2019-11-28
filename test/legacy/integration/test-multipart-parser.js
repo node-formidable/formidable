@@ -3,12 +3,11 @@ var CHUNK_LENGTH = 10,
     multipartParser = require(common.lib + '/multipart_parser'),
     MultipartParser = multipartParser.MultipartParser,
     parser = new MultipartParser(),
-    fixtures = require(TEST_FIXTURES + '/multipart'),
-    Buffer = require('buffer').Buffer;
+    fixtures = require(TEST_FIXTURES + '/multipart');
 
 Object.keys(fixtures).forEach(function(name) {
   var fixture = fixtures[name],
-      buffer = new Buffer(Buffer.byteLength(fixture.raw, 'binary')),
+      buffer = Buffer.alloc(Buffer.byteLength(fixture.raw, 'binary')),
       offset = 0,
       chunk,
       nparsed,

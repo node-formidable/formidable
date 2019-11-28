@@ -2,7 +2,6 @@ var common = require('../test/common'),
     http = require('http'),
     util = require('util'),
     formidable = common.formidable,
-    Buffer = require('buffer').Buffer,
     port = common.port,
     server;
 
