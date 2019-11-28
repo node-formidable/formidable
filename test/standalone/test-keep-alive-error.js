@@ -31,7 +31,7 @@ var server = http.createServer(function (req, res) {
         '------aaa\n\r'); // expected \r\n
 
   setTimeout(function () {
-    var buf = new Buffer(10000);
+    var buf = Buffer.alloc(10000);
     buf.fill('a');
     client.write(buf);
 

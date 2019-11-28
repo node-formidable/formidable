@@ -10,7 +10,6 @@ var formidable = require(common.lib + '/index'),
     events = require('events'),
     fs = require('fs'),
     path = require('path'),
-    Buffer = require('buffer').Buffer,
     fixtures = require(TEST_FIXTURES + '/multipart'),
     form,
     gently;
@@ -470,17 +469,17 @@ test(function _initMultipart() {
     });
 
     PARSER.onPartBegin();
-    PARSER.onHeaderField(new Buffer('content-disposition'), 0, 10);
-    PARSER.onHeaderField(new Buffer('content-disposition'), 10, 19);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 0, 14);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field1"'), 14, 24);
+    PARSER.onHeaderField(Buffer.from('content-disposition'), 0, 10);
+    PARSER.onHeaderField(Buffer.from('content-disposition'), 10, 19);
+    PARSER.onHeaderValue(Buffer.from('form-data; name="field1"'), 0, 14);
+    PARSER.onHeaderValue(Buffer.from('form-data; name="field1"'), 14, 24);
     PARSER.onHeaderEnd();
-    PARSER.onHeaderField(new Buffer('foo'), 0, 3);
-    PARSER.onHeaderValue(new Buffer('bar'), 0, 3);
+    PARSER.onHeaderField(Buffer.from('foo'), 0, 3);
+    PARSER.onHeaderValue(Buffer.from('bar'), 0, 3);
     PARSER.onHeaderEnd();
     PARSER.onHeadersEnd();
-    PARSER.onPartData(new Buffer('hello world'), 0, 5);
-    PARSER.onPartData(new Buffer('hello world'), 5, 11);
+    PARSER.onPartData(Buffer.from('hello world'), 0, 5);
+    PARSER.onPartData(Buffer.from('hello world'), 5, 11);
     PARSER.onPartEnd();
   })();
 
@@ -512,14 +511,14 @@ test(function _initMultipart() {
     });
 
     PARSER.onPartBegin();
-    PARSER.onHeaderField(new Buffer('content-disposition'), 0, 19);
-    PARSER.onHeaderValue(new Buffer('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'), 0, 85);
+    PARSER.onHeaderField(Buffer.from('content-disposition'), 0, 19);
+    PARSER.onHeaderValue(Buffer.from('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'), 0, 85);
     PARSER.onHeaderEnd();
-    PARSER.onHeaderField(new Buffer('Content-Type'), 0, 12);
-    PARSER.onHeaderValue(new Buffer('text/plain'), 0, 10);
+    PARSER.onHeaderField(Buffer.from('Content-Type'), 0, 12);
+    PARSER.onHeaderValue(Buffer.from('text/plain'), 0, 10);
     PARSER.onHeaderEnd();
     PARSER.onHeadersEnd();
-    PARSER.onPartData(new Buffer('... contents of file1.txt ...'), 0, 29);
+    PARSER.onPartData(Buffer.from('... contents of file1.txt ...'), 0, 29);
     PARSER.onPartEnd();
   })();
 
@@ -601,10 +600,10 @@ test(function handlePart() {
     });
 
     form.handlePart(PART);
-    PART.emit('data', new Buffer('hello'));
-    PART.emit('data', new Buffer(' world: '));
-    PART.emit('data', new Buffer([0xE2]));
-    PART.emit('data', new Buffer([0x82, 0xAC]));
+    PART.emit('data', Buffer.from('hello'));
+    PART.emit('data', Buffer.from(' world: '));
+    PART.emit('data', Buffer.from([0xE2]));
+    PART.emit('data', Buffer.from([0x82, 0xAC]));
     PART.emit('end');
   })();
 
@@ -615,15 +614,15 @@ test(function handlePart() {
     gently.expect(form, 'emit', function(event, field, value) {
       assert.equal(event, 'field');
       assert.equal(field, 'my_field2');
-      assert.equal(value, 'hello world: '+new Buffer([0xE2, 0x82, 0xAC]).toString('binary'));
+      assert.equal(value, 'hello world: '+Buffer.from([0xE2, 0x82, 0xAC]).toString('binary'));
     });
 
     form.encoding = 'binary';
     form.handlePart(PART);
-    PART.emit('data', new Buffer('hello'));
-    PART.emit('data', new Buffer(' world: '));
-    PART.emit('data', new Buffer([0xE2]));
-    PART.emit('data', new Buffer([0x82, 0xAC]));
+    PART.emit('data', Buffer.from('hello'));
+    PART.emit('data', Buffer.from(' world: '));
+    PART.emit('data', Buffer.from([0xE2]));
+    PART.emit('data', Buffer.from([0x82, 0xAC]));
     PART.emit('end');
   })();
 
@@ -638,8 +637,8 @@ test(function handlePart() {
 
     form.handlePart(PART);
     form._fieldsSize = 1;
-    PART.emit('data', new Buffer(7));
-    PART.emit('data', new Buffer(1));
+    PART.emit('data', Buffer.alloc(7));
+    PART.emit('data', Buffer.alloc(1));
   })();
 
   (function testFilePart() {
@@ -683,7 +682,7 @@ test(function handlePart() {
       cb();
     });
 
-    PART.emit('data', BUFFER = new Buffer('test'));
+    PART.emit('data', BUFFER = Buffer.from('test'));
 
     gently.expect(FILE, 'end', function(cb) {
       gently.expect(form, 'emit', function(event, field, file) {
