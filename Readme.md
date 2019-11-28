@@ -6,7 +6,8 @@
 
 This module was initially developed by [**@felixge**](https://github.com/felixge) for [Transloadit](http://transloadit.com/), a service focused on uploading and encoding images and videos. It has been battle-tested against hundreds of GBs of file uploads from a large variety of clients and is considered production-ready and is used in production for years.
 
-Currently, we are few maintainers trying to deal with it. :) New maintainers and contributors are always welcome! Jump on [issue #412](https://github.com/felixge/node-formidable/issues/412) if you are interested.
+Currently, we are few maintainers trying to deal with it. :) New maintainers and contributors are always welcome!  
+Jump on [issue #412](https://github.com/felixge/node-formidable/issues/412) if you are interested.
 
 ## Highlights
 
