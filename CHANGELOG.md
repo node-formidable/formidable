@@ -3,7 +3,8 @@
 
  * Test only on Node.js >= v10. Support only Node LTS and latest ([#515](https://github.com/node-formidable/node-formidable/pull/515))
  * stop using deprecated features ([#516](https://github.com/node-formidable/node-formidable/pull/516), [#472](https://github.com/node-formidable/node-formidable/issues/472), [#406](https://github.com/node-formidable/node-formidable/issues/406))
- *  throw error during data parsing ([#513](https://github.com/node-formidable/node-formidable/pull/513)) 
+ * throw error during data parsing ([#513](https://github.com/node-formidable/node-formidable/pull/513))
+ * Array parameters support ([#513](https://github.com/node-formidable/node-formidable/pull/380))
 
 ### v1.2.1 (2018-03-20)
 
