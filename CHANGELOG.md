@@ -6,6 +6,7 @@
  * throw error during data parsing ([#513](https://github.com/node-formidable/node-formidable/pull/513))
  * Array parameters support (array-like fields) ([#380](https://github.com/node-formidable/node-formidable/pull/380), [#340](https://github.com/node-formidable/node-formidable/pull/340), [#367](https://github.com/node-formidable/node-formidable/pull/367))
  * possible partial fix of [#386](https://github.com/node-formidable/node-formidable/pull/386) with #380 (need tests and better implementation)
+ * use hasOwnProperty in check against files/fields ([#522](https://github.com/node-formidable/node-formidable/pull/522))
 
 ### v1.2.1 (2018-03-20)
 
