@@ -2,6 +2,10 @@
 
 > A Node.js module for parsing form data, especially file uploads.
 
+<p align="center">
+  <img alt="node formidable logo" src="https://www.freelogodesign.org/file/app/client/thumb/bdee5764-e598-4783-a491-ac999f2e4578_200x200.png?1574910117345" />
+</p>
+
 ## Status
 
 This module was initially developed by [**@felixge**](https://github.com/felixge) for [Transloadit](http://transloadit.com/), a service focused on uploading and encoding images and videos. It has been battle-tested against hundreds of GBs of file uploads from a large variety of clients and is considered production-ready and is used in production for years.
