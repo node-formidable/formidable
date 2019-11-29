@@ -37,6 +37,8 @@ server = http.createServer(function(req, res) {
     form.parse(req, function (error, fields, files) {
       res.writeHead(200, {'content-type': 'text/plain'});
       res.write('received fields:\n\n '+util.inspect(fields));
+      res.write('\n\n');
+      res.end('received files:\n\n '+util.inspect(files));
     })
   } else {
     res.writeHead(404, {'content-type': 'text/plain'});
