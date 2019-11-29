@@ -7,16 +7,16 @@ var http = require('http'),
     server;
 
 server = http.createServer(function(req, res) {
-  if (req.url == '/') {
+  if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
-      '<form action="/upload" enctype="multipart/form-data" method="post">'+
-      '<input type="text" name="title"><br>'+
-      '<input type="file" name="upload" multiple="multiple"><br>'+
-      '<input type="submit" value="Upload">'+
-      '</form>'
+      `<form action="/upload" enctype="multipart/form-data" method="post">
+        <input type="text" name="title"><br>
+        <input type="file" name="upload" multiple><br>
+        <button>Upload</button>
+      </form>`
     );
-  } else if (req.url == '/upload') {
+  } else if (req.url === '/upload') {
     var form = new formidable.IncomingForm(),
         files = [],
         fields = [];

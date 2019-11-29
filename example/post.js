@@ -6,16 +6,16 @@ var http = require('http'),
     server;
 
 server = http.createServer(function(req, res) {
-  if (req.url == '/') {
+  if (req.url === '/') {
     res.writeHead(200, {'content-type': 'text/html'});
     res.end(
-      '<form action="/post" method="post">'+
-      '<input type="text" name="title"><br>'+
-      '<input type="text" name="data[foo][]"><br>'+
-      '<input type="submit" value="Submit">'+
-      '</form>'
+      `<form action="/post" method="post">
+        <input type="text" name="title"><br>
+        <input type="text" name="data[foo][]"><br>
+        <button>Submit</button>
+      '</form>`
     );
-  } else if (req.url == '/post') {
+  } else if (req.url === '/post') {
     var form = new formidable.IncomingForm(),
         fields = [];
 
