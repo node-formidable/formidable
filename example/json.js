@@ -36,13 +36,13 @@ server.listen(port);
 
 console.log('listening on http://localhost:'+port+'/');
 
-
+var message = '{"numbers":[1,2,3,4,5],"nested":{"key":"value"}}';
 var request = http.request({
   host: 'localhost',
   path: '/',
   port: port,
   method: 'POST',
-  headers: { 'content-type':'application/json', 'content-length':48 }
+  headers: { 'content-type':'application/json', 'content-length': message.length }
 }, function(response) {
   var data = '';
   console.log('\nServer responded with:');
@@ -62,5 +62,5 @@ var request = http.request({
   // });
 });
 
-request.write('{"numbers":[1,2,3,4,5],"nested":{"key":"value"}}');
+request.write(message);
 request.end();

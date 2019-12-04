@@ -3,6 +3,7 @@ var test         = require('utest');
 var assert       = common.assert;
 var IncomingForm = common.require('incoming_form').IncomingForm;
 var path         = require('path');
+var Request = require('http').ClientRequest
 
 var form;
 test('IncomingForm', {
@@ -58,6 +59,20 @@ test('IncomingForm', {
 
     ext = path.extname(form._uploadPath('file.aAa'));
     assert.equal(ext, '.aAa');
+  },
+  
+  '#_Array parameters support': function () {
+    form = new IncomingForm({multiples: true});
+    const req = new Request();
+    req.headers = 'content-type: json; content-length:8'
+    form.parse(req, function (error, fields, files) {
+      assert.equal(Array.isArray(fields.a), true);
+      assert.equal(fields.a[0], 1);
+      assert.equal(fields.a[1], 2);
+    })
+    form.emit('field', 'a[]', 1);
+    form.emit('field', 'a[]', 2);
+    form.emit('end');
   },
 });
 
