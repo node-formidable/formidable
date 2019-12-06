@@ -7,6 +7,9 @@
  * Array support for fields and files ([#380](https://github.com/node-formidable/node-formidable/pull/380), [#340](https://github.com/node-formidable/node-formidable/pull/340), [#367](https://github.com/node-formidable/node-formidable/pull/367), [#33](https://github.com/node-formidable/node-formidable/issues/33), [#498](https://github.com/node-formidable/node-formidable/issues/498), [#280](https://github.com/node-formidable/node-formidable/issues/280), [#483](https://github.com/node-formidable/node-formidable/issues/483))
  * possible partial fix of [#386](https://github.com/node-formidable/node-formidable/pull/386) with #380 (need tests and better implementation)
  * use hasOwnProperty in check against files/fields ([#522](https://github.com/node-formidable/node-formidable/pull/522))
+ * do not promote `IncomingForm` and add `exports.default` ([#529](https://github.com/node-formidable/node-formidable/pull/529))
+ * Improve examples and tests ([#523](https://github.com/node-formidable/node-formidable/pull/523))
+ * First step of Code quality improvements ([#525](https://github.com/node-formidable/node-formidable/pull/525))
 
 ### v1.2.1 (2018-03-20)
 
