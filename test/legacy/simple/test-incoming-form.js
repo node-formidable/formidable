@@ -191,7 +191,7 @@ test(function parse() {
 
   (function testWithCallback() {
     gently.expect(EventEmitterStub, 'call');
-    var form = new IncomingForm(),
+    var form = new IncomingForm({ multiples: true }),
         REQ = {headers: {}},
         parseCalled = 0;
 
@@ -220,13 +220,11 @@ test(function parse() {
       return this;
     });
 
-    form.multiples = true
     var parseCbOk = function (err, fields, files) {
       assert.deepEqual(fields, {field1: ['foo', 'bar'], field2: 'nice'});
       assert.deepEqual(files, {file1: '2', file2: '3'});
     };
     form.parse(REQ, parseCbOk);
-    form.multiples = false
 
     var ERR = new Error('test');
     gently.expect(form, 'on', 3, function(event, fn) {
