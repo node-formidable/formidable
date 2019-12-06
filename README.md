@@ -34,40 +34,41 @@ This is a low-level package, and if you're using a high-level framework it may a
 Parse an incoming file upload.
 
 ```js
-var formidable = require('formidable'),
-    http = require('http'),
-    util = require('util');
+const http = require('http');
+const util = require('util');
+const Formidable = require('formidable');
 
-http.createServer(function(req, res) {
-  if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
+http.createServer((req, res) => {
+  if (req.url === '/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
-    var form = new formidable.IncomingForm();
+    const form = new Formidable();
 
-    form.parse(req, function(err, fields, files) {
-      res.writeHead(200, {'content-type': 'text/plain'});
+    form.parse(req, (err, fields, files) => {
+      res.writeHead(200, { 'content-type': 'text/plain' });
       res.write('received upload:\n\n');
-      res.end(util.inspect({fields: fields, files: files}));
+      res.end(util.inspect({ fields: fields, files: files }));
     });
 
     return;
   }
 
   // show a file upload form
-  res.writeHead(200, {'content-type': 'text/html'});
-  res.end(
-    '<form action="/upload" enctype="multipart/form-data" method="post">'+
-    '<input type="text" name="title"><br>'+
-    '<input type="file" name="upload" multiple="multiple"><br>'+
-    '<input type="submit" value="Upload">'+
-    '</form>'
-  );
+  res.writeHead(200, { 'content-type': 'text/html' });
+  res.end(`
+    <form action="/upload" enctype="multipart/form-data" method="post">
+      <input type="text" name="title" /><br/>
+      <input type="file" name="upload" multiple="multiple" /><br/>
+      <input type="submit" value="Upload" />
+    </form>
+  `);
 }).listen(8080);
 ```
+
 ## API
 
-### Formidable.IncomingForm
+### Formidable
 ```javascript
-var form = new formidable.IncomingForm()
+const form = new Formidable()
 ```
 Creates a new incoming form.
 
