@@ -23,5 +23,8 @@
   "repository": "node-formidable/node-formidable",
   "bugs": {
     "url": "http://github.com/node-formidable/node-formidable/issues"
+  },
+  "funding": {
+    "url": "https://ko-fi.com/tunnckoCore/commissions"
   }
 }
