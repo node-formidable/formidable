@@ -39,7 +39,7 @@ function testNext(fixtures) {
   fixture = fixture.fixture;
 
   uploadFixture(name, function(err, parts) {
-    if (err) throw err;
+    if (err) throw {err, name};
 
     fixture.forEach(function(expectedPart, i) {
       var parsedPart = parts[i];
