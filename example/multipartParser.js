@@ -22,6 +22,6 @@ multipartParser.on('error', (error) => {
 });
 
 multipartParser.initWithBoundary(boundary.substring(2)); // todo make better error message when it is forgotten
-const shouldWait = !multipartParser.write(buffer);
+// const shouldWait = !multipartParser.write(buffer);
 multipartParser.end();
 // multipartParser.destroy();

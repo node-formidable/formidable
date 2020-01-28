@@ -144,7 +144,6 @@ IncomingForm.prototype.parse = function(req, cb) {
       this._parser.end();
     });
 
-  
   return this;
 };
 

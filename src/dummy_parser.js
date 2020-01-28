@@ -6,7 +6,7 @@ class DummyParser extends Transform {
     super();
     this.incomingForm = incomingForm;
   }
-  
+
   _flush(callback) {
     this.incomingForm.ended = true;
     this.incomingForm._maybeEnd();

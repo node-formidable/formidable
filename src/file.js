@@ -14,7 +14,7 @@ function File(properties) {
   this.lastModifiedDate = null;
 
   this._writeStream = null;
-  
+
   for (var key in properties) {
     this[key] = properties[key];
   }

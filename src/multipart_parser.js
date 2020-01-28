@@ -67,8 +67,8 @@ class MultipartParser extends Transform {
     this.boundary = Buffer.from(`\r\n--${str}`);
     this.lookbehind = Buffer.alloc(this.boundary.length+8);
     this.state = S.START;
-  
     this.boundaryChars = {};
+
     for (var i = 0; i < this.boundary.length; i++) {
       this.boundaryChars[this.boundary[i]] = true;
     }
@@ -89,7 +89,7 @@ class MultipartParser extends Transform {
         bufferLength = buffer.length,
         c,
         cl,
-  
+
         mark = (name) => {
           this[`${name}Mark`] = i;
         },
@@ -107,7 +107,7 @@ class MultipartParser extends Transform {
           if (!(markSymbol in this)) {
             return;
           }
-  
+
           if (!clear) {
             callback(name, buffer, this[markSymbol], buffer.length);
             this[markSymbol] = 0;
@@ -116,7 +116,7 @@ class MultipartParser extends Transform {
             delete this[markSymbol];
           }
         };
-  
+
     for (i = 0; i < len; i++) {
       c = buffer[i];
       switch (state) {
@@ -148,7 +148,7 @@ class MultipartParser extends Transform {
             }
             break;
           }
-  
+
           if (c != boundary[index+2]) {
             index = -2;
           }
@@ -166,12 +166,12 @@ class MultipartParser extends Transform {
             state = S.HEADERS_ALMOST_DONE;
             break;
           }
-  
+
           index++;
           if (c == HYPHEN) {
             break;
           }
-  
+
           if (c == COLON) {
             if (index == 1) {
               // empty header field
@@ -181,7 +181,7 @@ class MultipartParser extends Transform {
             state = S.HEADER_VALUE_START;
             break;
           }
-  
+
           cl = lower(c);
           if (cl < A || cl > Z) {
             return i;
@@ -191,7 +191,7 @@ class MultipartParser extends Transform {
           if (c == SPACE) {
             break;
           }
-  
+
           mark('headerValue');
           state = S.HEADER_VALUE;
         case S.HEADER_VALUE:
@@ -211,7 +211,7 @@ class MultipartParser extends Transform {
           if (c != LF) {
             return i;
           }
-  
+
           callback('headersEnd');
           state = S.PART_DATA_START;
           break;
@@ -220,7 +220,7 @@ class MultipartParser extends Transform {
           mark('partData');
         case S.PART_DATA:
           prevIndex = index;
-  
+
           if (index === 0) {
             // boyer-moore derrived algorithm to safely skip non-boundary data
             i += boundaryEnd;
@@ -230,7 +230,7 @@ class MultipartParser extends Transform {
             i -= boundaryEnd;
             c = buffer[i];
           }
-  
+
           if (index < boundary.length) {
             if (boundary[index] == c) {
               if (index === 0) {
@@ -275,7 +275,7 @@ class MultipartParser extends Transform {
               index = 0;
             }
           }
-  
+
           if (index > 0) {
             // when matching a possible boundary, keep a lookbehind reference
             // in case it turns out to be a false lead
@@ -286,12 +286,12 @@ class MultipartParser extends Transform {
             callback('partData', lookbehind, 0, prevIndex);
             prevIndex = 0;
             mark('partData');
-  
+
             // reconsider the current character even so it interrupted the sequence
             // it could be the beginning of a new sequence
             i--;
           }
-  
+
           break;
         case S.END:
           break;
@@ -299,18 +299,18 @@ class MultipartParser extends Transform {
           return i;
       }
     }
-  
+
     dataCallback('headerField');
     dataCallback('headerValue');
     dataCallback('partData');
-  
+
     this.index = index;
     this.state = state;
     this.flags = flags;
-  
+
     return len;
   }
-  
+
   explain () {
     return `state = ${MultipartParser.stateToString(this.state)}`;
   }
