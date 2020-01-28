@@ -1,6 +1,6 @@
 var assert = require('assert');
 var common = require('../common');
-var formidable = require('../../lib/index');
+var formidable = require('../../src/index');
 var http = require('http');
 
 var server = http.createServer(function(req, res) {

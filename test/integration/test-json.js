@@ -4,8 +4,8 @@ var http = require('http');
 var assert = require('assert');
 
 var testData = {
-  numbers: [1, 2, 3, 4, 5],
-  nested: { key: 'value' }
+    numbers: [1, 2, 3, 4, 5],
+    nested: { key: 'value' }
 };
 
 var server = http.createServer(function(req, res) {

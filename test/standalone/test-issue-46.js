@@ -1,5 +1,5 @@
 var http       = require('http'),
-    formidable = require('../../lib/index'),
+    formidable = require('../../src/index'),
     request    = require('request'),
     assert     = require('assert');
 
@@ -24,7 +24,7 @@ var server = http.createServer(function(req, res) {
   // Parse form and write results to response.
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
-    res.writeHead(200, {'content-type': 'text/plain'}); 
+    res.writeHead(200, {'content-type': 'text/plain'});
     res.write(JSON.stringify({err: err, fields: fields, files: files}));
     res.end();
   });

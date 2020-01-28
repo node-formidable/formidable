@@ -3,7 +3,7 @@ var path = require('path');
 var root = path.join(__dirname, '../');
 exports.dir = {
   root    : root,
-  lib     : root + '/lib',
+  lib     : root + '/src',
   fixture : root + '/test/fixture',
   tmp     : root + '/test/tmp',
 };
