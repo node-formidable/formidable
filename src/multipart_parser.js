@@ -90,15 +90,16 @@ class MultipartParser extends Transform {
     const boundaryLength = boundary.length;
     const boundaryEnd = boundaryLength - 1;
     const bufferLength = buffer.length;
+    const selfParser = this;
     let c = null;
     let cl = null;
 
     function setMark(name, idx) {
-      this[`${name}Mark`] = idx || i;
+      selfParser[`${name}Mark`] = idx || i;
     }
 
     function clearMarkSymbol(name) {
-      delete this[`${name}Mark`];
+      delete selfParser[`${name}Mark`];
     }
 
     // eslint-disable-next-line max-params
@@ -106,20 +107,20 @@ class MultipartParser extends Transform {
       if (start !== undefined && start === end) {
         return;
       }
-      this.push({ name, buffer: buf, start, end });
+      selfParser.push({ name, buffer: buf, start, end });
     }
 
     function dataCallback(name, shouldClear) {
       const markSymbol = `${name}Mark`;
-      if (!(markSymbol in this)) {
+      if (!(markSymbol in selfParser)) {
         return;
       }
 
       if (!shouldClear) {
-        callback(name, buffer, this[markSymbol], buffer.length);
+        callback(name, buffer, selfParser[markSymbol], buffer.length);
         setMark(markSymbol, 0);
       } else {
-        callback(name, buffer, this[markSymbol], i);
+        callback(name, buffer, selfParser[markSymbol], i);
         clearMarkSymbol(markSymbol);
       }
     }
