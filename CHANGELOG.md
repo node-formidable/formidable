@@ -11,7 +11,9 @@
  * Improve examples and tests ([#523](https://github.com/node-formidable/node-formidable/pull/523))
  * First step of Code quality improvements ([#525](https://github.com/node-formidable/node-formidable/pull/525))
  * chore(funding): remove patreon & add npm funding field ([#525](https://github.com/node-formidable/node-formidable/pull/532)
- * Modern Streams API ([#531](https://github.com/node-formidable/node-formidable/pull/531))
+ * feat: use Modern Streams API ([#531](https://github.com/node-formidable/node-formidable/pull/531))
+ * fix: remove gently hijack and tests (([#539](https://github.com/node-formidable/node-formidable/pull/539)))
+ * docs: Clarify supported hash algorithms (([#537](https://github.com/node-formidable/node-formidable/pull/537)))
 
 ### v1.2.1 (2018-03-20)
 
