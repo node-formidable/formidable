@@ -11,19 +11,18 @@
     "utest": "^0.0.8",
     "request": "^2.11.4"
   },
-  "directories": {
-    "lib": "./lib"
-  },
-  "main": "./lib/index",
+  "main": "./src/index.js",
+  "files": [
+    "src"
+  ],
   "scripts": {
-    "test": "node test/run.js",
-    "clean": "rm test/tmp/*"
+    "pretest": "yarn run cleanup",
+    "test": "mkdir test/tmp && node test/run.js",
+    "cleanup": "rm test/tmp/*"
   },
   "repository": "node-formidable/node-formidable",
   "bugs": {
     "url": "http://github.com/node-formidable/node-formidable/issues"
   },
-  "funding": {
-    "url": "https://ko-fi.com/tunnckoCore/commissions"
-  }
+  "funding": "https://ko-fi.com/tunnckoCore/commissions"
 }
