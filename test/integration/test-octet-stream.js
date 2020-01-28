@@ -7,9 +7,14 @@ const assert = require('assert');
 const hashish = require('hashish');
 
 const Formidable = require('../../src/index');
-const common = require('../common');
 
-const testFilePath = path.join(__dirname, '../fixture/file/binaryfile.tar.gz');
+const PORT = 13532;
+const testFilePath = path.join(
+  path.dirname(__dirname),
+  'fixture',
+  'file',
+  'binaryfile.tar.gz',
+);
 
 const server = http.createServer((req, res) => {
   const form = new Formidable();
@@ -30,11 +35,11 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(common.port, (err) => {
+server.listen(PORT, (err) => {
   assert.equal(err, null);
 
   const request = http.request({
-    port: common.port,
+    port: PORT,
     method: 'POST',
     headers: {
       'Content-Type': 'application/octet-stream',

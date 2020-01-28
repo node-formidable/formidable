@@ -23,8 +23,6 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "findit": "^0.1.2",
-    "hashish": "^0.0.4",
     "prettier": "^1.19.1",
     "prettier-plugin-pkgjson": "^0.2.0",
     "request": "^2.11.4",

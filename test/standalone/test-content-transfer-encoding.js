@@ -1,13 +1,16 @@
 'use strict';
 
-const assert = require('assert');
+const path = require('path');
 const http = require('http');
-const common = require('../common');
+const assert = require('assert');
+
 const Formidable = require('../../src/index');
+
+const UPLOAD_DIR = path.join(process.cwd(), 'test', 'tmp');
 
 const server = http.createServer((req, res) => {
   const form = new Formidable();
-  form.uploadDir = common.dir.tmp;
+  form.uploadDir = UPLOAD_DIR;
   form.on('end', () => {
     throw new Error('Unexpected "end" event');
   });

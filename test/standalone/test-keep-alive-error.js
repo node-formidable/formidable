@@ -1,8 +1,8 @@
 'use strict';
 
-const assert = require('assert');
-const http = require('http');
 const net = require('net');
+const http = require('http');
+const assert = require('assert');
 const Formidable = require('../../src/index');
 
 let ok = 0;

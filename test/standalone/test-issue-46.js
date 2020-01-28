@@ -1,8 +1,8 @@
 'use strict';
 
 const http = require('http');
-const request = require('request');
 const assert = require('assert');
+const request = require('request');
 const Formidable = require('../../src/index');
 
 const host = 'localhost';

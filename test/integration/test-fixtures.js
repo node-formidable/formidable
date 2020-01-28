@@ -4,44 +4,53 @@
 'use strict';
 
 const fs = require('fs');
+const net = require('net');
 const path = require('path');
 const http = require('http');
-const net = require('net');
 const assert = require('assert');
-const findit = require('findit');
-const hashish = require('hashish');
 
-const common = require('../common');
 const Formidable = require('../../src/index');
 
+const PORT = 13532;
+const CWD = process.cwd();
+const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
+const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
+const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
+
 const server = http.createServer();
-server.listen(common.port, findFixtures);
+server.listen(PORT, findFixtures);
 
 function findFixtures() {
-  const fixtures = [];
-  findit.sync(path.join(common.dir.fixture, 'js')).forEach((jsPath) => {
-    if (!/\.js$/.test(jsPath) || /workarounds/.test(jsPath)) return;
+  const results = fs
+    .readdirSync(FIXTURES_PATH)
+    .filter((x) => /\.js$/.test(x) && !/workarounds/.test(x))
+    .reduce((acc, fp) => {
+      const group = path.basename(fp, '.js');
+      const filepath = path.join(FIXTURES_PATH, fp);
+      const mod = require(filepath);
 
-    const group = path.basename(jsPath, '.js');
-    hashish.forEach(require(jsPath), (fixture, name) => {
-      fixtures.push({
-        name: `${group}/${name}`,
-        fixture,
+      Object.keys(mod).forEach((k) => {
+        Object.keys(mod[k]).forEach((_fixture) => {
+          acc.push({
+            fixture: mod[k],
+            name: path.join(group, k),
+          });
+        });
       });
-    });
-  });
 
-  testNext(fixtures);
+      return acc;
+    }, []);
+
+  testNext(results);
 }
 
-function testNext(fixtures) {
-  let fixture = fixtures.shift();
+function testNext(results) {
+  let fixture = results.shift();
   if (!fixture) {
     server.close();
     return;
   }
   const fixtureName = fixture.name;
-
   fixture = fixture.fixture;
 
   uploadFixture(fixtureName, (err, parts) => {
@@ -62,15 +71,13 @@ function testNext(fixtures) {
       }
     });
 
-    testNext(fixtures);
+    testNext(results);
   });
 }
 
 function uploadFixture(fixtureName, cb) {
   server.once('request', (req, res) => {
-    const form = new Formidable();
-    form.uploadDir = common.dir.tmp;
-    form.hash = 'sha1';
+    const form = new Formidable({ uploadDir: UPLOAD_DIR, hash: 'sha1' });
     form.parse(req);
 
     function callback(...args) {
@@ -96,8 +103,8 @@ function uploadFixture(fixtureName, cb) {
       });
   });
 
-  const socket = net.createConnection(common.port);
-  const fixturePath = path.join(common.dir.fixture, 'http', fixtureName);
+  const socket = net.createConnection(PORT);
+  const fixturePath = path.join(FIXTURES_HTTP, fixtureName);
   const file = fs.createReadStream(fixturePath);
 
   file.pipe(socket, { end: false });

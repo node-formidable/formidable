@@ -5,12 +5,12 @@
 const path = require('path');
 const assert = require('assert');
 const Request = require('http').ClientRequest;
-const test = require('utest');
-const common = require('../common');
 
-const { IncomingForm } = common.require('incoming_form');
+const test = require('utest');
+const { IncomingForm } = require('../../src/incoming_form');
 
 let form;
+
 test('IncomingForm', {
   before() {
     form = new IncomingForm();

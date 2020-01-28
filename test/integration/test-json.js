@@ -2,7 +2,6 @@
 
 const http = require('http');
 const assert = require('assert');
-const common = require('../common');
 const Formidable = require('../../src/index');
 
 const testData = {
@@ -10,6 +9,7 @@ const testData = {
   nested: { key: 'value' },
 };
 
+const PORT = 13532;
 const server = http.createServer((req, res) => {
   const form = new Formidable();
 
@@ -21,11 +21,11 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(common.port, (err) => {
+server.listen(PORT, (err) => {
   assert.equal(err, null);
 
   const request = http.request({
-    port: common.port,
+    port: PORT,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

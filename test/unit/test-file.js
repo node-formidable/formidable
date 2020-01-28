@@ -1,13 +1,13 @@
 'use strict';
 
+const assert = require('assert');
 const test = require('utest');
-const common = require('../common');
 
-const { assert } = common;
-const File = common.require('file');
+const { File } = require('../../src/file');
 
 let file;
 const now = new Date();
+
 test('IncomingForm', {
   before() {
     file = new File({
