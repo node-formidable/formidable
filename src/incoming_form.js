@@ -95,28 +95,37 @@ class IncomingForm extends EventEmitter {
         } else {
           fields[name] = value;
         }
-      })
-        .on('file', (name, file) => {
-          // TODO: too much nesting
-          if (this.multiples) {
-            if (hasOwnProp(files, name)) {
-              if (!Array.isArray(files[name])) {
-                files[name] = [files[name]];
-              }
-              files[name].push(file);
-            } else {
-              files[name] = file;
+        // if (name === 'simple') {
+        //   console.log('fields name!!', name);
+        //   console.log('fields value!!', value);
+        // }
+      });
+      this.on('file', (name, file) => {
+        // TODO: too much nesting
+        if (this.multiples) {
+          if (hasOwnProp(files, name)) {
+            if (!Array.isArray(files[name])) {
+              files[name] = [files[name]];
             }
+            files[name].push(file);
           } else {
             files[name] = file;
           }
-        })
-        .on('error', (err) => {
-          cb(err, fields, files);
-        })
-        .on('end', () => {
-          cb(null, fields, files);
-        });
+        } else {
+          files[name] = file;
+        }
+        // console.log('files!!', files);
+        // if (name === 'simple') {
+        //   console.log('files name!!', name);
+        //   console.log('files value!!', file);
+        // }
+      });
+      this.on('error', (err) => {
+        cb(err, fields, files);
+      });
+      this.on('end', () => {
+        cb(null, fields, files);
+      });
     }
 
     // Parse headers and setup the parser, ready to start listening for data.
@@ -191,8 +200,18 @@ class IncomingForm extends EventEmitter {
   }
 
   handlePart(part) {
+    if (part.filename && typeof part.filename !== 'string') {
+      this._error(new Error(`the part.filename should be string when exists`));
+      return;
+    }
+
     // This MUST check exactly for undefined. You can not change it to !part.filename.
-    if (part.filename === undefined) {
+
+    // @tunnckocore: no it can be any falsey value, it most probably depends on what's returned
+    // from somewhere else. Where recently I changed the return statements
+    // and such thing because code style
+    // @tunnckocore: or even better, if there is no mime, then it's for sure a field
+    if (!part.mime) {
       let value = '';
       const decoder = new StringDecoder(this.encoding);
 

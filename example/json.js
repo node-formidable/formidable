@@ -1,19 +1,19 @@
+'use strict';
+
 const http = require('http');
 const util = require('util');
-const common = require('../test/common');
+const Formidable = require('../src/index');
 
-const { formidable } = common;
-const { port } = common;
-let server;
-
-server = http.createServer((req, res) => {
+// random OS choosen port
+const PORT = 13532;
+const server = http.createServer((req, res) => {
   if (req.method !== 'POST') {
     res.writeHead(200, { 'content-type': 'text/plain' });
-    res.end(`Please POST a JSON payload to http://localhost:${port}/`);
+    res.end(`Please POST a JSON payload to http://localhost:${PORT}/`);
     return;
   }
 
-  const form = new formidable.IncomingForm();
+  const form = new Formidable();
   const fields = {};
 
   form
@@ -33,41 +33,43 @@ server = http.createServer((req, res) => {
     });
   form.parse(req);
 });
-server.listen(port);
 
-console.log(`listening on http://localhost:${port}/`);
+server.listen(PORT, () => {
+  const choosenPort = server.address().port;
+  console.log(`Listening on http://localhost:${choosenPort}/`);
 
-const message = '{"numbers":[1,2,3,4,5],"nested":{"key":"value"}}';
-const request = http.request(
-  {
-    host: 'localhost',
-    path: '/',
-    port,
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'content-length': message.length,
+  const message = '{"numbers":[1,2,3,4,5],"nested":{"key":"value"}}';
+  const request = http.request(
+    {
+      host: 'localhost',
+      path: '/',
+      port: choosenPort,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'content-length': message.length,
+      },
     },
-  },
-  (response) => {
-    const data = '';
-    console.log('\nServer responded with:');
-    console.log('Status:', response.statusCode);
-    response.pipe(process.stdout);
-    response.on('end', () => {
-      console.log('\n');
-      process.exit();
-    });
-    // response.on('data', function(chunk) {
-    //   data += chunk.toString('utf8');
-    // });
-    // response.on('end', function() {
-    //   console.log('Response Data:');
-    //   console.log(data);
-    //   process.exit();
-    // });
-  },
-);
+    (response) => {
+      console.log('\nServer responded with:');
+      console.log('Status:', response.statusCode);
+      response.pipe(process.stdout);
+      response.on('end', () => {
+        console.log('\n');
+        process.exit();
+      });
+      // const data = '';
+      // response.on('data', function(chunk) {
+      //   data += chunk.toString('utf8');
+      // });
+      // response.on('end', function() {
+      //   console.log('Response Data:');
+      //   console.log(data);
+      //   process.exit();
+      // });
+    },
+  );
 
-request.write(message);
-request.end();
+  request.write(message);
+  request.end();
+});

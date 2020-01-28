@@ -12,7 +12,7 @@ test-legacy
 *.cache
 
 # TODO: lint
-example
+# example
 benchmark
 
 # Build environment
