@@ -18,7 +18,7 @@ server = http.createServer(function(req, res) {
   form
     .on('error', function(err) {
       res.writeHead(500, {'content-type': 'text/plain'});
-      res.end('error:\n\n'+util.inspect(err));
+      res.end('error:\n\n' + util.inspect(err));
       console.error(err);
     })
     .on('field', function(field, value) {

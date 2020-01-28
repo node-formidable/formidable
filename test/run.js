@@ -1,1 +1,4 @@
-require('urun')(__dirname);
+require('urun')(__dirname, {
+  verbose: true,
+  reporter: 'BashTapReporter'
+});

@@ -4,6 +4,7 @@ var util = require('util'),
     path = require('path'),
     File = require('./file'),
     defaultOptions = require('./default_options').defaultOptions,
+    DummyParser = require('./dummy_parser').DummyParser,
     MultipartParser = require('./multipart_parser').MultipartParser,
     QuerystringParser = require('./querystring_parser').QuerystringParser,
     OctetParser       = require('./octet_parser').OctetParser,
@@ -140,10 +141,7 @@ IncomingForm.prototype.parse = function(req, cb) {
         return;
       }
 
-      var err = this._parser.end();
-      if (err) {
-        this._error(err);
-      }
+      this._parser.end();
     });
 
   return this;
@@ -153,6 +151,9 @@ IncomingForm.prototype.writeHeaders = function(headers) {
   this.headers = headers;
   this._parseContentLength();
   this._parseContentType();
+  this._parser.once('error', (error) => {
+    this._error(error);
+  });
 };
 
 IncomingForm.prototype.write = function(buffer) {
@@ -167,12 +168,9 @@ IncomingForm.prototype.write = function(buffer) {
   this.bytesReceived += buffer.length;
   this.emit('progress', this.bytesReceived, this.bytesExpected);
 
-  var bytesParsed = this._parser.write(buffer);
-  if (bytesParsed !== buffer.length) {
-    this._error(new Error(`parser error,${bytesParsed} of ${buffer.length} bytes parsed`));
-  }
+  this._parser.write(buffer);
 
-  return bytesParsed;
+  return this.bytesReceived;
 };
 
 IncomingForm.prototype.pause = function() {
@@ -249,19 +247,10 @@ IncomingForm.prototype.handlePart = function(part) {
   });
 };
 
-function dummyParser(incomingForm) {
-  return {
-    end: function () {
-      incomingForm.ended = true;
-      incomingForm._maybeEnd();
-      return null;
-    }
-  };
-}
 
 IncomingForm.prototype._parseContentType = function() {
   if (this.bytesExpected === 0) {
-    this._parser = dummyParser(this);
+    this._parser = new DummyParser(this);
     return;
   }
 
@@ -341,98 +330,103 @@ IncomingForm.prototype._initMultipart = function(boundary) {
 
   parser.initWithBoundary(boundary);
 
-  parser.onPartBegin = function() {
-    part = new Stream();
-    part.readable = true;
-    part.headers = {};
-    part.name = null;
-    part.filename = null;
-    part.mime = null;
+  parser.on('data', ({name, buffer, start, end}) => {
+    if (name === 'partBegin') {
+        part = new Stream();
+        part.readable = true;
+        part.headers = {};
+        part.name = null;
+        part.filename = null;
+        part.mime = null;
 
-    part.transferEncoding = 'binary';
-    part.transferBuffer = '';
+        part.transferEncoding = 'binary';
+        part.transferBuffer = '';
 
-    headerField = '';
-    headerValue = '';
-  };
+        headerField = '';
+        headerValue = '';
+    } else if (name === 'headerField') {
+        headerField += buffer.toString(this.encoding, start, end);
+    } else if (name === 'headerValue') {
+        headerValue += buffer.toString(this.encoding, start, end);
+    } else if (name === 'headerEnd') {
+        headerField = headerField.toLowerCase();
+        part.headers[headerField] = headerValue;
 
-  parser.onHeaderField = (b, start, end) => {
-    headerField += b.toString(this.encoding, start, end);
-  };
+        // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
+        var m = headerValue.match(/\bname=("([^"]*)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))/i);
+        if (headerField == 'content-disposition') {
+            if (m) {
+                part.name = m[2] || m[3] || '';
+            }
 
-  parser.onHeaderValue = (b, start, end) => {
-    headerValue += b.toString(this.encoding, start, end);
-  };
+            part.filename = this._fileName(headerValue);
+        } else if (headerField == 'content-type') {
+            part.mime = headerValue;
+        } else if (headerField == 'content-transfer-encoding') {
+            part.transferEncoding = headerValue.toLowerCase();
+        }
 
-  parser.onHeaderEnd = () => {
-    headerField = headerField.toLowerCase();
-    part.headers[headerField] = headerValue;
+        headerField = '';
+        headerValue = '';
+    } else if (name === 'headersEnd') {
 
-    // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
-    var m = headerValue.match(/\bname=("([^"]*)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))/i);
-    if (headerField == 'content-disposition') {
-      if (m) {
-        part.name = m[2] || m[3] || '';
-      }
+        switch(part.transferEncoding){
+            case 'binary':
+            case '7bit':
+            case '8bit': {
+                const dataPropagation = ({name, buffer, start, end}) => {
+                    if (name === 'partData') {
+                        part.emit('data', buffer.slice(start, end));
+                    }
+                };
+                const dataStopPropagation = ({name}) => {
+                    if (name === 'partEnd') {
+                        part.emit('end');
+                        parser.off('data', dataPropagation);
+                        parser.off('data', dataStopPropagation);
+                    }
+                };
+                parser.on('data', dataPropagation);
+                parser.on('data', dataStopPropagation);
+                break;
+            } case 'base64': {
+            const dataPropagation = ({name, buffer, start, end}) => {
+                if (name === 'partData') {
+                    part.transferBuffer += buffer.slice(start, end).toString('ascii');
 
-      part.filename = this._fileName(headerValue);
-    } else if (headerField == 'content-type') {
-      part.mime = headerValue;
-    } else if (headerField == 'content-transfer-encoding') {
-      part.transferEncoding = headerValue.toLowerCase();
+                    /*
+                    four bytes (chars) in base64 converts to three bytes in binary
+                    encoding. So we should always work with a number of bytes that
+                    can be divided by 4, it will result in a number of buytes that
+                    can be divided vy 3.
+                    */
+                    var offset = parseInt(part.transferBuffer.length / 4, 10) * 4;
+                    part.emit('data', Buffer.from(part.transferBuffer.substring(0, offset), 'base64'));
+                    part.transferBuffer = part.transferBuffer.substring(offset);
+                }
+            };
+            const dataStopPropagation = ({name}) => {
+                if (name === 'partEnd') {
+                    part.emit('data', Buffer.from(part.transferBuffer, 'base64'));
+                    part.emit('end');
+                    parser.off('data', dataPropagation);
+                    parser.off('data', dataStopPropagation);
+                }
+            };
+            parser.on('data', dataPropagation);
+            parser.on('data', dataStopPropagation);
+            break;
+
+        } default:
+                return this._error(new Error('unknown transfer-encoding'));
+        }
+
+        this.onPart(part);
+    } else if (name === 'end') {
+        this.ended = true;
+        this._maybeEnd();
     }
-
-    headerField = '';
-    headerValue = '';
-  };
-
-  parser.onHeadersEnd = () => {
-    switch(part.transferEncoding){
-      case 'binary':
-      case '7bit':
-      case '8bit':
-      parser.onPartData = function(b, start, end) {
-        part.emit('data', b.slice(start, end));
-      };
-
-      parser.onPartEnd = function() {
-        part.emit('end');
-      };
-      break;
-
-      case 'base64':
-      parser.onPartData = function(b, start, end) {
-        part.transferBuffer += b.slice(start, end).toString('ascii');
-
-        /*
-        four bytes (chars) in base64 converts to three bytes in binary
-        encoding. So we should always work with a number of bytes that
-        can be divided by 4, it will result in a number of buytes that
-        can be divided vy 3.
-        */
-        var offset = parseInt(part.transferBuffer.length / 4, 10) * 4;
-        part.emit('data', Buffer.from(part.transferBuffer.substring(0, offset), 'base64'));
-        part.transferBuffer = part.transferBuffer.substring(offset);
-      };
-
-      parser.onPartEnd = function() {
-        part.emit('data', Buffer.from(part.transferBuffer, 'base64'));
-        part.emit('end');
-      };
-      break;
-
-      default:
-      return this._error(new Error('unknown transfer-encoding'));
-    }
-
-    this.onPart(part);
-  };
-
-
-  parser.onEnd = () => {
-    this.ended = true;
-    this._maybeEnd();
-  };
+  });
 
   this._parser = parser;
 };
@@ -456,9 +450,9 @@ IncomingForm.prototype._initUrlencoded = function() {
 
   var parser = new QuerystringParser(this.maxFields);
 
-  parser.onField = (key, val) => {
-    this.emit('field', key, val);
-  };
+  parser.on('data', ({key, value}) => {
+    this.emit('field', key, value);
+  });
 
   parser.onEnd = () => {
     this.ended = true;
@@ -525,16 +519,19 @@ IncomingForm.prototype._initOctetStream = function() {
 IncomingForm.prototype._initJSONencoded = function() {
   this.type = 'json';
 
-  var parser = new JSONParser(this);
+  var parser = new JSONParser();
 
-  parser.onField = (key, val) => {
-    this.emit('field', key, val);
-  };
+  parser.on('data', ({ key, value }) => {
+    this.emit('field', key, value);
+  });
+  // parser.on('data', (key) => {
+  //   this.emit('field', key);
+  // });
 
-  parser.onEnd = () => {
+  parser.once('end', () => {
     this.ended = true;
     this._maybeEnd();
-  };
+  });
 
   this._parser = parser;
 };

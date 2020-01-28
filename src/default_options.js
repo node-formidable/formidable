@@ -7,5 +7,5 @@ const defaultOptions = {
     hash: false,
     multiples: false,
 };
-  
+
 exports.defaultOptions = defaultOptions;

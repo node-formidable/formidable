@@ -1,20 +1,5 @@
-var EventEmitter = require('events').EventEmitter
-	, util = require('util');
+const { PassThrough } = require('stream');
 
-function OctetParser(options){
-	if(!(this instanceof OctetParser)) return new OctetParser(options);
-	EventEmitter.call(this);
-}
-
-util.inherits(OctetParser, EventEmitter);
+class OctetParser extends PassThrough {}
 
 exports.OctetParser = OctetParser;
-
-OctetParser.prototype.write = function(buffer) {
-    this.emit('data', buffer);
-	return buffer.length;
-};
-
-OctetParser.prototype.end = function() {
-	this.emit('end');
-};

@@ -17,7 +17,7 @@ function findFixtures() {
   findit
     .sync(common.dir.fixture + '/js')
     .forEach(function(jsPath) {
-      if (!/\.js$/.test(jsPath)) return;
+      if (!/\.js$/.test(jsPath) || /workarounds/.test(jsPath)) return;
 
       var group = path.basename(jsPath, '.js');
       hashish.forEach(require(jsPath), function(fixture, name) {
@@ -39,7 +39,7 @@ function testNext(fixtures) {
   fixture = fixture.fixture;
 
   uploadFixture(name, function(err, parts) {
-    if (err) throw err;
+    if (err) throw {err, name};
 
     fixture.forEach(function(expectedPart, i) {
       var parsedPart = parts[i];

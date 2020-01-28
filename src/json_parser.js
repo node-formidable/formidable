@@ -1,26 +1,33 @@
-function JSONParser(parent) {
-  this.parent = parent;
-  this.chunks = [];
-  this.bytesWritten = 0;
-}
-exports.JSONParser = JSONParser;
+const { Transform } = require('stream');
 
-JSONParser.prototype.write = function(buffer) {
-  this.bytesWritten += buffer.length;
-  this.chunks.push(buffer);
-  return buffer.length;
-};
 
-JSONParser.prototype.end = function() {
-  try {
-    var fields = JSON.parse(Buffer.concat(this.chunks));
-    for (var field in fields) {
-      this.onField(field, fields[field]);
-    }
-  } catch (e) {
-    this.parent.emit('error', e);
+class JSONParser extends Transform {
+  constructor() {
+    super({ readableObjectMode: true });
+    this.chunks = [];
   }
-  this.data = null;
 
-  this.onEnd();
-};
+  _transform(chunk, encoding, callback) {
+    this.chunks.push(String(chunk));// todo consider using a string decoder
+    callback();
+  }
+
+  _flush(callback) {
+    try {
+      var fields = JSON.parse(this.chunks.join(''));
+      for (var key in fields) {
+        this.push({
+          key,
+          value: fields[key],
+        });
+      }
+    } catch (e) {
+        callback(e);
+        return;
+    }
+    this.chunks = null;
+    callback();
+  }
+}
+
+exports.JSONParser = JSONParser;
