@@ -1,5 +1,8 @@
-const { Transform } = require('stream');
+/* eslint-disable no-underscore-dangle */
 
+'use strict';
+
+const { Transform } = require('stream');
 
 class DummyParser extends Transform {
   constructor(incomingForm) {
@@ -13,6 +16,5 @@ class DummyParser extends Transform {
     callback();
   }
 }
-
 
 exports.DummyParser = DummyParser;

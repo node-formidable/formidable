@@ -1,23 +1,34 @@
-var assert = require('assert');
-var common = require('../common');
-var formidable = require('../../src/index');
-var http = require('http');
+'use strict';
 
-var server = http.createServer(function(req, res) {
-  var form = new formidable.IncomingForm();
-  form.uploadDir = common.dir.tmp;
-  form.on('end', function () {
+const path = require('path');
+const http = require('http');
+const assert = require('assert');
+
+const Formidable = require('../../src/index');
+
+const UPLOAD_DIR = path.join(process.cwd(), 'test', 'tmp');
+
+// OS choosing port
+const PORT = 13532;
+const server = http.createServer((req, res) => {
+  const form = new Formidable();
+  form.uploadDir = UPLOAD_DIR;
+  form.on('end', () => {
     throw new Error('Unexpected "end" event');
   });
-  form.on('error', function (e) {
+  form.on('error', (e) => {
     res.writeHead(500);
     res.end(e.message);
   });
   form.parse(req);
 });
 
-server.listen(0, function() {
-  var body =
+server.listen(PORT, () => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
+  const body =
     '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
     'Content-Type: application/octet-stream\r\n' +
@@ -29,18 +40,19 @@ server.listen(0, function() {
     '\r\nThis is the second file\r\n' +
     '--foo--\r\n';
 
-  var req = http.request({
+  const req = http.request({
     method: 'POST',
-    port: server.address().port,
+    port: choosenPort,
     headers: {
       'Content-Length': body.length,
-      'Content-Type': 'multipart/form-data; boundary=foo'
-    }
+      'Content-Type': 'multipart/form-data; boundary=foo',
+    },
   });
-  req.on('response', function (res) {
-    assert.equal(res.statusCode, 500);
-    res.on('data', function () {});
-    res.on('end', function () {
+
+  req.on('response', (res) => {
+    assert.strictEqual(res.statusCode, 500);
+    res.on('data', () => {});
+    res.on('end', () => {
       server.close();
     });
   });

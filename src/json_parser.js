@@ -1,5 +1,8 @@
-const { Transform } = require('stream');
+/* eslint-disable no-underscore-dangle */
 
+'use strict';
+
+const { Transform } = require('stream');
 
 class JSONParser extends Transform {
   constructor() {
@@ -8,22 +11,20 @@ class JSONParser extends Transform {
   }
 
   _transform(chunk, encoding, callback) {
-    this.chunks.push(String(chunk));// todo consider using a string decoder
+    this.chunks.push(String(chunk)); // todo consider using a string decoder
     callback();
   }
 
   _flush(callback) {
     try {
-      var fields = JSON.parse(this.chunks.join(''));
-      for (var key in fields) {
-        this.push({
-          key,
-          value: fields[key],
-        });
-      }
+      const fields = JSON.parse(this.chunks.join(''));
+      Object.keys(fields).forEach((key) => {
+        const value = fields[key];
+        this.push({ key, value });
+      });
     } catch (e) {
-        callback(e);
-        return;
+      callback(e);
+      return;
     }
     this.chunks = null;
     callback();

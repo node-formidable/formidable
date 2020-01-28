@@ -1,45 +1,53 @@
-var common = require('../common');
-var formidable = common.formidable;
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
-var hashish = require('hashish');
-var assert = require('assert');
+'use strict';
 
-var testFilePath = path.join(__dirname, '../fixture/file/binaryfile.tar.gz');
+const fs = require('fs');
+const http = require('http');
+const path = require('path');
+const assert = require('assert');
 
-var server = http.createServer(function(req, res) {
-    var form = new formidable.IncomingForm();
+const Formidable = require('../../src/index');
 
-    form.parse(req, function(err, fields, files) {
-        assert.equal(hashish(files).length, 1);
-        var file = files.file;
+const PORT = 13532;
+const testFilePath = path.join(
+  path.dirname(__dirname),
+  'fixture',
+  'file',
+  'binaryfile.tar.gz',
+);
 
-        assert.equal(file.size, 301);
+const server = http.createServer((req, res) => {
+  const form = new Formidable();
 
-        var uploaded = fs.readFileSync(file.path);
-        var original = fs.readFileSync(testFilePath);
+  form.parse(req, (err, fields, files) => {
+    assert.strictEqual(Object.keys(files).length, 1);
+    const { file } = files;
 
-        assert.deepEqual(uploaded, original);
+    assert.strictEqual(file.size, 301);
 
-        res.end();
-        server.close();
-    });
+    const uploaded = fs.readFileSync(file.path);
+    const original = fs.readFileSync(testFilePath);
+
+    assert.deepEqual(uploaded, original);
+
+    res.end();
+    server.close();
+  });
 });
 
-var port = common.port;
+server.listen(PORT, (err) => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
 
-server.listen(port, function(err){
-    assert.equal(err, null);
+  assert(!err, 'should not have error, but be falsey');
 
-    var request = http.request({
-        port: port,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/octet-stream'
-        }
-    });
+  const request = http.request({
+    port: PORT,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/octet-stream',
+    },
+  });
 
-    fs.createReadStream(testFilePath).pipe(request);
+  fs.createReadStream(testFilePath).pipe(request);
 });
-

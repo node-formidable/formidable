@@ -1,44 +1,44 @@
+/* eslint-disable no-fallthrough */
+/* eslint-disable no-bitwise */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-underscore-dangle */
 const { Transform } = require('stream');
 
+let s = 0;
+const STATE = {
+  PARSER_UNINITIALIZED: s++,
+  START: s++,
+  START_BOUNDARY: s++,
+  HEADER_FIELD_START: s++,
+  HEADER_FIELD: s++,
+  HEADER_VALUE_START: s++,
+  HEADER_VALUE: s++,
+  HEADER_VALUE_ALMOST_DONE: s++,
+  HEADERS_ALMOST_DONE: s++,
+  PART_DATA_START: s++,
+  PART_DATA: s++,
+  PART_END: s++,
+  END: s++,
+};
 
-var s = 0,
-    S =
-    { PARSER_UNINITIALIZED: s++,
-      START: s++,
-      START_BOUNDARY: s++,
-      HEADER_FIELD_START: s++,
-      HEADER_FIELD: s++,
-      HEADER_VALUE_START: s++,
-      HEADER_VALUE: s++,
-      HEADER_VALUE_ALMOST_DONE: s++,
-      HEADERS_ALMOST_DONE: s++,
-      PART_DATA_START: s++,
-      PART_DATA: s++,
-      PART_END: s++,
-      END: s++
-    },
+let f = 1;
+const FBOUNDARY = { PART_BOUNDARY: f, LAST_BOUNDARY: (f *= 2) };
 
-    f = 1,
-    F =
-    { PART_BOUNDARY: f,
-      LAST_BOUNDARY: f *= 2
-    },
+const LF = 10;
+const CR = 13;
+const SPACE = 32;
+const HYPHEN = 45;
+const COLON = 58;
+const A = 97;
+const Z = 122;
 
-    LF = 10,
-    CR = 13,
-    SPACE = 32,
-    HYPHEN = 45,
-    COLON = 58,
-    A = 97,
-    Z = 122,
-
-    lower = function(c) {
-      return c | 0x20;
-    };
-
-for (s in S) {
-  exports[s] = S[s];
+function lower(c) {
+  return c | 0x20;
 }
+
+Object.keys(STATE).forEach((stateName) => {
+  exports[stateName] = STATE[stateName];
+});
 
 class MultipartParser extends Transform {
   constructor() {
@@ -46,139 +46,146 @@ class MultipartParser extends Transform {
     this.boundary = null;
     this.boundaryChars = null;
     this.lookbehind = null;
-    this.state = S.PARSER_UNINITIALIZED;
+    this.state = STATE.PARSER_UNINITIALIZED;
 
     this.index = null;
     this.flags = 0;
   }
 
   _final(callback) {
-      if ((this.state == S.HEADER_FIELD_START && this.index === 0) ||
-          (this.state == S.PART_DATA && this.index == this.boundary.length)) {
-          this.callback('partEnd');
-          this.callback('end');
-          callback();
-      } else if (this.state != S.END) {
-          callback(new Error(`MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`));
-      }
+    if (
+      (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
+      (this.state === STATE.PART_DATA && this.index === this.boundary.length)
+    ) {
+      this.callback('partEnd');
+      this.callback('end');
+      callback();
+    } else if (this.state !== STATE.END) {
+      callback(
+        new Error(
+          `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
+        ),
+      );
+    }
   }
 
-  initWithBoundary (str) {
+  initWithBoundary(str) {
     this.boundary = Buffer.from(`\r\n--${str}`);
-    this.lookbehind = Buffer.alloc(this.boundary.length+8);
-    this.state = S.START;
+    this.lookbehind = Buffer.alloc(this.boundary.length + 8);
+    this.state = STATE.START;
     this.boundaryChars = {};
 
-    for (var i = 0; i < this.boundary.length; i++) {
+    for (let i = 0; i < this.boundary.length; i++) {
       this.boundaryChars[this.boundary[i]] = true;
     }
   }
 
-  _transform(buffer, encoding, callback) {
-    var i = 0,
-        len = buffer.length,
-        prevIndex = this.index,
-        index = this.index,
-        state = this.state,
-        flags = this.flags,
-        lookbehind = this.lookbehind,
-        boundary = this.boundary,
-        boundaryChars = this.boundaryChars,
-        boundaryLength = this.boundary.length,
-        boundaryEnd = boundaryLength - 1,
-        bufferLength = buffer.length,
-        c,
-        cl,
+  // eslint-disable-next-line max-statements
+  _transform(buffer, _, done) {
+    let i = 0;
+    let prevIndex = this.index;
+    let { index, state, flags } = this;
+    const { lookbehind, boundary, boundaryChars } = this;
+    const boundaryLength = boundary.length;
+    const boundaryEnd = boundaryLength - 1;
+    const bufferLength = buffer.length;
+    const selfParser = this;
+    let c = null;
+    let cl = null;
 
-        mark = (name) => {
-          this[`${name}Mark`] = i;
-        },
-        clear = (name) => {
-          delete this[`${name}Mark`];
-        },
-        callback = (name, buffer, start, end) => {
-          if (start !== undefined && start === end) {
-            return;
-          }
-          this.push({name, buffer, start, end});
-        },
-        dataCallback = (name, clear) => {
-          var markSymbol = `${name}Mark`;
-          if (!(markSymbol in this)) {
-            return;
-          }
+    function setMark(name, idx) {
+      selfParser[`${name}Mark`] = idx || i;
+    }
 
-          if (!clear) {
-            callback(name, buffer, this[markSymbol], buffer.length);
-            this[markSymbol] = 0;
-          } else {
-            callback(name, buffer, this[markSymbol], i);
-            delete this[markSymbol];
-          }
-        };
+    function clearMarkSymbol(name) {
+      delete selfParser[`${name}Mark`];
+    }
 
-    for (i = 0; i < len; i++) {
+    // eslint-disable-next-line max-params
+    function callback(name, buf, start, end) {
+      if (start !== undefined && start === end) {
+        return;
+      }
+      selfParser.push({ name, buffer: buf, start, end });
+    }
+
+    function dataCallback(name, shouldClear) {
+      const markSymbol = `${name}Mark`;
+      if (!(markSymbol in selfParser)) {
+        return;
+      }
+
+      if (!shouldClear) {
+        callback(name, buffer, selfParser[markSymbol], buffer.length);
+        setMark(markSymbol, 0);
+      } else {
+        callback(name, buffer, selfParser[markSymbol], i);
+        clearMarkSymbol(markSymbol);
+      }
+    }
+
+    for (i = 0; i < bufferLength; i++) {
       c = buffer[i];
       switch (state) {
-        case S.PARSER_UNINITIALIZED:
+        case STATE.PARSER_UNINITIALIZED:
           return i;
-        case S.START:
+        case STATE.START:
           index = 0;
-          state = S.START_BOUNDARY;
-        case S.START_BOUNDARY:
-          if (index == boundary.length - 2) {
-            if (c == HYPHEN) {
-              flags |= F.LAST_BOUNDARY;
-            } else if (c != CR) {
+          state = STATE.START_BOUNDARY;
+        case STATE.START_BOUNDARY:
+          if (index === boundary.length - 2) {
+            if (c === HYPHEN) {
+              flags |= FBOUNDARY.LAST_BOUNDARY;
+            } else if (c !== CR) {
               return i;
             }
             index++;
             break;
-          } else if (index - 1 == boundary.length - 2) {
-            if (flags & F.LAST_BOUNDARY && c == HYPHEN){
+          } else if (index - 1 === boundary.length - 2) {
+            if (flags & FBOUNDARY.LAST_BOUNDARY && c === HYPHEN) {
               callback('end');
-              state = S.END;
+              state = STATE.END;
               flags = 0;
-            } else if (!(flags & F.LAST_BOUNDARY) && c == LF) {
+            } else if (!(flags & FBOUNDARY.LAST_BOUNDARY) && c === LF) {
               index = 0;
               callback('partBegin');
-              state = S.HEADER_FIELD_START;
+              state = STATE.HEADER_FIELD_START;
             } else {
               return i;
             }
             break;
           }
 
-          if (c != boundary[index+2]) {
+          if (c !== boundary[index + 2]) {
             index = -2;
           }
-          if (c == boundary[index+2]) {
+          if (c === boundary[index + 2]) {
             index++;
           }
           break;
-        case S.HEADER_FIELD_START:
-          state = S.HEADER_FIELD;
-          mark('headerField');
+        case STATE.HEADER_FIELD_START:
+          state = STATE.HEADER_FIELD;
+          setMark('headerField');
           index = 0;
-        case S.HEADER_FIELD:
-          if (c == CR) {
-            clear('headerField');
-            state = S.HEADERS_ALMOST_DONE;
+        case STATE.HEADER_FIELD:
+          if (c === CR) {
+            clearMarkSymbol('headerField');
+            state = STATE.HEADERS_ALMOST_DONE;
             break;
           }
 
           index++;
-          if (c == HYPHEN) {
+          if (c === HYPHEN) {
             break;
           }
 
-          if (c == COLON) {
-            if (index == 1) {
+          if (c === COLON) {
+            if (index === 1) {
               // empty header field
               return i;
             }
             dataCallback('headerField', true);
-            state = S.HEADER_VALUE_START;
+            state = STATE.HEADER_VALUE_START;
             break;
           }
 
@@ -187,38 +194,38 @@ class MultipartParser extends Transform {
             return i;
           }
           break;
-        case S.HEADER_VALUE_START:
-          if (c == SPACE) {
+        case STATE.HEADER_VALUE_START:
+          if (c === SPACE) {
             break;
           }
 
-          mark('headerValue');
-          state = S.HEADER_VALUE;
-        case S.HEADER_VALUE:
-          if (c == CR) {
+          setMark('headerValue');
+          state = STATE.HEADER_VALUE;
+        case STATE.HEADER_VALUE:
+          if (c === CR) {
             dataCallback('headerValue', true);
             callback('headerEnd');
-            state = S.HEADER_VALUE_ALMOST_DONE;
+            state = STATE.HEADER_VALUE_ALMOST_DONE;
           }
           break;
-        case S.HEADER_VALUE_ALMOST_DONE:
-          if (c != LF) {
+        case STATE.HEADER_VALUE_ALMOST_DONE:
+          if (c !== LF) {
             return i;
           }
-          state = S.HEADER_FIELD_START;
+          state = STATE.HEADER_FIELD_START;
           break;
-        case S.HEADERS_ALMOST_DONE:
-          if (c != LF) {
+        case STATE.HEADERS_ALMOST_DONE:
+          if (c !== LF) {
             return i;
           }
 
           callback('headersEnd');
-          state = S.PART_DATA_START;
+          state = STATE.PART_DATA_START;
           break;
-        case S.PART_DATA_START:
-          state = S.PART_DATA;
-          mark('partData');
-        case S.PART_DATA:
+        case STATE.PART_DATA_START:
+          state = STATE.PART_DATA;
+          setMark('partData');
+        case STATE.PART_DATA:
           prevIndex = index;
 
           if (index === 0) {
@@ -232,7 +239,7 @@ class MultipartParser extends Transform {
           }
 
           if (index < boundary.length) {
-            if (boundary[index] == c) {
+            if (boundary[index] === c) {
               if (index === 0) {
                 dataCallback('partData', true);
               }
@@ -240,33 +247,33 @@ class MultipartParser extends Transform {
             } else {
               index = 0;
             }
-          } else if (index == boundary.length) {
+          } else if (index === boundary.length) {
             index++;
-            if (c == CR) {
+            if (c === CR) {
               // CR = part boundary
-              flags |= F.PART_BOUNDARY;
-            } else if (c == HYPHEN) {
+              flags |= FBOUNDARY.PART_BOUNDARY;
+            } else if (c === HYPHEN) {
               // HYPHEN = end boundary
-              flags |= F.LAST_BOUNDARY;
+              flags |= FBOUNDARY.LAST_BOUNDARY;
             } else {
               index = 0;
             }
-          } else if (index - 1 == boundary.length)  {
-            if (flags & F.PART_BOUNDARY) {
+          } else if (index - 1 === boundary.length) {
+            if (flags & FBOUNDARY.PART_BOUNDARY) {
               index = 0;
-              if (c == LF) {
+              if (c === LF) {
                 // unset the PART_BOUNDARY flag
-                flags &= ~F.PART_BOUNDARY;
+                flags &= ~FBOUNDARY.PART_BOUNDARY;
                 callback('partEnd');
                 callback('partBegin');
-                state = S.HEADER_FIELD_START;
+                state = STATE.HEADER_FIELD_START;
                 break;
               }
-            } else if (flags & F.LAST_BOUNDARY) {
-              if (c == HYPHEN) {
+            } else if (flags & FBOUNDARY.LAST_BOUNDARY) {
+              if (c === HYPHEN) {
                 callback('partEnd');
                 callback('end');
-                state = S.END;
+                state = STATE.END;
                 flags = 0;
               } else {
                 index = 0;
@@ -279,13 +286,13 @@ class MultipartParser extends Transform {
           if (index > 0) {
             // when matching a possible boundary, keep a lookbehind reference
             // in case it turns out to be a false lead
-            lookbehind[index-1] = c;
+            lookbehind[index - 1] = c;
           } else if (prevIndex > 0) {
             // if our boundary turned out to be rubbish, the captured lookbehind
             // belongs to partData
             callback('partData', lookbehind, 0, prevIndex);
             prevIndex = 0;
-            mark('partData');
+            setMark('partData');
 
             // reconsider the current character even so it interrupted the sequence
             // it could be the beginning of a new sequence
@@ -293,7 +300,7 @@ class MultipartParser extends Transform {
           }
 
           break;
-        case S.END:
+        case STATE.END:
           break;
         default:
           return i;
@@ -308,18 +315,21 @@ class MultipartParser extends Transform {
     this.state = state;
     this.flags = flags;
 
-    return len;
+    done();
+    return bufferLength;
   }
 
-  explain () {
+  explain() {
     return `state = ${MultipartParser.stateToString(this.state)}`;
   }
 }
 
-MultipartParser.stateToString = function(stateNumber) {
-  for (var state in S) {
-    var number = S[state];
-    if (number === stateNumber) return state;
+// eslint-disable-next-line consistent-return
+MultipartParser.stateToString = (stateNumber) => {
+  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  for (const stateName in STATE) {
+    const number = STATE[stateName];
+    if (number === stateNumber) return stateName;
   }
 };
 exports.MultipartParser = MultipartParser;

@@ -1,7 +1,8 @@
-var common = require('../common');
-var QuerystringParser = require(common.lib + '/querystring_parser').QuerystringParser,
-    gently,
-    parser;
+const common = require('../common');
+
+const { QuerystringParser } = require(`${common.lib}/querystring_parser`);
+let gently;
+let parser;
 
 function test(test) {
   gently = new Gently();
@@ -16,23 +17,26 @@ test(function constructor() {
 });
 
 test(function write() {
-  var a = Buffer.from('a=1');
+  const a = Buffer.from('a=1');
   assert.equal(parser.write(a), a.length);
 
-  var b = Buffer.from('&b=2');
+  const b = Buffer.from('&b=2');
   parser.write(b);
   assert.equal(parser.buffer, a + b);
 });
 
 test(function end() {
-  var FIELDS = {a: ['b', {c: 'd'}], e: 'f'};
+  const FIELDS = { a: ['b', { c: 'd' }], e: 'f' };
 
   gently.expect(GENTLY.hijacked.querystring, 'parse', function(str) {
     assert.equal(str, parser.buffer);
     return FIELDS;
   });
 
-  gently.expect(parser, 'onField', Object.keys(FIELDS).length, function(key, val) {
+  gently.expect(parser, 'onField', Object.keys(FIELDS).length, function(
+    key,
+    val,
+  ) {
     assert.deepEqual(FIELDS[key], val);
   });
 

@@ -1,81 +1,88 @@
-var util = require('util'),
-    fs = require('fs'),
-    EventEmitter = require('events').EventEmitter,
-    crypto = require('crypto');
+/* eslint-disable no-underscore-dangle */
 
-function File(properties) {
-  EventEmitter.call(this);
+'use strict';
 
-  this.size = 0;
-  this.path = null;
-  this.name = null;
-  this.type = null;
-  this.hash = null;
-  this.lastModifiedDate = null;
+const fs = require('fs');
+const crypto = require('crypto');
+const { EventEmitter } = require('events');
 
-  this._writeStream = null;
+class File extends EventEmitter {
+  constructor(properties) {
+    super();
 
-  for (var key in properties) {
-    this[key] = properties[key];
+    this.size = 0;
+    this.path = null;
+    this.name = null;
+    this.type = null;
+    this.hash = null;
+    this.lastModifiedDate = null;
+
+    this._writeStream = null;
+
+    // eslint-disable-next-line guard-for-in, no-restricted-syntax
+    for (const key in properties) {
+      this[key] = properties[key];
+    }
+
+    if (typeof this.hash === 'string') {
+      this.hash = crypto.createHash(properties.hash);
+    } else {
+      this.hash = null;
+    }
   }
 
-  if(typeof this.hash === 'string') {
-    this.hash = crypto.createHash(properties.hash);
-  } else {
-    this.hash = null;
+  open() {
+    this._writeStream = new fs.WriteStream(this.path);
+  }
+
+  toJSON() {
+    const json = {
+      size: this.size,
+      path: this.path,
+      name: this.name,
+      type: this.type,
+      mtime: this.lastModifiedDate,
+      length: this.length,
+      filename: this.filename,
+      mime: this.mime,
+    };
+    if (this.hash && this.hash !== '') {
+      json.hash = this.hash;
+    }
+    return json;
+  }
+
+  toString() {
+    return `File: ${this.name}, Path: ${this.path}`;
+  }
+
+  write(buffer, cb) {
+    if (this.hash) {
+      this.hash.update(buffer);
+    }
+
+    if (this._writeStream.closed) {
+      cb();
+      return;
+    }
+
+    this._writeStream.write(buffer, () => {
+      this.lastModifiedDate = new Date();
+      this.size += buffer.length;
+      this.emit('progress', this.size);
+      cb();
+    });
+  }
+
+  end(cb) {
+    if (this.hash) {
+      this.hash = this.hash.digest('hex');
+    }
+    this._writeStream.end(() => {
+      this.emit('end');
+      cb();
+    });
   }
 }
-module.exports = File;
-util.inherits(File, EventEmitter);
 
-File.prototype.open = function() {
-  this._writeStream = new fs.WriteStream(this.path);
-};
-
-File.prototype.toJSON = function() {
-  var json = {
-    size: this.size,
-    path: this.path,
-    name: this.name,
-    type: this.type,
-    mtime: this.lastModifiedDate,
-    length: this.length,
-    filename: this.filename,
-    mime: this.mime
-  };
-  if (this.hash && this.hash != "") {
-    json.hash = this.hash;
-  }
-  return json;
-};
-
-File.prototype.toString = function () {
-  return `File: ${this.name}, Path: ${this.path}`;
-};
-
-File.prototype.write = function(buffer, cb) {
-  if (this.hash) {
-    this.hash.update(buffer);
-  }
-
-  if (this._writeStream.closed) {
-    return cb();
-  }
-
-  this._writeStream.write(buffer, () => {
-    this.lastModifiedDate = new Date();
-    this.size += buffer.length;
-    this.emit('progress', this.size);
-    cb();
-  });
-};
-
-File.prototype.end = function(cb) {
-  if (this.hash) {
-    this.hash = this.hash.digest('hex');
-  }
-  this._writeStream.end(() => {
-    this.emit('end');
-    cb();
-  });
-};
+exports.File = File;

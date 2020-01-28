@@ -1,7 +1,8 @@
-var common = require('../common');
-var multipartParser = require(common.lib + '/multipart_parser'),
-    MultipartParser = multipartParser.MultipartParser,
-    parser;
+const common = require('../common');
+
+const multipartParser = require(`${common.lib}/multipart_parser`);
+const { MultipartParser } = multipartParser;
+let parser;
 
 function test(test) {
   parser = new MultipartParser();
@@ -19,17 +20,32 @@ test(function constructor() {
 });
 
 test(function initWithBoundary() {
-  var boundary = 'abc';
+  const boundary = 'abc';
   parser.initWithBoundary(boundary);
-  assert.deepEqual(Array.prototype.slice.call(parser.boundary), [13, 10, 45, 45, 97, 98, 99]);
+  assert.deepEqual(Array.prototype.slice.call(parser.boundary), [
+    13,
+    10,
+    45,
+    45,
+    97,
+    98,
+    99,
+  ]);
   assert.equal(parser.state, multipartParser.START);
 
-  assert.deepEqual(parser.boundaryChars, {10: true, 13: true, 45: true, 97: true, 98: true, 99: true});
+  assert.deepEqual(parser.boundaryChars, {
+    10: true,
+    13: true,
+    45: true,
+    97: true,
+    98: true,
+    99: true,
+  });
 });
 
 test(function parserError() {
-  var boundary = 'abc',
-      buffer = Buffer.alloc(5);
+  const boundary = 'abc';
+  const buffer = Buffer.alloc(5);
 
   parser.initWithBoundary(boundary);
   buffer.write('--ad', 0);
@@ -38,7 +54,10 @@ test(function parserError() {
 
 test(function end() {
   (function testError() {
-    assert.equal(parser.end().message, 'MultipartParser.end(): stream ended unexpectedly: ' + parser.explain());
+    assert.equal(
+      parser.end().message,
+      `MultipartParser.end(): stream ended unexpectedly: ${parser.explain()}`,
+    );
   })();
 
   (function testRegular() {

@@ -1,18 +1,26 @@
-var common = require('../common');
-var MultipartParserStub = GENTLY.stub('./multipart_parser', 'MultipartParser'),
-    QuerystringParserStub = GENTLY.stub('./querystring_parser', 'QuerystringParser'),
-    EventEmitterStub = GENTLY.stub('events', 'EventEmitter'),
-    StreamStub = GENTLY.stub('stream', 'Stream'),
-    FileStub = GENTLY.stub('./file');
+const common = require('../common');
 
-var formidable = require(common.lib + '/index'),
-    IncomingForm = formidable.IncomingForm,
-    events = require('events'),
-    fs = require('fs'),
-    path = require('path'),
-    fixtures = require(TEST_FIXTURES + '/multipart'),
-    form,
-    gently;
+const MultipartParserStub = GENTLY.stub(
+  './multipart_parser',
+  'MultipartParser',
+);
+const QuerystringParserStub = GENTLY.stub(
+  './querystring_parser',
+  'QuerystringParser',
+);
+const EventEmitterStub = GENTLY.stub('events', 'EventEmitter');
+const StreamStub = GENTLY.stub('stream', 'Stream');
+const FileStub = GENTLY.stub('./file');
+
+const formidable = require(`${common.lib}/index`);
+const { IncomingForm } = formidable;
+const events = require('events');
+const fs = require('fs');
+const path = require('path');
+
+const fixtures = require(`${TEST_FIXTURES}/multipart`);
+let form;
+let gently;
 
 function test(test) {
   gently = new Gently();
@@ -31,7 +39,7 @@ test(function constructor() {
   // Can't assume dir === '/tmp' for portability
   // assert.strictEqual(form.uploadDir, '/tmp');
   // Make sure it is a directory instead
-  assert.doesNotThrow(function () {
+  assert.doesNotThrow(function() {
     assert(fs.statSync(form.uploadDir).isDirectory());
   });
   assert.strictEqual(form.encoding, 'utf-8');
@@ -46,26 +54,26 @@ test(function constructor() {
 
   (function testSimpleConstructor() {
     gently.expect(EventEmitterStub, 'call');
-    var form = IncomingForm();
+    const form = IncomingForm();
     assert.ok(form instanceof IncomingForm);
   })();
 
   (function testSimpleConstructorShortcut() {
     gently.expect(EventEmitterStub, 'call');
-    var form = formidable();
+    const form = formidable();
     assert.ok(form instanceof IncomingForm);
   })();
 });
 
 test(function parse() {
-  var REQ = {headers: {}}
-    , emit = {};
+  const REQ = { headers: {} };
+  const emit = {};
 
   gently.expect(form, 'writeHeaders', function(headers) {
     assert.strictEqual(headers, REQ.headers);
   });
 
-  var EVENTS = ['error', 'aborted', 'data', 'end'];
+  const EVENTS = ['error', 'aborted', 'data', 'end'];
   gently.expect(REQ, 'on', EVENTS.length, function(event, fn) {
     assert.equal(event, EVENTS.shift());
     emit[event] = fn;
@@ -82,7 +90,7 @@ test(function parse() {
   (function testPauseCriticalException() {
     form.ended = false;
 
-    var ERR = new Error('dasdsa');
+    const ERR = new Error('dasdsa');
     gently.expect(REQ, 'pause', function() {
       throw ERR;
     });
@@ -97,7 +105,7 @@ test(function parse() {
   (function testPauseHarmlessException() {
     form.ended = true;
 
-    var ERR = new Error('dasdsa');
+    const ERR = new Error('dasdsa');
     gently.expect(REQ, 'pause', function() {
       throw ERR;
     });
@@ -113,7 +121,7 @@ test(function parse() {
   (function testResumeCriticalException() {
     form.ended = false;
 
-    var ERR = new Error('dasdsa');
+    const ERR = new Error('dasdsa');
     gently.expect(REQ, 'resume', function() {
       throw ERR;
     });
@@ -128,7 +136,7 @@ test(function parse() {
   (function testResumeHarmlessException() {
     form.ended = true;
 
-    var ERR = new Error('dasdsa');
+    const ERR = new Error('dasdsa');
     gently.expect(REQ, 'resume', function() {
       throw ERR;
     });
@@ -137,15 +145,15 @@ test(function parse() {
   })();
 
   (function testEmitError() {
-    var ERR = new Error('something bad happened');
-    gently.expect(form, '_error',function(err) {
+    const ERR = new Error('something bad happened');
+    gently.expect(form, '_error', function(err) {
       assert.strictEqual(err, ERR);
     });
     emit.error(ERR);
   })();
 
   (function testEmitAborted() {
-    gently.expect(form, 'emit',function(event) {
+    gently.expect(form, 'emit', function(event) {
       assert.equal(event, 'aborted');
     });
     gently.expect(form, '_error');
@@ -153,9 +161,8 @@ test(function parse() {
     emit.aborted();
   })();
 
-
   (function testEmitData() {
-    var BUFFER = [1, 2, 3];
+    const BUFFER = [1, 2, 3];
     gently.expect(form, 'write', function(buffer) {
       assert.strictEqual(buffer, BUFFER);
     });
@@ -166,7 +173,7 @@ test(function parse() {
     form._parser = {};
 
     (function testWithError() {
-      var ERR = new Error('haha');
+      const ERR = new Error('haha');
       gently.expect(form._parser, 'end', function() {
         return ERR;
       });
@@ -191,9 +198,9 @@ test(function parse() {
 
   (function testWithCallback() {
     gently.expect(EventEmitterStub, 'call');
-    var form = new IncomingForm(),
-        REQ = {headers: {}},
-        parseCalled = 0;
+    const form = new IncomingForm();
+    const REQ = { headers: {} };
+    const parseCalled = 0;
 
     gently.expect(form, 'on', 4, function(event, fn) {
       if (event == 'field') {
@@ -220,13 +227,13 @@ test(function parse() {
       return this;
     });
 
-    var parseCbOk = function (err, fields, files) {
-      //assert.deepEqual(fields, {field1: ['foo', 'bar'], field2: 'nice'});
-      assert.deepEqual(files, {file1: '2', file2: '3'});
+    const parseCbOk = function(err, fields, files) {
+      // assert.deepEqual(fields, {field1: ['foo', 'bar'], field2: 'nice'});
+      assert.deepEqual(files, { file1: '2', file2: '3' });
     };
     form.parse(REQ, parseCbOk);
 
-    var ERR = new Error('test');
+    const ERR = new Error('test');
     gently.expect(form, 'on', 3, function(event, fn) {
       if (event == 'field') {
         fn('foo', 'bar');
@@ -245,19 +252,19 @@ test(function parse() {
 
     form.parse(REQ, function parseCbErr(err, fields, files) {
       assert.strictEqual(err, ERR);
-      assert.deepEqual(fields, {foo: 'bar'});
+      assert.deepEqual(fields, { foo: 'bar' });
     });
   })();
 
   (function testWriteOrder() {
     gently.expect(EventEmitterStub, 'call');
-    var form    = new IncomingForm();
-    var REQ     = new events.EventEmitter();
-    var BUF     = {};
-    var DATACB  = null;
+    const form = new IncomingForm();
+    const REQ = new events.EventEmitter();
+    const BUF = {};
+    const DATACB = null;
 
     REQ.on('newListener', function(event, fn) {
-      if ('data' === event) fn(BUF);
+      if (event === 'data') fn(BUF);
     });
 
     gently.expect(form, 'writeHeaders');
@@ -277,9 +284,8 @@ test(function resume() {
   assert.strictEqual(form.resume(), false);
 });
 
-
 test(function writeHeaders() {
-  var HEADERS = {};
+  const HEADERS = {};
   gently.expect(form, '_parseContentLength');
   gently.expect(form, '_parseContentType');
 
@@ -288,8 +294,8 @@ test(function writeHeaders() {
 });
 
 test(function write() {
-  var parser = {},
-      BUFFER = [1, 2, 3];
+  const parser = {};
+  const BUFFER = [1, 2, 3];
 
   form._parser = parser;
   form.bytesExpected = 523423;
@@ -337,19 +343,21 @@ test(function write() {
 });
 
 test(function parseContentType() {
-  var HEADERS = {};
+  const HEADERS = {};
 
-  form.headers = {'content-type': 'application/x-www-form-urlencoded'};
+  form.headers = { 'content-type': 'application/x-www-form-urlencoded' };
   gently.expect(form, '_initUrlencoded');
   form._parseContentType();
 
   // accept anything that has 'urlencoded' in it
-  form.headers = {'content-type': 'broken-client/urlencoded-stupid'};
+  form.headers = { 'content-type': 'broken-client/urlencoded-stupid' };
   gently.expect(form, '_initUrlencoded');
   form._parseContentType();
 
-  var BOUNDARY = '---------------------------57814261102167618332366269';
-  form.headers = {'content-type': 'multipart/form-data; boundary='+BOUNDARY};
+  const BOUNDARY = '---------------------------57814261102167618332366269';
+  form.headers = {
+    'content-type': `multipart/form-data; boundary=${BOUNDARY}`,
+  };
 
   gently.expect(form, '_initMultipart', function(boundary) {
     assert.equal(boundary, BOUNDARY);
@@ -357,7 +365,9 @@ test(function parseContentType() {
   form._parseContentType();
 
   (function testQuotedBoundary() {
-    form.headers = {'content-type': 'multipart/form-data; boundary="' + BOUNDARY + '"'};
+    form.headers = {
+      'content-type': `multipart/form-data; boundary="${BOUNDARY}"`,
+    };
 
     gently.expect(form, '_initMultipart', function(boundary) {
       assert.equal(boundary, BOUNDARY);
@@ -366,7 +376,7 @@ test(function parseContentType() {
   })();
 
   (function testNoBoundary() {
-    form.headers = {'content-type': 'multipart/form-data'};
+    form.headers = { 'content-type': 'multipart/form-data' };
 
     gently.expect(form, '_error', function(err) {
       assert.ok(err.message.match(/no multipart boundary/i));
@@ -384,7 +394,7 @@ test(function parseContentType() {
   })();
 
   (function testUnknownContentType() {
-    form.headers = {'content-type': 'invalid'};
+    form.headers = { 'content-type': 'invalid' };
 
     gently.expect(form, '_error', function(err) {
       assert.ok(err.message.match(/unknown content-type/i));
@@ -394,7 +404,7 @@ test(function parseContentType() {
 });
 
 test(function parseContentLength() {
-  var HEADERS = {};
+  const HEADERS = {};
 
   form.headers = {};
   gently.expect(form, 'emit', function(event, bytesReceived, bytesExpected) {
@@ -426,14 +436,16 @@ test(function parseContentLength() {
 });
 
 test(function _initMultipart() {
-  var BOUNDARY = '123',
-      PARSER;
+  const BOUNDARY = '123';
+  let PARSER;
 
   gently.expect(MultipartParserStub, 'new', function() {
     PARSER = this;
   });
 
-  gently.expect(MultipartParserStub.prototype, 'initWithBoundary', function(boundary) {
+  gently.expect(MultipartParserStub.prototype, 'initWithBoundary', function(
+    boundary,
+  ) {
     assert.equal(boundary, BOUNDARY);
   });
 
@@ -442,29 +454,27 @@ test(function _initMultipart() {
   assert.strictEqual(form._parser, PARSER);
 
   (function testRegularField() {
-    var PART;
+    let PART;
     gently.expect(StreamStub, 'new', function() {
       PART = this;
     });
 
     gently.expect(form, 'onPart', function(part) {
       assert.strictEqual(part, PART);
-      assert.deepEqual
-        ( part.headers
-        , { 'content-disposition': 'form-data; name="field1"'
-          , 'foo': 'bar'
-          }
-        );
+      assert.deepEqual(part.headers, {
+        'content-disposition': 'form-data; name="field1"',
+        foo: 'bar',
+      });
       assert.equal(part.name, 'field1');
 
-      var strings = ['hello', ' world'];
+      const strings = ['hello', ' world'];
       gently.expect(part, 'emit', 2, function(event, b) {
-          assert.equal(event, 'data');
-          assert.equal(b.toString(), strings.shift());
+        assert.equal(event, 'data');
+        assert.equal(b.toString(), strings.shift());
       });
 
       gently.expect(part, 'emit', function(event, b) {
-          assert.equal(event, 'end');
+        assert.equal(event, 'end');
       });
     });
 
@@ -484,18 +494,17 @@ test(function _initMultipart() {
   })();
 
   (function testFileField() {
-    var PART;
+    let PART;
     gently.expect(StreamStub, 'new', function() {
       PART = this;
     });
 
     gently.expect(form, 'onPart', function(part) {
-      assert.deepEqual
-        ( part.headers
-        , { 'content-disposition': 'form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'
-          , 'content-type': 'text/plain'
-          }
-        );
+      assert.deepEqual(part.headers, {
+        'content-disposition':
+          'form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"',
+        'content-type': 'text/plain',
+      });
       assert.equal(part.name, 'field2');
       assert.equal(part.filename, 'Sun"et.jpg');
       assert.equal(part.mime, 'text/plain');
@@ -506,13 +515,19 @@ test(function _initMultipart() {
       });
 
       gently.expect(part, 'emit', function(event, b) {
-          assert.equal(event, 'end');
+        assert.equal(event, 'end');
       });
     });
 
     PARSER.onPartBegin();
     PARSER.onHeaderField(Buffer.from('content-disposition'), 0, 19);
-    PARSER.onHeaderValue(Buffer.from('form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"'), 0, 85);
+    PARSER.onHeaderValue(
+      Buffer.from(
+        'form-data; name="field2"; filename="C:\\Documents and Settings\\IE\\Must\\Die\\Sun"et.jpg"',
+      ),
+      0,
+      85,
+    );
     PARSER.onHeaderEnd();
     PARSER.onHeaderField(Buffer.from('Content-Type'), 0, 12);
     PARSER.onHeaderValue(Buffer.from('text/plain'), 0, 10);
@@ -531,11 +546,10 @@ test(function _initMultipart() {
 
 test(function _fileName() {
   // TODO
-  return;
 });
 
 test(function _initUrlencoded() {
-  var PARSER;
+  let PARSER;
 
   gently.expect(QuerystringParserStub, 'new', function() {
     PARSER = this;
@@ -546,7 +560,8 @@ test(function _initUrlencoded() {
   assert.strictEqual(form._parser, PARSER);
 
   (function testOnField() {
-    var KEY = 'KEY', VAL = 'VAL';
+    const KEY = 'KEY';
+    const VAL = 'VAL';
     gently.expect(form, 'emit', function(field, key, val) {
       assert.equal(field, 'field');
       assert.equal(key, KEY);
@@ -565,7 +580,7 @@ test(function _initUrlencoded() {
 });
 
 test(function _error() {
-  var ERR = new Error('bla');
+  const ERR = new Error('bla');
 
   gently.expect(form, 'emit', function(event, err) {
     assert.equal(event, 'error');
@@ -580,7 +595,7 @@ test(function _error() {
 });
 
 test(function onPart() {
-  var PART = {};
+  const PART = {};
   gently.expect(form, 'handlePart', function(part) {
     assert.strictEqual(part, PART);
   });
@@ -590,7 +605,7 @@ test(function onPart() {
 
 test(function handlePart() {
   (function testUtf8Field() {
-    var PART = new events.EventEmitter();
+    const PART = new events.EventEmitter();
     PART.name = 'my_field';
 
     gently.expect(form, 'emit', function(event, field, value) {
@@ -602,37 +617,43 @@ test(function handlePart() {
     form.handlePart(PART);
     PART.emit('data', Buffer.from('hello'));
     PART.emit('data', Buffer.from(' world: '));
-    PART.emit('data', Buffer.from([0xE2]));
-    PART.emit('data', Buffer.from([0x82, 0xAC]));
+    PART.emit('data', Buffer.from([0xe2]));
+    PART.emit('data', Buffer.from([0x82, 0xac]));
     PART.emit('end');
   })();
 
   (function testBinaryField() {
-    var PART = new events.EventEmitter();
+    const PART = new events.EventEmitter();
     PART.name = 'my_field2';
 
     gently.expect(form, 'emit', function(event, field, value) {
       assert.equal(event, 'field');
       assert.equal(field, 'my_field2');
-      assert.equal(value, 'hello world: '+Buffer.from([0xE2, 0x82, 0xAC]).toString('binary'));
+      assert.equal(
+        value,
+        `hello world: ${Buffer.from([0xe2, 0x82, 0xac]).toString('binary')}`,
+      );
     });
 
     form.encoding = 'binary';
     form.handlePart(PART);
     PART.emit('data', Buffer.from('hello'));
     PART.emit('data', Buffer.from(' world: '));
-    PART.emit('data', Buffer.from([0xE2]));
-    PART.emit('data', Buffer.from([0x82, 0xAC]));
+    PART.emit('data', Buffer.from([0xe2]));
+    PART.emit('data', Buffer.from([0x82, 0xac]));
     PART.emit('end');
   })();
 
   (function testFieldSize() {
     form.maxFieldsSize = 8;
-    var PART = new events.EventEmitter();
+    const PART = new events.EventEmitter();
     PART.name = 'my_field';
 
     gently.expect(form, '_error', function(err) {
-      assert.equal(err.message, 'maxFieldsSize exceeded, received 9 bytes of field data');
+      assert.equal(
+        err.message,
+        'maxFieldsSize exceeded, received 9 bytes of field data',
+      );
     });
 
     form.handlePart(PART);
@@ -642,9 +663,9 @@ test(function handlePart() {
   })();
 
   (function testFilePart() {
-    var PART = new events.EventEmitter(),
-        FILE = new events.EventEmitter(),
-        PATH = '/foo/bar';
+    const PART = new events.EventEmitter();
+    let FILE = new events.EventEmitter();
+    const PATH = '/foo/bar';
 
     PART.name = 'my_file';
     PART.filename = 'sweet.txt';
@@ -661,7 +682,7 @@ test(function handlePart() {
       assert.equal(properties.type, PART.mime);
       FILE = this;
 
-      gently.expect(form, 'emit', function (event, field, file) {
+      gently.expect(form, 'emit', function(event, field, file) {
         assert.equal(event, 'fileBegin');
         assert.strictEqual(field, PART.name);
         assert.strictEqual(file, FILE);
@@ -673,7 +694,7 @@ test(function handlePart() {
     form.handlePart(PART);
     assert.equal(form._flushing, 1);
 
-    var BUFFER;
+    let BUFFER;
     gently.expect(form, 'pause');
     gently.expect(FILE, 'write', function(buffer, cb) {
       assert.strictEqual(buffer, BUFFER);
@@ -682,7 +703,7 @@ test(function handlePart() {
       cb();
     });
 
-    PART.emit('data', BUFFER = Buffer.from('test'));
+    PART.emit('data', (BUFFER = Buffer.from('test')));
 
     gently.expect(FILE, 'end', function(cb) {
       gently.expect(form, 'emit', function(event, field, file) {
@@ -702,7 +723,8 @@ test(function handlePart() {
 
 test(function _uploadPath() {
   (function testUniqueId() {
-    var UUID_A, UUID_B;
+    let UUID_A;
+    let UUID_B;
     gently.expect(GENTLY.hijacked.path, 'join', function(uploadDir, uuid) {
       assert.equal(uploadDir, form.uploadDir);
       UUID_A = uuid;
@@ -719,8 +741,8 @@ test(function _uploadPath() {
 
   (function testFileExtension() {
     form.keepExtensions = true;
-    var FILENAME = 'foo.jpg',
-        EXT = '.bar';
+    const FILENAME = 'foo.jpg';
+    const EXT = '.bar';
 
     gently.expect(GENTLY.hijacked.path, 'extname', function(filename) {
       assert.equal(filename, FILENAME);

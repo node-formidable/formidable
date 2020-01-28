@@ -1,38 +1,41 @@
-var common = require('../common');
-var formidable = common.formidable;
-var http = require('http');
-var assert = require('assert');
+'use strict';
 
-var testData = {
-    numbers: [1, 2, 3, 4, 5],
-    nested: { key: 'value' }
+const http = require('http');
+const assert = require('assert');
+const Formidable = require('../../src/index');
+
+const testData = {
+  numbers: [1, 2, 3, 4, 5],
+  nested: { key: 'value' },
 };
 
-var server = http.createServer(function(req, res) {
-    var form = new formidable.IncomingForm();
+const PORT = 13532;
+const server = http.createServer((req, res) => {
+  const form = new Formidable();
 
-    form.parse(req, function(err, fields, files) {
-        assert.deepEqual(fields, testData);
+  form.parse(req, (err, fields) => {
+    assert.deepEqual(fields, testData);
 
-        res.end();
-        server.close();
-    });
+    res.end();
+    server.close();
+  });
 });
 
-var port = common.port;
+server.listen(PORT, (err) => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
 
-server.listen(port, function(err){
-    assert.equal(err, null);
+  assert(!err, 'should not have error, but be falsey');
 
-    var request = http.request({
-        port: port,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+  const request = http.request({
+    port: PORT,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-    request.write(JSON.stringify(testData));
-    request.end();
+  request.write(JSON.stringify(testData));
+  request.end();
 });
-
