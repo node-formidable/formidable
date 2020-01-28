@@ -82,37 +82,34 @@ class MultipartParser extends Transform {
   }
 
   // eslint-disable-next-line max-statements
-  _transform(buffer, encoding, callback) {
+  _transform(buffer, _, _done) {
     let i = 0;
-    const len = buffer.length;
     let prevIndex = this.index;
-    let { index } = this;
-    let { state } = this;
-    let { flags } = this;
-    const { lookbehind } = this;
-    const { boundary } = this;
-    const { boundaryChars } = this;
-    const boundaryLength = this.boundary.length;
+    let { index, state, flags } = this;
+    const { lookbehind, boundary, boundaryChars } = this;
+    const boundaryLength = boundary.length;
     const boundaryEnd = boundaryLength - 1;
     const bufferLength = buffer.length;
-    let c;
-    let cl;
+    let c = null;
+    let cl = null;
 
-    const mark = (name) => {
-      this[`${name}Mark`] = i;
-    };
-    const clear = (name) => {
+    function setMark(name, idx) {
+      this[`${name}Mark`] = idx || i;
+    }
+
+    function clearMarkSymbol(name) {
       delete this[`${name}Mark`];
-    };
-    // eslint-disable-next-line no-var, no-redeclare, max-params
-    var callback = (name, buf, start, end) => {
+    }
+
+    // eslint-disable-next-line max-params
+    function callback(name, buf, start, end) {
       if (start !== undefined && start === end) {
         return;
       }
       this.push({ name, buffer: buf, start, end });
-    };
+    }
 
-    const dataCallback = (name, shouldClear) => {
+    function dataCallback(name, shouldClear) {
       const markSymbol = `${name}Mark`;
       if (!(markSymbol in this)) {
         return;
@@ -120,14 +117,14 @@ class MultipartParser extends Transform {
 
       if (!shouldClear) {
         callback(name, buffer, this[markSymbol], buffer.length);
-        this[markSymbol] = 0;
+        setMark(markSymbol, 0);
       } else {
         callback(name, buffer, this[markSymbol], i);
-        delete this[markSymbol];
+        clearMarkSymbol(markSymbol);
       }
-    };
+    }
 
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < bufferLength; i++) {
       c = buffer[i];
       switch (state) {
         case STATE.PARSER_UNINITIALIZED:
@@ -168,11 +165,11 @@ class MultipartParser extends Transform {
           break;
         case STATE.HEADER_FIELD_START:
           state = STATE.HEADER_FIELD;
-          mark('headerField');
+          setMark('headerField');
           index = 0;
         case STATE.HEADER_FIELD:
           if (c === CR) {
-            clear('headerField');
+            clearMarkSymbol('headerField');
             state = STATE.HEADERS_ALMOST_DONE;
             break;
           }
@@ -202,7 +199,7 @@ class MultipartParser extends Transform {
             break;
           }
 
-          mark('headerValue');
+          setMark('headerValue');
           state = STATE.HEADER_VALUE;
         case STATE.HEADER_VALUE:
           if (c === CR) {
@@ -227,7 +224,7 @@ class MultipartParser extends Transform {
           break;
         case STATE.PART_DATA_START:
           state = STATE.PART_DATA;
-          mark('partData');
+          setMark('partData');
         case STATE.PART_DATA:
           prevIndex = index;
 
@@ -295,7 +292,7 @@ class MultipartParser extends Transform {
             // belongs to partData
             callback('partData', lookbehind, 0, prevIndex);
             prevIndex = 0;
-            mark('partData');
+            setMark('partData');
 
             // reconsider the current character even so it interrupted the sequence
             // it could be the beginning of a new sequence
@@ -318,7 +315,8 @@ class MultipartParser extends Transform {
     this.state = state;
     this.flags = flags;
 
-    return len;
+    // done();
+    return bufferLength;
   }
 
   explain() {
