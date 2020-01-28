@@ -1,45 +1,45 @@
-var common = require('../common');
-var formidable = common.formidable;
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
-var hashish = require('hashish');
-var assert = require('assert');
+'use strict';
 
-var testFilePath = path.join(__dirname, '../fixture/file/binaryfile.tar.gz');
+const fs = require('fs');
+const http = require('http');
+const path = require('path');
+const assert = require('assert');
+const hashish = require('hashish');
 
-var server = http.createServer(function(req, res) {
-    var form = new formidable.IncomingForm();
+const Formidable = require('../../src/index');
+const common = require('../common');
 
-    form.parse(req, function(err, fields, files) {
-        assert.equal(hashish(files).length, 1);
-        var file = files.file;
+const testFilePath = path.join(__dirname, '../fixture/file/binaryfile.tar.gz');
 
-        assert.equal(file.size, 301);
+const server = http.createServer((req, res) => {
+  const form = new Formidable();
 
-        var uploaded = fs.readFileSync(file.path);
-        var original = fs.readFileSync(testFilePath);
+  form.parse(req, (err, fields, files) => {
+    assert.equal(hashish(files).length, 1);
+    const { file } = files;
 
-        assert.deepEqual(uploaded, original);
+    assert.equal(file.size, 301);
 
-        res.end();
-        server.close();
-    });
+    const uploaded = fs.readFileSync(file.path);
+    const original = fs.readFileSync(testFilePath);
+
+    assert.deepEqual(uploaded, original);
+
+    res.end();
+    server.close();
+  });
 });
 
-var port = common.port;
+server.listen(common.port, (err) => {
+  assert.equal(err, null);
 
-server.listen(port, function(err){
-    assert.equal(err, null);
+  const request = http.request({
+    port: common.port,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/octet-stream',
+    },
+  });
 
-    var request = http.request({
-        port: port,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/octet-stream'
-        }
-    });
-
-    fs.createReadStream(testFilePath).pipe(request);
+  fs.createReadStream(testFilePath).pipe(request);
 });
-

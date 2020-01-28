@@ -1,49 +1,49 @@
-var http       = require('http'),
-    formidable = require('../../src/index'),
-    request    = require('request'),
-    assert     = require('assert');
+'use strict';
 
-var host = 'localhost';
+const http = require('http');
+const request = require('request');
+const assert = require('assert');
+const Formidable = require('../../src/index');
 
-var index = [
+const host = 'localhost';
+
+const index = [
   '<form action="/" method="post" enctype="multipart/form-data">',
   '  <input type="text" name="foo" />',
   '  <input type="submit" />',
-  '</form>'
-].join("\n");
+  '</form>',
+].join('\n');
 
-var server = http.createServer(function(req, res) {
-
+const server = http.createServer((req, res) => {
   // Show a form for testing purposes.
-  if (req.method == 'GET') {
-    res.writeHead(200, {'content-type': 'text/html'});
+  if (req.method === 'GET') {
+    res.writeHead(200, { 'content-type': 'text/html' });
     res.end(index);
     return;
   }
 
   // Parse form and write results to response.
-  var form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files) {
-    res.writeHead(200, {'content-type': 'text/plain'});
-    res.write(JSON.stringify({err: err, fields: fields, files: files}));
+  const form = new Formidable();
+  form.parse(req, (err, fields, files) => {
+    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.write(JSON.stringify({ err, fields, files }));
     res.end();
   });
+});
 
-}).listen(0, host, function() {
+server.listen(0, host, () => {
+  console.log('Server up and running...');
 
-  console.log("Server up and running...");
+  const url = `http://${host}:${server.address().port}`;
 
-  var server = this,
-      url    = 'http://' + host + ':' + server.address().port;
-
-  var parts  = [
-    {'Content-Disposition': 'form-data; name="foo"', 'body': 'bar'}
+  const parts = [
+    { 'Content-Disposition': 'form-data; name="foo"', body: 'bar' },
   ];
 
-  var req = request({method: 'POST', url: url, multipart: parts}, function(e, res, body) {
-    var obj = JSON.parse(body);
-    assert.equal("bar", obj.fields.foo);
+  request({ method: 'POST', url, multipart: parts }, (e, res, body) => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    assert.equal('bar', obj.fields.foo);
     server.close();
   });
-
 });

@@ -1,26 +1,27 @@
-var common = require('../common');
-var CHUNK_LENGTH = 10,
-    multipartParser = require(common.lib + '/multipart_parser'),
-    MultipartParser = multipartParser.MultipartParser,
-    parser = new MultipartParser(),
-    fixtures = require(TEST_FIXTURES + '/multipart');
+const common = require('../common');
+
+const CHUNK_LENGTH = 10;
+const multipartParser = require(`${common.lib}/multipart_parser`);
+const { MultipartParser } = multipartParser;
+const parser = new MultipartParser();
+const fixtures = require(`${TEST_FIXTURES}/multipart`);
 
 Object.keys(fixtures).forEach(function(name) {
-  var fixture = fixtures[name],
-      buffer = Buffer.alloc(Buffer.byteLength(fixture.raw, 'binary')),
-      offset = 0,
-      chunk,
-      nparsed,
+  const fixture = fixtures[name];
+  const buffer = Buffer.alloc(Buffer.byteLength(fixture.raw, 'binary'));
+  let offset = 0;
+  let chunk;
+  let nparsed;
 
-      parts = [],
-      part = null,
-      headerField,
-      headerValue,
-      endCalled = '';
+  const parts = [];
+  let part = null;
+  let headerField;
+  let headerValue;
+  let endCalled = '';
 
   parser.initWithBoundary(fixture.boundary);
   parser.onPartBegin = function() {
-    part = {headers: {}, data: ''};
+    part = { headers: {}, data: '' };
     parts.push(part);
     headerField = '';
     headerValue = '';
@@ -41,7 +42,7 @@ Object.keys(fixtures).forEach(function(name) {
   };
 
   parser.onPartData = function(b, start, end) {
-    var str = b.toString('ascii', start, end);
+    const str = b.toString('ascii', start, end);
     part.data += b.slice(start, end);
   };
 
@@ -53,11 +54,11 @@ Object.keys(fixtures).forEach(function(name) {
 
   while (offset < buffer.length) {
     if (offset + CHUNK_LENGTH < buffer.length) {
-      chunk = buffer.slice(offset, offset+CHUNK_LENGTH);
+      chunk = buffer.slice(offset, offset + CHUNK_LENGTH);
     } else {
       chunk = buffer.slice(offset, buffer.length);
     }
-    offset = offset + CHUNK_LENGTH;
+    offset += CHUNK_LENGTH;
 
     nparsed = parser.write(chunk);
     if (nparsed != chunk.length) {
@@ -66,7 +67,9 @@ Object.keys(fixtures).forEach(function(name) {
       }
       puts('-- ERROR --');
       p(chunk.toString('ascii'));
-      throw new Error(chunk.length+' bytes written, but only '+nparsed+' bytes parsed!');
+      throw new Error(
+        `${chunk.length} bytes written, but only ${nparsed} bytes parsed!`,
+      );
     }
   }
 

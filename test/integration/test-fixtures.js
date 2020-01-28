@@ -1,55 +1,64 @@
-var hashish = require('hashish');
-var fs = require('fs');
-var findit = require('findit');
-var path = require('path');
-var http = require('http');
-var net = require('net');
-var assert = require('assert');
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 
-var common = require('../common');
-var formidable = common.formidable;
+'use strict';
 
-var server = http.createServer();
+const fs = require('fs');
+const path = require('path');
+const http = require('http');
+const net = require('net');
+const assert = require('assert');
+const findit = require('findit');
+const hashish = require('hashish');
+
+const common = require('../common');
+const Formidable = require('../../src/index');
+
+const server = http.createServer();
 server.listen(common.port, findFixtures);
 
 function findFixtures() {
-  var fixtures = [];
-  findit
-    .sync(common.dir.fixture + '/js')
-    .forEach(function(jsPath) {
-      if (!/\.js$/.test(jsPath) || /workarounds/.test(jsPath)) return;
+  const fixtures = [];
+  findit.sync(path.join(common.dir.fixture, 'js')).forEach((jsPath) => {
+    if (!/\.js$/.test(jsPath) || /workarounds/.test(jsPath)) return;
 
-      var group = path.basename(jsPath, '.js');
-      hashish.forEach(require(jsPath), function(fixture, name) {
-        fixtures.push({
-          name    : group + '/' + name,
-          fixture : fixture,
-        });
+    const group = path.basename(jsPath, '.js');
+    hashish.forEach(require(jsPath), (fixture, name) => {
+      fixtures.push({
+        name: `${group}/${name}`,
+        fixture,
       });
     });
+  });
 
   testNext(fixtures);
 }
 
 function testNext(fixtures) {
-  var fixture = fixtures.shift();
-  if (!fixture) return server.close();
+  let fixture = fixtures.shift();
+  if (!fixture) {
+    server.close();
+    return;
+  }
+  const fixtureName = fixture.name;
 
-  var name    = fixture.name;
   fixture = fixture.fixture;
 
-  uploadFixture(name, function(err, parts) {
-    if (err) throw {err, name};
+  uploadFixture(fixtureName, (err, parts) => {
+    if (err) {
+      err.fixtureName = fixtureName;
+      throw err;
+    }
 
-    fixture.forEach(function(expectedPart, i) {
-      var parsedPart = parts[i];
+    fixture.forEach((expectedPart, i) => {
+      const parsedPart = parts[i];
       assert.equal(parsedPart.type, expectedPart.type);
       assert.equal(parsedPart.name, expectedPart.name);
 
       if (parsedPart.type === 'file') {
-        var file = parsedPart.value;
+        const file = parsedPart.value;
         assert.equal(file.name, expectedPart.filename);
-        if(expectedPart.sha1) assert.equal(file.hash, expectedPart.sha1);
+        if (expectedPart.sha1) assert.equal(file.hash, expectedPart.sha1);
       }
     });
 
@@ -57,40 +66,42 @@ function testNext(fixtures) {
   });
 }
 
-function uploadFixture(name, cb) {
-  server.once('request', function(req, res) {
-    var form = new formidable.IncomingForm();
+function uploadFixture(fixtureName, cb) {
+  server.once('request', (req, res) => {
+    const form = new Formidable();
     form.uploadDir = common.dir.tmp;
-    form.hash = "sha1";
+    form.hash = 'sha1';
     form.parse(req);
 
-    function callback() {
-      var realCallback = cb;
-      cb = function() {};
-      realCallback.apply(null, arguments);
+    function callback(...args) {
+      const realCallback = cb;
+      // eslint-disable-next-line no-param-reassign
+      cb = function calbackFn() {};
+
+      realCallback(...args);
     }
 
-    var parts = [];
+    const parts = [];
     form
       .on('error', callback)
-      .on('fileBegin', function(name, value) {
-        parts.push({type: 'file', name: name, value: value});
+      .on('fileBegin', (name, value) => {
+        parts.push({ type: 'file', name, value });
       })
-      .on('field', function(name, value) {
-        parts.push({type: 'field', name: name, value: value});
+      .on('field', (name, value) => {
+        parts.push({ type: 'field', name, value });
       })
-      .on('end', function() {
+      .on('end', () => {
         res.end('OK');
         callback(null, parts);
       });
   });
 
-  var socket = net.createConnection(common.port);
-  var file = fs.createReadStream(common.dir.fixture + '/http/' + name);
+  const socket = net.createConnection(common.port);
+  const fixturePath = path.join(common.dir.fixture, 'http', fixtureName);
+  const file = fs.createReadStream(fixturePath);
 
-  file.pipe(socket, {end: false});
-  socket.on('data', function () {
+  file.pipe(socket, { end: false });
+  socket.on('data', () => {
     socket.end();
   });
-
 }

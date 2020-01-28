@@ -1,23 +1,25 @@
-var assert = require('assert');
-var common = require('../common');
-var formidable = require('../../src/index');
-var http = require('http');
+'use strict';
 
-var server = http.createServer(function(req, res) {
-  var form = new formidable.IncomingForm();
+const assert = require('assert');
+const http = require('http');
+const common = require('../common');
+const Formidable = require('../../src/index');
+
+const server = http.createServer((req, res) => {
+  const form = new Formidable();
   form.uploadDir = common.dir.tmp;
-  form.on('end', function () {
+  form.on('end', () => {
     throw new Error('Unexpected "end" event');
   });
-  form.on('error', function (e) {
+  form.on('error', (e) => {
     res.writeHead(500);
     res.end(e.message);
   });
   form.parse(req);
 });
 
-server.listen(0, function() {
-  var body =
+server.listen(0, () => {
+  const body =
     '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
     'Content-Type: application/octet-stream\r\n' +
@@ -29,18 +31,19 @@ server.listen(0, function() {
     '\r\nThis is the second file\r\n' +
     '--foo--\r\n';
 
-  var req = http.request({
+  const req = http.request({
     method: 'POST',
     port: server.address().port,
     headers: {
       'Content-Length': body.length,
-      'Content-Type': 'multipart/form-data; boundary=foo'
-    }
+      'Content-Type': 'multipart/form-data; boundary=foo',
+    },
   });
-  req.on('response', function (res) {
+
+  req.on('response', (res) => {
     assert.equal(res.statusCode, 500);
-    res.on('data', function () {});
-    res.on('end', function () {
+    res.on('data', () => {});
+    res.on('end', () => {
       server.close();
     });
   });

@@ -1,10 +1,12 @@
-var common = require('../common');
-var WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
+const common = require('../common');
 
-var File = require(common.lib + '/file'),
-    EventEmitter = require('events').EventEmitter,
-    file,
-    gently;
+const WriteStreamStub = GENTLY.stub('fs', 'WriteStream');
+
+const File = require(`${common.lib}/file`);
+const { EventEmitter } = require('events');
+
+let file;
+let gently;
 
 function test(test) {
   gently = new Gently();
@@ -24,16 +26,16 @@ test(function constructor() {
   assert.strictEqual(file._writeStream, null);
 
   (function testSetProperties() {
-    var file2 = new File({foo: 'bar'});
+    const file2 = new File({ foo: 'bar' });
     assert.equal(file2.foo, 'bar');
   })();
 });
 
 test(function open() {
-  var WRITE_STREAM;
+  let WRITE_STREAM;
   file.path = '/foo';
 
-  gently.expect(WriteStreamStub, 'new', function (path) {
+  gently.expect(WriteStreamStub, 'new', function(path) {
     WRITE_STREAM = this;
     assert.strictEqual(path, file.path);
   });
@@ -43,18 +45,18 @@ test(function open() {
 });
 
 test(function write() {
-  var BUFFER = {length: 10},
-      CB_STUB,
-      CB = function() {
-        CB_STUB.apply(this, arguments);
-      };
+  const BUFFER = { length: 10 };
+  let CB_STUB;
+  const CB = function() {
+    CB_STUB.apply(this, arguments);
+  };
 
   file._writeStream = {};
 
-  gently.expect(file._writeStream, 'write', function (buffer, cb) {
+  gently.expect(file._writeStream, 'write', function(buffer, cb) {
     assert.strictEqual(buffer, BUFFER);
 
-    gently.expect(file, 'emit', function (event, bytesWritten) {
+    gently.expect(file, 'emit', function(event, bytesWritten) {
       assert.ok(file.lastModifiedDate instanceof Date);
       assert.equal(event, 'progress');
       assert.equal(bytesWritten, file.size);
@@ -66,7 +68,7 @@ test(function write() {
 
     cb();
 
-    gently.expect(file, 'emit', function (event, bytesWritten) {
+    gently.expect(file, 'emit', function(event, bytesWritten) {
       assert.equal(event, 'progress');
       assert.equal(bytesWritten, file.size);
     });
@@ -82,20 +84,19 @@ test(function write() {
 });
 
 test(function end() {
-  var CB_STUB,
-      CB = function() {
-        CB_STUB.apply(this, arguments);
-      };
+  let CB_STUB;
+  const CB = function() {
+    CB_STUB.apply(this, arguments);
+  };
 
   file._writeStream = {};
 
-  gently.expect(file._writeStream, 'end', function (cb) {
-    gently.expect(file, 'emit', function (event) {
+  gently.expect(file._writeStream, 'end', function(cb) {
+    gently.expect(file, 'emit', function(event) {
       assert.equal(event, 'end');
     });
 
-    CB_STUB = gently.expect(function endCb() {
-    });
+    CB_STUB = gently.expect(function endCb() {});
 
     cb();
   });

@@ -1,28 +1,37 @@
 {
   "name": "formidable",
+  "version": "1.2.1",
+  "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/node-formidable",
-  "license": "MIT",
-  "version": "1.2.1",
-  "devDependencies": {
-    "findit": "^0.1.2",
-    "hashish": "^0.0.4",
-    "urun": "^0.0.6",
-    "utest": "^0.0.8",
-    "request": "^2.11.4"
-  },
+  "funding": "https://ko-fi.com/tunnckoCore/commissions",
+  "repository": "node-formidable/node-formidable",
   "main": "./src/index.js",
   "files": [
     "src"
   ],
   "scripts": {
+    "cleanup": "rm -rf test/tmp",
+    "lint": "eslint . --cache --fix --quiet --format codeframe",
     "pretest": "yarn run cleanup",
-    "test": "mkdir test/tmp && node test/run.js",
-    "cleanup": "rm -rf test/tmp"
+    "test": "mkdir test/tmp && node test/run.js"
   },
-  "repository": "node-formidable/node-formidable",
+  "devDependencies": {
+    "@tunnckocore/prettier-config": "^1.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "findit": "^0.1.2",
+    "hashish": "^0.0.4",
+    "prettier": "^1.19.1",
+    "prettier-plugin-pkgjson": "^0.2.0",
+    "request": "^2.11.4",
+    "urun": "^0.0.6",
+    "utest": "^0.0.8"
+  },
   "bugs": {
     "url": "http://github.com/node-formidable/node-formidable/issues"
-  },
-  "funding": "https://ko-fi.com/tunnckoCore/commissions"
+  }
 }

@@ -1,14 +1,15 @@
-var common = require('../test/common');
-var http = require('http'),
-    util = require('util'),
-    os = require('os'),
-    formidable = common.formidable,
-    port = common.port,
-    server;
+const http = require('http');
+const util = require('util');
+const os = require('os');
+const common = require('../test/common');
 
-server = http.createServer(function(req, res) {
+const { formidable } = common;
+const { port } = common;
+let server;
+
+server = http.createServer((req, res) => {
   if (req.url === '/') {
-    res.writeHead(200, {'content-type': 'text/html'});
+    res.writeHead(200, { 'content-type': 'text/html' });
     res.end(
       `<form action="/upload" enctype="multipart/form-data" method="post">
         <label>simple<input type="text" name="simple"></label><br>
@@ -27,24 +28,24 @@ server = http.createServer(function(req, res) {
         <label>file html array and mulitple1<input type="file" name="mfilearray[]" multiple></label><br>
         <br>
         <button>Upload</button>
-      </form>`
+      </form>`,
     );
   } else if (req.url === '/upload') {
-    var form = new formidable.IncomingForm({multiples: true});
+    const form = new formidable.IncomingForm({ multiples: true });
 
     form.uploadDir = os.tmpdir();
 
-    form.parse(req, function (error, fields, files) {
-      res.writeHead(200, {'content-type': 'text/plain'});
-      res.write('received fields:\n\n '+util.inspect(fields));
+    form.parse(req, (error, fields, files) => {
+      res.writeHead(200, { 'content-type': 'text/plain' });
+      res.write(`received fields:\n\n ${util.inspect(fields)}`);
       res.write('\n\n');
-      res.end('received files:\n\n '+util.inspect(files));
-    })
+      res.end(`received files:\n\n ${util.inspect(files)}`);
+    });
   } else {
-    res.writeHead(404, {'content-type': 'text/plain'});
+    res.writeHead(404, { 'content-type': 'text/plain' });
     res.end('404');
   }
 });
 server.listen(port);
 
-console.log('listening on http://localhost:'+port+'/');
+console.log(`listening on http://localhost:${port}/`);

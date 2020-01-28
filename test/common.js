@@ -1,18 +1,21 @@
-var path = require('path');
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 
-var root = path.join(__dirname, '../');
+'use strict';
+
+const path = require('path');
+
+const root = path.dirname(__dirname);
 exports.dir = {
-  root    : root,
-  lib     : root + '/src',
-  fixture : root + '/test/fixture',
-  tmp     : root + '/test/tmp',
+  root,
+  lib: path.join(root, 'src'),
+  fixture: path.join(root, 'test', 'fixture'),
+  tmp: path.join(root, 'test', 'tmp'),
 };
 
 exports.port = 13532;
 
-exports.formidable = require('..');
-exports.assert     = require('assert');
+exports.formidable = require('../src/index');
+exports.assert = require('assert');
 
-exports.require = function(lib) {
-  return require(exports.dir.lib + '/' + lib);
-};
+exports.require = (x) => require(path.join(exports.dir.lib, x));

@@ -1,27 +1,32 @@
-var assert = require('assert');
-var http = require('http');
-var net = require('net');
-var formidable = require('../../src/index');
+'use strict';
 
-var server = http.createServer(function (req, res) {
-  var form = new formidable.IncomingForm();
-  var aborted_received = false;
-  form.on('aborted', function () {
-    aborted_received = true;
+const assert = require('assert');
+const http = require('http');
+const net = require('net');
+const Formidable = require('../../src/index');
+
+const server = http.createServer((req) => {
+  const form = new Formidable();
+  let abortedReceived = false;
+  form.on('aborted', () => {
+    abortedReceived = true;
   });
-  form.on('error', function () {
-    assert(aborted_received, 'Error event should follow aborted');
+  form.on('error', () => {
+    assert(abortedReceived, 'Error event should follow aborted');
     server.close();
   });
-  form.on('end', function () {
+  form.on('end', () => {
     throw new Error('Unexpected "end" event');
   });
   form.parse(req);
-}).listen(0, 'localhost', function () {
-  var client = net.connect(server.address().port);
+});
+
+server.listen(0, 'localhost', () => {
+  const client = net.connect(server.address().port);
   client.write(
-    "POST / HTTP/1.1\r\n" +
-    "Content-Length: 70\r\n" +
-    "Content-Type: multipart/form-data; boundary=foo\r\n\r\n");
+    'POST / HTTP/1.1\r\n' +
+      'Content-Length: 70\r\n' +
+      'Content-Type: multipart/form-data; boundary=foo\r\n\r\n',
+  );
   client.end();
 });
