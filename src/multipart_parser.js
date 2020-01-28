@@ -33,7 +33,6 @@ const A = 97;
 const Z = 122;
 
 function lower(c) {
-  // eslint-disable-next-line no-bitwise
   return c | 0x20;
 }
 
