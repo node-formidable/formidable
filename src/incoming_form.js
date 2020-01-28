@@ -1,20 +1,23 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
-const crypto = require('crypto');
+
+'use strict';
+
+const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const { StringDecoder } = require('string_decoder');
-const { EventEmitter } = require('events');
+const crypto = require('crypto');
 const { Stream } = require('stream');
-const os = require('os');
+const { EventEmitter } = require('events');
+const { StringDecoder } = require('string_decoder');
 
-const File = require('./file');
-const { defaultOptions } = require('./default_options');
+const { File } = require('./file');
+const { JSONParser } = require('./json_parser');
 const { DummyParser } = require('./dummy_parser');
+const { OctetParser } = require('./octet_parser');
+const { defaultOptions } = require('./default_options');
 const { MultipartParser } = require('./multipart_parser');
 const { QuerystringParser } = require('./querystring_parser');
-const { OctetParser } = require('./octet_parser');
-const { JSONParser } = require('./json_parser');
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);

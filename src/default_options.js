@@ -1,3 +1,5 @@
+'use strict';
+
 const defaultOptions = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,

@@ -1,4 +1,7 @@
 /* eslint-disable no-underscore-dangle */
+
+'use strict';
+
 const { Transform } = require('stream');
 
 class JSONParser extends Transform {

@@ -1,4 +1,7 @@
 /* eslint-disable no-underscore-dangle */
+
+'use strict';
+
 const { Transform } = require('stream');
 const querystring = require('querystring');
 
