@@ -19,7 +19,9 @@ var server = http.createServer(function (req, res) {
     res.end();
   });
   form.parse(req);
-}).listen(0, 'localhost', function () {
+})
+
+server.listen(0, 'localhost', function () {
   var client = net.createConnection(server.address().port);
 
   // first send malformed post upload
@@ -44,8 +46,8 @@ var server = http.createServer(function (req, res) {
         '------aaa--\r\n');
 
     setTimeout(function () {
-      assert(ok == 1);
-      assert(errors == 1);
+      assert.strictEqual(ok, 1, 'should have 1 ok, has: ' + ok);
+      assert.strictEqual(errors, 1, 'should have 1 errors, has: ' + errors);
       client.end();
       server.close();
     }, 100);

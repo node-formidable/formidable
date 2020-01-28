@@ -16,8 +16,9 @@
   },
   "main": "./lib/index",
   "scripts": {
-    "test": "node test/run.js",
-    "clean": "rm test/tmp/*"
+    "pretest": "yarn run cleanup",
+    "test": "mkdir test/tmp && node test/run.js",
+    "cleanup": "rm -rf test/tmp"
   },
   "repository": "node-formidable/node-formidable",
   "bugs": {
