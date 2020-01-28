@@ -5,7 +5,6 @@
   "license": "MIT",
   "version": "1.2.1",
   "devDependencies": {
-    "gently": "^0.8.0",
     "findit": "^0.1.2",
     "hashish": "^0.0.4",
     "urun": "^0.0.6",
