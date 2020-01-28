@@ -81,6 +81,7 @@ class IncomingForm extends EventEmitter {
       const fields = {};
       const files = {};
       this.on('field', (name, value) => {
+        // TODO: too much nesting
         if (this.multiples && name.slice(-2) === '[]') {
           const realName = name.slice(0, name.length - 2);
           if (hasOwnProp(fields, realName)) {
@@ -96,6 +97,7 @@ class IncomingForm extends EventEmitter {
         }
       })
         .on('file', (name, file) => {
+          // TODO: too much nesting
           if (this.multiples) {
             if (hasOwnProp(files, name)) {
               if (!Array.isArray(files[name])) {
