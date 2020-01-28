@@ -1,24 +1,27 @@
 'use strict';
 
+// @TODO: this test should be fixed?! later.
+
 const http = require('http');
 const assert = require('assert');
 const request = require('request');
 const Formidable = require('../../src/index');
 
-const host = 'localhost';
+// OS choosing port
+const PORT = 13532;
 
-const index = [
-  '<form action="/" method="post" enctype="multipart/form-data">',
-  '  <input type="text" name="foo" />',
-  '  <input type="submit" />',
-  '</form>',
-].join('\n');
+const indexForm = `
+  <form action="/" method="post" enctype="multipart/form-data">
+    <input type="text" name="foo" />
+    <input type="submit" />
+  </form>
+`;
 
 const server = http.createServer((req, res) => {
   // Show a form for testing purposes.
   if (req.method === 'GET') {
     res.writeHead(200, { 'content-type': 'text/html' });
-    res.end(index);
+    res.end(indexForm);
     return;
   }
 
@@ -31,19 +34,24 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(0, host, () => {
-  console.log('Server up and running...');
-
-  const url = `http://${host}:${server.address().port}`;
+server.listen(PORT, () => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
 
   const parts = [
-    { 'Content-Disposition': 'form-data; name="foo"', body: 'bar' },
+    {
+      'content-disposition': 'form-data; name="foo"',
+      body: 'barry',
+    },
   ];
 
   request({ method: 'POST', url, multipart: parts }, (e, res, body) => {
     const obj = JSON.parse(body);
     console.log(obj);
-    assert.equal('bar', obj.fields.foo);
+
+    assert.strictEqual('foo' in obj.fields, true);
+    assert.strictEqual('barry', obj.fields.foo);
     server.close();
   });
 });

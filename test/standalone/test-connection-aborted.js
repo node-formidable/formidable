@@ -5,6 +5,7 @@ const http = require('http');
 const net = require('net');
 const Formidable = require('../../src/index');
 
+const PORT = 13532;
 const server = http.createServer((req) => {
   const form = new Formidable();
   let abortedReceived = false;
@@ -21,8 +22,13 @@ const server = http.createServer((req) => {
   form.parse(req);
 });
 
-server.listen(0, 'localhost', () => {
-  const client = net.connect(server.address().port);
+server.listen(PORT, 'localhost', () => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
+  const client = net.connect(choosenPort);
+
   client.write(
     'POST / HTTP/1.1\r\n' +
       'Content-Length: 70\r\n' +

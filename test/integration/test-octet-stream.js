@@ -19,10 +19,10 @@ const server = http.createServer((req, res) => {
   const form = new Formidable();
 
   form.parse(req, (err, fields, files) => {
-    assert.equal(Object.keys(files).length, 1);
+    assert.strictEqual(Object.keys(files).length, 1);
     const { file } = files;
 
-    assert.equal(file.size, 301);
+    assert.strictEqual(file.size, 301);
 
     const uploaded = fs.readFileSync(file.path);
     const original = fs.readFileSync(testFilePath);
@@ -35,7 +35,11 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, (err) => {
-  assert.equal(err, null);
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
+  assert(!err, 'should not have error, but be falsey');
 
   const request = http.request({
     port: PORT,

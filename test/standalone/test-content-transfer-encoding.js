@@ -8,6 +8,8 @@ const Formidable = require('../../src/index');
 
 const UPLOAD_DIR = path.join(process.cwd(), 'test', 'tmp');
 
+// OS choosing port
+const PORT = 13532;
 const server = http.createServer((req, res) => {
   const form = new Formidable();
   form.uploadDir = UPLOAD_DIR;
@@ -21,7 +23,11 @@ const server = http.createServer((req, res) => {
   form.parse(req);
 });
 
-server.listen(0, () => {
+server.listen(PORT, () => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
   const body =
     '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
@@ -36,7 +42,7 @@ server.listen(0, () => {
 
   const req = http.request({
     method: 'POST',
-    port: server.address().port,
+    port: choosenPort,
     headers: {
       'Content-Length': body.length,
       'Content-Type': 'multipart/form-data; boundary=foo',
@@ -44,7 +50,7 @@ server.listen(0, () => {
   });
 
   req.on('response', (res) => {
-    assert.equal(res.statusCode, 500);
+    assert.strictEqual(res.statusCode, 500);
     res.on('data', () => {});
     res.on('end', () => {
       server.close();

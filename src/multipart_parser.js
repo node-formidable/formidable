@@ -81,7 +81,7 @@ class MultipartParser extends Transform {
   }
 
   // eslint-disable-next-line max-statements
-  _transform(buffer, _, _done) {
+  _transform(buffer, _, done) {
     let i = 0;
     let prevIndex = this.index;
     let { index, state, flags } = this;
@@ -315,7 +315,7 @@ class MultipartParser extends Transform {
     this.state = state;
     this.flags = flags;
 
-    // done();
+    done();
     return bufferLength;
   }
 

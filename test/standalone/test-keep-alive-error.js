@@ -8,6 +8,7 @@ const Formidable = require('../../src/index');
 let ok = 0;
 let errors = 0;
 
+const PORT = 13532;
 const server = http.createServer((req, res) => {
   const form = new Formidable();
   form.on('error', () => {
@@ -23,8 +24,12 @@ const server = http.createServer((req, res) => {
   form.parse(req);
 });
 
-server.listen(0, 'localhost', () => {
-  const client = net.createConnection(server.address().port);
+server.listen(PORT, 'localhost', () => {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
+  const client = net.createConnection(choosenPort);
 
   // first send malformed post upload
   client.write(

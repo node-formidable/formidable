@@ -21,6 +21,10 @@ const server = http.createServer();
 server.listen(PORT, findFixtures);
 
 function findFixtures() {
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
   const results = fs
     .readdirSync(FIXTURES_PATH)
     .filter((x) => /\.js$/.test(x) && !/workarounds/.test(x))
@@ -61,13 +65,16 @@ function testNext(results) {
 
     fixture.forEach((expectedPart, i) => {
       const parsedPart = parts[i];
-      assert.equal(parsedPart.type, expectedPart.type);
-      assert.equal(parsedPart.name, expectedPart.name);
+      assert.strictEqual(parsedPart.type, expectedPart.type);
+      assert.strictEqual(parsedPart.name, expectedPart.name);
 
       if (parsedPart.type === 'file') {
         const file = parsedPart.value;
-        assert.equal(file.name, expectedPart.filename);
-        if (expectedPart.sha1) assert.equal(file.hash, expectedPart.sha1);
+        assert.strictEqual(file.name, expectedPart.filename);
+
+        if (expectedPart.sha1) {
+          assert.strictEqual(file.hash, expectedPart.sha1);
+        }
       }
     });
 

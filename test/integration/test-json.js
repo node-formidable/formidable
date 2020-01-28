@@ -22,7 +22,11 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, (err) => {
-  assert.equal(err, null);
+  const choosenPort = server.address().port;
+  const url = `http://localhost:${choosenPort}`;
+  console.log('Server up and running at:', url);
+
+  assert(!err, 'should not have error, but be falsey');
 
   const request = http.request({
     port: PORT,
