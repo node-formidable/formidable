@@ -116,7 +116,7 @@ to 1000 (0 for unlimited).
 ```javascript
 form.hash = false;
 ```
-If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'`.
+If you want checksums calculated for incoming files, set this to either `'sha1'` or `'md5'` or see [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options) for available algorithms.
 
 ```javascript
 form.multiples = false;
