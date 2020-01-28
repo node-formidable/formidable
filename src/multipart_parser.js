@@ -111,6 +111,7 @@ class MultipartParser extends Transform {
       }
       this.push({ name, buffer: buf, start, end });
     };
+
     const dataCallback = (name, shouldClear) => {
       const markSymbol = `${name}Mark`;
       if (!(markSymbol in this)) {

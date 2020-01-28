@@ -46,7 +46,7 @@ class IncomingForm extends EventEmitter {
   }
 
   parse(req, cb) {
-    this.pause = function pauseFnc() {
+    this.pause = () => {
       try {
         req.pause();
       } catch (err) {
@@ -60,7 +60,7 @@ class IncomingForm extends EventEmitter {
       return true;
     };
 
-    this.resume = function resumeFnc() {
+    this.resume = () => {
       try {
         req.resume();
       } catch (err) {

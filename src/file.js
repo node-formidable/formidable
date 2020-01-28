@@ -56,7 +56,7 @@ class File extends EventEmitter {
     return `File: ${this.name}, Path: ${this.path}`;
   }
 
-  writeFn(buffer, cb) {
+  write(buffer, cb) {
     if (this.hash) {
       this.hash.update(buffer);
     }
@@ -74,7 +74,7 @@ class File extends EventEmitter {
     });
   }
 
-  endFn(cb) {
+  end(cb) {
     if (this.hash) {
       this.hash = this.hash.digest('hex');
     }

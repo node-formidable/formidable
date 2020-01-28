@@ -4,7 +4,6 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const assert = require('assert');
-const hashish = require('hashish');
 
 const Formidable = require('../../src/index');
 
@@ -20,7 +19,7 @@ const server = http.createServer((req, res) => {
   const form = new Formidable();
 
   form.parse(req, (err, fields, files) => {
-    assert.equal(hashish(files).length, 1);
+    assert.equal(Object.keys(files).length, 1);
     const { file } = files;
 
     assert.equal(file.size, 301);
