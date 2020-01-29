@@ -1,5 +1,5 @@
 
-### Unreleased
+### Unreleased (`formidable@canary` dist-tag)
 
  * Test only on Node.js >= v10. Support only Node LTS and latest ([#515](https://github.com/node-formidable/node-formidable/pull/515))
  * stop using deprecated features ([#516](https://github.com/node-formidable/node-formidable/pull/516), [#472](https://github.com/node-formidable/node-formidable/issues/472), [#406](https://github.com/node-formidable/node-formidable/issues/406))
@@ -17,8 +17,10 @@
  * feat: better tests, add Airbnb + Prettier ([#542](https://github.com/node-formidable/node-formidable/pull/542))
  * fix(incomingForm): better detection of fields vs files
  * fix: resolves [#128](https://github.com/node-formidable/node-formidable/pull/128)
- * fix: resolves [#543](https://github.com/node-formidable/node-formidable/pull/543)): urlencoded parsing to emit end; introduced in #531
-
+ * fix: urlencoded parsing to emit end [#543](https://github.com/node-formidable/node-formidable/pull/543), introduced in [#531](https://github.com/node-formidable/node-formidable/pull/531)
+ * fix(tests): include multipart and qs parser unit tests, part of [#415](https://github.com/node-formidable/node-formidable/issues/415)
+ * fix: reorganize exports + move parsers to `src/parsers/`
+ * fix: update docs and examples [#544](https://github.com/node-formidable/node-formidable/pull/544)
 
 ### v1.2.1 (2018-03-20)
 
