@@ -321,9 +321,23 @@ class IncomingForm extends EventEmitter {
     for (let idx = 0; idx < this._plugins.length; idx++) {
       const plugin = this._plugins[idx].bind(this);
 
-      const res = plugin.call(this, this, this.options);
+      let res = null;
+
+      try {
+        res = plugin.call(this, this, this.options);
+      } catch (err) {
+        this._error(
+          new Error(`plugin on index ${idx} failed with ${err.message}`),
+        );
+        break;
+      }
+
+      // todo: use Set/Map and pass plugin name instead of the `idx` index
+      this.emit('pluginReturn', idx, res);
       results.push(res);
     }
+
+    this.emit('pluginReturns', results);
 
     if (results.length === 0 && results.length !== this._plugins.length) {
       this._error(
@@ -410,4 +424,5 @@ class IncomingForm extends EventEmitter {
   }
 }
 
+IncomingForm.DEFAULT_OPTIONS = DEFAULT_OPTIONS;
 module.exports = IncomingForm;
