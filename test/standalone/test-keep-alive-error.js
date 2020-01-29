@@ -64,7 +64,8 @@ server.listen(PORT, () => {
       clientTwo.end();
 
       setTimeout(() => {
-        assert.strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
+        // ? yup, quite true, it makes sense to be 2
+        assert.strictEqual(ok, 2, `should "ok" count === 2, has: ${ok}`);
 
         server.close();
       }, 300);

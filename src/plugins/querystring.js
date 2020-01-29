@@ -8,6 +8,8 @@ const QuerystringParser = require('../parsers/Querystring');
 module.exports = function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
+
+  /* istanbul ignore next */
   const self = this || formidable;
 
   if (/urlencoded/i.test(self.headers['content-type'])) {

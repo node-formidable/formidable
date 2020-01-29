@@ -29,8 +29,9 @@ const server = http.createServer((req, res) => {
   const form = formidable();
   form.parse(req, (err, fields, files) => {
     res.writeHead(200, { 'content-type': 'text/plain' });
-    res.write(JSON.stringify({ err, fields, files }));
-    res.end();
+    // ? old, makes more sense to be passed to `.end()`?
+    // res.write(JSON.stringify({ err, fields, files }));
+    res.end(JSON.stringify({ err, fields, files }));
   });
 });
 
@@ -48,7 +49,6 @@ server.listen(PORT, () => {
 
   request({ method: 'POST', url, multipart: parts }, (e, res, body) => {
     const obj = JSON.parse(body);
-    console.log(obj);
 
     assert.strictEqual('foo' in obj.fields, true);
     assert.strictEqual('barry', obj.fields.foo);

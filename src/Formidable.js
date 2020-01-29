@@ -51,6 +51,16 @@ class IncomingForm extends EventEmitter {
     this._plugins = [];
     this.openedFiles = [];
 
+    const enabledPlugins = []
+      .concat(this.options.enabledPlugins)
+      .filter(Boolean);
+
+    if (enabledPlugins.length === 0) {
+      throw new Error(
+        'expect at least 1 enabled builtin plugin, see options.enabledPlugins',
+      );
+    }
+
     this.options.enabledPlugins.forEach((pluginName) => {
       const plgName = pluginName.toLowerCase();
       // eslint-disable-next-line import/no-dynamic-require, global-require
@@ -172,8 +182,10 @@ class IncomingForm extends EventEmitter {
         if (this.error) {
           return;
         }
-
-        this._parser.end();
+        if (this._parser) {
+          this._parser.end();
+        }
+        this._maybeEnd();
       });
 
     return this;
@@ -183,9 +195,20 @@ class IncomingForm extends EventEmitter {
     this.headers = headers;
     this._parseContentLength();
     this._parseContentType();
-    this._parser.once('error', (error) => {
-      this._error(error);
-    });
+
+    // in case plugin fails
+    if (this._parser) {
+      this._parser.once('error', (error) => {
+        this._error(error);
+      });
+    } else {
+      // when there is no argument,
+      // it will get the `this.error` which is manually set
+      // only on one case - when a plugin throw/fail
+      // this.emit('error', this.error);
+      // this._error();
+      // this._maybeEnd();
+    }
   }
 
   write(buffer) {
@@ -326,10 +349,9 @@ class IncomingForm extends EventEmitter {
       try {
         res = plugin.call(this, this, this.options);
       } catch (err) {
-        this._error(
-          new Error(`plugin on index ${idx} failed with ${err.message}`),
-        );
-        break;
+        const msg = `plugin on index ${idx} failed with: ${err.message}`;
+        this.error = new Error(msg);
+        // break;
       }
 
       // todo: use Set/Map and pass plugin name instead of the `idx` index
@@ -349,6 +371,10 @@ class IncomingForm extends EventEmitter {
   }
 
   _error(err) {
+    if (!err && this.error) {
+      this.emit('error', this.error);
+      return;
+    }
     if (this.error || this.ended) {
       return;
     }

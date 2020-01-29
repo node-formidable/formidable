@@ -9,9 +9,11 @@ const MultipartParser = require('../parsers/Multipart');
 module.exports = function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
+
+  /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/multipart/i.test(self.headers['content-type'])) {
+  if (/multipart|form-data/i.test(self.headers['content-type'])) {
     const m = self.headers['content-type'].match(
       /boundary=(?:"([^"]+)"|([^;]+))/i,
     );
@@ -19,7 +21,7 @@ module.exports = function plugin(formidable, options) {
       const initMultipart = createInitMultipart(m[1] || m[2]);
       initMultipart.call(self, self, options);
     } else {
-      self._error(new Error('bad content-type header, no multipart boundary'));
+      throw new Error('bad content-type header, no multipart boundary');
     }
   }
 };
