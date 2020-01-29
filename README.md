@@ -409,6 +409,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://ochrona.jawne.info.pl"><img src="https://avatars1.githubusercontent.com/u/3618479?v=4" width="100px;" alt=""/><br /><sub><b>Adam Dobrawy</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Aad-m" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=ad-m" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/amitrohatgi"><img src="https://avatars3.githubusercontent.com/u/12177021?v=4" width="100px;" alt=""/><br /><sub><b>amitrohatgi</b></sub></a><br /><a href="#ideas-amitrohatgi" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://julianreyes.co/"><img src="https://avatars1.githubusercontent.com/u/395707?v=4" width="100px;" alt=""/><br /><sub><b>Julian Reyes Escrigas</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Arkmax" title="Bug reports">🐛</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
