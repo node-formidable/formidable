@@ -12,10 +12,12 @@ class QuerystringParser extends Transform {
     super({ readableObjectMode: true });
     this.maxKeys = maxKeys;
     this.buffer = '';
+    this.bufferLength = 0;
   }
 
   _transform(buffer, encoding, callback) {
     this.buffer += buffer.toString('ascii');
+    this.bufferLength = this.buffer.length;
     callback();
   }
 

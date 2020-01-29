@@ -48,6 +48,7 @@ class MultipartParser extends Transform {
     this.boundary = null;
     this.boundaryChars = null;
     this.lookbehind = null;
+    this.bufferLength = 0;
     this.state = STATE.PARSER_UNINITIALIZED;
 
     this.index = null;
@@ -98,7 +99,7 @@ class MultipartParser extends Transform {
     const { lookbehind, boundary, boundaryChars } = this;
     const boundaryLength = boundary.length;
     const boundaryEnd = boundaryLength - 1;
-    const bufferLength = buffer.length;
+    this.bufferLength = buffer.length;
     let c = null;
     let cl = null;
 
@@ -125,7 +126,7 @@ class MultipartParser extends Transform {
       }
     };
 
-    for (i = 0; i < bufferLength; i++) {
+    for (i = 0; i < this.bufferLength; i++) {
       c = buffer[i];
       switch (state) {
         case STATE.PARSER_UNINITIALIZED:
@@ -232,7 +233,7 @@ class MultipartParser extends Transform {
           if (index === 0) {
             // boyer-moore derrived algorithm to safely skip non-boundary data
             i += boundaryEnd;
-            while (i < bufferLength && !(buffer[i] in boundaryChars)) {
+            while (i < this.bufferLength && !(buffer[i] in boundaryChars)) {
               i += boundaryLength;
             }
             i -= boundaryEnd;
@@ -317,7 +318,7 @@ class MultipartParser extends Transform {
     this.flags = flags;
 
     done();
-    return bufferLength;
+    return this.bufferLength;
   }
 
   explain() {

@@ -27,4 +27,8 @@ module.exports = Object.assign(formidable, {
   MultipartParser,
   OctetStreamParser,
   QuerystringParser,
+
+  // typo aliases
+  OctetstreamParser: OctetStreamParser,
+  QueryStringParser: QuerystringParser,
 });
