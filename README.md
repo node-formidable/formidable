@@ -378,17 +378,37 @@ Emitted when the entire request has been received, and all contained files have 
 form.on('end', () => {});
 ```
 
+## Ports & Credits
+
+- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
+- [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired the initial `multipart_parser.js`.
+
+## Contributing
+
+If the documentation is unclear or has a typo, please click on the page's `Edit`
+button (pencil icon) and suggest a correction. If you would like to help us fix a bug or add a new feature, please check our
+[Contributing Guide](./CONTRIBUTING.md). Pull requests are welcome!
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://twitter.com/felixge"><img src="https://avatars3.githubusercontent.com/u/15000?s=460&v=4" width="100px;" alt=""/><br /><sub><b>Felix Geisendörfer</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/commits?author=felixge" title="Code">💻</a> <a href="#design-felixge" title="Design">🎨</a> <a href="#ideas-felixge" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=felixge" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://tunnckoCore.com"><img src="https://avatars3.githubusercontent.com/u/5038030?v=4" width="100px;" alt=""/><br /><sub><b>Charlike Mike Reagent</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3AtunnckoCore" title="Bug reports">🐛</a> <a href="#infra-tunnckoCore" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#design-tunnckoCore" title="Design">🎨</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## License
 
 Formidable is licensed under the [MIT License][license-url].
-
-## Ports
-
-- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
-
-## Credits
-
-- [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js
 
 <!-- badges -->
 

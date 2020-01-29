@@ -1,0 +1,39 @@
+{
+  "projectName": "node-formidable",
+  "projectOwner": "node-formidable",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "imageSize": 100,
+  "contributorsPerLine": 7,
+  "commitConvention": "angular",
+  "commit": true,
+  "skipCi": true,
+  "files": [
+    "README.md"
+  ],
+  "contributors": [
+    {
+      "login": "felixge",
+      "name": "Felix Geisendörfer",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/15000?s=460&v=4",
+      "profile": "https://twitter.com/felixge",
+      "contributions": [
+        "code",
+        "design",
+        "ideas",
+        "doc"
+      ]
+    },
+    {
+      "login": "tunnckoCore",
+      "name": "Charlike Mike Reagent",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5038030?v=4",
+      "profile": "https://tunnckoCore.com",
+      "contributions": [
+        "bug",
+        "infra",
+        "design"
+      ]
+    }
+  ]
+}
