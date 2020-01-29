@@ -11,14 +11,14 @@ module.exports = function plugin(formidable, options) {
   const self = this || formidable;
 
   if (/urlencoded/i.test(self.headers['content-type'])) {
-    initQuerystring.call(self, self, options);
+    init.call(self, self, options);
   }
 };
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
-function initQuerystring() {
+function init(_self, _opts) {
   this.type = 'urlencoded';
 
   const parser = new QuerystringParser(this.options);
