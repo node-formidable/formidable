@@ -61,6 +61,17 @@
         "financial",
         "review"
       ]
+    },
+    {
+      "login": "Amit-A",
+      "name": "Amit-A",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7987238?v=4",
+      "profile": "https://github.com/Amit-A",
+      "contributions": [
+        "bug",
+        "test",
+        "review"
+      ]
     }
   ]
 }
