@@ -2,15 +2,14 @@
   <img alt="node formidable logo" src="./logo.png" />
 </p>
 
-# formidable
+# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url]
 
 > A Node.js module for parsing form data, especially file uploads.
 
 [![Code style][codestyle-img]][codestyle-url]
-[![npm version][npmv-img]][npmv-url]
+[![npm version][npmv-canary-img]][npmv-url]
 [![build status][build-img]][build-url]
 [![chat on gitter][chat-img]][chat-url]
-[![MIT license][license-img]][license-url]
 
 ## Status: Maintained
 
@@ -393,6 +392,7 @@ Formidable is licensed under the [MIT License][license-url].
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
 [build-img]: https://badgen.net/travis/node-formidable/node-formidable/master?label=build&icon=travis
 [build-url]: https://travis-ci.org/node-formidable/node-formidable.svg?branch=master
+[npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
 [npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
 [npmv-url]: https://npmjs.com/package/formidable
 [license-img]: https://badgen.net/npm/license/formidable
