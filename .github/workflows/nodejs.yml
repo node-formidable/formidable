@@ -10,9 +10,9 @@ on:
 
 jobs:
   test:
-    # if: |
-    #   !contains(github.event.commit.message, '[ci skip]') ||
-    #   !contains(github.event.commit.message, '[skip ci]')
+    if: |
+      !contains(github.event.commits.*.message, '[ci skip]') ||
+      !contains(github.event.commits.*.message, '[skip ci]')
     env:
       CI: true
       CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
