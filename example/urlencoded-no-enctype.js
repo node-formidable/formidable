@@ -1,10 +1,9 @@
 'use strict';
 
-// const os = require('os');
 const http = require('http');
 const util = require('util');
 
-const Formidable = require('../src/index');
+const { Formidable } = require('../src/index');
 
 const PORT = 13531;
 const server = http.createServer((req, res) => {

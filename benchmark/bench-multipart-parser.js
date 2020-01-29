@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 
-const { MultipartParser } = require('../src/multipart_parser');
+const MultipartParser = require('../src/parsers/Multipart');
 
 const parser = new MultipartParser();
 const customBoundary = '-----------------------------168072824752491622650073';
-const mb = 100;
+const mb = 1000; // 1GB
 const buf = createMultipartBuffer(customBoundary, mb * 1024 * 1024);
 
 const calls = {
@@ -20,17 +20,16 @@ const calls = {
   end: 0,
 };
 
-parser.initWithBoundary(customBoundary);
+const start = Date.now();
 
+parser.initWithBoundary(customBoundary);
 parser.on('data', ({ name }) => {
   calls[name] += 1;
 });
 
-const start = +new Date();
-
 parser.write(buf);
 
-const duration = +new Date() - start;
+const duration = Date.now() - start;
 const mbPerSec = (mb / (duration / 1000)).toFixed(2);
 
 console.log(`${mbPerSec} mb/sec`);

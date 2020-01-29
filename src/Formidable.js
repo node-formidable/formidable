@@ -11,7 +11,7 @@ const { Stream } = require('stream');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 
-const defaultOptions = {
+const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
   maxFileSize: 200 * 1024 * 1024,
@@ -40,7 +40,7 @@ class IncomingForm extends EventEmitter {
     this.error = null;
     this.ended = false;
 
-    Object.assign(this, defaultOptions, options);
+    Object.assign(this, DEFAULT_OPTIONS, options);
     this.uploadDir = this.uploadDir || os.tmpdir();
 
     this.headers = null;

@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "1.2.1",
+  "version": "2.0.0-canary.20200129.1",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/node-formidable",
@@ -10,6 +10,10 @@
   "files": [
     "src"
   ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "canary"
+  },
   "scripts": {
     "cleanup": "rm -rf test/tmp",
     "lint": "eslint . --cache --fix --quiet --format codeframe",
@@ -28,8 +32,5 @@
     "request": "^2.11.4",
     "urun": "^0.0.6",
     "utest": "^0.0.8"
-  },
-  "bugs": {
-    "url": "http://github.com/node-formidable/node-formidable/issues"
   }
 }
