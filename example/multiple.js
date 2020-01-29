@@ -30,9 +30,7 @@ const server = http.createServer((req, res) => {
       </form>`,
     );
   } else if (req.url === '/upload') {
-    const form = new Formidable({ multiples: true });
-
-    form.uploadDir = os.tmpdir();
+    const form = new Formidable({ multiples: true, uploadDir: os.tmpdir() });
 
     form.parse(req, (error, fields, files) => {
       res.writeHead(200, { 'content-type': 'text/plain' });

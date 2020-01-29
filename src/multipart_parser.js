@@ -52,16 +52,16 @@ class MultipartParser extends Transform {
     this.flags = 0;
   }
 
-  _final(callback) {
+  _final(done) {
     if (
       (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
       (this.state === STATE.PART_DATA && this.index === this.boundary.length)
     ) {
-      this.callback('partEnd');
-      this.callback('end');
-      callback();
+      this._handleCallback('partEnd');
+      this._handleCallback('end');
+      done();
     } else if (this.state !== STATE.END) {
-      callback(
+      done(
         new Error(
           `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
         ),
@@ -80,6 +80,14 @@ class MultipartParser extends Transform {
     }
   }
 
+  // eslint-disable-next-line max-params
+  _handleCallback(name, buf, start, end) {
+    if (start !== undefined && start === end) {
+      return;
+    }
+    this.push({ name, buffer: buf, start, end });
+  }
+
   // eslint-disable-next-line max-statements
   _transform(buffer, _, done) {
     let i = 0;
@@ -89,40 +97,31 @@ class MultipartParser extends Transform {
     const boundaryLength = boundary.length;
     const boundaryEnd = boundaryLength - 1;
     const bufferLength = buffer.length;
-    const selfParser = this;
     let c = null;
     let cl = null;
 
-    function setMark(name, idx) {
-      selfParser[`${name}Mark`] = idx || i;
-    }
+    const setMark = (name, idx) => {
+      this[`${name}Mark`] = idx || i;
+    };
 
-    function clearMarkSymbol(name) {
-      delete selfParser[`${name}Mark`];
-    }
+    const clearMarkSymbol = (name) => {
+      delete this[`${name}Mark`];
+    };
 
-    // eslint-disable-next-line max-params
-    function callback(name, buf, start, end) {
-      if (start !== undefined && start === end) {
-        return;
-      }
-      selfParser.push({ name, buffer: buf, start, end });
-    }
-
-    function dataCallback(name, shouldClear) {
+    const dataCallback = (name, shouldClear) => {
       const markSymbol = `${name}Mark`;
-      if (!(markSymbol in selfParser)) {
+      if (!(markSymbol in this)) {
         return;
       }
 
       if (!shouldClear) {
-        callback(name, buffer, selfParser[markSymbol], buffer.length);
+        this._handleCallback(name, buffer, this[markSymbol], buffer.length);
         setMark(markSymbol, 0);
       } else {
-        callback(name, buffer, selfParser[markSymbol], i);
+        this._handleCallback(name, buffer, this[markSymbol], i);
         clearMarkSymbol(markSymbol);
       }
-    }
+    };
 
     for (i = 0; i < bufferLength; i++) {
       c = buffer[i];
@@ -143,12 +142,12 @@ class MultipartParser extends Transform {
             break;
           } else if (index - 1 === boundary.length - 2) {
             if (flags & FBOUNDARY.LAST_BOUNDARY && c === HYPHEN) {
-              callback('end');
+              this._handleCallback('end');
               state = STATE.END;
               flags = 0;
             } else if (!(flags & FBOUNDARY.LAST_BOUNDARY) && c === LF) {
               index = 0;
-              callback('partBegin');
+              this._handleCallback('partBegin');
               state = STATE.HEADER_FIELD_START;
             } else {
               return i;
@@ -204,7 +203,7 @@ class MultipartParser extends Transform {
         case STATE.HEADER_VALUE:
           if (c === CR) {
             dataCallback('headerValue', true);
-            callback('headerEnd');
+            this._handleCallback('headerEnd');
             state = STATE.HEADER_VALUE_ALMOST_DONE;
           }
           break;
@@ -219,7 +218,7 @@ class MultipartParser extends Transform {
             return i;
           }
 
-          callback('headersEnd');
+          this._handleCallback('headersEnd');
           state = STATE.PART_DATA_START;
           break;
         case STATE.PART_DATA_START:
@@ -264,15 +263,15 @@ class MultipartParser extends Transform {
               if (c === LF) {
                 // unset the PART_BOUNDARY flag
                 flags &= ~FBOUNDARY.PART_BOUNDARY;
-                callback('partEnd');
-                callback('partBegin');
+                this._handleCallback('partEnd');
+                this._handleCallback('partBegin');
                 state = STATE.HEADER_FIELD_START;
                 break;
               }
             } else if (flags & FBOUNDARY.LAST_BOUNDARY) {
               if (c === HYPHEN) {
-                callback('partEnd');
-                callback('end');
+                this._handleCallback('partEnd');
+                this._handleCallback('end');
                 state = STATE.END;
                 flags = 0;
               } else {
@@ -290,7 +289,7 @@ class MultipartParser extends Transform {
           } else if (prevIndex > 0) {
             // if our boundary turned out to be rubbish, the captured lookbehind
             // belongs to partData
-            callback('partData', lookbehind, 0, prevIndex);
+            this._handleCallback('partData', lookbehind, 0, prevIndex);
             prevIndex = 0;
             setMark('partData');
 

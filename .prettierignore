@@ -3,7 +3,14 @@ LICENSE
 LICENSE.md
 LICENSE*.md
 dist
-# fixture
+
+*.txt
+test/tmp
+test/fixture/http
+test/fixture/file
+test/fixture/multi*
+test/tools
+
 # fixtures
 # __fixture__
 # __fixtures__

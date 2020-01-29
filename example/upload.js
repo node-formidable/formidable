@@ -1,13 +1,13 @@
+'use strict';
+
+const os = require('os');
 const http = require('http');
 const util = require('util');
-const os = require('os');
-const common = require('../test/common');
 
-const { formidable } = common;
-const { port } = common;
-let server;
+const Formidable = require('../src/index');
 
-server = http.createServer((req, res) => {
+const PORT = 13134;
+const server = http.createServer((req, res) => {
   if (req.url === '/') {
     res.writeHead(200, { 'content-type': 'text/html' });
     res.end(
@@ -18,20 +18,18 @@ server = http.createServer((req, res) => {
       </form>`,
     );
   } else if (req.url === '/upload') {
-    const form = new formidable.IncomingForm();
+    const form = new Formidable({ uploadDir: os.tmpdir() });
     const files = [];
     const fields = [];
 
-    form.uploadDir = os.tmpdir();
-
     form
-      .on('field', (field, value) => {
-        console.log(field, value);
-        fields.push([field, value]);
+      .on('field', (fieldName, value) => {
+        console.log(fieldName, value);
+        fields.push({ fieldName, value });
       })
-      .on('file', (field, file) => {
-        console.log(field, file);
-        files.push([field, file]);
+      .on('file', (fieldName, file) => {
+        console.log(fieldName, file);
+        files.push({ fieldName, file });
       })
       .on('end', () => {
         console.log('-> upload done');
@@ -46,6 +44,6 @@ server = http.createServer((req, res) => {
     res.end('404');
   }
 });
-server.listen(port);
-
-console.log(`listening on http://localhost:${port}/`);
+server.listen(PORT, () => {
+  console.log(`listening on http://localhost:${PORT}/`);
+});

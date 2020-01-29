@@ -27,10 +27,8 @@ function findFixtures() {
 
   const results = fs
     .readdirSync(FIXTURES_PATH)
-    // .filter((x) => /special/.test(x))
-    // the `workarounds` - doesn't work because `this.callback()` call which should be fixed
-    // the `spcial-chars-in-filename` - not sure yet why
-    .filter((x) => /\.js$/.test(x) && !/workarounds|special/.test(x))
+    // .filter((x) => /workarounds/.test(x))
+    .filter((x) => /\.js$/.test(x))
     .reduce((acc, fp) => {
       const group = path.basename(fp, '.js');
       const filepath = path.join(FIXTURES_PATH, fp);
@@ -66,21 +64,6 @@ function testNext(results) {
       throw err;
     }
 
-    // console.log(parts);
-    // const titleParts = parts.find((x) => x.type === 'field');
-    // const titleFixtures = fixture.find((x) => x.type === 'field');
-
-    // const uploadParts = parts.find((x) => x.name === 'upload');
-    // const uploadFixtures = fixture.find((x) => x.name === 'upload');
-
-    // console.log('titleParts', titleParts);
-    // console.log('titleFixtures', titleFixtures);
-    // const fileFromFixture = fixture.find((x) => x.type === 'file');
-    // const fieldFromFixture = fixture.find((x) => x.type === 'field');
-
-    // console.log('parts', fileFromParts);
-    // console.log('fixture', fileFromFixture);
-
     fixture.forEach((expectedPart, i) => {
       const parsedPart = parts[i];
       assert.strictEqual(parsedPart.type, expectedPart.type);
@@ -91,7 +74,11 @@ function testNext(results) {
         assert.strictEqual(file.name, expectedPart.filename);
 
         if (expectedPart.sha1) {
-          assert.strictEqual(file.hash, expectedPart.sha1);
+          assert.strictEqual(
+            file.hash,
+            expectedPart.sha1,
+            `error ${file.name} on ${file.path}`,
+          );
         }
       }
     });
@@ -134,7 +121,6 @@ function uploadFixture(fixtureName, cb) {
 
   const socket = net.createConnection(PORT);
   const fixturePath = path.join(FIXTURES_HTTP, fixtureName);
-  console.log(fixturePath);
   const file = fs.createReadStream(fixturePath);
 
   file.pipe(socket, { end: false });

@@ -11,10 +11,6 @@ test-legacy
 .*cache
 *.cache
 
-# TODO: lint
-# example
-benchmark
-
 # Build environment
 dist
 
