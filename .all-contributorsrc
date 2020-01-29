@@ -66,6 +66,18 @@
         "ideas",
         "maintenance"
       ]
+    },
+    {
+      "login": "xarguments",
+      "name": "Xargs",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/40522463?v=4",
+      "profile": "https://github.com/xarguments",
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "maintenance"
+      ]
     }
   ]
 }
