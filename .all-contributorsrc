@@ -32,7 +32,13 @@
       "contributions": [
         "bug",
         "infra",
-        "design"
+        "design",
+        "code",
+        "doc",
+        "example",
+        "ideas",
+        "maintenance",
+        "test"
       ]
     },
     {
