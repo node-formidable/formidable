@@ -4,9 +4,17 @@ on:
   pull_request:
     branches:
       - master
+    commits:
+      - '*'
+      - '!ci skip'
+      - '!skip ci'
   push:
     branches:
       - master
+    commits:
+      - '*'
+      - '!ci skip'
+      - '!skip ci'
 
 jobs:
   test:
