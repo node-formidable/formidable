@@ -20,8 +20,8 @@
     "lint": "eslint . --cache --fix --quiet --format codeframe",
     "pretest": "yarn run cleanup && mkdir test/tmp",
     "test": "node test/run.js",
-    "pretest:cov": "yarn pretest",
-    "test:cov": "nyc node test/run.js"
+    "pretest:ci": "yarn pretest",
+    "test:ci": "nyc node test/run.js"
   },
   "devDependencies": {
     "@tunnckocore/prettier-config": "^1.2.0",
