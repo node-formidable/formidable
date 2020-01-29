@@ -8,7 +8,7 @@ const formidable = require('../../src/index');
 let ok = 0;
 let errors = 0;
 
-const PORT = 13532;
+const PORT = 0;
 const server = http.createServer((req, res) => {
   const form = formidable();
   form.on('error', () => {
@@ -24,14 +24,14 @@ const server = http.createServer((req, res) => {
   form.parse(req);
 });
 
-server.listen(PORT, 'localhost', () => {
+server.listen(PORT, () => {
   const choosenPort = server.address().port;
   const url = `http://localhost:${choosenPort}`;
   console.log('Server up and running at:', url);
 
   const client = net.createConnection(choosenPort);
 
-  // first send malformed post upload
+  // first send malformed (boundary / hyphens) post upload
   client.write(
     'POST /upload-test HTTP/1.1\r\n' +
       'Host: localhost\r\n' +
@@ -39,30 +39,35 @@ server.listen(PORT, 'localhost', () => {
       'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
       'Content-Length: 10011\r\n\r\n' +
       '------aaa\n\r',
-  ); // expected \r\n
+  );
 
   setTimeout(() => {
     const buf = Buffer.alloc(10000);
     buf.fill('a');
     client.write(buf);
-
-    // correct post upload
-    client.write(
-      'POST /upload-test HTTP/1.1\r\n' +
-        'Host: localhost\r\n' +
-        'Connection: keep-alive\r\n' +
-        'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
-        'Content-Length: 13\r\n\r\n' +
-        '------aaa--\r\n',
-    );
+    client.end();
 
     setTimeout(() => {
-      assert.strictEqual(ok, 1, `should ok count === 1, has: ${ok}`);
-      // TODO: fix it!
-      // assert.strictEqual(errors, 1, 'should errors count === 1, has: ' + errors);
-      console.log('should errors === 1', errors);
-      client.end();
-      server.close();
-    }, 100);
-  }, 100);
+      assert.strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
+
+      const clientTwo = net.createConnection(choosenPort);
+
+      // correct post upload (with hyphens)
+      clientTwo.write(
+        'POST /upload-test HTTP/1.1\r\n' +
+          'Host: localhost\r\n' +
+          'Connection: keep-alive\r\n' +
+          'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
+          'Content-Length: 13\r\n\r\n' +
+          '------aaa--\r\n',
+      );
+      clientTwo.end();
+
+      setTimeout(() => {
+        assert.strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
+
+        server.close();
+      }, 300);
+    }, 200);
+  }, 150);
 });

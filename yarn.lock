@@ -1354,7 +1354,7 @@ regexpp@^2.0.1:
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-2.0.1.tgz#8d19d31cf632482b589049f8281f93dbcba4d07f"
   integrity sha512-lv0M6+TkDVniA3aD1Eg0DVpfU/booSu7Eev3TDO/mZKHBfVjgCGTV4t4buppESEYDtkArYFOxTJWv6S5C+iaNw==
 
-request@^2.11.4:
+request@^2.88.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
@@ -1687,17 +1687,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-urun@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/urun/-/urun-0.0.6.tgz#e0fa856980367d86bf146e180bc3890320ab1d2f"
-  integrity sha1-4PqFaYA2fYa/FG4YC8OJAyCrHS8=
-  dependencies:
-    utest "0.0.2"
-
-utest@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/utest/-/utest-0.0.2.tgz#3862e2975309ea5de0940444a6c6ee0179726a16"
-  integrity sha1-OGLil1MJ6l3glAREpsbuAXlyahY=
+urun@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/urun/-/urun-0.0.8.tgz#3799a0293714c1115d326a4e69e2a5f96ee786e2"
+  integrity sha1-N5mgKTcUwRFdMmpOaeKl+W7nhuI=
 
 utest@^0.0.8:
   version "0.0.8"
