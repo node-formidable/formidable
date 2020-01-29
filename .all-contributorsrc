@@ -150,6 +150,15 @@
         "code",
         "review"
       ]
+    },
+    {
+      "login": "MunMunMiao",
+      "name": "MunMunMiao",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/18216142?v=4",
+      "profile": "https://github.com/MunMunMiao",
+      "contributions": [
+        "bug"
+      ]
     }
   ]
 }
