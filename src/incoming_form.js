@@ -507,10 +507,10 @@ class IncomingForm extends EventEmitter {
       this.emit('field', key, value);
     });
 
-    parser.onEnd = () => {
+    parser.once('end', () => {
       this.ended = true;
       this._maybeEnd();
-    };
+    });
 
     this._parser = parser;
   }
@@ -577,9 +577,6 @@ class IncomingForm extends EventEmitter {
     parser.on('data', ({ key, value }) => {
       this.emit('field', key, value);
     });
-    // parser.on('data', (key) => {
-    //   this.emit('field', key);
-    // });
 
     parser.once('end', () => {
       this.ended = true;
@@ -604,6 +601,9 @@ class IncomingForm extends EventEmitter {
   }
 
   _maybeEnd() {
+    // console.log('ended', this.ended);
+    // console.log('_flushing', this._flushing);
+    // console.log('error', this.error);
     if (!this.ended || this._flushing || this.error) {
       return;
     }
