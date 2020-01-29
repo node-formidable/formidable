@@ -4,7 +4,7 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "imageSize": 100,
-  "contributorsPerLine": 5,
+  "contributorsPerLine": 6,
   "commitConvention": "angular",
   "commit": true,
   "skipCi": true,
