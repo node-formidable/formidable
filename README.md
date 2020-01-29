@@ -200,7 +200,9 @@ You may overwrite this method if you are interested in directly accessing the mu
 
 ### form.onPart
 
-If you want to use Formidable to only handle certain parts for you, you can do something similar
+If you want to use Formidable to only handle certain parts for you, you can do something similar.
+Or see [#387](https://github.com/node-formidable/node-formidable/issues/387) for inspiration,
+you can for example validate the mime-type.
 
 ```js
 const form = formidable();
