@@ -12,9 +12,13 @@
  * First step of Code quality improvements ([#525](https://github.com/node-formidable/node-formidable/pull/525))
  * chore(funding): remove patreon & add npm funding field ([#525](https://github.com/node-formidable/node-formidable/pull/532)
  * feat: use Modern Streams API ([#531](https://github.com/node-formidable/node-formidable/pull/531))
- * fix: remove gently hijack and tests (([#539](https://github.com/node-formidable/node-formidable/pull/539)))
- * docs: Clarify supported hash algorithms (([#537](https://github.com/node-formidable/node-formidable/pull/537)))
- * feat: better tests, add Airbnb + Prettier(([#542](https://github.com/node-formidable/node-formidable/pull/542)))
+ * fix: remove gently hijack and tests ([#539](https://github.com/node-formidable/node-formidable/pull/539))
+ * docs: Clarify supported hash algorithms ([#537](https://github.com/node-formidable/node-formidable/pull/537))
+ * feat: better tests, add Airbnb + Prettier ([#542](https://github.com/node-formidable/node-formidable/pull/542))
+ * fix(incomingForm): better detection of fields vs files
+ * fix: resolves [#128](https://github.com/node-formidable/node-formidable/pull/128)
+ * fix: resolves [#543](https://github.com/node-formidable/node-formidable/pull/543)): urlencoded parsing to emit end; introduced in #531
+
 
 ### v1.2.1 (2018-03-20)
 
