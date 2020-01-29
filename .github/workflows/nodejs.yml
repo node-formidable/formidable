@@ -37,9 +37,9 @@ jobs:
       - name: Installing dependencies
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
-      - name: Linting codebase with ESLint & Prettier
+      - name: Linting & Format codebase with ESLint & Prettier
         run: yarn lint && yarn fmt
-      - name: Testing all packages
+      - name: Testing
         run: yarn test:ci
       - name: Sending test coverage to CodeCov
         if: matrix.os == 'ubuntu-latest' && matrix.node == '12.x'

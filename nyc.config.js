@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-  statements: 85,
-  branches: 78,
-  functions: 85,
-  lines: 85,
+  statements: 70,
+  branches: 70,
+  functions: 70,
+  lines: 70,
 
   'check-coverage': true,
   exclude: ['test'],
