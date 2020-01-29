@@ -102,6 +102,16 @@
         "ideas",
         "maintenance"
       ]
+    },
+    {
+      "login": "ad-m",
+      "name": "Adam Dobrawy",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3618479?v=4",
+      "profile": "http://ochrona.jawne.info.pl",
+      "contributions": [
+        "bug",
+        "doc"
+      ]
     }
   ]
 }
