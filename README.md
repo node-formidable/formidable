@@ -19,11 +19,11 @@ This module was initially developed by [**@felixge**](https://github.com/felixge
 Currently, we are few maintainers trying to deal with it. :) More contributors are always welcome! :heart:
 Jump on [issue #412](https://github.com/felixge/node-formidable/issues/412) if you are interested.
 
-_**Note:** Master is a "development" branch. Do not expect (for now) things from it to be inside the `latest` "dist-tag"
-in the Npm.
-The `formidable@latest` is the `v1.2.1` version and probably it will be the last `v1` release!_
+_**Note:** Master is a "development" branch - try it with `npm i formidable@canary`.
+Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the Npm.
+The`formidable@latest`is the`v1.2.1` version and probably it will be the last`v1` release!_
 
-_**Note: v2 is coming soon! You can try it with `npm i node-formidable/node-formidable#master`.**_
+_**Note: v2 is coming soon!**_
 
 ## Highlights
 
@@ -33,12 +33,20 @@ _**Note: v2 is coming soon! You can try it with `npm i node-formidable/node-form
 - Graceful error handling
 - Very high test coverage
 
-## Installation
+## Install
 
 ```sh
-npm i formidable
-# or
+npm install formidable
+# or the development version
+npm install formidable@canary
+```
+
+or with Yarn v1/v2
+
+```sh
 yarn add formidable
+# or the development version
+yarn add formidable@canary
 ```
 
 This is a low-level package, and if you're using a high-level framework it may already be included.
