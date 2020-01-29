@@ -4,7 +4,7 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "imageSize": 100,
-  "contributorsPerLine": 7,
+  "contributorsPerLine": 5,
   "commitConvention": "angular",
   "commit": true,
   "skipCi": true,
@@ -101,6 +101,15 @@
         "code",
         "ideas",
         "maintenance"
+      ]
+    },
+    {
+      "login": "DylanPiercey",
+      "name": "Dylan Piercey",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4985201?v=4",
+      "profile": "https://twitter.com/dylan_piercey",
+      "contributions": [
+        "ideas"
       ]
     },
     {
