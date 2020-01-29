@@ -4,20 +4,15 @@ on:
   pull_request:
     branches:
       - master
-    commits:
-      - '*'
-      - '!ci skip'
-      - '!skip ci'
   push:
     branches:
       - master
-    commits:
-      - '*'
-      - '!ci skip'
-      - '!skip ci'
 
 jobs:
   test:
+    # if: |
+    #   !contains(github.event.commit.message, '[ci skip]') ||
+    #   !contains(github.event.commit.message, '[skip ci]')
     env:
       CI: true
       CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
@@ -42,6 +37,11 @@ jobs:
       #   uses: actions/setup-node@v1
       #   with:
       #     node: ${{ matrix.node }}
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
       - name: Installing dependencies
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
