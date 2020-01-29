@@ -211,9 +211,9 @@ class IncomingForm extends EventEmitter {
     // from somewhere else. Where recently I changed the return statements
     // and such thing because code style
     // @tunnckocore: or even better, if there is no mime, then it's for sure a field
-    if (!part.mime) {
+    if (!part.mime || (part.filename !== '' && !part.filename)) {
       let value = '';
-      const decoder = new StringDecoder(this.encoding);
+      const decoder = new StringDecoder(part.transferEncoding || this.encoding);
 
       part.on('data', (buffer) => {
         this._fieldsSize += buffer.length;
