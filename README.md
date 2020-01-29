@@ -183,7 +183,8 @@ form.bytesExpected;
 
 ### .parse(request, callback)
 
-Parses an incoming Node.js `request` containing form data. If `callback` is provided, all fields and files are collected and passed to the callback:
+Parses an incoming Node.js `request` containing form data.
+If `callback` is provided, all fields and files are collected and passed to the callback.
 
 ```js
 const formidable = require('formidable');
@@ -197,6 +198,58 @@ form.parse(req, (err, fields, files) => {
 ```
 
 You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events processing which would occur otherwise, making you fully responsible for handling the processing.
+
+In the example below, we listen on couple of events and direct them to the `data` listener,
+so you can do whatever you choose there, based on whether its before the file been emitted,
+the header value, the header name, on field, on file and etc.
+
+Or the other way could be to just override the `form.onPart` as it's shown a bit later.
+
+```js
+form.once('error', console.error);
+
+form.on('fileBegin', (filename, file) => {
+  form.emit('data', { name: 'fileBegin', filename, value: file });
+});
+
+form.on('file', (filename, file) => {
+  form.emit('data', { name: 'file', key: filename, value: file });
+});
+
+form.on('field', (fieldName, fieldValue) => {
+  form.emit('data', { name: 'field', key: fieldName, value: fieldValue });
+});
+
+form.once('end', () => {
+  console.log('Done!');
+});
+
+// If you want to customize whatever you want...
+form.on('data', ({ name, key, value, buffer, start, end, ...more }) => {
+  if (name === 'partBegin') {
+  }
+  if (name === 'partData') {
+  }
+  if (name === 'headerField') {
+  }
+  if (name === 'headerValue') {
+  }
+  if (name === 'headerEnd') {
+  }
+  if (name === 'headersEnd') {
+  }
+  if (name === 'field') {
+    console.log('field name:', key);
+    console.log('field value:', value);
+  }
+  if (name === 'file') {
+    console.log('file:', key, value);
+  }
+  if (name === 'fileBegin') {
+    console.log('fileBegin:', key, value);
+  }
+});
+```
 
 ### form.onPart
 
@@ -251,7 +304,7 @@ export interface File {
   // Mostly here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
   file.lastModifiedDate: Date | null;
 
-  // If hash calculation was set, you can read the hex digest out of this var.
+  // If `options.hash` calculation was set, you can read the hex digest out of this var.
   file.hash: string | 'sha1' | 'md5' | 'sha256' | null;
 }
 ```

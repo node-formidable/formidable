@@ -26,6 +26,7 @@ test(function write() {
   assert.equal(parser.bufferLength, a.length + b.length);
 });
 
+// ! skip
 // test(function end() {
 //   const FIELDS = { a: ['b', { c: 'd' }], e: 'f' };
 
