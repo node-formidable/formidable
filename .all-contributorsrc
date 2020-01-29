@@ -139,6 +139,17 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "quantumsheep",
+      "name": "Nathanael Demacon",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7271496?v=4",
+      "profile": "https://qtmsheep.com",
+      "contributions": [
+        "question",
+        "code",
+        "review"
+      ]
     }
   ]
 }
