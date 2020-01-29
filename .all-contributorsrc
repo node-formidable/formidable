@@ -34,6 +34,19 @@
         "infra",
         "design"
       ]
+    },
+    {
+      "login": "GrosSacASac",
+      "name": "Walle Cyril",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5721194?v=4",
+      "profile": "https://github.com/GrosSacASac",
+      "contributions": [
+        "code",
+        "doc",
+        "bug",
+        "maintenance",
+        "financial"
+      ]
     }
   ]
 }
