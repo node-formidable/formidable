@@ -33,6 +33,9 @@ class File extends EventEmitter {
 
   open() {
     this._writeStream = new fs.WriteStream(this.path);
+    this._writeStream.on('error', (err) => {
+      this.emit('error', err);
+    });
   }
 
   toJSON() {

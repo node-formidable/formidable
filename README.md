@@ -2,14 +2,16 @@
   <img alt="node formidable logo" src="./logo.png" />
 </p>
 
-# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url]
+# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url]
 
 > A Node.js module for parsing form data, especially file uploads.
 
 [![Code style][codestyle-img]][codestyle-url]
-[![npm version][npmv-canary-img]][npmv-url]
 [![build status][build-img]][build-url]
-[![chat on gitter][chat-img]][chat-url]
+[![codecoverage][codecov-img]][codecov-url]
+[![Renovate App Status][renovateapp-img]][renovateapp-url]
+[![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+[![Twitter][twitter-img]][twitter-url]
 
 ## Status: Maintained
 
@@ -23,6 +25,8 @@ Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the
 The`formidable@latest`is the`v1.2.1` version and probably it will be the last`v1` release!_
 
 _**Note: v2 is coming soon!**_
+
+[![npm version][npmv-canary-img]][npmv-url]
 
 ## Highlights
 
@@ -436,24 +440,62 @@ Emitted when the entire request has been received, and all contained files have 
 form.on('end', () => {});
 ```
 
+## Ports & Credits
+
+- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
+- [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired the initial `multipart_parser.js`.
+
+## Contributing
+
+If the documentation is unclear or has a typo, please click on the page's `Edit`
+button (pencil icon) and suggest a correction. If you would like to help us fix a bug or add a new feature, please check our
+[Contributing Guide](./CONTRIBUTING.md). Pull requests are welcome!
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://twitter.com/felixge"><img src="https://avatars3.githubusercontent.com/u/15000?s=460&v=4" width="100px;" alt=""/><br /><sub><b>Felix Geisendörfer</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/commits?author=felixge" title="Code">💻</a> <a href="#design-felixge" title="Design">🎨</a> <a href="#ideas-felixge" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=felixge" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://tunnckoCore.com"><img src="https://avatars3.githubusercontent.com/u/5038030?v=4" width="100px;" alt=""/><br /><sub><b>Charlike Mike Reagent</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3AtunnckoCore" title="Bug reports">🐛</a> <a href="#infra-tunnckoCore" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#design-tunnckoCore" title="Design">🎨</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=tunnckoCore" title="Code">💻</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=tunnckoCore" title="Documentation">📖</a> <a href="#example-tunnckoCore" title="Examples">💡</a> <a href="#ideas-tunnckoCore" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-tunnckoCore" title="Maintenance">🚧</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=tunnckoCore" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/kedarv"><img src="https://avatars1.githubusercontent.com/u/1365665?v=4" width="100px;" alt=""/><br /><sub><b>Kedar</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/commits?author=kedarv" title="Code">💻</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=kedarv" title="Tests">⚠️</a> <a href="#question-kedarv" title="Answering Questions">💬</a> <a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Akedarv" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/GrosSacASac"><img src="https://avatars0.githubusercontent.com/u/5721194?v=4" width="100px;" alt=""/><br /><sub><b>Walle Cyril</b></sub></a><br /><a href="#question-GrosSacASac" title="Answering Questions">💬</a> <a href="https://github.com/node-formidable/node-formidable/issues?q=author%3AGrosSacASac" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=GrosSacASac" title="Code">💻</a> <a href="#financial-GrosSacASac" title="Financial">💵</a> <a href="#ideas-GrosSacASac" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-GrosSacASac" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/xarguments"><img src="https://avatars2.githubusercontent.com/u/40522463?v=4" width="100px;" alt=""/><br /><sub><b>Xargs</b></sub></a><br /><a href="#question-xarguments" title="Answering Questions">💬</a> <a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Axarguments" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=xarguments" title="Code">💻</a> <a href="#maintenance-xarguments" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/Amit-A"><img src="https://avatars1.githubusercontent.com/u/7987238?v=4" width="100px;" alt=""/><br /><sub><b>Amit-A</b></sub></a><br /><a href="#question-Amit-A" title="Answering Questions">💬</a> <a href="https://github.com/node-formidable/node-formidable/issues?q=author%3AAmit-A" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=Amit-A" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://charmander.me/"><img src="https://avatars1.githubusercontent.com/u/1889843?v=4" width="100px;" alt=""/><br /><sub><b>Charmander</b></sub></a><br /><a href="#question-charmander" title="Answering Questions">💬</a> <a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Acharmander" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=charmander" title="Code">💻</a> <a href="#ideas-charmander" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-charmander" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://twitter.com/dylan_piercey"><img src="https://avatars2.githubusercontent.com/u/4985201?v=4" width="100px;" alt=""/><br /><sub><b>Dylan Piercey</b></sub></a><br /><a href="#ideas-DylanPiercey" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://ochrona.jawne.info.pl"><img src="https://avatars1.githubusercontent.com/u/3618479?v=4" width="100px;" alt=""/><br /><sub><b>Adam Dobrawy</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Aad-m" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=ad-m" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/amitrohatgi"><img src="https://avatars3.githubusercontent.com/u/12177021?v=4" width="100px;" alt=""/><br /><sub><b>amitrohatgi</b></sub></a><br /><a href="#ideas-amitrohatgi" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/fengxinming"><img src="https://avatars2.githubusercontent.com/u/6262382?v=4" width="100px;" alt=""/><br /><sub><b>Jesse Feng</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Afengxinming" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://qtmsheep.com"><img src="https://avatars1.githubusercontent.com/u/7271496?v=4" width="100px;" alt=""/><br /><sub><b>Nathanael Demacon</b></sub></a><br /><a href="#question-quantumsheep" title="Answering Questions">💬</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=quantumsheep" title="Code">💻</a> <a href="https://github.com/node-formidable/node-formidable/pulls?q=is%3Apr+reviewed-by%3Aquantumsheep" title="Reviewed Pull Requests">👀</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/MunMunMiao"><img src="https://avatars1.githubusercontent.com/u/18216142?v=4" width="100px;" alt=""/><br /><sub><b>MunMunMiao</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3AMunMunMiao" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/gabipetrovay"><img src="https://avatars0.githubusercontent.com/u/1170398?v=4" width="100px;" alt=""/><br /><sub><b>Gabriel Petrovay</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Agabipetrovay" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=gabipetrovay" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Elzair"><img src="https://avatars0.githubusercontent.com/u/2352818?v=4" width="100px;" alt=""/><br /><sub><b>Philip Woods</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/commits?author=Elzair" title="Code">💻</a> <a href="#ideas-Elzair" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## License
 
 Formidable is licensed under the [MIT License][license-url].
-
-## Ports
-
-- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
-
-## Credits
-
-- [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js
 
 <!-- badges -->
 
 [codestyle-url]: https://github.com/airbnb/javascript
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
-[build-img]: https://badgen.net/travis/node-formidable/node-formidable/master?label=build&icon=travis
-[build-url]: https://travis-ci.org/node-formidable/node-formidable.svg?branch=master
+[codecov-url]: https://codecov.io/gh/node-formidable/node-formidable
+[codecov-img]: https://badgen.net/codecov/c/github/node-formidable/node-formidable/master?icon=codecov
+[build-img]: https://badgen.net/github/checks/node-formidable/node-formidable?label=build&icon=github
+[build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 [npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
 [npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
 [npmv-url]: https://npmjs.com/package/formidable
@@ -461,3 +503,11 @@ Formidable is licensed under the [MIT License][license-url].
 [license-url]: https://github.com/node-formidable/node-formidable/blob/master/LICENSE
 [chat-img]: https://badgen.net/badge/chat/on%20gitter/46BC99?icon=gitter
 [chat-url]: https://gitter.im/node-formidable/Lobby
+[libera-manifesto-url]: https://liberamanifesto.com
+[libera-manifesto-img]: https://badgen.net/badge/libera/manifesto/grey
+[renovateapp-url]: https://renovatebot.com
+[renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
+[prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
+[prs-welcome-url]: http://makeapullrequest.com
+[twitter-url]: https://twitter.com/tunnckoCore
+[twitter-img]: https://badgen.net/twitter/follow/tunnckoCore?icon=twitter&color=1da1f2&cache=300

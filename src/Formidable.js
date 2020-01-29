@@ -292,7 +292,9 @@ class IncomingForm extends EventEmitter {
       type: part.mime,
       hash: this.options.hash,
     });
-
+    file.on('error', (err) => {
+      this._error(err);
+    });
     this.emit('fileBegin', part.name, file);
 
     file.open();

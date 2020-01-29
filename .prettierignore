@@ -28,6 +28,7 @@ coverage
 *.jpg
 
 .*
+!.all-contributorsrc
 !.*rc.js
 !.verb*.md
 patches

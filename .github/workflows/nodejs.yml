@@ -10,6 +10,7 @@ on:
 
 jobs:
   test:
+    if: "!contains(toJson(github.event.commits), '[skip ci]')"
     env:
       CI: true
       CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
@@ -20,7 +21,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v1
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
       - uses: actions/cache@v1
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
         id: nodejs-cache
         name: Cache node modules
         with:
@@ -34,12 +37,20 @@ jobs:
       #   uses: actions/setup-node@v1
       #   with:
       #     node: ${{ matrix.node }}
+
+      - name: Dump GitHub context
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
       - name: Installing dependencies
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
-      - name: Linting codebase with ESLint & Prettier
+      - name: Linting & Format codebase with ESLint & Prettier
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
         run: yarn lint && yarn fmt
-      - name: Testing all packages
+      - name: Testing
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
         run: yarn test:ci
       - name: Sending test coverage to CodeCov
         if: matrix.os == 'ubuntu-latest' && matrix.node == '12.x'

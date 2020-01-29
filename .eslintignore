@@ -11,6 +11,7 @@ test-legacy
 .*cache
 *.cache
 
+.all-contrib*rc
 # Build environment
 dist
 
