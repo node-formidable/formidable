@@ -3,7 +3,7 @@
 const os = require('os');
 const http = require('http');
 const util = require('util');
-const Formidable = require('../src/index');
+const { Formidable } = require('../src/index');
 
 const PORT = 13532;
 const server = http.createServer((req, res) => {

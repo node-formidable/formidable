@@ -1,7 +1,7 @@
 'use strict';
 
 const File = require('./File');
-const IncomingForm = require('./IncomingForm');
+const Formidable = require('./Formidable');
 
 const JSONParser = require('./parsers/JSON');
 const DummyParser = require('./parsers/Dummy');
@@ -11,15 +11,15 @@ const QuerystringParser = require('./parsers/Querystring');
 
 // make it available without requiring the `new` keyword
 // if you want it access `const formidable.IncomingForm` as v1
-const formidable = (...args) => new IncomingForm(...args);
+const formidable = (...args) => new Formidable(...args);
 
 module.exports = Object.assign(formidable, {
-  IncomingForm,
   File,
+  Formidable,
   formidable,
 
   // alias
-  Formidable: IncomingForm,
+  IncomingForm: Formidable,
 
   // parsers
   JSONParser,

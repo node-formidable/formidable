@@ -2,7 +2,7 @@
 
 const http = require('http');
 const util = require('util');
-const Formidable = require('../src/index');
+const { Formidable } = require('../src/index');
 
 // random OS choosen port
 const PORT = 13532;
