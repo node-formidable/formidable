@@ -390,8 +390,8 @@ Formidable is licensed under the [MIT License][license-url].
 
 [codestyle-url]: https://github.com/airbnb/javascript
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
-[build-img]: https://badgen.net/travis/node-formidable/node-formidable/master?label=build&icon=travis
-[build-url]: https://travis-ci.org/node-formidable/node-formidable.svg?branch=master
+[build-img]: https://badgen.net/github/checks/node-formidable/node-formidable?label=build&icon=github
+[build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 [npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
 [npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
 [npmv-url]: https://npmjs.com/package/formidable
