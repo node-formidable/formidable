@@ -257,7 +257,9 @@ class IncomingForm extends EventEmitter {
       type: part.mime,
       hash: this.hash,
     });
-
+    file.on('error', (err) => {
+      this._error(err);
+    });
     this.emit('fileBegin', part.name, file);
 
     file.open();
@@ -538,6 +540,10 @@ class IncomingForm extends EventEmitter {
       path: this._uploadPath(filename),
       name: filename,
       type: mime,
+    });
+
+    file.on('error', (err) => {
+      this._error(err);
     });
 
     this.emit('fileBegin', filename, file);
