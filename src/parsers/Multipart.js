@@ -43,7 +43,7 @@ Object.keys(STATE).forEach((stateName) => {
 });
 
 class MultipartParser extends Transform {
-  constructor() {
+  constructor(options = {}) {
     super({ readableObjectMode: true });
     this.boundary = null;
     this.boundaryChars = null;
@@ -51,6 +51,7 @@ class MultipartParser extends Transform {
     this.bufferLength = 0;
     this.state = STATE.PARSER_UNINITIALIZED;
 
+    this.globalOptions = { ...options };
     this.index = null;
     this.flags = 0;
   }

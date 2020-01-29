@@ -5,8 +5,9 @@
 const { Transform } = require('stream');
 
 class DummyParser extends Transform {
-  constructor(incomingForm) {
+  constructor(incomingForm, options = {}) {
     super();
+    this.globalOptions = { ...options };
     this.incomingForm = incomingForm;
   }
 

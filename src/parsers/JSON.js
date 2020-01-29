@@ -5,9 +5,10 @@
 const { Transform } = require('stream');
 
 class JSONParser extends Transform {
-  constructor() {
+  constructor(options = {}) {
     super({ readableObjectMode: true });
     this.chunks = [];
+    this.globalOptions = { ...options };
   }
 
   _transform(chunk, encoding, callback) {

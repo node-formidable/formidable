@@ -77,7 +77,7 @@ function testNext(results) {
           assert.strictEqual(
             file.hash,
             expectedPart.sha1,
-            `error ${file.name} on ${file.path}`,
+            `SHA1 error ${file.name} on ${file.path}`,
           );
         }
       }

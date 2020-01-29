@@ -7,7 +7,6 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { Stream } = require('stream');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 
@@ -19,16 +18,12 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hash: false,
   multiples: false,
+  enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
 };
 
 const File = require('./File');
-
-/** Parsers */
-const JSONParser = require('./parsers/JSON');
 const DummyParser = require('./parsers/Dummy');
-const OctetParser = require('./parsers/OctetStream');
 const MultipartParser = require('./parsers/Multipart');
-const QuerystringParser = require('./parsers/Querystring');
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -40,7 +35,7 @@ class IncomingForm extends EventEmitter {
     this.error = null;
     this.ended = false;
 
-    Object.assign(this, DEFAULT_OPTIONS, options);
+    this.options = { ...DEFAULT_OPTIONS, ...options };
     this.uploadDir = this.uploadDir || os.tmpdir();
 
     this.headers = null;
@@ -53,7 +48,22 @@ class IncomingForm extends EventEmitter {
     this._flushing = 0;
     this._fieldsSize = 0;
     this._fileSize = 0;
+    this._plugins = [];
     this.openedFiles = [];
+
+    this.options.enabledPlugins.forEach((pluginName) => {
+      const plgName = pluginName.toLowerCase();
+      // eslint-disable-next-line import/no-dynamic-require, global-require
+      this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
+    });
+  }
+
+  use(plugin) {
+    if (typeof plugin !== 'function') {
+      throw new Error('.use: expect `plugin` to be a function');
+    }
+    this._plugins.push(plugin.bind(this));
+    return this;
   }
 
   parse(req, cb) {
@@ -93,7 +103,7 @@ class IncomingForm extends EventEmitter {
 
       this.on('field', (name, value) => {
         // TODO: too much nesting
-        if (this.multiples && name.slice(-2) === '[]') {
+        if (this.options.multiples && name.slice(-2) === '[]') {
           const realName = name.slice(0, name.length - 2);
           if (hasOwnProp(fields, realName)) {
             if (!Array.isArray(fields[realName])) {
@@ -113,7 +123,7 @@ class IncomingForm extends EventEmitter {
       });
       this.on('file', (name, file) => {
         // TODO: too much nesting
-        if (this.multiples) {
+        if (this.options.multiples) {
           if (hasOwnProp(files, name)) {
             if (!Array.isArray(files[name])) {
               files[name] = [files[name]];
@@ -207,10 +217,10 @@ class IncomingForm extends EventEmitter {
 
   onPart(part) {
     // this method can be overwritten by the user
-    this.handlePart(part);
+    this._handlePart(part);
   }
 
-  handlePart(part) {
+  _handlePart(part) {
     if (part.filename && typeof part.filename !== 'string') {
       this._error(new Error(`the part.filename should be string when exists`));
       return;
@@ -228,14 +238,16 @@ class IncomingForm extends EventEmitter {
     // ? NOTE(@tunnckocore): filename is an empty string when a field?
     if (!part.mime) {
       let value = '';
-      const decoder = new StringDecoder(part.transferEncoding || this.encoding);
+      const decoder = new StringDecoder(
+        part.transferEncoding || this.options.encoding,
+      );
 
       part.on('data', (buffer) => {
         this._fieldsSize += buffer.length;
-        if (this._fieldsSize > this.maxFieldsSize) {
+        if (this._fieldsSize > this.options.maxFieldsSize) {
           this._error(
             new Error(
-              `maxFieldsSize exceeded, received ${this._fieldsSize} bytes of field data`,
+              `options.maxFieldsSize exceeded, received ${this._fieldsSize} bytes of field data`,
             ),
           );
           return;
@@ -255,7 +267,7 @@ class IncomingForm extends EventEmitter {
       path: this._uploadPath(part.filename),
       name: part.filename,
       type: part.mime,
-      hash: this.hash,
+      hash: this.options.hash,
     });
 
     this.emit('fileBegin', part.name, file);
@@ -265,10 +277,10 @@ class IncomingForm extends EventEmitter {
 
     part.on('data', (buffer) => {
       this._fileSize += buffer.length;
-      if (this._fileSize > this.maxFileSize) {
+      if (this._fileSize > this.options.maxFileSize) {
         this._error(
           new Error(
-            `maxFileSize exceeded, received ${this._fileSize} bytes of file data`,
+            `options.maxFileSize exceeded, received ${this._fileSize} bytes of file data`,
           ),
         );
         return;
@@ -294,7 +306,7 @@ class IncomingForm extends EventEmitter {
   // eslint-disable-next-line max-statements
   _parseContentType() {
     if (this.bytesExpected === 0) {
-      this._parser = new DummyParser(this);
+      this._parser = new DummyParser(this, this.options);
       return;
     }
 
@@ -303,40 +315,23 @@ class IncomingForm extends EventEmitter {
       return;
     }
 
-    if (this.headers['content-type'].match(/octet-stream/i)) {
-      this._initOctetStream();
-      return;
+    const results = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let idx = 0; idx < this._plugins.length; idx++) {
+      const plugin = this._plugins[idx].bind(this);
+
+      const res = plugin.call(this, this, this.options);
+      results.push(res);
     }
 
-    if (this.headers['content-type'].match(/urlencoded/i)) {
-      this._initUrlencoded();
-      return;
-    }
-
-    if (this.headers['content-type'].match(/multipart/i)) {
-      const m = this.headers['content-type'].match(
-        /boundary=(?:"([^"]+)"|([^;]+))/i,
+    if (results.length === 0 && results.length !== this._plugins.length) {
+      this._error(
+        new Error(
+          `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
+        ),
       );
-      if (m) {
-        this._initMultipart(m[1] || m[2]);
-      } else {
-        this._error(
-          new Error('bad content-type header, no multipart boundary'),
-        );
-      }
-      return;
     }
-
-    if (this.headers['content-type'].match(/json/i)) {
-      this._initJSONencoded();
-      return;
-    }
-
-    this._error(
-      new Error(
-        `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
-      ),
-    );
   }
 
   _error(err) {
@@ -369,133 +364,10 @@ class IncomingForm extends EventEmitter {
   }
 
   _newParser() {
-    return new MultipartParser();
+    return new MultipartParser(this.options);
   }
 
-  _initMultipart(boundary) {
-    this.type = 'multipart';
-
-    const parser = new MultipartParser();
-    let headerField;
-    let headerValue;
-    let part;
-
-    parser.initWithBoundary(boundary);
-
-    // eslint-disable-next-line max-statements, consistent-return
-    parser.on('data', ({ name, buffer, start, end }) => {
-      if (name === 'partBegin') {
-        part = new Stream();
-        part.readable = true;
-        part.headers = {};
-        part.name = null;
-        part.filename = null;
-        part.mime = null;
-
-        part.transferEncoding = 'binary';
-        part.transferBuffer = '';
-
-        headerField = '';
-        headerValue = '';
-      } else if (name === 'headerField') {
-        headerField += buffer.toString(this.encoding, start, end);
-      } else if (name === 'headerValue') {
-        headerValue += buffer.toString(this.encoding, start, end);
-      } else if (name === 'headerEnd') {
-        headerField = headerField.toLowerCase();
-        part.headers[headerField] = headerValue;
-
-        // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
-        const m = headerValue.match(
-          // eslint-disable-next-line no-useless-escape
-          /\bname=("([^"]*)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))/i,
-        );
-        if (headerField === 'content-disposition') {
-          if (m) {
-            part.name = m[2] || m[3] || '';
-          }
-
-          part.filename = this._fileName(headerValue);
-        } else if (headerField === 'content-type') {
-          part.mime = headerValue;
-        } else if (headerField === 'content-transfer-encoding') {
-          part.transferEncoding = headerValue.toLowerCase();
-        }
-
-        headerField = '';
-        headerValue = '';
-      } else if (name === 'headersEnd') {
-        switch (part.transferEncoding) {
-          case 'binary':
-          case '7bit':
-          case '8bit': {
-            const dataPropagation = (ctx) => {
-              if (ctx.name === 'partData') {
-                part.emit('data', ctx.buffer.slice(ctx.start, ctx.end));
-              }
-            };
-            const dataStopPropagation = (ctx) => {
-              if (ctx.name === 'partEnd') {
-                part.emit('end');
-                parser.off('data', dataPropagation);
-                parser.off('data', dataStopPropagation);
-              }
-            };
-            parser.on('data', dataPropagation);
-            parser.on('data', dataStopPropagation);
-            break;
-          }
-          case 'base64': {
-            const dataPropagation = (ctx) => {
-              if (ctx.name === 'partData') {
-                part.transferBuffer += ctx.buffer
-                  .slice(ctx.start, ctx.end)
-                  .toString('ascii');
-
-                /*
-                    four bytes (chars) in base64 converts to three bytes in binary
-                    encoding. So we should always work with a number of bytes that
-                    can be divided by 4, it will result in a number of buytes that
-                    can be divided vy 3.
-                    */
-                const offset = parseInt(part.transferBuffer.length / 4, 10) * 4;
-                part.emit(
-                  'data',
-                  Buffer.from(
-                    part.transferBuffer.substring(0, offset),
-                    'base64',
-                  ),
-                );
-                part.transferBuffer = part.transferBuffer.substring(offset);
-              }
-            };
-            const dataStopPropagation = (ctx) => {
-              if (ctx.name === 'partEnd') {
-                part.emit('data', Buffer.from(part.transferBuffer, 'base64'));
-                part.emit('end');
-                parser.off('data', dataPropagation);
-                parser.off('data', dataStopPropagation);
-              }
-            };
-            parser.on('data', dataPropagation);
-            parser.on('data', dataStopPropagation);
-            break;
-          }
-          default:
-            return this._error(new Error('unknown transfer-encoding'));
-        }
-
-        this.onPart(part);
-      } else if (name === 'end') {
-        this.ended = true;
-        this._maybeEnd();
-      }
-    });
-
-    this._parser = parser;
-  }
-
-  _fileName(headerValue) {
+  _getFileName(headerValue) {
     // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
     const m = headerValue.match(
       // eslint-disable-next-line no-useless-escape
@@ -512,99 +384,11 @@ class IncomingForm extends EventEmitter {
     return filename;
   }
 
-  _initUrlencoded() {
-    this.type = 'urlencoded';
-
-    const parser = new QuerystringParser(this.maxFields);
-
-    parser.on('data', ({ key, value }) => {
-      this.emit('field', key, value);
-    });
-
-    parser.once('end', () => {
-      this.ended = true;
-      this._maybeEnd();
-    });
-
-    this._parser = parser;
-  }
-
-  _initOctetStream() {
-    this.type = 'octet-stream';
-    const filename = this.headers['x-file-name'];
-    const mime = this.headers['content-type'];
-
-    const file = new File({
-      path: this._uploadPath(filename),
-      name: filename,
-      type: mime,
-    });
-
-    this.emit('fileBegin', filename, file);
-    file.open();
-    this.openedFiles.push(file);
-    this._flushing += 1;
-
-    this._parser = new OctetParser();
-
-    // Keep track of writes that haven't finished so we don't emit the file before it's done being written
-    let outstandingWrites = 0;
-
-    this._parser.on('data', (buffer) => {
-      this.pause();
-      outstandingWrites += 1;
-
-      file.write(buffer, () => {
-        outstandingWrites -= 1;
-        this.resume();
-
-        if (this.ended) {
-          this._parser.emit('doneWritingFile');
-        }
-      });
-    });
-
-    this._parser.on('end', () => {
-      this._flushing -= 1;
-      this.ended = true;
-
-      const done = () => {
-        file.end(() => {
-          this.emit('file', 'file', file);
-          this._maybeEnd();
-        });
-      };
-
-      if (outstandingWrites === 0) {
-        done();
-      } else {
-        this._parser.once('doneWritingFile', done);
-      }
-    });
-  }
-
-  _initJSONencoded() {
-    this.type = 'json';
-
-    const parser = new JSONParser();
-
-    parser.on('data', ({ key, value }) => {
-      this.emit('field', key, value);
-    });
-
-    parser.once('end', () => {
-      this.ended = true;
-      this._maybeEnd();
-    });
-
-    this._parser = parser;
-  }
-
   _uploadPath(filename) {
     const buf = crypto.randomBytes(16);
     let name = `upload_${buf.toString('hex')}`;
 
-    if (this.keepExtensions) {
+    if (this.options.keepExtensions) {
       let ext = path.extname(filename);
       ext = ext.replace(/(\.[a-z0-9]+).*/i, '$1');
 
