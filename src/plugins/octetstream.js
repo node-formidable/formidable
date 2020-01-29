@@ -30,6 +30,7 @@ function init(_self, _opts) {
     path: this._uploadPath(filename),
     name: filename,
     type: mime,
+    hash: this.options.hash,
   });
 
   this.emit('fileBegin', filename, file);
