@@ -89,6 +89,19 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "charmander",
+      "name": "Charmander",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1889843?v=4",
+      "profile": "https://charmander.me/",
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "ideas",
+        "maintenance"
+      ]
     }
   ]
 }
