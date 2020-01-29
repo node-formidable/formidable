@@ -3,7 +3,7 @@
 const assert = require('assert');
 const test = require('utest');
 
-const { File } = require('../../src/file');
+const { File } = require('../../src/index');
 
 let file;
 const now = new Date();

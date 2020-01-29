@@ -5,7 +5,7 @@ const http = require('http');
 const path = require('path');
 const assert = require('assert');
 
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 const PORT = 13532;
 const testFilePath = path.join(
@@ -16,7 +16,7 @@ const testFilePath = path.join(
 );
 
 const server = http.createServer((req, res) => {
-  const form = new Formidable();
+  const form = formidable();
 
   form.parse(req, (err, fields, files) => {
     assert.strictEqual(Object.keys(files).length, 1);

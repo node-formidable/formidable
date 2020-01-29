@@ -4,14 +4,14 @@ const path = require('path');
 const http = require('http');
 const assert = require('assert');
 
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 const UPLOAD_DIR = path.join(process.cwd(), 'test', 'tmp');
 
 // OS choosing port
 const PORT = 13532;
 const server = http.createServer((req, res) => {
-  const form = new Formidable();
+  const form = formidable();
   form.uploadDir = UPLOAD_DIR;
   form.on('end', () => {
     throw new Error('Unexpected "end" event');

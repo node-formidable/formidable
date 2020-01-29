@@ -5,7 +5,7 @@
 const http = require('http');
 const assert = require('assert');
 const request = require('request');
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 // OS choosing port
 const PORT = 13532;
@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Parse form and write results to response.
-  const form = new Formidable();
+  const form = formidable();
   form.parse(req, (err, fields, files) => {
     res.writeHead(200, { 'content-type': 'text/plain' });
     res.write(JSON.stringify({ err, fields, files }));

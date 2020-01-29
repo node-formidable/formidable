@@ -3,14 +3,14 @@
 const net = require('net');
 const http = require('http');
 const assert = require('assert');
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 let ok = 0;
 let errors = 0;
 
 const PORT = 13532;
 const server = http.createServer((req, res) => {
-  const form = new Formidable();
+  const form = formidable();
   form.on('error', () => {
     errors += 1;
     res.writeHead(500);

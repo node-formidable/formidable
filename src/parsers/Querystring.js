@@ -35,4 +35,4 @@ class QuerystringParser extends Transform {
   }
 }
 
-exports.QuerystringParser = QuerystringParser;
+module.exports = QuerystringParser;

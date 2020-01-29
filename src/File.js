@@ -85,4 +85,4 @@ class File extends EventEmitter {
   }
 }
 
-exports.File = File;
+module.exports = File;

@@ -2,7 +2,7 @@
 
 const http = require('http');
 const assert = require('assert');
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 const testData = {
   numbers: [1, 2, 3, 4, 5],
@@ -11,7 +11,7 @@ const testData = {
 
 const PORT = 13532;
 const server = http.createServer((req, res) => {
-  const form = new Formidable();
+  const form = formidable();
 
   form.parse(req, (err, fields) => {
     assert.deepEqual(fields, testData);

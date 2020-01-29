@@ -11,13 +11,24 @@ const { Stream } = require('stream');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 
-const { File } = require('./file');
-const { JSONParser } = require('./json_parser');
-const { DummyParser } = require('./dummy_parser');
-const { OctetParser } = require('./octet_parser');
-const { defaultOptions } = require('./default_options');
-const { MultipartParser } = require('./multipart_parser');
-const { QuerystringParser } = require('./querystring_parser');
+const defaultOptions = {
+  maxFields: 1000,
+  maxFieldsSize: 20 * 1024 * 1024,
+  maxFileSize: 200 * 1024 * 1024,
+  keepExtensions: false,
+  encoding: 'utf-8',
+  hash: false,
+  multiples: false,
+};
+
+const File = require('./File');
+
+/** Parsers */
+const JSONParser = require('./parsers/JSON');
+const DummyParser = require('./parsers/Dummy');
+const OctetParser = require('./parsers/OctetStream');
+const MultipartParser = require('./parsers/Multipart');
+const QuerystringParser = require('./parsers/Querystring');
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -75,11 +86,11 @@ class IncomingForm extends EventEmitter {
       return true;
     };
 
-    // Setup callback first, so we don't miss anything from data events emitted
-    // immediately.
+    // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const fields = {};
       const files = {};
+
       this.on('field', (name, value) => {
         // TODO: too much nesting
         if (this.multiples && name.slice(-2) === '[]') {
@@ -612,7 +623,4 @@ class IncomingForm extends EventEmitter {
   }
 }
 
-IncomingForm.IncomingForm = IncomingForm;
-exports.IncomingForm = IncomingForm;
-exports.default = IncomingForm;
-module.exports = exports.default;
+module.exports = IncomingForm;

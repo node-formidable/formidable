@@ -9,7 +9,7 @@ const path = require('path');
 const http = require('http');
 const assert = require('assert');
 
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 const PORT = 13532;
 const CWD = process.cwd();
@@ -89,7 +89,7 @@ function testNext(results) {
 
 function uploadFixture(fixtureName, cb) {
   server.once('request', (req, res) => {
-    const form = new Formidable({
+    const form = formidable({
       uploadDir: UPLOAD_DIR,
       hash: 'sha1',
       multiples: true,

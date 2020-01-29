@@ -31,4 +31,4 @@ class JSONParser extends Transform {
   }
 }
 
-exports.JSONParser = JSONParser;
+module.exports = JSONParser;

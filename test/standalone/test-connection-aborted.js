@@ -3,11 +3,12 @@
 const assert = require('assert');
 const http = require('http');
 const net = require('net');
-const Formidable = require('../../src/index');
+const formidable = require('../../src/index');
 
 const PORT = 13532;
 const server = http.createServer((req) => {
-  const form = new Formidable();
+  const form = formidable();
+
   let abortedReceived = false;
   form.on('aborted', () => {
     abortedReceived = true;

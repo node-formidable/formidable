@@ -36,8 +36,10 @@ function lower(c) {
   return c | 0x20;
 }
 
+exports.STATES = {};
+
 Object.keys(STATE).forEach((stateName) => {
-  exports[stateName] = STATE[stateName];
+  exports.STATES[stateName] = STATE[stateName];
 });
 
 class MultipartParser extends Transform {
@@ -331,4 +333,5 @@ MultipartParser.stateToString = (stateNumber) => {
     if (number === stateNumber) return stateName;
   }
 };
-exports.MultipartParser = MultipartParser;
+
+module.exports = Object.assign(MultipartParser, { STATES: exports.STATES });

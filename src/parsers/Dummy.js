@@ -17,4 +17,4 @@ class DummyParser extends Transform {
   }
 }
 
-exports.DummyParser = DummyParser;
+module.exports = DummyParser;
