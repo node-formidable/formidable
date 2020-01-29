@@ -2,14 +2,16 @@
   <img alt="node formidable logo" src="./logo.png" />
 </p>
 
-# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url]
+# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url]
 
 > A Node.js module for parsing form data, especially file uploads.
 
 [![Code style][codestyle-img]][codestyle-url]
-[![npm version][npmv-canary-img]][npmv-url]
 [![build status][build-img]][build-url]
-[![chat on gitter][chat-img]][chat-url]
+[![codecoverage][codecov-img]][codecov-url]
+[![Renovate App Status][renovateapp-img]][renovateapp-url]
+[![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+[![Twitter][twitter-img]][twitter-url]
 
 ## Status: Maintained
 
@@ -23,6 +25,8 @@ Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the
 The`formidable@latest`is the`v1.2.1` version and probably it will be the last`v1` release!_
 
 _**Note: v2 is coming soon!**_
+
+[![npm version][npmv-canary-img]][npmv-url]
 
 ## Highlights
 
@@ -390,6 +394,8 @@ Formidable is licensed under the [MIT License][license-url].
 
 [codestyle-url]: https://github.com/airbnb/javascript
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
+[codecov-url]: https://codecov.io/gh/node-formidable/node-formidable
+[codecov-img]: https://badgen.net/codecov/c/github/node-formidable/node-formidable/master?icon=codecov
 [build-img]: https://badgen.net/github/checks/node-formidable/node-formidable?label=build&icon=github
 [build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 [npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
@@ -399,3 +405,11 @@ Formidable is licensed under the [MIT License][license-url].
 [license-url]: https://github.com/node-formidable/node-formidable/blob/master/LICENSE
 [chat-img]: https://badgen.net/badge/chat/on%20gitter/46BC99?icon=gitter
 [chat-url]: https://gitter.im/node-formidable/Lobby
+[libera-manifesto-url]: https://liberamanifesto.com
+[libera-manifesto-img]: https://badgen.net/badge/libera/manifesto/grey
+[renovateapp-url]: https://renovatebot.com
+[renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
+[prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
+[prs-welcome-url]: http://makeapullrequest.com
+[twitter-url]: https://twitter.com/tunnckoCore
+[twitter-img]: https://badgen.net/twitter/follow/tunnckoCore?icon=twitter&color=1da1f2&cache=300
