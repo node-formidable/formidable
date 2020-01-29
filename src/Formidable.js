@@ -218,12 +218,15 @@ class IncomingForm extends EventEmitter {
 
     // This MUST check exactly for undefined. You can not change it to !part.filename.
 
+    // todo: uncomment when switch tests to Jest
+    // console.log(part);
+
     // ? NOTE(@tunnckocore): no it can be any falsey value, it most probably depends on what's returned
     // from somewhere else. Where recently I changed the return statements
     // and such thing because code style
     // ? NOTE(@tunnckocore): or even better, if there is no mime, then it's for sure a field
-    // ? NOTE(@tunnckocore): filename is an empty string when a field
-    if ((part.filename !== '' && !part.filename) || !part.mime) {
+    // ? NOTE(@tunnckocore): filename is an empty string when a field?
+    if (!part.mime) {
       let value = '';
       const decoder = new StringDecoder(part.transferEncoding || this.encoding);
 

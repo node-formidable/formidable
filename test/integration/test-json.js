@@ -6,7 +6,7 @@ const formidable = require('../../src/index');
 
 const testData = {
   numbers: [1, 2, 3, 4, 5],
-  nested: { key: 'value' },
+  nested: { key: 'val' },
 };
 
 const PORT = 13532;
@@ -14,7 +14,10 @@ const server = http.createServer((req, res) => {
   const form = formidable();
 
   form.parse(req, (err, fields) => {
-    assert.deepEqual(fields, testData);
+    assert.deepStrictEqual(fields, {
+      numbers: [1, 2, 3, 4, 5],
+      nested: { key: 'val' },
+    });
 
     res.end();
     server.close();
