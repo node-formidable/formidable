@@ -130,6 +130,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "rkmax",
+      "name": "Julian Reyes Escrigas",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/395707?v=4",
+      "profile": "https://julianreyes.co/",
+      "contributions": [
+        "bug"
+      ]
     }
   ]
 }
