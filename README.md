@@ -13,20 +13,22 @@
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
 [![Twitter][twitter-img]][twitter-url]
 
-## Status: Maintained
+## Status: Maintained [![npm version][npmv-canary-img]][npmv-url] [![npm version][npmv-dev-img]][npmv-url]
 
 This module was initially developed by [**@felixge**](https://github.com/felixge) for [Transloadit](http://transloadit.com/), a service focused on uploading and encoding images and videos. It has been battle-tested against hundreds of GBs of file uploads from a large variety of clients and is considered production-ready and is used in production for years.
 
 Currently, we are few maintainers trying to deal with it. :) More contributors are always welcome! :heart:
 Jump on [issue #412](https://github.com/felixge/node-formidable/issues/412) if you are interested.
 
-_**Note:** Master is a "development" branch - try it with `npm i formidable@canary`.
+_**Note:** Master is a "canary" branch - try it with `npm i formidable@canary`.
 Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the Npm.
 The`formidable@latest`is the`v1.2.1` version and probably it will be the last`v1` release!_
 
 _**Note: v2 is coming soon!**_
 
-[![npm version][npmv-canary-img]][npmv-url]
+You can try the [Plugins API](https://github.com/felixge/node-formidable/tree/plugins-api)
+([#545](https://github.com/felixge/node-formidable/pull/545)),
+which is available through `formidable@dev`.
 
 ## Highlights
 
@@ -40,7 +42,7 @@ _**Note: v2 is coming soon!**_
 
 ```sh
 npm install formidable
-# or the development version
+# or the canary version
 npm install formidable@canary
 ```
 
@@ -48,7 +50,7 @@ or with Yarn v1/v2
 
 ```sh
 yarn add formidable
-# or the development version
+# or the canary version
 yarn add formidable@canary
 ```
 
@@ -498,6 +500,7 @@ Formidable is licensed under the [MIT License][license-url].
 [build-img]: https://badgen.net/github/checks/node-formidable/node-formidable?label=build&icon=github
 [build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 [npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
+[npmv-dev-img]: https://badgen.net/npm/v/formidable/dev?icon=npm
 [npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
 [npmv-url]: https://npmjs.com/package/formidable
 [license-img]: https://badgen.net/npm/license/formidable
