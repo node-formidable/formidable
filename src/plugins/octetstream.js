@@ -16,6 +16,8 @@ module.exports = function plugin(formidable, options) {
   if (/octet-stream/i.test(self.headers['content-type'])) {
     init.call(self, self, options);
   }
+
+  return self;
 };
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
@@ -74,4 +76,6 @@ function init(_self, _opts) {
       this._parser.once('doneWritingFile', done);
     }
   });
+
+  return this;
 }

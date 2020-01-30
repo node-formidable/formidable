@@ -31,11 +31,17 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.1.0",
+    "koa": "^2.11.0",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
     "prettier-plugin-pkgjson": "^0.2.0",
     "request": "^2.88.0",
+    "supertest": "^4.0.2",
     "urun": "^0.0.8",
     "utest": "^0.0.8"
+  },
+  "dependencies": {
+    "dezalgo": "^1.0.3",
+    "once": "^1.4.0"
   }
 }

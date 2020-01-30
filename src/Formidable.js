@@ -7,6 +7,8 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const once = require('once');
+const dezalgo = require('dezalgo');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 
@@ -108,6 +110,7 @@ class IncomingForm extends EventEmitter {
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
+      const callback = once(dezalgo(cb));
       const fields = {};
       const files = {};
 
@@ -152,10 +155,10 @@ class IncomingForm extends EventEmitter {
         // }
       });
       this.on('error', (err) => {
-        cb(err, fields, files);
+        callback(err, fields, files);
       });
       this.on('end', () => {
-        cb(null, fields, files);
+        callback(null, fields, files);
       });
     }
 
@@ -196,19 +199,14 @@ class IncomingForm extends EventEmitter {
     this._parseContentLength();
     this._parseContentType();
 
-    // in case plugin fails
-    if (this._parser) {
-      this._parser.once('error', (error) => {
-        this._error(error);
-      });
-    } else {
-      // when there is no argument,
-      // it will get the `this.error` which is manually set
-      // only on one case - when a plugin throw/fail
-      // this.emit('error', this.error);
-      // this._error();
-      // this._maybeEnd();
+    if (!this._parser) {
+      this._error(new Error('not parser found'));
+      return;
     }
+
+    this._parser.once('error', (error) => {
+      this._error(error);
+    });
   }
 
   write(buffer) {
@@ -341,48 +339,56 @@ class IncomingForm extends EventEmitter {
     }
 
     const results = [];
+    const _dummyParser = new DummyParser(this, this.options);
 
     // eslint-disable-next-line no-plusplus
     for (let idx = 0; idx < this._plugins.length; idx++) {
-      const plugin = this._plugins[idx].bind(this);
+      const plugin = this._plugins[idx];
 
-      let res = null;
+      let pluginReturn = null;
 
       try {
-        res = plugin.call(this, this, this.options);
+        pluginReturn = plugin(this, this.options) || this;
       } catch (err) {
-        const msg = `plugin on index ${idx} failed with: ${err.message}`;
-        this.error = new Error(msg);
-        // break;
+        // directly throw from the `form.parse` method;
+        // there is no other better way, except a handle through options
+        const error = new Error(
+          `plugin on index ${idx} failed with: ${err.message}`,
+        );
+        error.idx = idx;
+        throw error;
       }
 
+      Object.assign(this, pluginReturn);
+
       // todo: use Set/Map and pass plugin name instead of the `idx` index
-      this.emit('pluginReturn', idx, res);
-      results.push(res);
+      this.emit('plugin', idx, pluginReturn);
+      results.push(pluginReturn);
     }
 
-    this.emit('pluginReturns', results);
+    this.emit('pluginsResults', results);
 
-    if (results.length === 0 && results.length !== this._plugins.length) {
-      this._error(
-        new Error(
-          `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
-        ),
-      );
-    }
+    // ? probably not needed, because we check options.enabledPlugins in the constructor
+    // if (results.length === 0 /* && results.length !== this._plugins.length */) {
+    //   this._error(
+    //     new Error(
+    //       `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
+    //     ),
+    //   );
+    // }
   }
 
-  _error(err) {
-    if (!err && this.error) {
-      this.emit('error', this.error);
-      return;
-    }
+  _error(err, eventName = 'error') {
+    // if (!err && this.error) {
+    //   this.emit('error', this.error);
+    //   return;
+    // }
     if (this.error || this.ended) {
       return;
     }
 
     this.error = err;
-    this.emit('error', err);
+    this.emit(eventName, err);
 
     if (Array.isArray(this.openedFiles)) {
       this.openedFiles.forEach((file) => {

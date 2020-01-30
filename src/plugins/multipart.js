@@ -21,7 +21,8 @@ module.exports = function plugin(formidable, options) {
       const initMultipart = createInitMultipart(m[1] || m[2]);
       initMultipart.call(self, self, options);
     } else {
-      throw new Error('bad content-type header, no multipart boundary');
+      const err = new Error('bad content-type header, no multipart boundary');
+      self._error(err);
     }
   }
 };
