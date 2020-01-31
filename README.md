@@ -183,13 +183,13 @@ See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
   placing file uploads in. You can move them later by using `fs.rename()`
 - `options.keepExtensions` **{boolean}** - default `false`; to include the
   extensions of the original files or not
-- `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
-  limit the amount of memory all fields together (except files) can allocate in
-  bytes.
-- `options.maxFieldsSize` **{number}** - default `200 * 1024 * 1024` (200mb);
+- `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
   limit the size of uploaded file.
 - `options.maxFields` **{number}** - default `1000`; limit the number of fields
   that the Querystring parser will decode, set 0 for unlimited
+- `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
+  limit the amount of memory all fields together (except files) can allocate in
+  bytes.
 - `options.hash` **{boolean}** - default `false`; include checksums calculated
   for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
@@ -469,6 +469,7 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License
