@@ -48,8 +48,9 @@ server.listen(PORT, () => {
   request({ method: 'POST', url, multipart: parts }, (e, res, body) => {
     const obj = JSON.parse(body);
 
-    assert.ok(obj.fields.foo, 'should havce fields.foo === barry');
+    assert.ok(obj.fields.foo, 'should have fields.foo === barry');
     assert.strictEqual(obj.fields.foo, 'barry');
+
     server.close();
   });
 });
