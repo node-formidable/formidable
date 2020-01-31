@@ -289,8 +289,8 @@ form.on('data', ({ name, key, value, buffer, start, end, ...more }) => {
 
 ### .use(plugin: Plugin)
 
-A method that allows you to extend the Formidable library. By default we include 4 plugins,
-which esentially are adapters to plug the different built-in parsers.
+A method that allows you to extend the Formidable library. By default we include
+4 plugins, which esentially are adapters to plug the different built-in parsers.
 
 **The plugins added by this method are always enabled.**
 
@@ -302,8 +302,8 @@ The `plugin` param has such signature:
 function(formidable: Formidable, options: Options): void;
 ```
 
-The architecture is simple. The `plugin` is a function that is passed with
-the Formidable instance (the `form` across the README examples) and the options.
+The architecture is simple. The `plugin` is a function that is passed with the
+Formidable instance (the `form` across the README examples) and the options.
 
 **Note:** the plugin function's `this` context is also the same instance.
 
@@ -323,14 +323,15 @@ form.parse(req, (error, fields, files) => {
 });
 ```
 
-**Important to note**, is that inside plugin `this.options`, `self.options` and `options`
-MAY or MAY NOT be the same. General best practice is to always use the `this`, so you can
-later test your plugin independently and more easily.
+**Important to note**, is that inside plugin `this.options`, `self.options` and
+`options` MAY or MAY NOT be the same. General best practice is to always use the
+`this`, so you can later test your plugin independently and more easily.
 
-If you want to disable some parsing capabilities of Formidable, you can disable the plugin
-which corresponds to the parser. For example, if you want to disable multipart parsing
-(so the [src/parsers/Multipart.js](./src/parsers/Multipart.js) which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then you can remove it from
-the `options.enabledPlugins`, like so
+If you want to disable some parsing capabilities of Formidable, you can disable
+the plugin which corresponds to the parser. For example, if you want to disable
+multipart parsing (so the [src/parsers/Multipart.js](./src/parsers/Multipart.js)
+which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
+you can remove it from the `options.enabledPlugins`, like so
 
 ```js
 const { Formidable } = require('formidable');
@@ -341,12 +342,12 @@ const form = new Formidable({
 });
 ```
 
-**Be aware** that the order _MAY_ be important too. The names corresponds 1:1
-to files in [src/plugins/](./src/plugins) folder.
+**Be aware** that the order _MAY_ be important too. The names corresponds 1:1 to
+files in [src/plugins/](./src/plugins) folder.
 
-Pull requests for new built-in plugins MAY be accepted - for example,
-more advanced querystring parser. Add your plugin as a new file
-in `src/plugins/` folder (lowercased) and follow how the other plugins are made.
+Pull requests for new built-in plugins MAY be accepted - for example, more
+advanced querystring parser. Add your plugin as a new file in `src/plugins/`
+folder (lowercased) and follow how the other plugins are made.
 
 ### form.onPart
 
@@ -530,6 +531,7 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License
