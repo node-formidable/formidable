@@ -1,0 +1,57 @@
+name: nodejs
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    if: "!contains(toJson(github.event.commits), '[skip ci]')"
+    env:
+      CI: true
+      CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [10.x, 12.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      # if: contains(toJson(github.event.commits), '[skip ci]') == false
+      - uses: actions/cache@v1
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
+        id: nodejs-cache
+        name: Cache node modules
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-nodejs-${{ matrix.node }}-
+            ${{ matrix.os }}-nodejs-
+            ${{ matrix.os }}-
+      # - name: "Use Node.js ${{ matrix.node }}"
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node: ${{ matrix.node }}
+
+      - name: Dump GitHub context
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Installing dependencies
+        if: steps.nodejs-cache.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+      - name: Linting & Format codebase with ESLint & Prettier
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
+        run: yarn lint && yarn fmt
+      - name: Testing
+        # if: contains(toJson(github.event.commits), '[skip ci]') == false
+        run: yarn test:ci
+      - name: Sending test coverage to CodeCov
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '12.x'
+        run: echo ${{ matrix.node }} && bash <(curl -s https://codecov.io/bash)

@@ -1,0 +1,41 @@
+{
+  "name": "formidable",
+  "version": "2.0.0-canary.20200129.32",
+  "license": "MIT",
+  "description": "A node.js module for parsing form data, especially file uploads.",
+  "homepage": "https://github.com/node-formidable/node-formidable",
+  "funding": "https://ko-fi.com/tunnckoCore/commissions",
+  "repository": "node-formidable/node-formidable",
+  "main": "./src/index.js",
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "canary"
+  },
+  "scripts": {
+    "cleanup": "rm -rf test/tmp",
+    "fmt": "prettier '**/*.{md,js,json}' --write",
+    "lint": "eslint . --cache --fix --quiet --format codeframe",
+    "pretest": "yarn run cleanup && mkdir test/tmp",
+    "test": "node test/run.js",
+    "pretest:ci": "yarn pretest",
+    "test:ci": "nyc node test/run.js"
+  },
+  "devDependencies": {
+    "@tunnckocore/prettier-config": "^1.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "nyc": "^15.0.0",
+    "prettier": "^1.19.1",
+    "prettier-plugin-pkgjson": "^0.2.0",
+    "request": "^2.88.0",
+    "urun": "^0.0.8",
+    "utest": "^0.0.8"
+  }
+}

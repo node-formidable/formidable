@@ -1,0 +1,27 @@
+# Ignore everything!
+*
+
+# de-ignores: add here what you want to be committed
+!*.mjs
+!*.cjs
+!*.js*
+!*.ts*
+!*.md*
+
+!**/src
+!**/src/**
+
+!**/test
+!**/test/**
+
+!**/*tests*
+!**/*tests*/**
+
+!**/benchmark*
+!**/benchmark*/**
+
+!**/example*
+!**/example*/**
+
+# re-ignores: add here what you want to be ignored again
+test/tmp
