@@ -2,6 +2,9 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
+
+'use strict';
+
 const { Transform } = require('stream');
 
 let s = 0;

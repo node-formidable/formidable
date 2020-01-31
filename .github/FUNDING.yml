@@ -3,7 +3,6 @@ ko_fi: tunnckoCore
 # Replace with up to 4 custom sponsorship URLs e.g., ['link1', 'link2']
 custom:
   - https://gumroad.com/l/tunnckoCoreRecurringDonation
-
 # github: # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
 #open_collective: # Replace with a single Open Collective username
 #tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel

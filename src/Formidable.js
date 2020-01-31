@@ -368,7 +368,7 @@ class IncomingForm extends EventEmitter {
 
     this.emit('pluginsResults', results);
 
-    // ? probably not needed, because we check options.enabledPlugins in the constructor
+    // NOTE: probably not needed, because we check options.enabledPlugins in the constructor
     // if (results.length === 0 /* && results.length !== this._plugins.length */) {
     //   this._error(
     //     new Error(
@@ -376,6 +376,13 @@ class IncomingForm extends EventEmitter {
     //     ),
     //   );
     // }
+    this._error(
+      new Error(
+        `bad content-type header, unknown content-type: ${
+          this.headers['content-type']
+        }`,
+      ),
+    );
   }
 
   _error(err, eventName = 'error') {

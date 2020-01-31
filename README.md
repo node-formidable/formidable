@@ -15,20 +15,29 @@
 
 ## Status: Maintained [![npm version][npmv-canary-img]][npmv-url] [![npm version][npmv-dev-img]][npmv-url]
 
-This module was initially developed by [**@felixge**](https://github.com/felixge) for [Transloadit](http://transloadit.com/), a service focused on uploading and encoding images and videos. It has been battle-tested against hundreds of GBs of file uploads from a large variety of clients and is considered production-ready and is used in production for years.
+This module was initially developed by
+[**@felixge**](https://github.com/felixge) for
+[Transloadit](http://transloadit.com/), a service focused on uploading and
+encoding images and videos. It has been battle-tested against hundreds of GBs of
+file uploads from a large variety of clients and is considered production-ready
+and is used in production for years.
 
-Currently, we are few maintainers trying to deal with it. :) More contributors are always welcome! :heart:
-Jump on [issue #412](https://github.com/felixge/node-formidable/issues/412) if you are interested.
+Currently, we are few maintainers trying to deal with it. :) More contributors
+are always welcome! :heart: Jump on
+[issue #412](https://github.com/felixge/node-formidable/issues/412) if you are
+interested.
 
 _**Note:** Master is a "canary" branch - try it with `npm i formidable@canary`.
-Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the Npm.
-The`formidable@latest`is the`v1.2.1` version and probably it will be the last`v1` release!_
+Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the
+Npm. The`formidable@latest`is the`v1.2.1` version and probably it will be the
+last`v1` release!_
 
 _**Note: v2 is coming soon!**_
 
-You can try the [Plugins API](https://github.com/felixge/node-formidable/tree/plugins-api)
-([#545](https://github.com/felixge/node-formidable/pull/545)),
-which is available through `formidable@dev`.
+You can try the
+[Plugins API](https://github.com/felixge/node-formidable/tree/plugins-api)
+([#545](https://github.com/felixge/node-formidable/pull/545)), which is
+available through `formidable@dev`.
 
 ## Highlights
 
@@ -54,12 +63,14 @@ yarn add formidable
 yarn add formidable@canary
 ```
 
-This is a low-level package, and if you're using a high-level framework it may already be included.
+This is a low-level package, and if you're using a high-level framework it may
+already be included.
 
-However, [Express v4](http://expressjs.com) does not include any multipart handling, nor does [body-parser](https://github.com/expressjs/body-parser).
+However, [Express v4](http://expressjs.com) does not include any multipart
+handling, nor does [body-parser](https://github.com/expressjs/body-parser).
 
-For `koa` there is [koa-better-body](https://ghub.now.sh/koa-better-body)
-which can handle ANY type of body / form-data - JSON, urlencoded, multpart and so on.
+For `koa` there is [koa-better-body](https://ghub.now.sh/koa-better-body) which
+can handle ANY type of body / form-data - JSON, urlencoded, multpart and so on.
 A new major release is coming there too.
 
 ## Example
@@ -104,9 +115,9 @@ http
 ## Benchmarks
 
 The benchmark is quite old, from the old codebase. But maybe quite true though.
-Previously the numbers was around ~500 mb/sec. Currently with moving to
-the new Node.js Streams API it's faster. You can clearly see the differences
-between the Node versions.
+Previously the numbers was around ~500 mb/sec. Currently with moving to the new
+Node.js Streams API it's faster. You can clearly see the differences between the
+Node versions.
 
 _Note: a lot better benchmarking could and should be done in future._
 
@@ -141,8 +152,8 @@ Benchmarked on 8GB RAM, Xeon X3440 (2.53 GHz, 4 cores, 8 threads)
 
 All shown are equivalent.
 
-_Please pass [`options`](#options) to the function/constructor,
-not by passing assigning them to the instance `form`_
+_Please pass [`options`](#options) to the function/constructor, not by passing
+assigning them to the instance `form`_
 
 ```js
 const formidable = require('formidable');
@@ -169,7 +180,7 @@ See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the `DEFA
 - `options.uploadDir` **{string}** - default `os.tmpdir()`; the directory for placing file uploads in. You can move them later by using `fs.rename()`
 - `options.keepExtensions` **{boolean}** - default `false`; to include the extensions of the original files or not
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb); limit the amount of memory all fields together (except files) can allocate in bytes.
-- `options.maxFieldsSize` **{number}** - default `200 * 1024 * 1024` (200mb); limit the size of uploaded file.
+- `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb); limit the size of uploaded file.
 - `options.maxFields` **{number}** - default `1000`; limit the number of fields that the Querystring parser will decode, set 0 for unlimited
 - `options.hash` **{boolean}** - default `false`; include checksums calculated for incoming files, set this to some hash algorithm, see [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options) for available algorithms
 - `options.multiples` **{boolean}** - default `false`; when you call the `.parse` method, the `files` argument (of the callback) will contain arrays of files for inputs which submit multiple files using the HTML5 `multiple` attribute. Also, the `fields` argument will contain arrays of values for fields that have names ending with '[]'.
@@ -189,8 +200,8 @@ form.bytesExpected;
 
 ### .parse(request, callback)
 
-Parses an incoming Node.js `request` containing form data.
-If `callback` is provided, all fields and files are collected and passed to the callback.
+Parses an incoming Node.js `request` containing form data. If `callback` is
+provided, all fields and files are collected and passed to the callback.
 
 ```js
 const formidable = require('formidable');
@@ -203,13 +214,18 @@ form.parse(req, (err, fields, files) => {
 });
 ```
 
-You may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `'field'` / `'file'` events processing which would occur otherwise, making you fully responsible for handling the processing.
+You may overwrite this method if you are interested in directly accessing the
+multipart stream. Doing so will disable any `'field'` / `'file'` events
+processing which would occur otherwise, making you fully responsible for
+handling the processing.
 
-In the example below, we listen on couple of events and direct them to the `data` listener,
-so you can do whatever you choose there, based on whether its before the file been emitted,
-the header value, the header name, on field, on file and etc.
+In the example below, we listen on couple of events and direct them to the
+`data` listener, so you can do whatever you choose there, based on whether its
+before the file been emitted, the header value, the header name, on field, on
+file and etc.
 
-Or the other way could be to just override the `form.onPart` as it's shown a bit later.
+Or the other way could be to just override the `form.onPart` as it's shown a bit
+later.
 
 ```js
 form.once('error', console.error);
@@ -320,9 +336,10 @@ in `src/plugins/` folder (lowercased) and follow how the other plugins are made.
 
 ### form.onPart
 
-If you want to use Formidable to only handle certain parts for you, you can do something similar.
-Or see [#387](https://github.com/node-formidable/node-formidable/issues/387) for inspiration,
-you can for example validate the mime-type.
+If you want to use Formidable to only handle certain parts for you, you can do
+something similar. Or see
+[#387](https://github.com/node-formidable/node-formidable/issues/387) for
+inspiration, you can for example validate the mime-type.
 
 ```js
 const form = formidable();
@@ -334,7 +351,8 @@ form.onPart = (part) => {
 };
 ```
 
-For example, force Formidable to be used only on non-file "parts" (i.e., html fields)
+For example, force Formidable to be used only on non-file "parts" (i.e., html
+fields)
 
 ```js
 const form = formidable();
@@ -379,14 +397,15 @@ export interface File {
 #### file.toJSON()
 
 This method returns a JSON-representation of the file, allowing you to
-`JSON.stringify()` the file which is useful for logging and responding
-to requests.
+`JSON.stringify()` the file which is useful for logging and responding to
+requests.
 
 ### Events
 
 #### `'progress'`
 
-Emitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.
+Emitted after each incoming chunk of data that has been parsed. Can be used to
+roll your own progress bar.
 
 ```js
 form.on('progress', (bytesReceived, bytesExpected) => {});
@@ -403,8 +422,8 @@ form.on('field', (name, value) => {});
 #### `'fileBegin'`
 
 Emitted whenever a new file is detected in the upload stream. Use this event if
-you want to stream the file to somewhere else while buffering the upload on
-the file system.
+you want to stream the file to somewhere else while buffering the upload on the
+file system.
 
 ```js
 form.on('fileBegin', (name, file) => {});
@@ -412,7 +431,8 @@ form.on('fileBegin', (name, file) => {});
 
 #### `'file'`
 
-Emitted whenever a field / file pair has been received. `file` is an instance of `File`.
+Emitted whenever a field / file pair has been received. `file` is an instance of
+`File`.
 
 ```js
 form.on('file', (name, file) => {});
@@ -420,7 +440,9 @@ form.on('file', (name, file) => {});
 
 #### `'error'`
 
-Emitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `'data'` events.
+Emitted when there is an error processing the incoming form. A request that
+experiences an error is automatically paused, you will have to manually call
+`request.resume()` if you want the request to continue firing `'data'` events.
 
 ```js
 form.on('error', (err) => {});
@@ -428,7 +450,10 @@ form.on('error', (err) => {});
 
 #### `'aborted'`
 
-Emitted when the request was aborted by the user. Right now this can be due to a 'timeout' or 'close' event on the socket. After this event is emitted, an `error` event will follow. In the future there will be a separate 'timeout' event (needs a change in the node core).
+Emitted when the request was aborted by the user. Right now this can be due to a
+'timeout' or 'close' event on the socket. After this event is emitted, an
+`error` event will follow. In the future there will be a separate 'timeout'
+event (needs a change in the node core).
 
 ```js
 form.on('aborted', () => {});
@@ -436,7 +461,8 @@ form.on('aborted', () => {});
 
 #### `'end'`
 
-Emitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.
+Emitted when the entire request has been received, and all contained files have
+finished flushing to disk. This is a great place for you to send your response.
 
 ```js
 form.on('end', () => {});
@@ -444,16 +470,21 @@ form.on('end', () => {});
 
 ## Ports & Credits
 
-- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
-- [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired the initial `multipart_parser.js`.
+- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++
+  parser based on formidable
+- [Ryan Dahl](http://twitter.com/ryah) for his work on
+  [http-parser](http://github.com/ry/http-parser) which heavily inspired the
+  initial `multipart_parser.js`.
 
 ## Contributing
 
 If the documentation is unclear or has a typo, please click on the page's `Edit`
-button (pencil icon) and suggest a correction. If you would like to help us fix a bug or add a new feature, please check our
+button (pencil icon) and suggest a correction. If you would like to help us fix
+a bug or add a new feature, please check our
 [Contributing Guide](./CONTRIBUTING.md). Pull requests are welcome!
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to these wonderful people
+([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
 <!-- prettier-ignore-start -->
@@ -479,12 +510,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/MunMunMiao"><img src="https://avatars1.githubusercontent.com/u/18216142?v=4" width="100px;" alt=""/><br /><sub><b>MunMunMiao</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3AMunMunMiao" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/gabipetrovay"><img src="https://avatars0.githubusercontent.com/u/1170398?v=4" width="100px;" alt=""/><br /><sub><b>Gabriel Petrovay</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/issues?q=author%3Agabipetrovay" title="Bug reports">🐛</a> <a href="https://github.com/node-formidable/node-formidable/commits?author=gabipetrovay" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Elzair"><img src="https://avatars0.githubusercontent.com/u/2352818?v=4" width="100px;" alt=""/><br /><sub><b>Philip Woods</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/commits?author=Elzair" title="Code">💻</a> <a href="#ideas-Elzair" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/dmolim"><img src="https://avatars2.githubusercontent.com/u/7090374?v=4" width="100px;" alt=""/><br /><sub><b>Dmitry Ivonin</b></sub></a><br /><a href="https://github.com/node-formidable/node-formidable/commits?author=dmolim" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License
@@ -492,6 +523,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 Formidable is licensed under the [MIT License][license-url].
 
 <!-- badges -->
+<!-- prettier-ignore-start -->
 
 [codestyle-url]: https://github.com/airbnb/javascript
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
@@ -515,3 +547,5 @@ Formidable is licensed under the [MIT License][license-url].
 [prs-welcome-url]: http://makeapullrequest.com
 [twitter-url]: https://twitter.com/tunnckoCore
 [twitter-img]: https://badgen.net/twitter/follow/tunnckoCore?icon=twitter&color=1da1f2&cache=300
+
+<!-- prettier-ignore-end -->
