@@ -378,9 +378,7 @@ class IncomingForm extends EventEmitter {
     // }
     this._error(
       new Error(
-        `bad content-type header, unknown content-type: ${
-          this.headers['content-type']
-        }`,
+        `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
       ),
     );
   }
