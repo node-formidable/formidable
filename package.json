@@ -15,27 +15,53 @@
     "tag": "canary"
   },
   "scripts": {
-    "cleanup": "rm -rf test/tmp",
-    "fmt": "prettier '**/*.{md,js,json}' --write",
-    "lint": "eslint . --cache --fix --quiet --format codeframe",
-    "pretest": "yarn run cleanup && mkdir test/tmp",
+    "bench": "node benchmark",
+    "fmt": "yarn run fmt:prepare '**/*'",
+    "fmt:prepare": "prettier --write",
+    "lint": "yarn run lint:prepare .",
+    "lint:prepare": "eslint --cache --fix --quiet --format codeframe",
+    "reinstall": "rm -rf node_modules yarn.lock && yarn",
+    "pretest": "rm -rf test/tmp && mkdir test/tmp",
     "test": "node test/run.js",
     "pretest:ci": "yarn pretest",
     "test:ci": "nyc node test/run.js"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@tunnckocore/prettier-config": "^1.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.1",
     "jest": "^25.1.0",
+    "lint-staged": "^10.0.6",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
     "prettier-plugin-pkgjson": "^0.2.0",
     "request": "^2.88.0",
     "urun": "^0.0.8",
     "utest": "^0.0.8"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "!*.{js,jsx,ts,tsx}": [
+      "yarn run fmt:prepare"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "yarn run lint"
+    ]
   }
 }

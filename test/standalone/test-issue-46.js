@@ -1,7 +1,5 @@
 'use strict';
 
-// @TODO: this test should be fixed?! later.
-
 const http = require('http');
 const assert = require('assert');
 const request = require('request');

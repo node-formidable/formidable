@@ -124,6 +124,7 @@ function uploadFixture(fixtureName, cb) {
   const file = fs.createReadStream(fixturePath);
 
   file.pipe(socket, { end: false });
+
   socket.on('data', () => {
     socket.end();
   });
