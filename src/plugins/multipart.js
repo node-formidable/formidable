@@ -13,7 +13,7 @@ module.exports = function plugin(formidable, options) {
   /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/multipart|form-data/i.test(self.headers['content-type'])) {
+  if (/multipart\/form-data/i.test(self.headers['content-type'])) {
     const m = self.headers['content-type'].match(
       /boundary=(?:"([^"]+)"|([^;]+))/i,
     );
