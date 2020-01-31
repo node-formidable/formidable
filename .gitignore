@@ -8,9 +8,7 @@
 !test-legacy
 !tool
 
-!*.mjs
-!*.cjs
-!*.js*
+!*.*js*
 !*.ts*
 !*.md*
 !.*rc

@@ -1,8 +1,5 @@
 'use strict';
 
-// const assert = require('assert');
-// const test = require('utest');
-
 const { File } = require('../../src/index');
 
 const now = new Date();

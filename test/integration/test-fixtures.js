@@ -123,10 +123,8 @@ function uploadFixture(fixtureName, cb) {
   const fixturePath = path.join(FIXTURES_HTTP, fixtureName);
   const file = fs.createReadStream(fixturePath);
 
-  file.pipe(
-    socket,
-    { end: false },
-  );
+  file.pipe(socket, { end: false });
+
   socket.on('data', () => {
     socket.end();
   });

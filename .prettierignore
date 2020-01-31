@@ -3,9 +3,7 @@
 
 # de-ignores: add here what you want to be committed
 
-!*.mjs
-!*.cjs
-!*.js*
+!*.*js*
 !*.ts*
 !*.md*
 !*.y*ml
