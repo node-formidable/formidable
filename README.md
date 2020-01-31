@@ -174,16 +174,31 @@ const form = new Formidable(options);
 
 ### Options
 
-See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the `DEFAULT_OPTIONS` constant).
+See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
+`DEFAULT_OPTIONS` constant).
 
-- `options.encoding` **{string}** - default `'utf-8'`; sets encoding for incoming form fields,
-- `options.uploadDir` **{string}** - default `os.tmpdir()`; the directory for placing file uploads in. You can move them later by using `fs.rename()`
-- `options.keepExtensions` **{boolean}** - default `false`; to include the extensions of the original files or not
-- `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb); limit the amount of memory all fields together (except files) can allocate in bytes.
-- `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb); limit the size of uploaded file.
-- `options.maxFields` **{number}** - default `1000`; limit the number of fields that the Querystring parser will decode, set 0 for unlimited
-- `options.hash` **{boolean}** - default `false`; include checksums calculated for incoming files, set this to some hash algorithm, see [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options) for available algorithms
-- `options.multiples` **{boolean}** - default `false`; when you call the `.parse` method, the `files` argument (of the callback) will contain arrays of files for inputs which submit multiple files using the HTML5 `multiple` attribute. Also, the `fields` argument will contain arrays of values for fields that have names ending with '[]'.
+- `options.encoding` **{string}** - default `'utf-8'`; sets encoding for
+  incoming form fields,
+- `options.uploadDir` **{string}** - default `os.tmpdir()`; the directory for
+  placing file uploads in. You can move them later by using `fs.rename()`
+- `options.keepExtensions` **{boolean}** - default `false`; to include the
+  extensions of the original files or not
+- `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
+  limit the amount of memory all fields together (except files) can allocate in
+  bytes.
+- `options.maxFieldsSize` **{number}** - default `200 * 1024 * 1024` (200mb);
+  limit the size of uploaded file.
+- `options.maxFields` **{number}** - default `1000`; limit the number of fields
+  that the Querystring parser will decode, set 0 for unlimited
+- `options.hash` **{boolean}** - default `false`; include checksums calculated
+  for incoming files, set this to some hash algorithm, see
+  [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
+  for available algorithms
+- `options.multiples` **{boolean}** - default `false`; when you call the
+  `.parse` method, the `files` argument (of the callback) will contain arrays of
+  files for inputs which submit multiple files using the HTML5 `multiple`
+  attribute. Also, the `fields` argument will contain arrays of values for
+  fields that have names ending with '[]'.
 
 _**Note:** If this value is exceeded, an `'error'` event is emitted._
 
