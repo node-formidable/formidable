@@ -13,6 +13,9 @@
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
 [![Twitter][twitter-img]][twitter-url]
 
+[![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
+[![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
+
 ## Status: Maintained [![npm version][npmv-canary-img]][npmv-url] [![npm version][npmv-dev-img]][npmv-url]
 
 This module was initially developed by
@@ -563,5 +566,10 @@ Formidable is licensed under the [MIT License][license-url].
 [prs-welcome-url]: http://makeapullrequest.com
 [twitter-url]: https://twitter.com/tunnckoCore
 [twitter-img]: https://badgen.net/twitter/follow/tunnckoCore?icon=twitter&color=1da1f2&cache=300
+
+[npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
+[npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
+[npm-yearly-img]: https://badgen.net/npm/dy/formidable?icon=npm&cache=300
+[npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300
 
 <!-- prettier-ignore-end -->
