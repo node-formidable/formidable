@@ -63,5 +63,10 @@
     "*.{js,jsx,ts,tsx}": [
       "yarn run lint"
     ]
+  },
+  "renovate": {
+    "extends": [
+      "@tunnckocore"
+    ]
   }
 }
