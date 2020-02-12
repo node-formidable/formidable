@@ -49,9 +49,8 @@ _**Note: v2 is coming soon!**_
 ## Install
 
 This project requires `Node.js >=10.13`. Install it using
-[yarn](https://yarnpkg.com) or [npm](https://npmjs.com).
-
-_We highly recommend to use Yarn when you think to contribute to this project._
+[yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly
+recommend to use Yarn when you think to contribute to this project._
 
 ```sh
 npm install formidable
