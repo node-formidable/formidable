@@ -48,7 +48,7 @@ _**Note: v2 is coming soon!**_
 
 ## Install
 
-This project requires `Node.js >=10.13`. Install it using
+This project requires `Node.js >= 10.13`. Install it using
 [yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly
 recommend to use Yarn when you think to contribute to this project._
 
@@ -71,7 +71,7 @@ already be included. Check the examples below and the `examples/` folder.
 
 ## Examples
 
-For more examples look at the `example/` directory.
+For more examples look at the `examples/` directory.
 
 ### with Node.js http module
 
