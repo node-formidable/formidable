@@ -3,11 +3,8 @@
 const File = require('./File');
 const Formidable = require('./Formidable');
 
-const JSONParser = require('./parsers/JSON');
-const DummyParser = require('./parsers/Dummy');
-const MultipartParser = require('./parsers/Multipart');
-const OctetStreamParser = require('./parsers/OctetStream');
-const QuerystringParser = require('./parsers/Querystring');
+const plugins = require('./plugins/index');
+const parsers = require('./parsers/index');
 
 // make it available without requiring the `new` keyword
 // if you want it access `const formidable.IncomingForm` as v1
@@ -22,13 +19,15 @@ module.exports = Object.assign(formidable, {
   IncomingForm: Formidable,
 
   // parsers
-  JSONParser,
-  DummyParser,
-  MultipartParser,
-  OctetStreamParser,
-  QuerystringParser,
+  ...parsers,
+  parsers,
 
-  // typo aliases
-  OctetstreamParser: OctetStreamParser,
-  QueryStringParser: QuerystringParser,
+  // misc
+  defaultOptions: Formidable.DEFAULT_OPTIONS,
+  enabledPlugins: Formidable.DEFAULT_OPTIONS.enabledPlugins,
+
+  // plugins
+  plugins: {
+    ...plugins,
+  },
 });

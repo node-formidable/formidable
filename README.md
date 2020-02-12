@@ -290,6 +290,68 @@ form.on('data', ({ name, key, value, buffer, start, end, ...more }) => {
 });
 ```
 
+### .use(plugin: Plugin)
+
+A method that allows you to extend the Formidable library. By default we include
+4 plugins, which esentially are adapters to plug the different built-in parsers.
+
+**The plugins added by this method are always enabled.**
+
+_See [src/plugins/](./src/plugins/) for more detailed look on default plugins._
+
+The `plugin` param has such signature:
+
+```typescript
+function(formidable: Formidable, options: Options): void;
+```
+
+The architecture is simple. The `plugin` is a function that is passed with the
+Formidable instance (the `form` across the README examples) and the options.
+
+**Note:** the plugin function's `this` context is also the same instance.
+
+```js
+const formidable = require('formidable');
+
+const form = formidable({ keepExtensions: true });
+
+form.use((self, options) => {
+  // self === this === form
+  console.log('woohoo, custom plugin');
+  // do your stuff; check `src/plugins` for inspiration
+});
+
+form.parse(req, (error, fields, files) => {
+  console.log('done!');
+});
+```
+
+**Important to note**, is that inside plugin `this.options`, `self.options` and
+`options` MAY or MAY NOT be the same. General best practice is to always use the
+`this`, so you can later test your plugin independently and more easily.
+
+If you want to disable some parsing capabilities of Formidable, you can disable
+the plugin which corresponds to the parser. For example, if you want to disable
+multipart parsing (so the [src/parsers/Multipart.js](./src/parsers/Multipart.js)
+which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
+you can remove it from the `options.enabledPlugins`, like so
+
+```js
+const { Formidable } = require('formidable');
+
+const form = new Formidable({
+  hash: 'sha1',
+  enabledPlugins: ['octetstream', 'querystring', 'json'],
+});
+```
+
+**Be aware** that the order _MAY_ be important too. The names corresponds 1:1 to
+files in [src/plugins/](./src/plugins) folder.
+
+Pull requests for new built-in plugins MAY be accepted - for example, more
+advanced querystring parser. Add your plugin as a new file in `src/plugins/`
+folder (lowercased) and follow how the other plugins are made.
+
 ### form.onPart
 
 If you want to use Formidable to only handle certain parts for you, you can do
@@ -509,4 +571,5 @@ Formidable is licensed under the [MIT License][license-url].
 [npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
 [npm-yearly-img]: https://badgen.net/npm/dy/formidable?icon=npm&cache=300
 [npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300
+
 <!-- prettier-ignore-end -->

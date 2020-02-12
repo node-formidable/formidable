@@ -8,9 +8,10 @@ const querystring = require('querystring');
 // This is a buffering parser, not quite as nice as the multipart one.
 // If I find time I'll rewrite this to be fully streaming as well
 class QuerystringParser extends Transform {
-  constructor(maxKeys) {
+  constructor(options = {}) {
     super({ readableObjectMode: true });
-    this.maxKeys = maxKeys;
+    this.globalOptions = { ...options };
+    this.maxKeys = this.globalOptions.maxFields;
     this.buffer = '';
     this.bufferLength = 0;
   }

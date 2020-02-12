@@ -20,7 +20,12 @@ const server = http.createServer((req) => {
   form.on('end', () => {
     throw new Error('Unexpected "end" event');
   });
-  form.parse(req);
+  form.parse(req, () => {
+    assert(
+      abortedReceived,
+      'from .parse() callback: Error event should follow aborted',
+    );
+  });
 });
 
 server.listen(PORT, 'localhost', () => {

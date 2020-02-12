@@ -4,11 +4,12 @@
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/node-formidable",
-  "funding": "https://ko-fi.com/tunnckoCore/commissions",
+  "funding": "https://tidelift.com/funding/github/npm/formidable",
   "repository": "node-formidable/node-formidable",
   "main": "./src/index.js",
   "files": [
-    "src"
+    "src",
+    "test"
   ],
   "publishConfig": {
     "access": "public",
@@ -26,6 +27,10 @@
     "pretest:ci": "yarn pretest",
     "test:ci": "nyc node test/run.js"
   },
+  "dependencies": {
+    "dezalgo": "^1.0.3",
+    "once": "^1.4.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
@@ -37,11 +42,13 @@
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.2.2",
     "jest": "^25.1.0",
+    "koa": "^2.11.0",
     "lint-staged": "^10.0.7",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
     "prettier-plugin-pkgjson": "^0.2.3",
     "request": "^2.88.2",
+    "supertest": "^4.0.2",
     "urun": "^0.0.8",
     "utest": "^0.0.8"
   },

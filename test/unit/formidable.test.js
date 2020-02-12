@@ -17,47 +17,47 @@ function makeHeader(filename) {
 }
 
 ['IncomingForm', 'Formidable', 'formidable'].forEach((name) => {
-  test(`${name}#_fileName with regular characters`, () => {
+  test(`${name}#_getFileName with regular characters`, () => {
     const filename = 'foo.txt';
     const form = getForm(name);
 
-    expect(form._fileName(makeHeader(filename))).toBe('foo.txt');
+    expect(form._getFileName(makeHeader(filename))).toBe('foo.txt');
   });
 
-  test(`${name}#_fileName with unescaped quote`, () => {
+  test(`${name}#_getFileName with unescaped quote`, () => {
     const filename = 'my".txt';
     const form = getForm(name);
 
-    expect(form._fileName(makeHeader(filename))).toBe('my".txt');
+    expect(form._getFileName(makeHeader(filename))).toBe('my".txt');
   });
 
-  test(`${name}#_fileName with escaped quote`, () => {
+  test(`${name}#_getFileName with escaped quote`, () => {
     const filename = 'my%22.txt';
     const form = getForm(name);
 
-    expect(form._fileName(makeHeader(filename))).toBe('my".txt');
+    expect(form._getFileName(makeHeader(filename))).toBe('my".txt');
   });
 
-  test(`${name}#_fileName with bad quote and additional sub-header`, () => {
+  test(`${name}#_getFileName with bad quote and additional sub-header`, () => {
     const filename = 'my".txt';
     const form = getForm(name);
 
     const header = `${makeHeader(filename)}; foo="bar"`;
-    expect(form._fileName(header)).toBe(filename);
+    expect(form._getFileName(header)).toBe(filename);
   });
 
-  test(`${name}#_fileName with semicolon`, () => {
+  test(`${name}#_getFileName with semicolon`, () => {
     const filename = 'my;.txt';
     const form = getForm(name);
 
-    expect(form._fileName(makeHeader(filename))).toBe('my;.txt');
+    expect(form._getFileName(makeHeader(filename))).toBe('my;.txt');
   });
 
-  test(`${name}#_fileName with utf8 character`, () => {
+  test(`${name}#_getFileName with utf8 character`, () => {
     const filename = 'my&#9731;.txt';
     const form = getForm(name);
 
-    expect(form._fileName(makeHeader(filename))).toBe('my☃.txt');
+    expect(form._getFileName(makeHeader(filename))).toBe('my☃.txt');
   });
 
   test(`${name}#_uploadPath strips harmful characters from extension when keepExtensions`, () => {
