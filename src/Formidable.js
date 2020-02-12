@@ -129,10 +129,6 @@ class IncomingForm extends EventEmitter {
         } else {
           fields[name] = value;
         }
-        // if (name === 'simple') {
-        //   console.log('fields name!!', name);
-        //   console.log('fields value!!', value);
-        // }
       });
       this.on('file', (name, file) => {
         // TODO: too much nesting
@@ -148,11 +144,6 @@ class IncomingForm extends EventEmitter {
         } else {
           files[name] = file;
         }
-        // console.log('files!!', files);
-        // if (name === 'simple') {
-        //   console.log('files name!!', name);
-        //   console.log('files value!!', file);
-        // }
       });
       this.on('error', (err) => {
         callback(err, fields, files);
@@ -268,7 +259,7 @@ class IncomingForm extends EventEmitter {
         if (this._fieldsSize > this.options.maxFieldsSize) {
           this._error(
             new Error(
-              `options.maxFieldsSize exceeded, received ${this._fieldsSize} bytes of field data`,
+              `options.maxFieldsSize (${this.options.maxFieldsSize} bytes) exceeded, received ${this._fieldsSize} bytes of field data`,
             ),
           );
           return;
@@ -303,7 +294,7 @@ class IncomingForm extends EventEmitter {
       if (this._fileSize > this.options.maxFileSize) {
         this._error(
           new Error(
-            `options.maxFileSize exceeded, received ${this._fileSize} bytes of file data`,
+            `options.maxFileSize (${this.options.maxFileSize} bytes) exceeded, received ${this._fileSize} bytes of file data`,
           ),
         );
         return;

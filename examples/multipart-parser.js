@@ -1,6 +1,6 @@
 'use strict';
 
-const { MultipartParser } = require('../src/index.js');
+const { MultipartParser } = require('../src/index');
 
 // hand crafted multipart
 const boundary = '--abcxyz';

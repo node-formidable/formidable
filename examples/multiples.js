@@ -2,15 +2,13 @@
 
 const os = require('os');
 const http = require('http');
-const util = require('util');
 const { Formidable } = require('../src/index');
 
-const PORT = 13532;
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
     res.writeHead(200, { 'content-type': 'text/html' });
-    res.end(
-      `<form action="/upload" enctype="multipart/form-data" method="post">
+    res.end(`
+      <form action="/upload" enctype="multipart/form-data" method="post">
         <label>simple<input type="text" name="text_single" autofocus /></label><br />
 
         <label>array text 0<input type="text" name="text_multiple[]" /></label><br />
@@ -27,16 +25,14 @@ const server = http.createServer((req, res) => {
         <label>file html array and mulitple1<input type="file" name="filearray_with_multiple[]" multiple /></label><br />
         <br />
         <button>Upload</button>
-      </form>`,
-    );
+      </form>
+    `);
   } else if (req.url === '/upload') {
     const form = new Formidable({ multiples: true, uploadDir: os.tmpdir() });
 
-    form.parse(req, (error, fields, files) => {
-      res.writeHead(200, { 'content-type': 'text/plain' });
-      res.write(`received fields:\n\n ${util.inspect(fields)}`);
-      res.write('\n\n');
-      res.end(`received files:\n\n ${util.inspect(files)}`);
+    form.parse(req, (err, fields, files) => {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ err, fields, files }, null, 2));
     });
   } else {
     res.writeHead(404, { 'content-type': 'text/plain' });
@@ -44,6 +40,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`listening on http://localhost:${PORT}/`);
+server.listen(3000, () => {
+  console.log('Server listening on http://localhost:3000 ...');
 });

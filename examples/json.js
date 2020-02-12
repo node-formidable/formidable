@@ -2,10 +2,9 @@
 
 const http = require('http');
 const util = require('util');
-const { Formidable } = require('../src/index');
+const { formidable } = require('../src/index');
 
-// random OS choosen port
-const PORT = 13532;
+const PORT = 3000;
 const server = http.createServer((req, res) => {
   if (req.method !== 'POST') {
     res.writeHead(200, { 'content-type': 'text/plain' });
@@ -13,24 +12,25 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const form = new Formidable();
+  const form = formidable();
   const fields = {};
 
   form
     .on('error', (err) => {
+      console.error(err);
       res.writeHead(500, { 'content-type': 'text/plain' });
       res.end(`error:\n\n${util.inspect(err)}`);
-      console.error(err);
     })
     .on('field', (field, value) => {
       console.log(field, value);
       fields[field] = value;
     })
     .on('end', () => {
-      console.log('-> post done');
+      console.log('-> post done from "end" event');
       res.writeHead(200, { 'content-type': 'text/plain' });
-      res.end(`received fields:\n\n ${util.inspect(fields)}`);
+      res.end(`received fields:\n\n${util.inspect(fields)}`);
     });
+
   form.parse(req);
 });
 
@@ -38,7 +38,11 @@ server.listen(PORT, () => {
   const choosenPort = server.address().port;
   console.log(`Listening on http://localhost:${choosenPort}/`);
 
-  const message = '{"numbers":[1,2,3,4,5],"nested":{"key":"value"}}';
+  const body = JSON.stringify({
+    numbers: [1, 2, 3, 4, 5],
+    nested: { key: 'some val' },
+  });
+
   const request = http.request(
     {
       host: 'localhost',
@@ -47,7 +51,7 @@ server.listen(PORT, () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'content-length': message.length,
+        'content-length': body.length,
       },
     },
     (response) => {
@@ -69,7 +73,5 @@ server.listen(PORT, () => {
       // });
     },
   );
-
-  request.write(message);
-  request.end();
+  request.end(body);
 });

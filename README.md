@@ -16,7 +16,7 @@
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
 
-## Status: Maintained [![npm version][npmv-canary-img]][npmv-url] [![npm version][npmv-dev-img]][npmv-url]
+## Status: Maintained [![npm version][npmv-canary-img]][npmv-url]
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
@@ -27,8 +27,8 @@ and is used in production for years.
 
 Currently, we are few maintainers trying to deal with it. :) More contributors
 are always welcome! :heart: Jump on
-[issue #412](https://github.com/felixge/node-formidable/issues/412) if you are
-interested.
+[issue #412](https://github.com/felixge/node-formidable/issues/412) which is
+closed, but if you are interested we can discuss it and add you.
 
 _**Note:** Master is a "canary" branch - try it with `npm i formidable@canary`.
 Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the
@@ -37,20 +37,20 @@ last`v1` release!_
 
 _**Note: v2 is coming soon!**_
 
-You can try the
-[Plugins API](https://github.com/felixge/node-formidable/tree/plugins-api)
-([#545](https://github.com/felixge/node-formidable/pull/545)), which is
-available through `formidable@dev`.
-
 ## Highlights
 
-- Fast (~900-2500 mb/sec), streaming multipart parser
-- Automatically writing file uploads to disk
+- [Fast (~900-2500 mb/sec)](#benchmarks) & streaming multipart parser
+- Automatically writing file uploads to disk (soon optionally)
+- [Plugins API](#useplugin-plugin) - allowing custom parsers and plugins
 - Low memory footprint
 - Graceful error handling
 - Very high test coverage
 
 ## Install
+
+This project requires `Node.js >=10.13`. Install it using
+[yarn](https://yarnpkg.com) or [npm](https://npmjs.com). _We highly recommend to
+use Yarn when you think to contribute to this project._
 
 ```sh
 npm install formidable
@@ -66,53 +66,162 @@ yarn add formidable
 yarn add formidable@canary
 ```
 
-This is a low-level package, and if you're using a high-level framework it may
-already be included.
+This is a low-level package, and if you're using a high-level framework it _may_
+already be included. Check the examples below and the `examples/` folder.
 
-However, [Express v4](http://expressjs.com) does not include any multipart
-handling, nor does [body-parser](https://github.com/expressjs/body-parser).
+## Examples
 
-For `koa` there is [koa-better-body](https://ghub.now.sh/koa-better-body) which
-can handle ANY type of body / form-data - JSON, urlencoded, multpart and so on.
-A new major release is coming there too.
+For more examples look at the `example/` directory.
 
-## Example
+### with Node.js http module
 
-Parse an incoming file upload.
+Parse an incoming file upload, with the
+[Node.js's built-in `http` module](https://nodejs.org/api/http.html).
 
 ```js
 const http = require('http');
-const util = require('util');
 const formidable = require('formidable');
 
-http
-  .createServer((req, res) => {
-    if (req.url === '/upload' && req.method.toLowerCase() === 'post') {
-      // parse a file upload
-      const form = formidable();
+const server = http.createServer((req, res) => {
+  if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
+    // parse a file upload
+    const form = formidable({ multiples: true });
 
-      form.parse(req, (err, fields, files) => {
-        res.writeHead(200, { 'content-type': 'text/plain' });
-        res.write('received upload:\n\n');
-        res.end(util.inspect({ fields: fields, files: files }));
-      });
+    form.parse(req, (err, fields, files) => {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ fields, files }, null, 2));
+    });
 
+    return;
+  }
+
+  // show a file upload form
+  res.writeHead(200, { 'content-type': 'text/html' });
+  res.end(`
+    <h2>With Node.js <code>"http"</code> module</h2>
+    <form action="/api/upload" enctype="multipart/form-data" method="post">
+      <div>Text field title: <input type="text" name="title" /></div>
+      <div>File: <input type="file" name="multipleFiles" multiple="multiple" /></div>
+      <input type="submit" value="Upload" />
+    </form>
+  `);
+});
+
+server.listen(8080, () => {
+  console.log('Server listening on http://localhost:8080/ ...');
+});
+```
+
+### with Express.js
+
+There are multiple variants to do this, but Formidable just need Node.js Request
+stream, so something like the following example should work just fine, without
+any third-party [Express.js](https://ghub.now.sh/express) middleware.
+
+Or try the
+[examples/with-express.js](https://github.com/node-formidable/node-formidable/blob/master/examples/with-express.js)
+
+```js
+const express = require('express');
+const formidable = require('formidable');
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send(`
+    <h2>With <code>"express"</code> npm package</h2>
+    <form action="/api/upload" enctype="multipart/form-data" method="post">
+      <div>Text field title: <input type="text" name="title" /></div>
+      <div>File: <input type="file" name="someExpressFiles" multiple="multiple" /></div>
+      <input type="submit" value="Upload" />
+    </form>
+  `);
+});
+
+app.post('/api/upload', (req, res, next) => {
+  const form = formidable({ multiples: true });
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
       return;
     }
-
-    // show a file upload form
-    res.writeHead(200, { 'content-type': 'text/html' });
-    res.end(`
-      <form action="/upload" enctype="multipart/form-data" method="post">
-        <input type="text" name="title" /><br/>
-        <input type="file" name="upload" multiple="multiple" /><br/>
-        <input type="submit" value="Upload" />
-      </form>
-    `);
-  })
-  .listen(8080, () => {
-    console.log('Server listening on http://localhost:8080/ ...');
+    res.json({ fields, files });
   });
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on http://localhost:3000 ...');
+});
+```
+
+### with Koa and Formidable
+
+Of course, with [Koa v1, v2 or future v3](https://ghub.now.sh/koa) the things
+are very similar. You can use `formidable` directly as shown below or through
+the [koa-better-body](https://ghub.now.sh/koa-better-body) package which support
+more features and different request bodies, check its documentation for more
+info.
+
+_Note: this example is assuming Koa v2. Be aware that you should pass `ctx.req`
+which is Node.js's Request, and **NOT** the `ctx.request` which is Koa's Request
+object - there is a difference._
+
+```js
+const Koa = require('koa');
+const formidable = require('formidable');
+
+const app = new Koa();
+
+app.on('error', (err) => {
+  console.error('server error', err);
+});
+
+app.use(async (ctx, next) => {
+  if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
+    const form = formidable({ multiples: true });
+
+    // not very elegant, but that's for now if you don't want touse `koa-better-body`
+    // or other middlewares.
+    await new Promise((resolve, reject) => {
+      form.parse(ctx.req, (err, fields, files) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        ctx.set('Content-Type', 'application/json');
+        ctx.status = 200;
+        ctx.state = { fields, files };
+        ctx.body = JSON.stringify(ctx.state, null, 2);
+        resolve();
+      });
+    });
+    await next();
+    return;
+  }
+
+  // show a file upload form
+  ctx.set('Content-Type', 'text/html');
+  ctx.status = 200;
+  ctx.body = `
+    <h2>With <code>"koa"</code> npm package</h2>
+    <form action="/api/upload" enctype="multipart/form-data" method="post">
+    <div>Text field title: <input type="text" name="title" /></div>
+    <div>File: <input type="file" name="koaFiles" multiple="multiple" /></div>
+    <input type="submit" value="Upload" />
+    </form>
+  `;
+});
+
+app.use((ctx) => {
+  console.log('The next middleware is called');
+  console.log('Results:', ctx.state);
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on http://localhost:3000 ...');
+});
 ```
 
 ## Benchmarks
@@ -203,7 +312,8 @@ See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
   attribute. Also, the `fields` argument will contain arrays of values for
   fields that have names ending with '[]'.
 
-_**Note:** If this value is exceeded, an `'error'` event is emitted._
+_**Note:** If this size of combined fields, or size of some file is exceeded, an
+`'error'` event is fired._
 
 ```js
 // The amount of bytes received for this form so far.
@@ -535,6 +645,7 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License

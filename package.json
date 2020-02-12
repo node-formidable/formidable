@@ -23,9 +23,10 @@
     "lint:prepare": "eslint --cache --fix --quiet --format codeframe",
     "reinstall": "rm -rf node_modules yarn.lock && yarn",
     "pretest": "rm -rf test/tmp && mkdir test/tmp",
-    "test": "node test/run.js",
+    "test": "yarn node test/run.js",
     "pretest:ci": "yarn pretest",
-    "test:ci": "nyc node test/run.js"
+    "test:ci": "nyc node test/run.js",
+    "test:jest": "jest --coverage"
   },
   "dependencies": {
     "dezalgo": "^1.0.3",
@@ -40,6 +41,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
+    "express": "^4.17.1",
     "husky": "^4.2.2",
     "jest": "^25.1.0",
     "koa": "^2.11.0",
