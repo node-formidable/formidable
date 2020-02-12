@@ -31,16 +31,17 @@ jobs:
         node: [12.x]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v1
-        id: nodejs-cache
-        name: Cache node modules
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ matrix.os }}-nodejs-${{ matrix.node }}-
-            ${{ matrix.os }}-nodejs-
-            ${{ matrix.os }}-
+      - uses: actions/checkout@v2
+      # - uses: actions/cache@v1
+      #   id: nodejs-cache
+      #   name: Cache node modules
+      #   with:
+      #     path: node_modules
+      #     key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ matrix.os }}-nodejs-${{ matrix.node }}-
+      #       ${{ matrix.os }}-nodejs-
+      #       ${{ matrix.os }}-
       - name: Installing dependencies
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --check-files
@@ -57,17 +58,17 @@ jobs:
         node: [10.x, 12.x]
     runs-on: ${{ matrix.os }}
     steps:
-      # - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        id: nodejs-cache
-        name: Cache node modules
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ matrix.os }}-nodejs-${{ matrix.node }}-
-            ${{ matrix.os }}-nodejs-
-            ${{ matrix.os }}-
+      - uses: actions/checkout@v2
+      # - uses: actions/cache@v1
+      #   id: nodejs-cache
+      #   name: Cache node modules
+      #   with:
+      #     path: node_modules
+      #     key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ matrix.os }}-nodejs-${{ matrix.node }}-
+      #       ${{ matrix.os }}-nodejs-
+      #       ${{ matrix.os }}-
       - name: Installing dependencies
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --check-files
