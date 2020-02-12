@@ -8,7 +8,35 @@ on:
     branches:
       - master
 
+modules_cache: &modules_cache
+  uses: actions/cache@v2
+  id: nodejs-cache
+  name: Cache node modules
+  with:
+    path: node_modules
+    key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
+    restore-keys: |
+      ${{ matrix.os }}-nodejs-${{ matrix.node }}-
+      ${{ matrix.os }}-nodejs-
+      ${{ matrix.os }}-
+
 jobs:
+  lint:
+    if: "!contains(toJson(github.event.commits), '[skip ci]')"
+    env:
+      CI: true
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [12.x]
+    runs-on: ubuntu-latest
+    steps:
+      - *modules_cache
+      - name: Installing dependencies
+        if: steps.nodejs-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --check-files
+      - name: Linting & Format codebase with ESLint and Prettier
+        run: yarn lint && yarn fmt
   test:
     if: "!contains(toJson(github.event.commits), '[skip ci]')"
     env:
@@ -16,30 +44,15 @@ jobs:
       CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         node: [10.x, 12.x]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/cache@v1
-        id: nodejs-cache
-        name: Cache node modules
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-nodejs-${{ matrix.node }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ matrix.os }}-nodejs-${{ matrix.node }}-
-            ${{ matrix.os }}-nodejs-
-            ${{ matrix.os }}-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+      # - uses: actions/checkout@v2
+      - *modules_cache
       - name: Installing dependencies
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
-      - name: Linting & Format codebase with ESLint & Prettier
-        run: yarn lint && yarn fmt
+        run: yarn install --frozen-lockfile --check-files
       - name: Testing
         run: yarn test:ci
       - name: Sending test coverage to CodeCov
