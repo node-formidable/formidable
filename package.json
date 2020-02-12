@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/node-formidable",
-  "funding": "https://ko-fi.com/tunnckoCore/commissions",
+  "funding": "https://tidelift.com/funding/github/npm/formidable",
   "repository": "node-formidable/node-formidable",
   "main": "./src/index.js",
   "files": [
@@ -13,7 +13,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "dev"
+    "tag": "canary"
   },
   "scripts": {
     "bench": "node benchmark",
