@@ -49,8 +49,9 @@ _**Note: v2 is coming soon!**_
 ## Install
 
 This project requires `Node.js >=10.13`. Install it using
-[yarn](https://yarnpkg.com) or [npm](https://npmjs.com). _We highly recommend to
-use Yarn when you think to contribute to this project._
+[yarn](https://yarnpkg.com) or [npm](https://npmjs.com).
+
+_We highly recommend to use Yarn when you think to contribute to this project._
 
 ```sh
 npm install formidable
@@ -158,10 +159,10 @@ app.listen(3000, () => {
 ### with Koa and Formidable
 
 Of course, with [Koa v1, v2 or future v3](https://ghub.now.sh/koa) the things
-are very similar. You can use `formidable` directly as shown below or through
-the [koa-better-body](https://ghub.now.sh/koa-better-body) package which support
-more features and different request bodies, check its documentation for more
-info.
+are very similar. You can use `formidable` manually as shown below or through
+the [koa-better-body](https://ghub.now.sh/koa-better-body) package which is
+using `formidable` under the hood and support more features and different
+request bodies, check its documentation for more info.
 
 _Note: this example is assuming Koa v2. Be aware that you should pass `ctx.req`
 which is Node.js's Request, and **NOT** the `ctx.request` which is Koa's Request
@@ -264,8 +265,8 @@ Benchmarked on 8GB RAM, Xeon X3440 (2.53 GHz, 4 cores, 8 threads)
 
 All shown are equivalent.
 
-_Please pass [`options`](#options) to the function/constructor, not by passing
-assigning them to the instance `form`_
+_Please pass [`options`](#options) to the function/constructor, not by assigning
+them to the instance `form`_
 
 ```js
 const formidable = require('formidable');
