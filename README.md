@@ -2,16 +2,39 @@
   <img alt="node formidable logo" src="./logo.png" />
 </p>
 
-# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url]
+# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url] [![Twitter][twitter-img]][twitter-url]
 
 > A Node.js module for parsing form data, especially file uploads.
 
 [![Code style][codestyle-img]][codestyle-url]
-[![build status][build-img]][build-url]
 [![codecoverage][codecov-img]][codecov-url]
+[![linux build status][linux-build-img]][build-url]
+[![windows build status][windows-build-img]][build-url]
+[![macos build status][macos-build-img]][build-url]
+
+If you have any _how-to_ kind of questions, please read the [Contributing
+Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
+documents.<br /> For bugs reports and feature requests, [please create an
+issue][open-issue-url] or ping [@tunnckoCore](https://twitter.com/tunnckoCore)
+at Twitter.
+
+[![Conventional Commits][ccommits-img]][ccommits-url]
+[![Minimum Required Nodejs][nodejs-img]][npmv-url]
+[![Tidelift Subcsription][tidelift-img]][tidelift-url]
+[![Buy me a Kofi][kofi-img]][kofi-url]
 [![Renovate App Status][renovateapp-img]][renovateapp-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
-[![Twitter][twitter-img]][twitter-url]
+
+This project is [semantically versioned](https://semver.org) and available as
+part of the [Tidelift Subscription][tidelift-url] for professional grade
+assurances, enhanced support and security.
+[Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+
+_The maintainers of `formidable` and thousands of other packages are working
+with Tidelift to deliver commercial support and maintenance for the Open Source
+dependencies you use to build your applications. Save time, reduce risk, and
+improve code health, while paying the maintainers of the exact dependencies you
+use._
 
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
@@ -659,8 +682,6 @@ Formidable is licensed under the [MIT License][license-url].
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
 [codecov-url]: https://codecov.io/gh/node-formidable/node-formidable
 [codecov-img]: https://badgen.net/codecov/c/github/node-formidable/node-formidable/master?icon=codecov
-[build-img]: https://badgen.net/github/checks/node-formidable/node-formidable?label=build&icon=github
-[build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 [npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
 [npmv-dev-img]: https://badgen.net/npm/v/formidable/dev?icon=npm
 [npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
@@ -681,6 +702,26 @@ Formidable is licensed under the [MIT License][license-url].
 [npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
 [npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
 [npm-yearly-img]: https://badgen.net/npm/dy/formidable?icon=npm&cache=300
-[npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300
+[npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300&label=total%20downloads
 
+[nodejs-img]: https://badgen.net/badge/node/>=%2010.13/green?cache=300
+
+[ccommits-url]: https://conventionalcommits.org/
+[ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300
+
+[contributing-url]: https://github.com/node-formidable/node-formidable/blob/master/CONTRIBUTING.md
+[code_of_conduct-url]: https://github.com/node-formidable/node-formidable/blob/master/CODE_OF_CONDUCT.md
+
+[open-issue-url]: https://github.com/node-formidable/node-formidable/issues/new
+
+[tidelift-url]: https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise
+[tidelift-img]: https://badgen.net/badge/tidelift/subscription/4B5168?labelColor=F6914D
+
+[kofi-url]: https://ko-fi.com/tunnckoCore/commissions
+[kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
+
+[linux-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable?label=linux%20build&icon=github
+[macos-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable?label=macos%20build&icon=github
+[windows-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable?label=windows%20build&icon=github
+[build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 <!-- prettier-ignore-end -->
