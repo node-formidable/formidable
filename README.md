@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="node formidable logo" src="./logo.png" />
+  <img alt="npm formidable package logo" src="https://raw.githubusercontent.com/node-formidable/formidable/master/logo.png" />
 </p>
 
 # formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url] [![Twitter][twitter-img]][twitter-url]
@@ -28,7 +28,7 @@ at Twitter.
 This project is [semantically versioned](https://semver.org) and available as
 part of the [Tidelift Subscription][tidelift-url] for professional grade
 assurances, enhanced support and security.
-[Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+[Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise)
 
 _The maintainers of `formidable` and thousands of other packages are working
 with Tidelift to deliver commercial support and maintenance for the Open Source
@@ -51,12 +51,13 @@ and is used in production for years.
 Currently, we are few maintainers trying to deal with it. :) More contributors
 are always welcome! :heart: Jump on
 [issue #412](https://github.com/felixge/node-formidable/issues/412) which is
-closed, but if you are interested we can discuss it and add you.
+closed, but if you are interested we can discuss it and add you after strict
+rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
 
-_**Note:** Master is a "canary" branch - try it with `npm i formidable@canary`.
-Do not expect (for now) things from it to be inside the`latest`"dist-tag" in the
-Npm. The`formidable@latest`is the`v1.2.1` version and probably it will be the
-last`v1` release!_
+_**Note:** The github `master` branch is a "canary" branch - try it with
+`npm i formidable@canary`. Do not expect (for now) things from it to be inside
+the`latest` "dist-tag" in the Npm. The`formidable@latest`is the`v1.2.1` version
+and probably it will be the last`v1` release!_
 
 _**Note: v2 is coming soon!**_
 
