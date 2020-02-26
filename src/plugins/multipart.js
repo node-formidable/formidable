@@ -22,7 +22,7 @@ module.exports = function plugin(formidable, options) {
     );
     if (m) {
       const initMultipart = createInitMultipart(m[1] || m[2]);
-      initMultipart.call(self, self, options);
+      initMultipart.call(self, self, options); // lgtm [js/superfluous-trailing-arguments]
     } else {
       const err = new Error('bad content-type header, no multipart boundary');
       self._error(err);

@@ -409,8 +409,7 @@ class IncomingForm extends EventEmitter {
   _getFileName(headerValue) {
     // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
     const m = headerValue.match(
-      // eslint-disable-next-line no-useless-escape
-      /\bfilename=("(.*?)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))($|;\s)/i,
+      /\bfilename=("(.*?)"|([^()<>{}[\]@,;:"?=\s/\t]+))($|;\s)/i,
     );
     if (!m) return null;
 
