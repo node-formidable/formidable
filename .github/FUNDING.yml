@@ -1,9 +1,9 @@
+tidelift: npm/formidable
 ko_fi: tunnckoCore
 patreon: tunnckoCore
-tidelift: npm/formidable
 github:
   - tunnckoCore
-  
-# Replace with up to 4 custom sponsorship URLs
+
 custom:
-  - https://gumroad.com/l/tunnckoCoreRecurringDonation
+  - https://gum.co/tunnckoCoreRecurringDonation
+  - https://gum.co/tunnckocorePatronLicense
