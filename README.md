@@ -721,8 +721,8 @@ Formidable is licensed under the [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable?label=linux%20build&icon=github
-[macos-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable?label=macos%20build&icon=github
-[windows-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable?label=windows%20build&icon=github
+[linux-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable/master/ubuntu?label=linux%20build&icon=github
+[macos-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable/master/macos?label=macos%20build&icon=github
+[windows-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable/master/windows?label=windows%20build&icon=github
 [build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 <!-- prettier-ignore-end -->
