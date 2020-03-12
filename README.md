@@ -143,7 +143,7 @@ stream, so something like the following example should work just fine, without
 any third-party [Express.js](https://ghub.now.sh/express) middleware.
 
 Or try the
-[examples/with-express.js](https://github.com/node-formidable/node-formidable/blob/master/examples/with-express.js)
+[examples/with-express.js](https://github.com/node-formidable/formidable/blob/master/examples/with-express.js)
 
 ```js
 const express = require('express');
@@ -681,14 +681,14 @@ Formidable is licensed under the [MIT License][license-url].
 
 [codestyle-url]: https://github.com/airbnb/javascript
 [codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
-[codecov-url]: https://codecov.io/gh/node-formidable/node-formidable
-[codecov-img]: https://badgen.net/codecov/c/github/node-formidable/node-formidable/master?icon=codecov
+[codecov-url]: https://codecov.io/gh/node-formidable/formidable
+[codecov-img]: https://badgen.net/codecov/c/github/node-formidable/formidable/master?icon=codecov
 [npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
 [npmv-dev-img]: https://badgen.net/npm/v/formidable/dev?icon=npm
 [npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
 [npmv-url]: https://npmjs.com/package/formidable
 [license-img]: https://badgen.net/npm/license/formidable
-[license-url]: https://github.com/node-formidable/node-formidable/blob/master/LICENSE
+[license-url]: https://github.com/node-formidable/formidable/blob/master/LICENSE
 [chat-img]: https://badgen.net/badge/chat/on%20gitter/46BC99?icon=gitter
 [chat-url]: https://gitter.im/node-formidable/Lobby
 [libera-manifesto-url]: https://liberamanifesto.com
@@ -710,10 +710,10 @@ Formidable is licensed under the [MIT License][license-url].
 [ccommits-url]: https://conventionalcommits.org/
 [ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300
 
-[contributing-url]: https://github.com/node-formidable/node-formidable/blob/master/CONTRIBUTING.md
-[code_of_conduct-url]: https://github.com/node-formidable/node-formidable/blob/master/CODE_OF_CONDUCT.md
+[contributing-url]: https://github.com/node-formidable/formidable/blob/master/CONTRIBUTING.md
+[code_of_conduct-url]: https://github.com/node-formidable/formidable/blob/master/CODE_OF_CONDUCT.md
 
-[open-issue-url]: https://github.com/node-formidable/node-formidable/issues/new
+[open-issue-url]: https://github.com/node-formidable/formidable/issues/new
 
 [tidelift-url]: https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise
 [tidelift-img]: https://badgen.net/badge/tidelift/subscription/4B5168?labelColor=F6914D
@@ -721,8 +721,8 @@ Formidable is licensed under the [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable?label=linux%20build&icon=github
-[macos-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable?label=macos%20build&icon=github
-[windows-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/node-formidable?label=windows%20build&icon=github
+[linux-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable?label=linux%20build&icon=github
+[macos-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable?label=macos%20build&icon=github
+[windows-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable?label=windows%20build&icon=github
 [build-url]: https://github.com/node-formidable/node-formidable/actions?query=workflow%3Anodejs
 <!-- prettier-ignore-end -->
