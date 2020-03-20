@@ -20,6 +20,7 @@ const DEFAULT_OPTIONS = {
   keepExtensions: false,
   encoding: 'utf-8',
   hash: false,
+  uploadDir: os.tmpdir(),
   multiples: false,
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
 };
@@ -35,24 +36,31 @@ function hasOwnProp(obj, key) {
 class IncomingForm extends EventEmitter {
   constructor(options = {}) {
     super();
-    this.error = null;
-    this.ended = false;
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
-    this.uploadDir = this.uploadDir || os.tmpdir();
+
+    const dir = this.options.uploadDir || this.options.uploaddir || os.tmpdir();
+
+    this.uploaddir = dir;
+    this.uploadDir = dir;
 
     this.options.filename =
       typeof this.options.filename === 'function'
         ? this.options.filename.bind(this)
         : this._uploadPath.bind(this);
 
-    this.headers = null;
-    this.type = null;
+    // initialize with null
+    [
+      'error',
+      'headers',
+      'type',
+      'bytesExpected',
+      'bytesReceived',
+      '_parser',
+    ].forEach((key) => {
+      this[key] = null;
+    });
 
-    this.bytesReceived = null;
-    this.bytesExpected = null;
-
-    this._parser = null;
     this._flushing = 0;
     this._fieldsSize = 0;
     this._fileSize = 0;
@@ -282,7 +290,7 @@ class IncomingForm extends EventEmitter {
     this._flushing += 1;
 
     const file = new File({
-      path: this.options.filename(part),
+      path: this.options.filename(part, this),
       name: part.filename,
       type: part.mime,
       hash: this.options.hash,
