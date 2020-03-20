@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable no-underscore-dangle */
 
 'use strict';
@@ -63,20 +64,37 @@ function makeHeader(filename) {
   test(`${name}#_uploadPath strips harmful characters from extension when keepExtensions`, () => {
     const form = getForm(name, { keepExtensions: true });
 
-    let ext = path.extname(form._uploadPath('fine.jpg?foo=bar'));
+    const getBasename = (part) => path.basename(form._uploadPath(part));
+
+    let basename = getBasename('fine.jpg?foo=bar');
+    expect(basename).toHaveLength(29);
+    let ext = path.extname(basename);
     expect(ext).toBe('.jpg');
 
-    ext = path.extname(form._uploadPath('fine?foo=bar'));
+    basename = getBasename('fine-no-ext?foo=qux');
+    expect(basename).toHaveLength(25);
+    ext = path.extname(basename);
     expect(ext).toBe('');
 
-    ext = path.extname(form._uploadPath('super.cr2+dsad'));
+    basename = getBasename({ filename: 'super.cr2+dsad' });
+    expect(basename).toHaveLength(29);
+    ext = path.extname(basename);
     expect(ext).toBe('.cr2');
 
-    ext = path.extname(form._uploadPath('super.bar'));
-    expect(ext).toBe('.bar');
+    basename = getBasename({ filename: 'super.gz' });
+    expect(basename).toHaveLength(28);
+    ext = path.extname(basename);
+    expect(ext).toBe('.gz');
 
-    ext = path.extname(form._uploadPath('file.aAa'));
+    basename = getBasename('file.aAa');
+    expect(basename).toHaveLength(29);
+    ext = path.extname(basename);
     expect(ext).toBe('.aAa');
+
+    basename = getBasename('file#!@#koh.QxZs?sa=1');
+    expect(basename).toHaveLength(30);
+    ext = path.extname(basename);
+    expect(ext).toBe('.QxZs');
   });
 
   test(`${name}#_Array parameters support`, () => {
@@ -93,4 +111,10 @@ function makeHeader(filename) {
     form.emit('field', 'a[]', 2);
     form.emit('end');
   });
+
+  // test(`${name}: use custom options.filename instead of form._uploadPath`, () => {
+  //   const form = getForm(name, {
+  //     filename: (_) => path.join(__dirname, 'sasa'),
+  //   });
+  // });
 });

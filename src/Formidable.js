@@ -6,12 +6,13 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
+const hexoid = require('hexoid');
 const once = require('once');
 const dezalgo = require('dezalgo');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 
+const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
@@ -39,6 +40,11 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.uploadDir = this.uploadDir || os.tmpdir();
+
+    this.options.filename =
+      typeof this.options.filename === 'function'
+        ? this.options.filename.bind(this)
+        : this._uploadPath.bind(this);
 
     this.headers = null;
     this.type = null;
@@ -276,7 +282,7 @@ class IncomingForm extends EventEmitter {
     this._flushing += 1;
 
     const file = new File({
-      path: this._uploadPath(part.filename),
+      path: this.options.filename(part),
       name: part.filename,
       type: part.mime,
       hash: this.options.hash,
@@ -422,18 +428,17 @@ class IncomingForm extends EventEmitter {
     return filename;
   }
 
-  _uploadPath(filename) {
-    const buf = crypto.randomBytes(16);
-    let name = `upload_${buf.toString('hex')}`;
+  _uploadPath(part) {
+    const name = `${this.uploadDir}${path.sep}${toHexoId()}`;
 
-    if (this.options.keepExtensions) {
-      let ext = path.extname(filename);
+    if (part && this.options.keepExtensions) {
+      let ext = path.extname(typeof part === 'string' ? part : part.filename);
       ext = ext.replace(/(\.[a-z0-9]+).*/i, '$1');
 
-      name += ext;
+      return `${name}${ext}`;
     }
 
-    return path.join(this.uploadDir, name);
+    return name;
   }
 
   _maybeEnd() {
