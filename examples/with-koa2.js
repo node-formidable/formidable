@@ -11,7 +11,16 @@ app.on('error', (err) => {
 
 app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
-    const form = formidable({ multiples: true });
+    let i = 0;
+    const form = formidable({
+      multiples: true,
+      keepExtensions: true,
+      // must return absolute path
+      filename: (part, $self) => {
+        i += 1;
+        return `${$self.uploadDir}/sasasa${i}`;
+      },
+    });
 
     // not very elegant, but that's for now if you don't want touse `koa-better-body`
     // or other middlewares.

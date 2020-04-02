@@ -44,11 +44,6 @@ class IncomingForm extends EventEmitter {
     this.uploaddir = dir;
     this.uploadDir = dir;
 
-    this.options.filename =
-      typeof this.options.filename === 'function'
-        ? this.options.filename.bind(this)
-        : this._uploadPath.bind(this);
-
     // initialize with null
     [
       'error',
@@ -60,6 +55,19 @@ class IncomingForm extends EventEmitter {
     ].forEach((key) => {
       this[key] = null;
     });
+
+    const hasRename = typeof this.options.filename === 'function';
+    const rename = hasRename ? this.options.filename : this._uploadPath;
+
+    if (this.options.keepExtensions === true && hasRename) {
+      this._rename = (part) => {
+        const resultFilepath = this.options.filename.call(this, part, this);
+
+        return this._uploadPath(part, resultFilepath);
+      };
+    } else {
+      this._rename = rename;
+    }
 
     this._flushing = 0;
     this._fieldsSize = 0;
@@ -290,7 +298,7 @@ class IncomingForm extends EventEmitter {
     this._flushing += 1;
 
     const file = new File({
-      path: this.options.filename(part, this),
+      path: this._rename.call(this, part, this),
       name: part.filename,
       type: part.mime,
       hash: this.options.hash,
@@ -436,14 +444,17 @@ class IncomingForm extends EventEmitter {
     return filename;
   }
 
-  _uploadPath(part) {
-    const name = `${this.uploadDir}${path.sep}${toHexoId()}`;
+  _uploadPath(part, fp) {
+    const name = fp || `${this.uploadDir}${path.sep}${toHexoId()}`;
 
     if (part && this.options.keepExtensions) {
-      let ext = path.extname(typeof part === 'string' ? part : part.filename);
-      ext = ext.replace(/(\.[a-z0-9]+).*/i, '$1');
+      // eslint-disable-next-line no-inner-declarations
+      function getExt(str) {
+        return path.basename(str).slice(path.basename(str).indexOf('.'));
+      }
 
-      return `${name}${ext}`;
+      const filename = typeof part === 'string' ? part : part.filename;
+      return `${name}${getExt(filename)}`;
     }
 
     return name;
