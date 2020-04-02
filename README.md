@@ -509,7 +509,7 @@ fields)
 ```js
 const form = formidable();
 
-form.onPart = function(part) {
+form.onPart = function (part) {
   // let formidable handle only non-file parts
   if (part.filename === '' || !part.mime) {
     // used internally, please do not override!

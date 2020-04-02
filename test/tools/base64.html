@@ -10,7 +10,7 @@
         var fileInput = document.getElementById('fileInput');
         var fieldInput = document.getElementById('fieldInput');
 
-        makeRequestBase64(fileInput.files[0], fieldInput.value, function(
+        makeRequestBase64(fileInput.files[0], fieldInput.value, function (
           err,
           result,
         ) {
@@ -26,7 +26,7 @@
         var crlf = '\r\n';
 
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           var body = '';
 
           body += '--' + boundary + crlf;
@@ -65,8 +65,8 @@
 
   <body>
     <form action="" onsubmit="return form_submit();">
-      <label>File: <input id="fileInput" type="file"/></label><br />
-      <label>Field: <input id="fieldInput" type="text" value="file"/></label
+      <label>File: <input id="fileInput" type="file" /></label><br />
+      <label>Field: <input id="fieldInput" type="text" value="file" /></label
       ><br />
       <button type="submit">Ok!</button><br />
       <label

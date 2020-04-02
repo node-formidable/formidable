@@ -5,7 +5,7 @@ on:
     types: [opened]
   issues:
     types: [opened]
-    
+
 jobs:
   build:
     name: is-sponsor-label

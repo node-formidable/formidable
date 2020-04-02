@@ -1,12 +1,12 @@
 issuesOpened: >
   Thank you for raising this issue! We will try and get back to you as soon as possible.
   Please make sure you format it properly, followed our [code of conduct](https://github.com/node-formidable/.github/blob/master/CODE_OF_CONDUCT.md) and have given us as much context as possible.
-  
+
   /cc @tunnckoCore @GrosSacASac
 
 pullRequestOpened: >
   Thank you for raising your pull request.
   Please make sure again that you have followed our [contributing guidelines](https://github.com/node-formidable/.github/blob/master/CONTRIBUTING.md) and the [code of conduct](https://github.com/node-formidable/.github/blob/master/CODE_OF_CONDUCT.md).
   We will review it as soon as possible.
-  
+
   /cc @tunnckoCore @GrosSacASac
