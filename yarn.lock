@@ -2586,6 +2586,11 @@ hasha@^5.0.0:
     is-stream "^2.0.0"
     type-fest "^0.8.0"
 
+hexoid@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hexoid/-/hexoid-1.0.0.tgz#ad10c6573fb907de23d9ec63a711267d9dc9bc18"
+  integrity sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==
+
 hosted-git-info@^2.1.4:
   version "2.8.6"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.6.tgz#3a6e6d0324c5371fc8c7ba7175e1e5d14578724d"
@@ -4561,10 +4566,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-pkgjson@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-pkgjson/-/prettier-plugin-pkgjson-0.2.5.tgz#f38f412dfcd238cb6d955fd23c39ae482a9b87ab"
-  integrity sha512-vOaW3MvRdvWrqoNWgYRgUgdgGbQIdjHKN2A5tl8acauX6JxxcuZKhlo4e5NWdTmm0q+gnn+rB6fF1hkk3QRu3Q==
+prettier-plugin-pkgjson@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-pkgjson/-/prettier-plugin-pkgjson-0.2.8.tgz#cc644f846887332518d279dd6b8719e0781b742f"
+  integrity sha512-MBpPCjqQKxKc5SxhLkVeE2Q+3N7KBk+zJLkFzHVL6SMRAZlyiq/44w/NonCmO+24pI7s/LKoeFqcWY2+08vuEg==
   dependencies:
     sort-package-json "^1.40.0"
 
