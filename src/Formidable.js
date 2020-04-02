@@ -440,20 +440,29 @@ class IncomingForm extends EventEmitter {
     filename = filename.replace(/&#([\d]{4});/g, (_, code) =>
       String.fromCharCode(code),
     );
+
     return filename;
+  }
+
+  _getExtension(str) {
+    const basename = path.basename(str);
+    const firstDot = basename.indexOf('.');
+    const lastDot = basename.lastIndexOf('.');
+    const extname = path.extname(basename).replace(/(\.[a-z0-9]+).*/i, '$1');
+
+    if (firstDot === lastDot) {
+      return extname;
+    }
+
+    return basename.slice(firstDot, lastDot) + extname;
   }
 
   _uploadPath(part, fp) {
     const name = fp || `${this.uploadDir}${path.sep}${toHexoId()}`;
 
     if (part && this.options.keepExtensions) {
-      // eslint-disable-next-line no-inner-declarations
-      function getExt(str) {
-        return path.basename(str).slice(path.basename(str).indexOf('.'));
-      }
-
       const filename = typeof part === 'string' ? part : part.filename;
-      return `${name}${getExt(filename)}`;
+      return `${name}${this._getExtension(filename)}`;
     }
 
     return name;
