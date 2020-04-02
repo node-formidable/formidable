@@ -4566,10 +4566,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-pkgjson@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-pkgjson/-/prettier-plugin-pkgjson-0.2.5.tgz#f38f412dfcd238cb6d955fd23c39ae482a9b87ab"
-  integrity sha512-vOaW3MvRdvWrqoNWgYRgUgdgGbQIdjHKN2A5tl8acauX6JxxcuZKhlo4e5NWdTmm0q+gnn+rB6fF1hkk3QRu3Q==
+prettier-plugin-pkgjson@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-pkgjson/-/prettier-plugin-pkgjson-0.2.8.tgz#cc644f846887332518d279dd6b8719e0781b742f"
+  integrity sha512-MBpPCjqQKxKc5SxhLkVeE2Q+3N7KBk+zJLkFzHVL6SMRAZlyiq/44w/NonCmO+24pI7s/LKoeFqcWY2+08vuEg==
   dependencies:
     sort-package-json "^1.40.0"
 
