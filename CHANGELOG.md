@@ -24,7 +24,7 @@
  * respect form hash option on incoming octect/stream requests ([#407](https://github.com/node-formidable/node-formidable/pull/407))
  * fix: exposing file writable stream errors ([#520](https://github.com/node-formidable/node-formidable/pull/520), [#316](https://github.com/node-formidable/node-formidable/pull/316), [#469](https://github.com/node-formidable/node-formidable/pull/469), [#470](https://github.com/node-formidable/node-formidable/pull/470))
  * feat: custom file (re)naming, thru options.filename ([#591](https://github.com/node-formidable/node-formidable/pull/591), [#84](https://github.com/node-formidable/node-formidable/issues/84), [#86](https://github.com/node-formidable/node-formidable/issues/86), [#94](https://github.com/node-formidable/node-formidable/issues/94), [#154](https://github.com/node-formidable/node-formidable/issues/154), [#158](https://github.com/node-formidable/node-formidable/issues/158), [#488](https://github.com/node-formidable/node-formidable/issues/488), [#595](https://github.com/node-formidable/node-formidable/issues/595))
-
+ * fix: make opts.filename from #591 work with opts.keepExtensions ([#597](https://github.com/node-formidable/node-formidable/pull/597))
 ### v1.2.1 (2018-03-20)
 
  * `maxFileSize` option with default of 200MB (Charlike Mike Reagent, Nima Shahri)
