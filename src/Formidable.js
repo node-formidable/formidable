@@ -57,7 +57,6 @@ class IncomingForm extends EventEmitter {
     });
 
     const hasRename = typeof this.options.filename === 'function';
-    const rename = hasRename ? this.options.filename : this._uploadPath;
 
     if (this.options.keepExtensions === true && hasRename) {
       this._rename = (part) => {
@@ -66,7 +65,7 @@ class IncomingForm extends EventEmitter {
         return this._uploadPath(part, resultFilepath);
       };
     } else {
-      this._rename = rename;
+      this._rename = (part) => this._uploadPath(part);
     }
 
     this._flushing = 0;
@@ -298,7 +297,7 @@ class IncomingForm extends EventEmitter {
     this._flushing += 1;
 
     const file = new File({
-      path: this._rename.call(this, part, this),
+      path: this._rename(part),
       name: part.filename,
       type: part.mime,
       hash: this.options.hash,
