@@ -108,7 +108,7 @@ class MultipartParser extends Transform {
     let cl = null;
 
     const setMark = (name, idx) => {
-      this[`${name}Mark`] = idx || i;
+      this[`${name}Mark`] = typeof idx === 'number' ? idx : i;
     };
 
     const clearMarkSymbol = (name) => {
@@ -123,10 +123,10 @@ class MultipartParser extends Transform {
 
       if (!shouldClear) {
         this._handleCallback(name, buffer, this[markSymbol], buffer.length);
-        setMark(markSymbol, 0);
+        setMark(name, 0);
       } else {
         this._handleCallback(name, buffer, this[markSymbol], i);
-        clearMarkSymbol(markSymbol);
+        clearMarkSymbol(name);
       }
     };
 
