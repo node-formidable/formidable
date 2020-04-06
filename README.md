@@ -497,7 +497,7 @@ inspiration, you can for example validate the mime-type.
 const form = formidable();
 
 form.onPart = (part) => {
-  part.on('data', (buffer) {
+  part.on('data', (buffer) => {
     // do whatever you want here
   });
 };
