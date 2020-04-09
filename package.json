@@ -80,7 +80,8 @@
   },
   "renovate": {
     "extends": [
-      "@tunnckocore"
+      "@tunnckocore",
+      ":pinAllExceptPeerDependencies"
     ]
   }
 }
