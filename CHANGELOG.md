@@ -80,3 +80,7 @@
 * Fix benchmark script (Andrew Kelley)
 * Fix scope issue in incoming_forms (Sven Lito)
 * Fix file handle leak on error (OrangeDog)
+
+---
+
+[First commit, #3270eb4b1f8b (May 4th, 2010)](https://github.com/node-formidable/formidable/commit/3270eb4b1f8bb667b8c12f64c36a4e7b854216d8)
