@@ -49,7 +49,7 @@
     "husky": "4.2.5",
     "jest": "25.4.0",
     "koa": "2.11.0",
-    "lint-staged": "10.1.6",
+    "lint-staged": "10.1.7",
     "make-dir-cli": "2.0.0",
     "nyc": "15.0.1",
     "prettier": "2.0.4",
