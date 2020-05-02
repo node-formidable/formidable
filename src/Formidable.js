@@ -11,6 +11,8 @@ const once = require('once');
 const dezalgo = require('dezalgo');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
+const qs = require('qs');
+const merge = require('lodash.merge');
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
@@ -136,17 +138,9 @@ class IncomingForm extends EventEmitter {
       const files = {};
 
       this.on('field', (name, value) => {
-        // TODO: too much nesting
-        if (this.options.multiples && name.slice(-2) === '[]') {
-          const realName = name.slice(0, name.length - 2);
-          if (hasOwnProp(fields, realName)) {
-            if (!Array.isArray(fields[realName])) {
-              fields[realName] = [fields[realName]];
-            }
-          } else {
-            fields[realName] = [];
-          }
-          fields[realName].push(value);
+        if (this.options.multiples) {
+          const qsed = qs.parse(`${name}=${value}`);
+          merge(fields, qsed);
         } else {
           fields[name] = value;
         }
