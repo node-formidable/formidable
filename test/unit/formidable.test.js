@@ -135,8 +135,8 @@ function makeHeader(filename) {
     const req = new Request();
     req.headers = 'content-type: json; content-length:8';
     form.parse(req, (error, fields) => {
-      expect(fields.a['x']).toBe('1');
-      expect(fields.a['y']).toBe('2');
+      expect(fields.a.x).toBe('1');
+      expect(fields.a.y).toBe('2');
     });
     form.emit('field', 'a[x]', '1');
     form.emit('field', 'a[y]', '2');
@@ -149,9 +149,9 @@ function makeHeader(filename) {
     const req = new Request();
     req.headers = 'content-type: json; content-length:8';
     form.parse(req, (error, fields) => {
-      expect(fields.a['l1']['k1']).toBe('2');
-      expect(fields.a['l1']['k2']).toBe('3');
-      expect(fields.a['l2']['k3']).toBe('5');
+      expect(fields.a.l1.k1).toBe('2');
+      expect(fields.a.l1.k2).toBe('3');
+      expect(fields.a.l2.k3).toBe('5');
     });
     form.emit('field', 'a[l1][k1]', '2');
     form.emit('field', 'a[l1][k2]', '3');
