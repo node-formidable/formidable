@@ -135,12 +135,13 @@ class IncomingForm extends EventEmitter {
     if (cb) {
       const callback = once(dezalgo(cb));
       const fields = {};
+      let mockFields = '';
       const files = {};
-
+      
       this.on('field', (name, value) => {
         if (this.options.multiples) {
-          const qsed = qs.parse(`${name}=${value}`);
-          merge(fields, qsed);
+          let mObj = { [name] : value };
+          mockFields = mockFields + '&' + qs.stringify(mObj);
         } else {
           fields[name] = value;
         }
@@ -164,6 +165,9 @@ class IncomingForm extends EventEmitter {
         callback(err, fields, files);
       });
       this.on('end', () => {
+        if (this.options.multiples) {
+          Object.assign(fields, qs.parse(mockFields));
+        }
         callback(null, fields, files);
       });
     }

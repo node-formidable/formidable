@@ -104,11 +104,11 @@ function makeHeader(filename) {
     req.headers = 'content-type: json; content-length:8';
     form.parse(req, (error, fields) => {
       expect(Array.isArray(fields.a)).toBe(true);
-      expect(fields.a[0]).toBe(1);
-      expect(fields.a[1]).toBe(2);
+      expect(fields.a[0]).toBe('1');
+      expect(fields.a[1]).toBe('2');
     });
-    form.emit('field', 'a[]', 1);
-    form.emit('field', 'a[]', 2);
+    form.emit('field', 'a[]', '1');
+    form.emit('field', 'a[]', '2');
     form.emit('end');
   });
 
