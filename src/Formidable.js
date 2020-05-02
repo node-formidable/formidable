@@ -12,7 +12,6 @@ const dezalgo = require('dezalgo');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 const qs = require('qs');
-const merge = require('lodash.merge');
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
