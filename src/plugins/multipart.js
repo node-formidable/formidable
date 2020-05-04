@@ -54,7 +54,7 @@ function createInitMultipart(boundary) {
         part.filename = null;
         part.mime = null;
 
-        part.transferEncoding = 'binary';
+        part.transferEncoding = this.options.encoding;
         part.transferBuffer = '';
 
         headerField = '';
@@ -90,7 +90,8 @@ function createInitMultipart(boundary) {
         switch (part.transferEncoding) {
           case 'binary':
           case '7bit':
-          case '8bit': {
+          case '8bit':
+          case 'utf-8': {
             const dataPropagation = (ctx) => {
               if (ctx.name === 'partData') {
                 part.emit('data', ctx.buffer.slice(ctx.start, ctx.end));
