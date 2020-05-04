@@ -268,7 +268,9 @@ class IncomingForm extends EventEmitter {
     // ? NOTE(@tunnckocore): filename is an empty string when a field?
     if (!part.mime) {
       let value = '';
-      const decoder = new StringDecoder(this.options.encoding);
+      const decoder = new StringDecoder(
+        part.transferEncoding || this.options.encoding,
+      );
 
       part.on('data', (buffer) => {
         this._fieldsSize += buffer.length;
