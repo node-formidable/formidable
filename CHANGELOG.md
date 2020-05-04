@@ -26,6 +26,7 @@
  * feat: custom file (re)naming, thru options.filename ([#591](https://github.com/node-formidable/node-formidable/pull/591), [#84](https://github.com/node-formidable/node-formidable/issues/84), [#86](https://github.com/node-formidable/node-formidable/issues/86), [#94](https://github.com/node-formidable/node-formidable/issues/94), [#154](https://github.com/node-formidable/node-formidable/issues/154), [#158](https://github.com/node-formidable/node-formidable/issues/158), [#488](https://github.com/node-formidable/node-formidable/issues/488), [#595](https://github.com/node-formidable/node-formidable/issues/595))
  * fix: make opts.filename from #591 work with opts.keepExtensions ([#597](https://github.com/node-formidable/node-formidable/pull/597))
  * fix: better handling of nested arrays when options.multiples ([#621](https://github.com/node-formidable/node-formidable/pull/621))
+ * fix: a regression causing cyrillic to fail ([#624](https://github.com/node-formidable/node-formidable/pull/624), [#623](https://github.com/node-formidable/node-formidable/issues/623))
  
 ### v1.2.1 (2018-03-20)
 
