@@ -11,6 +11,7 @@ const once = require('once');
 const dezalgo = require('dezalgo');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
+const qs = require('qs');
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
@@ -133,20 +134,13 @@ class IncomingForm extends EventEmitter {
     if (cb) {
       const callback = once(dezalgo(cb));
       const fields = {};
+      let mockFields = '';
       const files = {};
-
+      
       this.on('field', (name, value) => {
-        // TODO: too much nesting
-        if (this.options.multiples && name.slice(-2) === '[]') {
-          const realName = name.slice(0, name.length - 2);
-          if (hasOwnProp(fields, realName)) {
-            if (!Array.isArray(fields[realName])) {
-              fields[realName] = [fields[realName]];
-            }
-          } else {
-            fields[realName] = [];
-          }
-          fields[realName].push(value);
+        if (this.options.multiples) {
+          let mObj = { [name] : value };
+          mockFields = mockFields + '&' + qs.stringify(mObj);
         } else {
           fields[name] = value;
         }
@@ -170,6 +164,9 @@ class IncomingForm extends EventEmitter {
         callback(err, fields, files);
       });
       this.on('end', () => {
+        if (this.options.multiples) {
+          Object.assign(fields, qs.parse(mockFields));
+        }
         callback(null, fields, files);
       });
     }
