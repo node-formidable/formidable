@@ -34,7 +34,7 @@
     "dezalgo": "1.0.3",
     "hexoid": "1.0.0",
     "once": "1.4.0",
-    "qs": "^6.9.3"
+    "qs": "6.9.3"
   },
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
