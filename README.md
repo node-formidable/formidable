@@ -310,7 +310,7 @@ const form = new Formidable(options);
 
 ### Options
 
-See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
+See it's defaults in [src/Formidable.js](./src/Formidable.js#L17-L27) (the
 `DEFAULT_OPTIONS` constant).
 
 - `options.encoding` **{string}** - default `'utf-8'`; sets encoding for
