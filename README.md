@@ -205,7 +205,7 @@ app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
     const form = formidable({ multiples: true });
 
-    // not very elegant, but that's for now if you don't want touse `koa-better-body`
+    // not very elegant, but that's for now if you don't want to use `koa-better-body`
     // or other middlewares.
     await new Promise((resolve, reject) => {
       form.parse(ctx.req, (err, fields, files) => {
