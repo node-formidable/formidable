@@ -18,6 +18,8 @@ const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
   maxFileSize: 200 * 1024 * 1024,
+  minFileSize: 1,
+  allowEmptyFiles: true,
   keepExtensions: false,
   encoding: 'utf-8',
   hash: false,
@@ -309,6 +311,14 @@ class IncomingForm extends EventEmitter {
 
     part.on('data', (buffer) => {
       this._fileSize += buffer.length;
+      if (this._fileSize < this.options.minFileSize) {
+        this._error(
+          new Error(
+            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${this._fileSize} bytes of file data`,
+          ),
+        );
+        return;
+      }
       if (this._fileSize > this.options.maxFileSize) {
         this._error(
           new Error(
@@ -327,6 +337,15 @@ class IncomingForm extends EventEmitter {
     });
 
     part.on('end', () => {
+      if (!this.options.allowEmptyFiles && this._fileSize === 0) {
+        this._error(
+          new Error(
+            `options.allowEmptyFiles is false, file size should be greather than 0`,
+          ),
+        );
+        return;
+      }
+
       file.end(() => {
         this._flushing -= 1;
         this.emit('file', part.name, file);
