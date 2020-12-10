@@ -180,7 +180,6 @@ function makeHeader(filename) {
           });
           form.onPart(part);
           part.emit('end');
-          expect.assertions(1);
         });
       });
 
@@ -228,7 +227,6 @@ function makeHeader(filename) {
         });
         form.onPart(part);
         part.emit('data', Buffer.alloc(4));
-        expect.assertions(1);
       });
     });
 
