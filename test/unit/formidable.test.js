@@ -213,7 +213,7 @@ function makeHeader(filename) {
       });
     });
 
-    describe('when file uploaded size is inferior than fileMinSize option', () => {
+    describe('when file uploaded size is inferior than minFileSize option', () => {
       test('emits error when part is received', (done) => {
         const form = getForm(name, { multiples: true, minFileSize: 5 });
 
@@ -230,7 +230,7 @@ function makeHeader(filename) {
       });
     });
 
-    describe('when file uploaded size is superior than fileMinSize option', () => {
+    describe('when file uploaded size is superior than minFileSize option', () => {
       test('not emits error when part is received', () => {
         const form = getForm(name, { multiples: true, minFileSize: 10 });
         const formEmitSpy = jest.spyOn(form, 'emit');
