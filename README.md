@@ -319,6 +319,10 @@ See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
   placing file uploads in. You can move them later by using `fs.rename()`
 - `options.keepExtensions` **{boolean}** - default `false`; to include the
   extensions of the original files or not
+- `options.allowEmptyFiles` **{boolean}** - default `true`; allow upload empty
+  files
+- `options.minFileSize` **{number}** - default `1` (1byte); the minium size of
+  uploaded file.
 - `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
   limit the size of uploaded file.
 - `options.maxFields` **{number}** - default `1000`; limit the number of fields

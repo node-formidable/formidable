@@ -4,6 +4,7 @@
 'use strict';
 
 const path = require('path');
+const Stream = require('stream');
 // const assert = require('assert');
 const Request = require('http').ClientRequest;
 
@@ -157,6 +158,90 @@ function makeHeader(filename) {
     form.emit('field', 'a[l1][k2]', '3');
     form.emit('field', 'a[l2][k3]', '5');
     form.emit('end');
+  });
+
+  describe(`${name}#_onPart`, () => {
+    describe('when not allow empty files', () => {
+      describe('when file is empty', () => {
+        test('emits error when part is received', (done) => {
+          const form = getForm(name, {
+            multiples: true,
+            allowEmptyFiles: false,
+          });
+
+          const part = new Stream();
+          part.mime = 'text/plain';
+          // eslint-disable-next-line max-nested-callbacks
+          form.on('error', (error) => {
+            expect(error.message).toBe(
+              'options.allowEmptyFiles is false, file size should be greather than 0',
+            );
+            done();
+          });
+          form.onPart(part);
+          part.emit('end');
+        });
+      });
+
+      describe('when file is not empty', () => {
+        test('not emits error when part is received', () => {
+          const form = getForm(name, {
+            multiples: true,
+            allowEmptyFiles: false,
+          });
+          const formEmitSpy = jest.spyOn(form, 'emit');
+
+          const part = new Stream();
+          part.mime = 'text/plain';
+          form.onPart(part);
+          part.emit('data', Buffer.alloc(1));
+          expect(formEmitSpy).not.toBeCalledWith('error');
+        });
+      });
+    });
+
+    describe('when allow empty files', () => {
+      test('not emits error when part is received', () => {
+        const form = getForm(name, { multiples: true });
+        const formEmitSpy = jest.spyOn(form, 'emit');
+
+        const part = new Stream();
+        part.mime = 'text/plain';
+        form.onPart(part);
+        part.emit('end');
+        expect(formEmitSpy).not.toBeCalledWith('error');
+      });
+    });
+
+    describe('when file uploaded size is inferior than minFileSize option', () => {
+      test('emits error when part is received', (done) => {
+        const form = getForm(name, { multiples: true, minFileSize: 5 });
+
+        const part = new Stream();
+        part.mime = 'text/plain';
+        form.on('error', (error) => {
+          expect(error.message).toBe(
+            'options.minFileSize (5 bytes) inferior, received 4 bytes of file data',
+          );
+          done();
+        });
+        form.onPart(part);
+        part.emit('data', Buffer.alloc(4));
+      });
+    });
+
+    describe('when file uploaded size is superior than minFileSize option', () => {
+      test('not emits error when part is received', () => {
+        const form = getForm(name, { multiples: true, minFileSize: 10 });
+        const formEmitSpy = jest.spyOn(form, 'emit');
+
+        const part = new Stream();
+        part.mime = 'text/plain';
+        form.onPart(part);
+        part.emit('data', Buffer.alloc(11));
+        expect(formEmitSpy).not.toBeCalledWith('error');
+      });
+    });
   });
 
   // test(`${name}: use custom options.filename instead of form._uploadPath`, () => {
