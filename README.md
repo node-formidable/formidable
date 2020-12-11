@@ -637,7 +637,7 @@ form.on('end', () => {});
 If the documentation is unclear or has a typo, please click on the page's `Edit`
 button (pencil icon) and suggest a correction. If you would like to help us fix
 a bug or add a new feature, please check our
-[Contributing Guide](./CONTRIBUTING.md). Pull requests are welcome!
+[Contributing Guide][contributing-url]. Pull requests are welcome!
 
 Thanks goes to these wonderful people
 ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -714,8 +714,8 @@ Formidable is licensed under the [MIT License][license-url].
 [ccommits-url]: https://conventionalcommits.org/
 [ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300
 
-[contributing-url]: https://github.com/node-formidable/formidable/blob/master/CONTRIBUTING.md
-[code_of_conduct-url]: https://github.com/node-formidable/formidable/blob/master/CODE_OF_CONDUCT.md
+[contributing-url]: https://github.com/node-formidable/.github/blob/master/CONTRIBUTING.md
+[code_of_conduct-url]: https://github.com/node-formidable/.github/blob/master/CODE_OF_CONDUCT.md
 
 [open-issue-url]: https://github.com/node-formidable/formidable/issues/new
 
