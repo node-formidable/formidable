@@ -18,7 +18,7 @@ const indexForm = `
 const server = http.createServer((req, res) => {
   // Show a form for testing purposes.
   if (req.method === 'GET') {
-    res.writeHead(200, { 'content-type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(indexForm);
     return;
   }
@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
   // Parse form and write results to response.
   const form = formidable();
   form.parse(req, (err, fields, files) => {
-    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
     // ? old, makes more sense to be passed to `.end()`?
     // res.write(JSON.stringify({ err, fields, files }));
     res.end(JSON.stringify({ err, fields, files }));

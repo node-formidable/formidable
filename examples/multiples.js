@@ -6,7 +6,7 @@ const { Formidable } = require('../src/index');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
-    res.writeHead(200, { 'content-type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(`
       <form action="/upload" enctype="multipart/form-data" method="post">
         <label>simple<input type="text" name="text_single" autofocus /></label><br />
@@ -31,11 +31,11 @@ const server = http.createServer((req, res) => {
     const form = new Formidable({ multiples: true, uploadDir: os.tmpdir() });
 
     form.parse(req, (err, fields, files) => {
-      res.writeHead(200, { 'content-type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ err, fields, files }, null, 2));
     });
   } else {
-    res.writeHead(404, { 'content-type': 'text/plain' });
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('404');
   }
 });

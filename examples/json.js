@@ -7,7 +7,7 @@ const { formidable } = require('../src/index');
 const PORT = 3000;
 const server = http.createServer((req, res) => {
   if (req.method !== 'POST') {
-    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(`Please POST a JSON payload to http://localhost:${PORT}/`);
     return;
   }
@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
   form
     .on('error', (err) => {
       console.error(err);
-      res.writeHead(500, { 'content-type': 'text/plain' });
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
       res.end(`error:\n\n${util.inspect(err)}`);
     })
     .on('field', (field, value) => {
@@ -27,7 +27,7 @@ const server = http.createServer((req, res) => {
     })
     .on('end', () => {
       console.log('-> post done from "end" event');
-      res.writeHead(200, { 'content-type': 'text/plain' });
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end(`received fields:\n\n${util.inspect(fields)}`);
     });
 
@@ -50,7 +50,7 @@ server.listen(PORT, () => {
       port: choosenPort,
       method: 'POST',
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'content-length': body.length,
       },
     },
