@@ -24,11 +24,13 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hash: false,
   uploadDir: os.tmpdir(),
+  storeFiles: true,
   multiples: false,
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
 };
 
-const File = require('./File');
+const PersistentFile = require('./PersistentFile');
+const VolatileFile = require('./VolatileFile');
 const DummyParser = require('./parsers/Dummy');
 const MultipartParser = require('./parsers/Multipart');
 
@@ -138,11 +140,11 @@ class IncomingForm extends EventEmitter {
       const fields = {};
       let mockFields = '';
       const files = {};
-      
+
       this.on('field', (name, value) => {
         if (this.options.multiples) {
-          let mObj = { [name] : value };
-          mockFields = mockFields + '&' + qs.stringify(mObj);
+          const mObj = { [name]: value };
+          mockFields = `${mockFields}&${qs.stringify(mObj)}`;
         } else {
           fields[name] = value;
         }
@@ -295,11 +297,10 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
-    const file = new File({
+    const file = this._newFile({
       path: this._rename(part),
-      name: part.filename,
-      type: part.mime,
-      hash: this.options.hash,
+      filename: part.filename,
+      mime: part.mime,
     });
     file.on('error', (err) => {
       this._error(err);
@@ -420,7 +421,7 @@ class IncomingForm extends EventEmitter {
 
     if (Array.isArray(this.openedFiles)) {
       this.openedFiles.forEach((file) => {
-        file._writeStream.destroy();
+        file.destroy();
         setTimeout(fs.unlink, 0, file.path, () => {});
       });
     }
@@ -441,6 +442,21 @@ class IncomingForm extends EventEmitter {
 
   _newParser() {
     return new MultipartParser(this.options);
+  }
+
+  _newFile({ path: filePath, filename: name, mime: type }) {
+    return this.options.storeFiles
+      ? new PersistentFile({
+          path: filePath,
+          name,
+          type,
+          hash: this.options.hash,
+        })
+      : new VolatileFile({
+          name,
+          type,
+          hash: this.options.hash,
+        });
   }
 
   _getFileName(headerValue) {

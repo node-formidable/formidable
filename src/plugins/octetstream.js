@@ -2,7 +2,6 @@
 
 'use strict';
 
-const File = require('../File');
 const OctetStreamParser = require('../parsers/OctetStream');
 
 // the `options` is also available through the `options` / `formidable.options`
@@ -28,11 +27,10 @@ function init(_self, _opts) {
   const filename = this.headers['x-file-name'];
   const mime = this.headers['content-type'];
 
-  const file = new File({
+  const file = this._newFile({
     path: this._uploadPath(filename),
-    name: filename,
-    type: mime,
-    hash: this.options.hash,
+    filename,
+    mime,
   });
 
   this.emit('fileBegin', filename, file);

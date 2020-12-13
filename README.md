@@ -64,7 +64,8 @@ _**Note: v2 is coming soon!**_
 ## Highlights
 
 - [Fast (~900-2500 mb/sec)](#benchmarks) & streaming multipart parser
-- Automatically writing file uploads to disk (soon optionally)
+- Automatically writing file uploads to disk (optional, see
+  [`options.storeFiles`](#options))
 - [Plugins API](#useplugin-plugin) - allowing custom parsers and plugins
 - Low memory footprint
 - Graceful error handling
@@ -310,8 +311,8 @@ const form = new Formidable(options);
 
 ### Options
 
-See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js) (the
-`DEFAULT_OPTIONS` constant).
+See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
+(the `DEFAULT_OPTIONS` constant).
 
 - `options.encoding` **{string}** - default `'utf-8'`; sets encoding for
   incoming form fields,
@@ -334,6 +335,8 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js) (t
   for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
   for available algorithms
+- `options.storeFiles` **{boolean}** - default `true`; to store uploaded file(s)
+  in `uploadDir` on host machine or not and only parse the file(s).
 - `options.multiples` **{boolean}** - default `false`; when you call the
   `.parse` method, the `files` argument (of the callback) will contain arrays of
   files for inputs which submit multiple files using the HTML5 `multiple`
@@ -636,8 +639,8 @@ form.on('end', () => {});
 
 If the documentation is unclear or has a typo, please click on the page's `Edit`
 button (pencil icon) and suggest a correction. If you would like to help us fix
-a bug or add a new feature, please check our
-[Contributing Guide][contributing-url]. Pull requests are welcome!
+a bug or add a new feature, please check our [Contributing
+Guide][contributing-url]. Pull requests are welcome!
 
 Thanks goes to these wonderful people
 ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
