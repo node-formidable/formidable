@@ -112,7 +112,7 @@ const server = http.createServer((req, res) => {
     const form = formidable({ multiples: true });
 
     form.parse(req, (err, fields, files) => {
-      res.writeHead(200, { 'content-type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ fields, files }, null, 2));
     });
 
@@ -120,7 +120,7 @@ const server = http.createServer((req, res) => {
   }
 
   // show a file upload form
-  res.writeHead(200, { 'content-type': 'text/html' });
+  res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -310,7 +310,7 @@ const form = new Formidable(options);
 
 ### Options
 
-See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
+See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js) (the
 `DEFAULT_OPTIONS` constant).
 
 - `options.encoding` **{string}** - default `'utf-8'`; sets encoding for
@@ -319,6 +319,10 @@ See it's defaults in [src/Formidable.js](./src/Formidable.js#L14-L22) (the
   placing file uploads in. You can move them later by using `fs.rename()`
 - `options.keepExtensions` **{boolean}** - default `false`; to include the
   extensions of the original files or not
+- `options.allowEmptyFiles` **{boolean}** - default `true`; allow upload empty
+  files
+- `options.minFileSize` **{number}** - default `1` (1byte); the minium size of
+  uploaded file.
 - `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
   limit the size of uploaded file.
 - `options.maxFields` **{number}** - default `1000`; limit the number of fields
@@ -633,7 +637,7 @@ form.on('end', () => {});
 If the documentation is unclear or has a typo, please click on the page's `Edit`
 button (pencil icon) and suggest a correction. If you would like to help us fix
 a bug or add a new feature, please check our
-[Contributing Guide](./CONTRIBUTING.md). Pull requests are welcome!
+[Contributing Guide][contributing-url]. Pull requests are welcome!
 
 Thanks goes to these wonderful people
 ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -717,8 +721,8 @@ Formidable is licensed under the [MIT License][license-url].
 [ccommits-url]: https://conventionalcommits.org/
 [ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300
 
-[contributing-url]: https://github.com/node-formidable/formidable/blob/master/CONTRIBUTING.md
-[code_of_conduct-url]: https://github.com/node-formidable/formidable/blob/master/CODE_OF_CONDUCT.md
+[contributing-url]: https://github.com/node-formidable/.github/blob/master/CONTRIBUTING.md
+[code_of_conduct-url]: https://github.com/node-formidable/.github/blob/master/CODE_OF_CONDUCT.md
 
 [open-issue-url]: https://github.com/node-formidable/formidable/issues/new
 

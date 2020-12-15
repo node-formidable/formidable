@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {
     const form = formidable({ multiples: true });
 
     form.parse(req, (err, fields, files) => {
-      res.writeHead(200, { 'content-type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ fields, files }, null, 2));
     });
 
@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
   }
 
   // show a file upload form
-  res.writeHead(200, { 'content-type': 'text/html' });
+  res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
