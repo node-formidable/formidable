@@ -65,7 +65,7 @@ _**Note: v2 is coming soon!**_
 
 - [Fast (~900-2500 mb/sec)](#benchmarks) & streaming multipart parser
 - Automatically writing file uploads to disk (optional, see
-  [`options.storeFiles`](#options))
+  [`options.fileWriteStreamHandler`](#options))
 - [Plugins API](#useplugin-plugin) - allowing custom parsers and plugins
 - Low memory footprint
 - Graceful error handling
@@ -335,8 +335,16 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
   for available algorithms
-- `options.storeFiles` **{boolean}** - default `true`; to store uploaded file(s)
-  in `uploadDir` on host machine or not and only parse the file(s).
+- `options.fileWriteStreamHandler` **{function}** - default `null`, which by
+  default writes to host machine file system every file parsed; The function
+  should return an instance of a
+  [Writable stream](https://nodejs.org/api/stream.html#stream_class_stream_writable)
+  that will receive the uploaded file data. With this option, you can have any
+  custom behavior regarding where the uploaded file data will be streamed for.
+  If you are looking to write the file uploaded in other types of cloud storages
+  (AWS S3, Azure blob storage, Google cloud storage) or private file storage,
+  this is the option you're looking for. When this option is defined the default
+  behavior of writing the file in the host machine file system is lost.
 - `options.multiples` **{boolean}** - default `false`; when you call the
   `.parse` method, the `files` argument (of the callback) will contain arrays of
   files for inputs which submit multiple files using the HTML5 `multiple`

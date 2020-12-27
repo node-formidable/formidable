@@ -14,6 +14,8 @@ class VolatileFile extends EventEmitter {
     this.type = null;
     this.hash = null;
 
+    this._writeStream = null;
+
     // eslint-disable-next-line guard-for-in, no-restricted-syntax
     for (const key in properties) {
       this[key] = properties[key];
@@ -26,11 +28,16 @@ class VolatileFile extends EventEmitter {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  open() {}
+  open() {
+    this._writeStream = this.createFileWriteStream(this.name);
+    this._writeStream.on('error', (err) => {
+      this.emit('error', err);
+    });
+  }
 
-  // eslint-disable-next-line class-methods-use-this
-  destroy() {}
+  destroy() {
+    this._writeStream.destroy();
+  }
 
   toJSON() {
     const json = {
@@ -56,17 +63,26 @@ class VolatileFile extends EventEmitter {
       this.hash.update(buffer);
     }
 
-    this.size += buffer.length;
-    this.emit('progress', this.size);
-    cb();
+    if (this._writeStream.closed || this._writeStream.destroyed) {
+      cb();
+      return;
+    }
+
+    this._writeStream.write(buffer, () => {
+      this.size += buffer.length;
+      this.emit('progress', this.size);
+      cb();
+    });
   }
 
   end(cb) {
     if (this.hash) {
       this.hash = this.hash.digest('hex');
     }
-    this.emit('end');
-    cb();
+    this._writeStream.end(() => {
+      this.emit('end');
+      cb();
+    });
   }
 }
 

@@ -13,7 +13,11 @@ const DEFAULT_UPLOAD_DIR = path.join(
   os.tmpdir(),
   'test-store-files-option-default',
 );
-const CUSTOM_UPLOAD_FILE_PATH = path.join(DEFAULT_UPLOAD_DIR, 'test-file');
+const CUSTOM_UPLOAD_DIR = path.join(
+  os.tmpdir(),
+  'test-store-files-option-custom',
+);
+const CUSTOM_UPLOAD_FILE_PATH = path.join(CUSTOM_UPLOAD_DIR, 'test-file');
 const testFilePath = path.join(
   path.dirname(__dirname),
   'fixture',
@@ -21,13 +25,19 @@ const testFilePath = path.join(
   'binaryfile.tar.gz',
 );
 
+const createDirs = (dirs) => {
+  dirs.forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+  });
+};
+
 const server = http.createServer((req, res) => {
-  if (!fs.existsSync(DEFAULT_UPLOAD_DIR)) {
-    fs.mkdirSync(DEFAULT_UPLOAD_DIR);
-  }
+  createDirs([DEFAULT_UPLOAD_DIR, CUSTOM_UPLOAD_DIR]);
   const form = formidable({
     uploadDir: DEFAULT_UPLOAD_DIR,
-    fileWriteStreamHandler: () => new fs.WriteStream(CUSTOM_UPLOAD_FILE_PATH),
+    fileWriteStreamHandler: () => fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
   });
 
   form.parse(req, (err, fields, files) => {
@@ -36,6 +46,9 @@ const server = http.createServer((req, res) => {
 
     assert.strictEqual(file.size, 301);
     assert.ok(file.path === undefined);
+
+    const dirFiles = fs.readdirSync(DEFAULT_UPLOAD_DIR);
+    assert.ok(dirFiles.length === 0);
 
     const uploadedFileStats = fs.statSync(CUSTOM_UPLOAD_FILE_PATH);
     assert.ok(uploadedFileStats.size === file.size);

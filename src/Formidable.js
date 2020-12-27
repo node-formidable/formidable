@@ -24,9 +24,9 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hash: false,
   uploadDir: os.tmpdir(),
-  storeFiles: true,
   multiples: false,
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
+  fileWriteStreamHandler: null,
 };
 
 const PersistentFile = require('./PersistentFile');
@@ -445,14 +445,15 @@ class IncomingForm extends EventEmitter {
   }
 
   _newFile({ path: filePath, filename: name, mime: type }) {
-    return this.options.storeFiles
-      ? new PersistentFile({
-          path: filePath,
+    return this.options.fileWriteStreamHandler
+      ? new VolatileFile({
           name,
           type,
+          createFileWriteStream: this.options.fileWriteStreamHandler,
           hash: this.options.hash,
         })
-      : new VolatileFile({
+      : new PersistentFile({
+          path: filePath,
           name,
           type,
           hash: this.options.hash,
