@@ -687,6 +687,13 @@ Thanks goes to these wonderful people
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
+From a [Felix blog post](https://felixge.de/2013/03/11/the-pull-request-hack/):
+
+- [Sven Lito](https://github.com/svnlto) for fixing bugs and merging patches
+- [egirshov](https://github.com/egirshov) for contributing many improvements to the node-formidable multipart parser
+- [Andrew Kelley](https://github.com/superjoe30) for also helping with fixing bugs and making improvements
+- [Mike Frey](https://github.com/mikefrey) for contributing JSON support
+
 ## License
 
 Formidable is licensed under the [MIT License][license-url].
