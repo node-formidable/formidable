@@ -114,7 +114,7 @@ function uploadFixture(fixtureName, cb) {
         parts.push({ type: 'field', name, value });
       })
       .on('end', () => {
-        res.end('OK');
+        res.end();
         callback(null, parts);
       });
   });

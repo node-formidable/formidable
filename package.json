@@ -84,5 +84,15 @@
       "@tunnckocore",
       ":pinAllExceptPeerDependencies"
     ]
-  }
+  },
+  "keywords": [
+      "multipart",
+      "form",
+      "data",
+      "querystring",
+      "www",
+      "json",
+      "ulpoad",
+      "file"
+  ]
 }

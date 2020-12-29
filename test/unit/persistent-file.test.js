@@ -1,9 +1,9 @@
 'use strict';
 
-const { File } = require('../../src/index');
+const PersistentFile = require('../../src/PersistentFile');
 
 const now = new Date();
-const file = new File({
+const file = new PersistentFile({
   size: 1024,
   path: '/tmp/cat.png',
   name: 'cat.png',
@@ -13,7 +13,7 @@ const file = new File({
   mime: 'image/png',
 });
 
-test('File#toJSON()', () => {
+test('PersistentFile#toJSON()', () => {
   const obj = file.toJSON();
   const len = Object.keys(obj).length;
 

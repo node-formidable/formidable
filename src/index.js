@@ -1,6 +1,7 @@
 'use strict';
 
-const File = require('./File');
+const PersistentFile = require('./PersistentFile');
+const VolatileFile = require('./VolatileFile');
 const Formidable = require('./Formidable');
 
 const plugins = require('./plugins/index');
@@ -11,7 +12,9 @@ const parsers = require('./parsers/index');
 const formidable = (...args) => new Formidable(...args);
 
 module.exports = Object.assign(formidable, {
-  File,
+  File: PersistentFile,
+  PersistentFile,
+  VolatileFile,
   Formidable,
   formidable,
 

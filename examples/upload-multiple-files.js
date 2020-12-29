@@ -8,7 +8,7 @@ const { Formidable } = require('../src/index');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
-    res.writeHead(200, { 'content-type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(`
       <form action="/upload" enctype="multipart/form-data" method="post">
         <input type="text" name="title"><br>
@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
       })
       .on('end', () => {
         console.log('-> upload done');
-        res.writeHead(200, { 'content-type': 'text/plain' });
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.write(`received fields:\n\n${util.inspect(fields)}`);
         res.write('\n\n');
         res.end(`received files:\n\n${util.inspect(files)}`);
@@ -40,7 +40,7 @@ const server = http.createServer((req, res) => {
 
     form.parse(req);
   } else {
-    res.writeHead(404, { 'content-type': 'text/plain' });
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('404');
   }
 });

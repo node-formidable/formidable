@@ -6,7 +6,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
 
-class File extends EventEmitter {
+class PersistentFile extends EventEmitter {
   constructor(properties) {
     super();
 
@@ -56,7 +56,7 @@ class File extends EventEmitter {
   }
 
   toString() {
-    return `File: ${this.name}, Path: ${this.path}`;
+    return `PersistentFile: ${this.name}, Path: ${this.path}`;
   }
 
   write(buffer, cb) {
@@ -86,6 +86,10 @@ class File extends EventEmitter {
       cb();
     });
   }
+
+  destroy() {
+    this._writeStream.destroy();
+  }
 }
 
-module.exports = File;
+module.exports = PersistentFile;
