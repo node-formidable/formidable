@@ -23,4 +23,5 @@ module.exports = {
   'xp-ie-7.http': expect(ffOrIe),
   'xp-ie-8.http': expect(ffOrIe),
   'xp-safari-5.http': expect(webkit),
+  'line-separator.http': expect(".txt"),
 };

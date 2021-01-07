@@ -1,0 +1,20 @@
+POST /upload HTTP/1.1
+Host: localhost:8080
+Referer: http://localhost:8080/
+Content-Length: 383
+Origin: http://localhost:8080
+User-Agent: Mozilla/5.0 
+Content-Type: multipart/form-data; boundary=----SEPARATOR
+Accept: text/html
+
+------SEPARATOR
+Content-Disposition: form-data; name="title"
+
+Weird filename
+------SEPARATOR
+Content-Disposition: form-data; name="upload"; filename=" .txt"
+Content-Type: text/plain
+
+I am a text file with a funky name!
+
+------SEPARATOR--
