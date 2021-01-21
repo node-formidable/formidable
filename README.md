@@ -317,7 +317,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.encoding` **{string}** - default `'utf-8'`; sets encoding for
   incoming form fields,
 - `options.uploadDir` **{string}** - default `os.tmpdir()`; the directory for
-  placing file uploads in. You can move them later by using `fs.rename()`
+  placing file uploads in. You can move them later by using `fs.rename()`.
 - `options.keepExtensions` **{boolean}** - default `false`; to include the
   extensions of the original files or not
 - `options.allowEmptyFiles` **{boolean}** - default `true`; allow upload empty
@@ -384,6 +384,41 @@ You may overwrite this method if you are interested in directly accessing the
 multipart stream. Doing so will disable any `'field'` / `'file'` events
 processing which would occur otherwise, making you fully responsible for
 handling the processing.
+
+About `uploadDir`, given the following directory structure 
+```
+project-name
+├── src
+│   └── server.js
+│       
+└── uploads
+    └── image.jpg
+```
+
+`__dirname` would be the same directory as the source file itself (src)
+
+
+```js
+ `${__dirname}/../uploads`
+```
+
+to put files in uploads.
+
+Omitting `__dirname` would make the path relative to the current working directory. This would be the same if server.js is launched from src but not project-name.
+
+
+`null` will use default which is `os.tmpdir()`
+
+Note: If the directory does not exist, the uploaded files are __silently discarded__. To make sure it exists:
+
+```js
+import {createNecessaryDirectoriesSync} from "filesac";
+
+
+const uploadPath = `${__dirname}/../uploads`;
+createNecessaryDirectoriesSync(`${uploadPath}/x`);
+```
+
 
 In the example below, we listen on couple of events and direct them to the
 `data` listener, so you can do whatever you choose there, based on whether its
