@@ -213,7 +213,7 @@ class IncomingForm extends EventEmitter {
     this._parseContentType();
 
     if (!this._parser) {
-      this._error(new Error('not parser found'));
+      this._error(new Error('no parser found'));
       return;
     }
 
