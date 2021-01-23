@@ -331,7 +331,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
   limit the amount of memory all fields together (except files) can allocate in
   bytes.
-- `options.hash` **{boolean}** - default `false`; include checksums calculated
+- `options.hash` **{string | false}** - default `false`; include checksums calculated
   for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
   for available algorithms
@@ -431,12 +431,12 @@ later.
 ```js
 form.once('error', console.error);
 
-form.on('fileBegin', (filename, file) => {
-  form.emit('data', { name: 'fileBegin', filename, value: file });
+form.on('fileBegin', (formname, file) => {
+  form.emit('data', { name: 'fileBegin', formname, value: file });
 });
 
-form.on('file', (filename, file) => {
-  form.emit('data', { name: 'file', key: filename, value: file });
+form.on('file', (formname, file) => {
+  form.emit('data', { name: 'file', formname, value: file });
 });
 
 form.on('field', (fieldName, fieldValue) => {
@@ -448,7 +448,7 @@ form.once('end', () => {
 });
 
 // If you want to customize whatever you want...
-form.on('data', ({ name, key, value, buffer, start, end, ...more }) => {
+form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) => {
   if (name === 'partBegin') {
   }
   if (name === 'partData') {
@@ -466,10 +466,10 @@ form.on('data', ({ name, key, value, buffer, start, end, ...more }) => {
     console.log('field value:', value);
   }
   if (name === 'file') {
-    console.log('file:', key, value);
+    console.log('file:', formname, value);
   }
   if (name === 'fileBegin') {
-    console.log('fileBegin:', key, value);
+    console.log('fileBegin:', formname, value);
   }
 });
 ```
@@ -628,7 +628,13 @@ you want to stream the file to somewhere else while buffering the upload on the
 file system.
 
 ```js
-form.on('fileBegin', (name, file) => {});
+form.on('fileBegin', (formName, file) => {
+    // accessible here 
+    // formName the name in the form (<input name="thisname" type="file">)
+    // file.name (http filename)
+    // file.path default pathnme as per options.uploadDir and options.filename
+    // file.path = CUSTOM_PATH // to change the final path
+});
 ```
 
 #### `'file'`
@@ -637,7 +643,11 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 `File`.
 
 ```js
-form.on('file', (name, file) => {});
+form.on('file', (formname, file) => {
+    // same as fileBegin, except
+    // it is too late to change file.path
+    // file.hash is available if options.hash was used
+});
 ```
 
 #### `'error'`
