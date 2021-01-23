@@ -169,6 +169,9 @@ class IncomingForm extends EventEmitter {
       });
       this.on('end', () => {
         if (this.options.multiples) {
+            console.log(172,mockFields)
+            console.log(173,fields)
+            console.log()
           Object.assign(fields, qs.parse(mockFields));
         }
         callback(null, fields, files);
