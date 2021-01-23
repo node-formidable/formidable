@@ -11,7 +11,7 @@ const testData = {
 
 const PORT = 13532;
 const server = http.createServer((req, res) => {
-  const form = formidable();
+  const form = formidable({multiples: true});
 
   form.parse(req, (err, fields) => {
     assert.deepStrictEqual(fields, {
