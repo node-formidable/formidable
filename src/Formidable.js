@@ -143,7 +143,7 @@ class IncomingForm extends EventEmitter {
 
       this.on('field', (name, value) => {
         if (this.options.multiples && 
-            this.type === 'multipart' || this.type === 'urlencoded'
+            (this.type === 'multipart' || this.type === 'urlencoded')
             ) {
           const mObj = { [name]: value };
           mockFields = `${mockFields}&${qs.stringify(mObj)}`;
