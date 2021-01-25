@@ -138,17 +138,27 @@ class IncomingForm extends EventEmitter {
     if (cb) {
       const callback = once(dezalgo(cb));
       const fields = {};
+      let fieldsCount = 0;
       let mockFields = '';
       const files = {};
 
       this.on('field', (name, value) => {
-        if (this.options.multiples && 
-            (this.type === 'multipart' || this.type === 'urlencoded')
-            ) {
+        if (
+          this.options.multiples &&
+          (this.type === 'multipart' || this.type === 'urlencoded')
+        ) {
           const mObj = { [name]: value };
-          mockFields = `${mockFields}&${qs.stringify(mObj)}`;
+          mockFields = mockFields
+            ? `${mockFields}&${qs.stringify(mObj)}`
+            : `${qs.stringify(mObj)}`;
         } else {
-          fields[name] = value;
+          if (
+            this.options.maxFields === 0 ||
+            fieldsCount < this.options.maxFields
+          ) {
+            fields[name] = value;
+            fieldsCount++;
+          }
         }
       });
       this.on('file', (name, file) => {
@@ -171,7 +181,15 @@ class IncomingForm extends EventEmitter {
       });
       this.on('end', () => {
         if (this.options.multiples) {
-          Object.assign(fields, qs.parse(mockFields));
+          Object.assign(
+            fields,
+            qs.parse(mockFields, {
+              parameterLimit:
+                this.options.maxFields === 0
+                  ? Infinity
+                  : this.options.maxFields,
+            }),
+          );
         }
         callback(null, fields, files);
       });
