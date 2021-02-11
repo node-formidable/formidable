@@ -134,11 +134,24 @@ class IncomingForm extends EventEmitter {
       return true;
     };
 
+    if (this.options.maxFields !== 0) {
+      let fieldsCount = 0;
+      this.on('field', (x, y) => {
+        fieldsCount++;
+        if (fieldsCount > this.options.maxFields) {
+          this._error(
+            new Error(
+              `options.maxFields (${this.options.maxFields}) exceeded`,
+            ),
+          );
+        }
+      });
+    }
+    
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const callback = once(dezalgo(cb));
       const fields = {};
-      let fieldsCount = 0;
       let mockFields = '';
       const files = {};
 
@@ -152,13 +165,7 @@ class IncomingForm extends EventEmitter {
             ? `${mockFields}&${qs.stringify(mObj)}`
             : `${qs.stringify(mObj)}`;
         } else {
-          if (
-            this.options.maxFields === 0 ||
-            fieldsCount < this.options.maxFields
-          ) {
-            fields[name] = value;
-            fieldsCount++;
-          }
+          fields[name] = value;
         }
       });
       this.on('file', (name, file) => {
@@ -183,12 +190,7 @@ class IncomingForm extends EventEmitter {
         if (this.options.multiples) {
           Object.assign(
             fields,
-            qs.parse(mockFields, {
-              parameterLimit:
-                this.options.maxFields === 0
-                  ? Infinity
-                  : this.options.maxFields,
-            }),
+            qs.parse(mockFields),
           );
         }
         callback(null, fields, files);
