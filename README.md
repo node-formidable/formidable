@@ -631,7 +631,7 @@ file system.
 form.on('fileBegin', (formName, file) => {
     // accessible here 
     // formName the name in the form (<input name="thisname" type="file">)
-    // file.name (http filename)
+    // file.name http filename or null if there was a parsing error
     // file.path default pathnme as per options.uploadDir and options.filename
     // file.path = CUSTOM_PATH // to change the final path
 });
