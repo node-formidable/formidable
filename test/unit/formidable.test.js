@@ -5,10 +5,8 @@
 
 const path = require('path');
 const Stream = require('stream');
-// const assert = require('assert');
 const Request = require('http').ClientRequest;
 
-const test = require('utest');
 const mod = require('../../src/index');
 
 function getForm(name, opts) {

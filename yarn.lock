@@ -5866,11 +5866,6 @@ use@^3.1.0:
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
 
-utest@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/utest/-/utest-0.0.8.tgz#fc09451fe697b9008d0c432fe0db439d6cf37914"
-  integrity sha1-/AlFH+aXuQCNDEMv4NtDnWzzeRQ=
-
 util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
