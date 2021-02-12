@@ -326,8 +326,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   uploaded file.
 - `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
   limit the size of uploaded file.
-- `options.maxFields` **{number}** - default `1000`; limit the number of fields
-  that the Querystring parser will decode, set 0 for unlimited
+- `options.maxFields` **{number}** - default `1000`; limit the number of fields, set 0 for unlimited
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
   limit the amount of memory all fields together (except files) can allocate in
   bytes.
