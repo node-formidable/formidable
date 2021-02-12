@@ -94,6 +94,20 @@ class IncomingForm extends EventEmitter {
       // eslint-disable-next-line import/no-dynamic-require, global-require
       this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
     });
+
+    if (this.options.maxFields !== 0) {
+      let fieldsCount = 0;
+      this.on('field', (x, y) => {
+        fieldsCount++;
+        if (fieldsCount > this.options.maxFields) {
+          this._error(
+            new Error(
+              `options.maxFields (${this.options.maxFields}) exceeded`,
+            ),
+          );
+        }
+      });
+    }
   }
 
   use(plugin) {
@@ -133,20 +147,6 @@ class IncomingForm extends EventEmitter {
 
       return true;
     };
-
-    if (this.options.maxFields !== 0) {
-      let fieldsCount = 0;
-      this.on('field', (x, y) => {
-        fieldsCount++;
-        if (fieldsCount > this.options.maxFields) {
-          this._error(
-            new Error(
-              `options.maxFields (${this.options.maxFields}) exceeded`,
-            ),
-          );
-        }
-      });
-    }
     
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
