@@ -259,12 +259,12 @@ function makeHeader(filename) {
           multiples: true,
           maxFields: 1,
         });
-        
+
         form.on('error', (error) => {
           expect(error.message.includes('maxFields')).toBe(true);
           done();
         });
-        
+
         form.emit('field', 'a', '1');
         form.emit('field', 'b', '2');
         form.emit('end');

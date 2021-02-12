@@ -8,16 +8,18 @@ const server = http.createServer((req, res) => {
     // parse a file upload
     const form = formidable({ multiples: true });
 
-    form.on("fileBegin", (formName, file) => {
+    form.on('fileBegin', (formName, file) => {
       if (file.name === null) {
-        file.name = "invalid-characters"
+        // todo change lint rules because that is what we recommend
+        // eslint-disable-next-line
+        file.name = 'invalid-characters';
       }
-    })
+    });
     form.parse(req, (err, fields, files) => {
       if (err) {
         console.error(err);
         res.writeHead(400, { 'Content-Type': 'text/plain' });
-        res.end("Bad Request");
+        res.end('Bad Request');
         return;
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });

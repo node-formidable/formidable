@@ -101,9 +101,7 @@ class IncomingForm extends EventEmitter {
         fieldsCount++;
         if (fieldsCount > this.options.maxFields) {
           this._error(
-            new Error(
-              `options.maxFields (${this.options.maxFields}) exceeded`,
-            ),
+            new Error(`options.maxFields (${this.options.maxFields}) exceeded`),
           );
         }
       });
@@ -147,7 +145,7 @@ class IncomingForm extends EventEmitter {
 
       return true;
     };
-    
+
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const callback = once(dezalgo(cb));
@@ -188,10 +186,7 @@ class IncomingForm extends EventEmitter {
       });
       this.on('end', () => {
         if (this.options.multiples) {
-          Object.assign(
-            fields,
-            qs.parse(mockFields),
-          );
+          Object.assign(fields, qs.parse(mockFields));
         }
         callback(null, fields, files);
       });
