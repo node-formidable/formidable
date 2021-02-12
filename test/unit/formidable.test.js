@@ -8,7 +8,7 @@ const Stream = require('stream');
 // const assert = require('assert');
 const Request = require('http').ClientRequest;
 
-// const test = require('utest');
+const test = require('utest');
 const mod = require('../../src/index');
 
 function getForm(name, opts) {
@@ -240,6 +240,28 @@ function makeHeader(filename) {
         form.onPart(part);
         part.emit('data', Buffer.alloc(11));
         expect(formEmitSpy).not.toBeCalledWith('error');
+      });
+    });
+
+    describe('when there are more fields than maxFields', () => {
+      test('emits error', (done) => {
+        const form = getForm(name, {
+          multiples: true,
+          maxFields: 1,
+        });
+
+
+        const req = new Request();
+        req.headers = 'content-type: json; content-length:8';
+        
+        form.on('error', (error) => {
+          expect(error.message.includes('maxFields')).toBe(true);
+          done();
+        });
+        
+        form.emit('field', 'a', '1');
+        form.emit('field', 'b', '2');
+        form.emit('end');
       });
     });
   });
