@@ -247,10 +247,6 @@ function makeHeader(filename) {
           multiples: true,
           maxFields: 1,
         });
-
-
-        const req = new Request();
-        req.headers = 'content-type: json; content-length:8';
         
         form.on('error', (error) => {
           expect(error.message.includes('maxFields')).toBe(true);
