@@ -61,17 +61,8 @@ class IncomingForm extends EventEmitter {
       this[key] = null;
     });
 
-    const hasRename = typeof this.options.filename === 'function';
+    this._setUpRename();
 
-    if (this.options.keepExtensions === true && hasRename) {
-      this._rename = (part) => {
-        const resultFilepath = this.options.filename.call(this, part, this);
-
-        return this._uploadPath(part, resultFilepath);
-      };
-    } else {
-      this._rename = (part) => this._uploadPath(part);
-    }
 
     this._flushing = 0;
     this._fieldsSize = 0;
@@ -95,17 +86,7 @@ class IncomingForm extends EventEmitter {
       this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
     });
 
-    if (this.options.maxFields !== 0) {
-      let fieldsCount = 0;
-      this.on('field', (x, y) => {
-        fieldsCount++;
-        if (fieldsCount > this.options.maxFields) {
-          this._error(
-            new Error(`options.maxFields (${this.options.maxFields}) exceeded`),
-          );
-        }
-      });
-    }
+    this._setUpMaxFields();
   }
 
   use(plugin) {
@@ -516,6 +497,34 @@ class IncomingForm extends EventEmitter {
     }
 
     return name;
+  }
+
+  _setUpRename() {
+    const hasRename = typeof this.options.filename === 'function';
+
+    if (this.options.keepExtensions === true && hasRename) {
+      this._rename = (part) => {
+        const resultFilepath = this.options.filename.call(this, part, this);
+
+        return this._uploadPath(part, resultFilepath);
+      };
+    } else {
+      this._rename = (part) => this._uploadPath(part);
+    }
+  }
+
+  _setUpMaxFields() {
+    if (this.options.maxFields !== 0) {
+      let fieldsCount = 0;
+      this.on('field', () => {
+        fieldsCount += 1;
+        if (fieldsCount > this.options.maxFields) {
+          this._error(
+            new Error(`options.maxFields (${this.options.maxFields}) exceeded`),
+          );
+        }
+      });
+    }
   }
 
   _maybeEnd() {
