@@ -79,11 +79,11 @@ class IncomingForm extends EventEmitter {
     this._plugins = [];
     this.openedFiles = [];
 
-    const enabledPlugins = []
+    this.options.enabledPlugins = []
       .concat(this.options.enabledPlugins)
       .filter(Boolean);
 
-    if (enabledPlugins.length === 0) {
+    if (this.options.enabledPlugins.length === 0) {
       throw new Error(
         'expect at least 1 enabled builtin plugin, see options.enabledPlugins',
       );
