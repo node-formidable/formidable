@@ -476,6 +476,10 @@ class IncomingForm extends EventEmitter {
   }
 
   _getExtension(str) {
+    if (!str) {
+      return '';
+    }
+
     const basename = path.basename(str);
     const firstDot = basename.indexOf('.');
     const lastDot = basename.lastIndexOf('.');
