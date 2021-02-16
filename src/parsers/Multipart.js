@@ -6,6 +6,8 @@
 'use strict';
 
 const { Transform } = require('stream');
+const errors = require('../FormidableError.js');
+const { FormidableError } = errors;
 
 let s = 0;
 const STATE = {
@@ -69,8 +71,10 @@ class MultipartParser extends Transform {
       done();
     } else if (this.state !== STATE.END) {
       done(
-        new Error(
+        new FormidableError(
           `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
+          errors.malformedMultipart,
+          400,
         ),
       );
     }

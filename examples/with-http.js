@@ -18,8 +18,8 @@ const server = http.createServer((req, res) => {
     form.parse(req, (err, fields, files) => {
       if (err) {
         console.error(err);
-        res.writeHead(400, { 'Content-Type': 'text/plain' });
-        res.end('Bad Request');
+        res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+        res.end(String(err));
         return;
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });

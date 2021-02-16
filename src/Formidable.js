@@ -33,6 +33,8 @@ const PersistentFile = require('./PersistentFile');
 const VolatileFile = require('./VolatileFile');
 const DummyParser = require('./parsers/Dummy');
 const MultipartParser = require('./parsers/Multipart');
+const errors = require('./FormidableError.js');
+const { FormidableError } = errors;
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -75,8 +77,9 @@ class IncomingForm extends EventEmitter {
       .filter(Boolean);
 
     if (this.options.enabledPlugins.length === 0) {
-      throw new Error(
+      throw new FormidableError(
         'expect at least 1 enabled builtin plugin, see options.enabledPlugins',
+        errors.missingPlugin,
       );
     }
 
@@ -91,7 +94,10 @@ class IncomingForm extends EventEmitter {
 
   use(plugin) {
     if (typeof plugin !== 'function') {
-      throw new Error('.use: expect `plugin` to be a function');
+      throw new FormidableError(
+        '.use: expect `plugin` to be a function',
+        errors.pluginFunction
+      );
     }
     this._plugins.push(plugin.bind(this));
     return this;
@@ -183,7 +189,10 @@ class IncomingForm extends EventEmitter {
       })
       .on('aborted', () => {
         this.emit('aborted');
-        this._error(new Error('Request aborted'));
+        this._error(new FormidableError(
+          'Request aborted',
+          errors.aborted
+        ));
       })
       .on('data', (buffer) => {
         try {
@@ -211,7 +220,11 @@ class IncomingForm extends EventEmitter {
     this._parseContentType();
 
     if (!this._parser) {
-      this._error(new Error('no parser found'));
+      this._error(new FormidableError(
+        'no parser found',
+        errors.noParser,
+        415 // Unsupported Media Type
+      ));
       return;
     }
 
@@ -225,7 +238,10 @@ class IncomingForm extends EventEmitter {
       return null;
     }
     if (!this._parser) {
-      this._error(new Error('uninitialized parser'));
+      this._error(new FormidableError(
+        'uninitialized parser',
+        errors.uninitializedParser,
+      ));
       return null;
     }
 
@@ -254,7 +270,10 @@ class IncomingForm extends EventEmitter {
 
   _handlePart(part) {
     if (part.filename && typeof part.filename !== 'string') {
-      this._error(new Error(`the part.filename should be string when exists`));
+      this._error(new FormidableError(
+        `the part.filename should be string when it exists`,
+        errors.filenameNotString,
+      ));
       return;
     }
 
@@ -278,8 +297,10 @@ class IncomingForm extends EventEmitter {
         this._fieldsSize += buffer.length;
         if (this._fieldsSize > this.options.maxFieldsSize) {
           this._error(
-            new Error(
+            new FormidableError(
               `options.maxFieldsSize (${this.options.maxFieldsSize} bytes) exceeded, received ${this._fieldsSize} bytes of field data`,
+              errors.maxFieldsSizeExceeded,
+              413 // Payload Too Large
             ),
           );
           return;
@@ -312,16 +333,20 @@ class IncomingForm extends EventEmitter {
       this._fileSize += buffer.length;
       if (this._fileSize < this.options.minFileSize) {
         this._error(
-          new Error(
+          new FormidableError(
             `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${this._fileSize} bytes of file data`,
+            errors.smallerThanMinFileSize,
+            400,
           ),
         );
         return;
       }
       if (this._fileSize > this.options.maxFileSize) {
         this._error(
-          new Error(
+          new FormidableError(
             `options.maxFileSize (${this.options.maxFileSize} bytes) exceeded, received ${this._fileSize} bytes of file data`,
+            errors.biggerThanMaxFileSize,
+            413,
           ),
         );
         return;
@@ -338,8 +363,10 @@ class IncomingForm extends EventEmitter {
     part.on('end', () => {
       if (!this.options.allowEmptyFiles && this._fileSize === 0) {
         this._error(
-          new Error(
+          new FormidableError(
             `options.allowEmptyFiles is false, file size should be greather than 0`,
+            errors.noEmptyFiles,
+            400,
           ),
         );
         return;
@@ -361,7 +388,11 @@ class IncomingForm extends EventEmitter {
     }
 
     if (!this.headers['content-type']) {
-      this._error(new Error('bad content-type header, no content-type'));
+      this._error(new FormidableError(
+        'bad content-type header, no content-type',
+        errors.missingContentType,
+        400,
+      ));
       return;
     }
 
@@ -379,8 +410,10 @@ class IncomingForm extends EventEmitter {
       } catch (err) {
         // directly throw from the `form.parse` method;
         // there is no other better way, except a handle through options
-        const error = new Error(
+        const error = new FormidableError(
           `plugin on index ${idx} failed with: ${err.message}`,
+          errors.pluginFailed,
+          500,
         );
         error.idx = idx;
         throw error;
@@ -524,7 +557,11 @@ class IncomingForm extends EventEmitter {
         fieldsCount += 1;
         if (fieldsCount > this.options.maxFields) {
           this._error(
-            new Error(`options.maxFields (${this.options.maxFields}) exceeded`),
+            new FormidableError(
+              `options.maxFields (${this.options.maxFields}) exceeded`,
+              errors.maxFieldsExceeded,
+              413
+            ),
           );
         }
       });

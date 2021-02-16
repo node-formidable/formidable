@@ -4,6 +4,8 @@
 
 const { Stream } = require('stream');
 const MultipartParser = require('../parsers/Multipart');
+const errors = require('../FormidableError.js');
+const { FormidableError } = errors;
 
 // the `options` is also available through the `options` / `formidable.options`
 module.exports = function plugin(formidable, options) {
@@ -24,7 +26,11 @@ module.exports = function plugin(formidable, options) {
       const initMultipart = createInitMultipart(m[1] || m[2]);
       initMultipart.call(self, self, options); // lgtm [js/superfluous-trailing-arguments]
     } else {
-      const err = new Error('bad content-type header, no multipart boundary');
+      const err = new FormidableError(
+        'bad content-type header, no multipart boundary',
+        errors.missingMultipartBoundary,
+        400,
+      );
       self._error(err);
     }
   }
@@ -145,7 +151,11 @@ function createInitMultipart(boundary) {
             break;
           }
           default:
-            return this._error(new Error('unknown transfer-encoding'));
+            return this._error(new FormidableError(
+              'unknown transfer-encoding',
+              errors.unknownTransferEncoding,
+              501,
+            ));
         }
 
         this.onPart(part);
