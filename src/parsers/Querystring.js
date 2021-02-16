@@ -4,6 +4,9 @@
 'use strict';
 
 const { Transform } = require('stream');
+const errors = require('../FormidableError.js');
+
+const { FormidableError } = errors;
 
 
 var AMPERSAND = 38,
@@ -27,10 +30,10 @@ class QuerystringParser extends Transform {
     if(this.buffer && this.buffer.length) {
         //we have some data left over from the last write which we are in the middle of processing
         len += this.buffer.length;
-        buffer = Buffer.concat([this.buffer, buff], len)
+        buffer = Buffer.concat([this.buffer, buffer], len)
     }
 
-    for (var i = this.buffer.length || 0; i < len; i++) {
+    for (var i = this.buffer.length || 0; i < len; i += 1) {
         var c = buffer[i];
         if(this.readingKey) {
             //KEY, check for =
@@ -38,22 +41,24 @@ class QuerystringParser extends Transform {
                 this.key = this.getSection(buffer, i);
                 this.readingKey = false;
                 this.sectionStart = i + 1
-            }
-            else if(c===AMPERSAND) {
+            } else if(c===AMPERSAND) {
                 //just key, no value. Prepare to read another key
                 this.emitField(this.getSection(buffer, i));
                 this.sectionStart = i + 1
             }
-        } else {
-            //VALUE, check for &
-            if(c===AMPERSAND) {
-                this.emitField(this.key, this.getSection(buffer, i));
-                this.sectionStart = i + 1;
-            }
+        //VALUE, check for &
+        } else if(c===AMPERSAND) {
+            this.emitField(this.key, this.getSection(buffer, i));
+            this.sectionStart = i + 1;
         }
+      
 
         if(this.maxFieldLength && i - this.sectionStart === this.maxFieldLength) {
-            return new Error((this.readingKey ? 'Key' : 'Value for ' + this.key) + ' longer than maxFieldLength')
+            callback(new FormidableError(
+              (this.readingKey ? 'Key' : 'Value for ' + this.key) + ' longer than maxFieldLength'),
+              errors.maxFieldsSizeExceeded,
+              413,
+            )
         }
     }
 
