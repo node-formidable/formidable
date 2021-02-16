@@ -1,22 +1,32 @@
 
+/* eslint-disable no-underscore-dangle */
+
+'use strict';
+
+const { Transform } = require('stream');
+
 
 var AMPERSAND = 38,
     EQUALS = 61;
 
-function QuerystringParser(maxKeys, maxFieldSize) {
-    this.maxKeys = maxKeys;
+// This is a buffering parser, not quite as nice as the multipart one.
+// If I find time I'll rewrite this to be fully streaming as well
+class QuerystringParser extends Transform {
+  constructor(options = {}) {
+    super({ readableObjectMode: true });
+    
+    const {maxFieldSize} = options
     this.maxFieldLength = maxFieldSize;
-    this.buffer = null;
+    this.buffer = Buffer.from("");
     this.fieldCount = 0;
     this.sectionStart = 0;
     this.key = '';
     this.readingKey = true;
-}
-exports.QuerystringParser = QuerystringParser;
+  }
 
-QuerystringParser.prototype.write = function (buff) {
-    var buffer = buff;
-    var len = buff.length;
+  _transform(buffer, encoding, callback) {
+
+    var len = buffer.length;
     if(this.buffer && this.buffer.length) {
         //we have some data left over from the last write which we are in the middle of processing
         len += this.buffer.length;
@@ -54,16 +64,15 @@ QuerystringParser.prototype.write = function (buff) {
     len -= this.sectionStart;
     if(len){
         // i.e. Unless the last character was a & or =
-        this.buffer = new Buffer(len);
-        buffer.copyTo(this.buffer, 0, this.sectionStart); //Can we use slice or will it get overridden?
+        this.buffer = Buffer.from(this.buffer,0, this.sectionStart);
     }
     else this.buffer = null;
 
     this.sectionStart = 0;
-    return buff.length;
-};
+    callback();
+  }
 
-QuerystringParser.prototype.end = function () {
+  _flush(callback) {
     //Emit the last field
     if(this.readingKey) {
         //we only have a key if there's something in the buffer. We definitely have no value
@@ -72,32 +81,30 @@ QuerystringParser.prototype.end = function () {
         //We have a key, we may or may not have a value
         this.emitField(this.key, this.buffer && this.buffer.length && this.buffer.toString('ascii'));
     }
+    this.buffer = '';
+    callback();
+  }
 
-    this.onEnd();
-};
-
-/**
- * Parses the buffer from this.sectionStart to i (exclusive)
- * @param buffer
- * @param i Index of the separator / exclusive upper index
- * @returns {string}
- */
-QuerystringParser.prototype.getSection = function(buffer, i) {
+  getSection(buffer, i) {
     if(i===this.sectionStart) return '';
-    
+
     return buffer.toString('ascii', this.sectionStart, i);
-};
+  }
 
-QuerystringParser.prototype.emitField = function(key, val) {
-    this.onField(key, val || '');
-    this.key = '';
-    this.readingKey = true;
+  emitField(key, val) {
+      this.key = '';
+      this.readingKey = true;
+      this.push({key, value: val || ''});
+  }
+}
 
-    if(this.fieldCount++ === this.maxKeys) {
-        //silently ignore the rest of the request
-        this.end = this.onEnd;
-        this.write = function(buff) {
-            return buff.length
-        };
-    }
-};
+module.exports = QuerystringParser;
+
+// const q = new QuerystringParser({maxFieldSize: 100});
+// (async function() {
+//     for await (const chunk of q) {
+//       console.log(chunk);
+//     }
+// })();
+// q.write("a=b&c=d")
+// q.end()
