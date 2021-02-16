@@ -113,6 +113,11 @@ const server = http.createServer((req, res) => {
     const form = formidable({ multiples: true });
 
     form.parse(req, (err, fields, files) => {
+      if (err) {
+        res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+        res.end(String(err));
+        return;
+      }
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ fields, files }, null, 2));
     });
@@ -654,6 +659,8 @@ form.on('file', (formname, file) => {
 Emitted when there is an error processing the incoming form. A request that
 experiences an error is automatically paused, you will have to manually call
 `request.resume()` if you want the request to continue firing `'data'` events.
+
+May have `error.httpCode` and `error.code` attached.
 
 ```js
 form.on('error', (err) => {});
