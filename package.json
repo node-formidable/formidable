@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "2.0.0-canary.20210212",
+  "version": "2.0.0-canary.20210216",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
@@ -27,9 +27,9 @@
     "postreinstall": "yarn setup",
     "setup": "yarn",
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
-    "test": "node test/run.js",
+    "test": "jest --coverage",
     "pretest:ci": "yarn run pretest",
-    "test:ci": "nyc node test/run.js",
+    "test:ci": "nyc jest --coverage",
     "test:jest": "jest --coverage"
   },
   "dependencies": {
@@ -58,8 +58,7 @@
     "prettier": "2.0.5",
     "prettier-plugin-pkgjson": "0.2.8",
     "request": "2.88.2",
-    "supertest": "4.0.2",
-    "urun": "0.0.8"
+    "supertest": "4.0.2"
   },
   "jest": {
     "verbose": true
