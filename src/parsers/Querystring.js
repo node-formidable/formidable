@@ -23,7 +23,6 @@ class QuerystringParser extends Transform {
   }
 
   _transform(buffer, encoding, callback) {
-
     var len = buffer.length;
     if(this.buffer && this.buffer.length) {
         //we have some data left over from the last write which we are in the middle of processing
