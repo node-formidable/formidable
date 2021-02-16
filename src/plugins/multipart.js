@@ -5,6 +5,7 @@
 const { Stream } = require('stream');
 const MultipartParser = require('../parsers/Multipart');
 const errors = require('../FormidableError.js');
+
 const { FormidableError } = errors;
 
 // the `options` is also available through the `options` / `formidable.options`
@@ -151,11 +152,13 @@ function createInitMultipart(boundary) {
             break;
           }
           default:
-            return this._error(new FormidableError(
-              'unknown transfer-encoding',
-              errors.unknownTransferEncoding,
-              501,
-            ));
+            return this._error(
+              new FormidableError(
+                'unknown transfer-encoding',
+                errors.unknownTransferEncoding,
+                501,
+              ),
+            );
         }
 
         this.onPart(part);

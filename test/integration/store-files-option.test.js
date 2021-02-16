@@ -21,7 +21,6 @@ const testFilePath = path.join(
   'binaryfile.tar.gz',
 );
 
-
 test('store files option', (done) => {
   const server = http.createServer((req, res) => {
     if (!fs.existsSync(DEFAULT_UPLOAD_DIR)) {

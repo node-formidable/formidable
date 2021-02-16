@@ -34,6 +34,7 @@ const VolatileFile = require('./VolatileFile');
 const DummyParser = require('./parsers/Dummy');
 const MultipartParser = require('./parsers/Multipart');
 const errors = require('./FormidableError.js');
+
 const { FormidableError } = errors;
 
 function hasOwnProp(obj, key) {
@@ -65,7 +66,6 @@ class IncomingForm extends EventEmitter {
 
     this._setUpRename();
 
-
     this._flushing = 0;
     this._fieldsSize = 0;
     this._fileSize = 0;
@@ -96,7 +96,7 @@ class IncomingForm extends EventEmitter {
     if (typeof plugin !== 'function') {
       throw new FormidableError(
         '.use: expect `plugin` to be a function',
-        errors.pluginFunction
+        errors.pluginFunction,
       );
     }
     this._plugins.push(plugin.bind(this));
@@ -189,10 +189,7 @@ class IncomingForm extends EventEmitter {
       })
       .on('aborted', () => {
         this.emit('aborted');
-        this._error(new FormidableError(
-          'Request aborted',
-          errors.aborted
-        ));
+        this._error(new FormidableError('Request aborted', errors.aborted));
       })
       .on('data', (buffer) => {
         try {
@@ -220,11 +217,13 @@ class IncomingForm extends EventEmitter {
     this._parseContentType();
 
     if (!this._parser) {
-      this._error(new FormidableError(
-        'no parser found',
-        errors.noParser,
-        415 // Unsupported Media Type
-      ));
+      this._error(
+        new FormidableError(
+          'no parser found',
+          errors.noParser,
+          415, // Unsupported Media Type
+        ),
+      );
       return;
     }
 
@@ -238,10 +237,9 @@ class IncomingForm extends EventEmitter {
       return null;
     }
     if (!this._parser) {
-      this._error(new FormidableError(
-        'uninitialized parser',
-        errors.uninitializedParser,
-      ));
+      this._error(
+        new FormidableError('uninitialized parser', errors.uninitializedParser),
+      );
       return null;
     }
 
@@ -270,10 +268,12 @@ class IncomingForm extends EventEmitter {
 
   _handlePart(part) {
     if (part.filename && typeof part.filename !== 'string') {
-      this._error(new FormidableError(
-        `the part.filename should be string when it exists`,
-        errors.filenameNotString,
-      ));
+      this._error(
+        new FormidableError(
+          `the part.filename should be string when it exists`,
+          errors.filenameNotString,
+        ),
+      );
       return;
     }
 
@@ -300,7 +300,7 @@ class IncomingForm extends EventEmitter {
             new FormidableError(
               `options.maxFieldsSize (${this.options.maxFieldsSize} bytes) exceeded, received ${this._fieldsSize} bytes of field data`,
               errors.maxFieldsSizeExceeded,
-              413 // Payload Too Large
+              413, // Payload Too Large
             ),
           );
           return;
@@ -388,11 +388,13 @@ class IncomingForm extends EventEmitter {
     }
 
     if (!this.headers['content-type']) {
-      this._error(new FormidableError(
-        'bad content-type header, no content-type',
-        errors.missingContentType,
-        400,
-      ));
+      this._error(
+        new FormidableError(
+          'bad content-type header, no content-type',
+          errors.missingContentType,
+          400,
+        ),
+      );
       return;
     }
 
@@ -560,7 +562,7 @@ class IncomingForm extends EventEmitter {
             new FormidableError(
               `options.maxFields (${this.options.maxFields}) exceeded`,
               errors.maxFieldsExceeded,
-              413
+              413,
             ),
           );
         }

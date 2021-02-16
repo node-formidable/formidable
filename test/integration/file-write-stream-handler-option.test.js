@@ -33,13 +33,13 @@ const createDirs = (dirs) => {
   });
 };
 
-
 test('file write stream handler', (done) => {
   const server = http.createServer((req, res) => {
     createDirs([DEFAULT_UPLOAD_DIR, CUSTOM_UPLOAD_DIR]);
     const form = formidable({
       uploadDir: DEFAULT_UPLOAD_DIR,
-      fileWriteStreamHandler: () => fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
+      fileWriteStreamHandler: () =>
+        fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
     });
 
     form.parse(req, (err, fields, files) => {
@@ -63,8 +63,6 @@ test('file write stream handler', (done) => {
   });
 
   server.listen(PORT, (err) => {
-    const choosenPort = server.address().port;
-
     assert(!err, 'should not have error, but be falsey');
 
     const request = http.request({

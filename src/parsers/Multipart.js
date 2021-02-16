@@ -7,6 +7,7 @@
 
 const { Transform } = require('stream');
 const errors = require('../FormidableError.js');
+
 const { FormidableError } = errors;
 
 let s = 0;

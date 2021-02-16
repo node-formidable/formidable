@@ -27,7 +27,7 @@ test('connection aborted', (done) => {
         abortedReceived,
         'from .parse() callback: Error event should follow aborted',
       );
-      
+
       server.close();
       done();
     });
@@ -45,5 +45,4 @@ test('connection aborted', (done) => {
     );
     client.end();
   });
-
-})
+});

@@ -1,4 +1,3 @@
-
 /* eslint-disable no-plusplus */
 
 let errorCodes = 0;
@@ -19,29 +18,29 @@ const missingMultipartBoundary = errorCodes++;
 const unknownTransferEncoding = errorCodes++;
 
 const FormidableError = class extends Error {
-    constructor(message, internalCode, httpCode = 500) {
-        super(message)
-        this.code = internalCode;
-        this.httpCode = httpCode;
-    }
-}
+  constructor(message, internalCode, httpCode = 500) {
+    super(message);
+    this.code = internalCode;
+    this.httpCode = httpCode;
+  }
+};
 
 module.exports = {
-    missingPlugin,
-    pluginFunction,
-    aborted,
-    noParser,
-    uninitializedParser,
-    filenameNotString,
-    maxFieldsSizeExceeded,
-    maxFieldsExceeded,
-    smallerThanMinFileSize,
-    biggerThanMaxFileSize,
-    noEmptyFiles,
-    missingContentType,
-    malformedMultipart,
-    missingMultipartBoundary,
-    unknownTransferEncoding,
+  missingPlugin,
+  pluginFunction,
+  aborted,
+  noParser,
+  uninitializedParser,
+  filenameNotString,
+  maxFieldsSizeExceeded,
+  maxFieldsExceeded,
+  smallerThanMinFileSize,
+  biggerThanMaxFileSize,
+  noEmptyFiles,
+  missingContentType,
+  malformedMultipart,
+  missingMultipartBoundary,
+  unknownTransferEncoding,
 
-    FormidableError
+  FormidableError,
 };
