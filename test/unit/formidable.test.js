@@ -5,10 +5,8 @@
 
 const path = require('path');
 const Stream = require('stream');
-// const assert = require('assert');
 const Request = require('http').ClientRequest;
 
-// const test = require('utest');
 const mod = require('../../src/index');
 
 function getForm(name, opts) {
@@ -102,7 +100,10 @@ function makeHeader(filename) {
     const form = getForm(name, { multiples: true });
 
     const req = new Request();
-    req.headers = 'content-type: json; content-length:8';
+    req.headers = {
+      'content-length': '8',
+      'content-type': 'multipart/form-data; boundary=----TLVx',
+    };
     form.parse(req, (error, fields) => {
       expect(Array.isArray(fields.a)).toBe(true);
       expect(fields.a[0]).toBe('1');
@@ -117,7 +118,10 @@ function makeHeader(filename) {
     const form = getForm(name, { multiples: true });
 
     const req = new Request();
-    req.headers = 'content-type: json; content-length:8';
+    req.headers = {
+      'content-length': '8',
+      'content-type': 'multipart/form-data; boundary=----TLVx',
+    };
     form.parse(req, (error, fields) => {
       expect(Array.isArray(fields.a)).toBe(true);
       expect(fields.a[0][0]).toBe('a');
@@ -134,7 +138,10 @@ function makeHeader(filename) {
     const form = getForm(name, { multiples: true });
 
     const req = new Request();
-    req.headers = 'content-type: json; content-length:8';
+    req.headers = {
+      'content-length': '8',
+      'content-type': 'multipart/form-data; boundary=----TLVx',
+    };
     form.parse(req, (error, fields) => {
       expect(fields.a.x).toBe('1');
       expect(fields.a.y).toBe('2');
@@ -148,7 +155,10 @@ function makeHeader(filename) {
     const form = getForm(name, { multiples: true });
 
     const req = new Request();
-    req.headers = 'content-type: json; content-length:8';
+    req.headers = {
+      'content-length': '8',
+      'content-type': 'multipart/form-data; boundary=----TLVx',
+    };
     form.parse(req, (error, fields) => {
       expect(fields.a.l1.k1).toBe('2');
       expect(fields.a.l1.k2).toBe('3');
@@ -240,6 +250,24 @@ function makeHeader(filename) {
         form.onPart(part);
         part.emit('data', Buffer.alloc(11));
         expect(formEmitSpy).not.toBeCalledWith('error');
+      });
+    });
+
+    describe('when there are more fields than maxFields', () => {
+      test('emits error', (done) => {
+        const form = getForm(name, {
+          multiples: true,
+          maxFields: 1,
+        });
+
+        form.on('error', (error) => {
+          expect(error.message.includes('maxFields')).toBe(true);
+          done();
+        });
+
+        form.emit('field', 'a', '1');
+        form.emit('field', 'b', '2');
+        form.emit('end');
       });
     });
   });

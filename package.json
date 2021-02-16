@@ -59,8 +59,10 @@
     "prettier-plugin-pkgjson": "0.2.8",
     "request": "2.88.2",
     "supertest": "4.0.2",
-    "urun": "0.0.8",
-    "utest": "0.0.8"
+    "urun": "0.0.8"
+  },
+  "jest": {
+    "verbose": true
   },
   "husky": {
     "hooks": {
@@ -88,13 +90,13 @@
     ]
   },
   "keywords": [
-      "multipart",
-      "form",
-      "data",
-      "querystring",
-      "www",
-      "json",
-      "ulpoad",
-      "file"
+    "multipart",
+    "form",
+    "data",
+    "querystring",
+    "www",
+    "json",
+    "ulpoad",
+    "file"
   ]
 }

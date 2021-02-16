@@ -61,17 +61,8 @@ class IncomingForm extends EventEmitter {
       this[key] = null;
     });
 
-    const hasRename = typeof this.options.filename === 'function';
+    this._setUpRename();
 
-    if (this.options.keepExtensions === true && hasRename) {
-      this._rename = (part) => {
-        const resultFilepath = this.options.filename.call(this, part, this);
-
-        return this._uploadPath(part, resultFilepath);
-      };
-    } else {
-      this._rename = (part) => this._uploadPath(part);
-    }
 
     this._flushing = 0;
     this._fieldsSize = 0;
@@ -79,11 +70,11 @@ class IncomingForm extends EventEmitter {
     this._plugins = [];
     this.openedFiles = [];
 
-    const enabledPlugins = []
+    this.options.enabledPlugins = []
       .concat(this.options.enabledPlugins)
       .filter(Boolean);
 
-    if (enabledPlugins.length === 0) {
+    if (this.options.enabledPlugins.length === 0) {
       throw new Error(
         'expect at least 1 enabled builtin plugin, see options.enabledPlugins',
       );
@@ -94,6 +85,8 @@ class IncomingForm extends EventEmitter {
       // eslint-disable-next-line import/no-dynamic-require, global-require
       this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
     });
+
+    this._setUpMaxFields();
   }
 
   use(plugin) {
@@ -142,11 +135,14 @@ class IncomingForm extends EventEmitter {
       const files = {};
 
       this.on('field', (name, value) => {
-        if (this.options.multiples && 
-            (this.type === 'multipart' || this.type === 'urlencoded')
-            ) {
+        if (
+          this.options.multiples &&
+          (this.type === 'multipart' || this.type === 'urlencoded')
+        ) {
           const mObj = { [name]: value };
-          mockFields = `${mockFields}&${qs.stringify(mObj)}`;
+          mockFields = mockFields
+            ? `${mockFields}&${qs.stringify(mObj)}`
+            : `${qs.stringify(mObj)}`;
         } else {
           fields[name] = value;
         }
@@ -505,6 +501,34 @@ class IncomingForm extends EventEmitter {
     }
 
     return name;
+  }
+
+  _setUpRename() {
+    const hasRename = typeof this.options.filename === 'function';
+
+    if (this.options.keepExtensions === true && hasRename) {
+      this._rename = (part) => {
+        const resultFilepath = this.options.filename.call(this, part, this);
+
+        return this._uploadPath(part, resultFilepath);
+      };
+    } else {
+      this._rename = (part) => this._uploadPath(part);
+    }
+  }
+
+  _setUpMaxFields() {
+    if (this.options.maxFields !== 0) {
+      let fieldsCount = 0;
+      this.on('field', () => {
+        fieldsCount += 1;
+        if (fieldsCount > this.options.maxFields) {
+          this._error(
+            new Error(`options.maxFields (${this.options.maxFields}) exceeded`),
+          );
+        }
+      });
+    }
   }
 
   _maybeEnd() {

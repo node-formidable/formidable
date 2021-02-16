@@ -11,7 +11,6 @@ class QuerystringParser extends Transform {
   constructor(options = {}) {
     super({ readableObjectMode: true });
     this.globalOptions = { ...options };
-    this.maxKeys = this.globalOptions.maxFields;
     this.buffer = '';
     this.bufferLength = 0;
   }
@@ -23,9 +22,7 @@ class QuerystringParser extends Transform {
   }
 
   _flush(callback) {
-    const fields = querystring.parse(this.buffer, '&', '=', {
-      maxKeys: this.maxKeys,
-    });
+    const fields = querystring.parse(this.buffer, '&', '=');
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const key in fields) {
       this.push({
