@@ -29,7 +29,6 @@ function fromFixtures(...args) {
 //   server.listen(0, () => {
 //     const choosenPort = server.address().port;
 //     const url = `http://localhost:${choosenPort}`;
-//     console.log('Server up and running at:', url);
 
 //     const method = 'POST';
 
