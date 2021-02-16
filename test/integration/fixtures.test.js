@@ -17,7 +17,6 @@ const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
 const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
 const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
 
-
 test('fixtures', (done) => {
   const server = http.createServer();
   server.listen(PORT, findFixtures);

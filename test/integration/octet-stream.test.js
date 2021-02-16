@@ -15,7 +15,6 @@ const testFilePath = path.join(
   'binaryfile.tar.gz',
 );
 
-
 test('octet stream', (done) => {
   const server = http.createServer((req, res) => {
     const form = formidable();

@@ -1,3 +1,5 @@
+/* eslint-disable max-nested-callbacks */
+
 'use strict';
 
 const net = require('net');

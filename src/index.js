@@ -3,6 +3,7 @@
 const PersistentFile = require('./PersistentFile');
 const VolatileFile = require('./VolatileFile');
 const Formidable = require('./Formidable');
+const FormidableError = require('./FormidableError');
 
 const plugins = require('./plugins/index');
 const parsers = require('./parsers/index');
@@ -12,6 +13,7 @@ const parsers = require('./parsers/index');
 const formidable = (...args) => new Formidable(...args);
 
 module.exports = Object.assign(formidable, {
+  errors: FormidableError,
   File: PersistentFile,
   PersistentFile,
   VolatileFile,
