@@ -1,21 +1,21 @@
 /* eslint-disable no-plusplus */
 
-let errorCodes = 0;
-const missingPlugin = errorCodes++;
-const pluginFunction = errorCodes++;
-const aborted = errorCodes++;
-const noParser = errorCodes++;
-const uninitializedParser = errorCodes++;
-const filenameNotString = errorCodes++;
-const maxFieldsSizeExceeded = errorCodes++;
-const maxFieldsExceeded = errorCodes++;
-const smallerThanMinFileSize = errorCodes++;
-const biggerThanMaxFileSize = errorCodes++;
-const noEmptyFiles = errorCodes++;
-const missingContentType = errorCodes++;
-const malformedMultipart = errorCodes++;
-const missingMultipartBoundary = errorCodes++;
-const unknownTransferEncoding = errorCodes++;
+
+const missingPlugin = 1000;
+const pluginFunction = 1001;
+const aborted = 1002;
+const noParser = 1003;
+const uninitializedParser = 1004;
+const filenameNotString = 1005;
+const maxFieldsSizeExceeded = 1006;
+const maxFieldsExceeded = 1007;
+const smallerThanMinFileSize = 1008;
+const biggerThanMaxFileSize = 1009;
+const noEmptyFiles = 1010;
+const missingContentType = 1011;
+const malformedMultipart = 1012;
+const missingMultipartBoundary = 1013;
+const unknownTransferEncoding = 1014;
 
 const FormidableError = class extends Error {
   constructor(message, internalCode, httpCode = 500) {
