@@ -549,7 +549,7 @@ class IncomingForm extends EventEmitter {
     const newPath = path.join(this.uploadDir, name);
 
     // prevent directory traversal attacks
-    if (!newPath.startsWith(targetPath)) {
+    if (!newPath.startsWith(this.uploadDir)) {
       return path.join(this.uploadDir, this.options.defaultInvalidName);
     }
 
