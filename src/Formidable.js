@@ -317,7 +317,7 @@ class IncomingForm extends EventEmitter {
     this._flushing += 1;
 
     const file = this._newFile({
-      path: this._rename(part),
+      path: this._getFinalPath(part),
       filename: part.filename,
       mime: part.mime,
     });
@@ -543,13 +543,13 @@ class IncomingForm extends EventEmitter {
     const hasRename = typeof this.options.filename === 'function';
 
     if (hasRename) {
-      this._rename = (part) => {
+      this._getFinalPath = (part) => {
         const resultFilepath = this.options.filename.call(this, part, this);
 
         return this._uploadPath(part, resultFilepath);
       };
     } else {
-      this._rename = (part) => this._uploadPath(part);
+      this._getFinalPath = (part) => this._uploadPath(part);
     }
   }
 
