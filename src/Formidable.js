@@ -541,7 +541,7 @@ class IncomingForm extends EventEmitter {
   _setUpRename() {
     const hasRename = typeof this.options.filename === 'function';
 
-    if (this.options.keepExtensions === true && hasRename) {
+    if (hasRename) {
       this._rename = (part) => {
         const resultFilepath = this.options.filename.call(this, part, this);
 
