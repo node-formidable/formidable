@@ -27,8 +27,15 @@ function init(_self, _opts) {
   const filename = this.headers['x-file-name'];
   const mime = this.headers['content-type'];
 
+  const thisPart = {
+    filename,
+    mime
+  };
+  const newName = this._getNewName(part)
+  const finalPath  = this._joinDirectoryName(newName);
   const file = this._newFile({
-    path: this._uploadPath(filename),
+    newName: newName,
+    path: finalPath,
     filename,
     mime,
   });

@@ -317,8 +317,11 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
+    const newName = this._getNewName(part)
+    const finalPath  = this._joinDirectoryName(newName);
     const file = this._newFile({
-      path: this._getFinalPath(part),
+      newName: newName,
+      path: finalPath,
       filename: part.filename,
       mime: part.mime,
     });
@@ -528,15 +531,15 @@ class IncomingForm extends EventEmitter {
     return basename.slice(firstDot, lastDot) + extname;
   }
 
-  _uploadPath(part, fp) {
-    const name = fp || toHexoId();
+  _uploadPath(part) {
+    const name = toHexoId();
 
     if (part && this.options.keepExtensions) {
       const filename = typeof part === 'string' ? part : part.filename;
       return `${name}${this._getExtension(filename)}`;
     }
 
-    return this._joinDirectoryName(name);
+    return name;
   }
   
   _joinDirectoryName(name) {
@@ -544,16 +547,16 @@ class IncomingForm extends EventEmitter {
 
     // prevent directory traversal attacks
     if (!newPath.startsWith(targetPath)) {
-      return path.join(this.uploadDir, this.options.defaultInvalidName)
+      return path.join(this.uploadDir, this.options.defaultInvalidName);
     }
 
-    return newPath
+    return newPath;
   }
 
   _setUpRename() {
     const hasRename = typeof this.options.filename === 'function';
     if (hasRename) {
-      this._getFinalPath = (part) => {
+      this._getNewName = (part) => {
         let ext = "";
         let name = this.options.defaultInvalidName;
         if (part.filename) { // can be null
@@ -562,12 +565,11 @@ class IncomingForm extends EventEmitter {
             ext = ""
           }
         }
-        const resultFilepath = this.options.filename.call(this, name, ext, part, this);
+        return this.options.filename.call(this, name, ext, part, this);
 
-        return this._joinDirectoryName(resultFilepath);
       };
     } else {
-      this._getFinalPath = (part) => this._uploadPath(part);
+      this._getNewName = (part) => this._uploadPath(part);
     }
   }
 

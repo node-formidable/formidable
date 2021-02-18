@@ -634,7 +634,7 @@ file system.
 ```js
 form.on('fileBegin', (formName, file) => {
     // accessible here 
-    // formName the name in the form (<input name="thisname" type="file">)
+    // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
     // file.name http filename or null if there was a parsing error
     // file.path default pathnme as per options.uploadDir and options.filename
     // file.path = CUSTOM_PATH // to change the final path
