@@ -9,20 +9,11 @@ const { EventEmitter } = require('events');
 class PersistentFile extends EventEmitter {
   constructor(properties) {
     super();
+    
+    Object.assign(this, properties);
 
     this.size = 0;
-    this.path = null;
-    this.filename = null;
-    this.mime = null;
-    this.hash = null;
-    this.lastModifiedDate = null;
-
     this._writeStream = null;
-
-    // eslint-disable-next-line guard-for-in, no-restricted-syntax
-    for (const key in properties) {
-      this[key] = properties[key];
-    }
 
     if (typeof this.hash === 'string') {
       this.hash = crypto.createHash(properties.hash);

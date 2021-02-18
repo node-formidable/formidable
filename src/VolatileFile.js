@@ -9,17 +9,10 @@ class VolatileFile extends EventEmitter {
   constructor(properties) {
     super();
 
+    Object.assign(this, properties);
+
     this.size = 0;
-    this.filename = null;
-    this.mime = null;
-    this.hash = null;
-
     this._writeStream = null;
-
-    // eslint-disable-next-line guard-for-in, no-restricted-syntax
-    for (const key in properties) {
-      this[key] = properties[key];
-    }
 
     if (typeof this.hash === 'string') {
       this.hash = crypto.createHash(properties.hash);
