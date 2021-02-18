@@ -34,7 +34,7 @@ function init(_self, _opts) {
   const newName = this._getNewName(part)
   const finalPath  = this._joinDirectoryName(newName);
   const file = this._newFile({
-    newName: newName,
+    newName,
     path: finalPath,
     filename,
     mime,
