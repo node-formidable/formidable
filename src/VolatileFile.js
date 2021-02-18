@@ -10,8 +10,8 @@ class VolatileFile extends EventEmitter {
     super();
 
     this.size = 0;
-    this.name = null;
-    this.type = null;
+    this.filename = null;
+    this.mime = null;
     this.hash = null;
 
     this._writeStream = null;
@@ -29,7 +29,7 @@ class VolatileFile extends EventEmitter {
   }
 
   open() {
-    this._writeStream = this.createFileWriteStream(this.name);
+    this._writeStream = this.createFileWriteStream(this.filename);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
@@ -42,8 +42,8 @@ class VolatileFile extends EventEmitter {
   toJSON() {
     const json = {
       size: this.size,
-      name: this.name,
-      type: this.type,
+      name: this.filename,
+      type: this.mime,
       length: this.length,
       filename: this.filename,
       mime: this.mime,
@@ -55,7 +55,7 @@ class VolatileFile extends EventEmitter {
   }
 
   toString() {
-    return `VolatileFile: ${this.name}`;
+    return `VolatileFile: ${this.filename}`;
   }
 
   write(buffer, cb) {

@@ -12,8 +12,8 @@ class PersistentFile extends EventEmitter {
 
     this.size = 0;
     this.path = null;
-    this.name = null;
-    this.type = null;
+    this.filename = null;
+    this.mime = null;
     this.hash = null;
     this.lastModifiedDate = null;
 
@@ -42,8 +42,8 @@ class PersistentFile extends EventEmitter {
     const json = {
       size: this.size,
       path: this.path,
-      name: this.name,
-      type: this.type,
+      name: this.filename,
+      type: this.mime,
       mtime: this.lastModifiedDate,
       length: this.length,
       filename: this.filename,
@@ -56,7 +56,7 @@ class PersistentFile extends EventEmitter {
   }
 
   toString() {
-    return `PersistentFile: ${this.name}, Path: ${this.path}`;
+    return `PersistentFile: ${this.filename}, Path: ${this.path}`;
   }
 
   write(buffer, cb) {

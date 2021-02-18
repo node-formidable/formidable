@@ -481,18 +481,18 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ path: filePath, filename: name, mime: type }) {
+  _newFile({ path, filename, mime }) {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
-          name,
-          type,
+          filename,
+          mime,
           createFileWriteStream: this.options.fileWriteStreamHandler,
           hash: this.options.hash,
         })
       : new PersistentFile({
-          path: filePath,
-          name,
-          type,
+          path,
+          filename,
+          mime,
           hash: this.options.hash,
         });
   }
