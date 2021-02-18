@@ -6,15 +6,23 @@ const formidable = require('../src/index');
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
-    const form = formidable({ multiples: true });
-
-    form.on('fileBegin', (formName, file) => {
-      if (file.name === null) {
-        // todo change lint rules because that is what we recommend
-        // eslint-disable-next-line
-        file.name = 'invalid-characters';
-      }
+    const form = formidable({
+      multiples: true,
+      uploadDir: `uploads`,
+      keepExtensions: true,
+      filename: function (name, ext, part, form) {
+        /* name basename of the http filename
+          ext with the dot ".txt" only if keepExtension is true
+         */
+        // slugify to avoid invalid filenames
+        // substr to define a maximum length
+        // return `${slugify(name).${slugify(ext, separator: '')}`.substr(0, 100); 
+        return 'yo.txt'; // or completly different name
+        // return 'z/yo.txt'; // subdirectory
+      },
     });
+
+
     form.parse(req, (err, fields, files) => {
       if (err) {
         console.error(err);

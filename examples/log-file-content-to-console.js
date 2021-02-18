@@ -8,7 +8,7 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
-      fileWriteStreamHandler: () => {
+      fileWriteStreamHandler: (/* file */) => {
         const writable = Writable();
         // eslint-disable-next-line no-underscore-dangle
         writable._write = (chunk, enc, next) => {
