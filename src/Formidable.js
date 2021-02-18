@@ -27,6 +27,7 @@ const DEFAULT_OPTIONS = {
   multiples: false,
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
   fileWriteStreamHandler: null,
+  defaultInvalidName: 'invalid-name',
 };
 
 const PersistentFile = require('./PersistentFile');
@@ -47,7 +48,7 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
 
-    const dir = this.options.uploadDir || this.options.uploaddir || os.tmpdir();
+    const dir = path.resolve(this.options.uploadDir || this.options.uploaddir || os.tmpdir());
 
     this.uploaddir = dir;
     this.uploadDir = dir;
@@ -529,24 +530,41 @@ class IncomingForm extends EventEmitter {
 
   _uploadPath(part, fp) {
     const name = fp || toHexoId();
-    const filePath = `${this.uploadDir}${path.sep}${name}`;
 
     if (part && this.options.keepExtensions) {
       const filename = typeof part === 'string' ? part : part.filename;
-      return `${filePath}${this._getExtension(filename)}`;
+      return `${name}${this._getExtension(filename)}`;
     }
 
-    return filePath;
+    return this._joinDirectoryName(name);
+  }
+  
+  _joinDirectoryName(name) {
+    const newPath = path.join(this.uploadDir, name);
+
+    // prevent directory traversal attacks
+    if (!newPath.startsWith(targetPath)) {
+      return path.join(this.uploadDir, this.options.defaultInvalidName)
+    }
+
+    return newPath
   }
 
   _setUpRename() {
     const hasRename = typeof this.options.filename === 'function';
-
     if (hasRename) {
       this._getFinalPath = (part) => {
-        const resultFilepath = this.options.filename.call(this, part, this);
+        let ext = "";
+        let name = this.options.defaultInvalidName;
+        if (part.filename) { // can be null
+          ({ext, name} = path.parse(part.filename));
+          if (!this.options.keepExtensions) {
+            ext = ""
+          }
+        }
+        const resultFilepath = this.options.filename.call(this, name, ext, part, this);
 
-        return this._uploadPath(part, resultFilepath);
+        return this._joinDirectoryName(resultFilepath);
       };
     } else {
       this._getFinalPath = (part) => this._uploadPath(part);
