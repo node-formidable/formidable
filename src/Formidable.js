@@ -48,7 +48,9 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
 
-    const dir = path.resolve(this.options.uploadDir || this.options.uploaddir || os.tmpdir());
+    const dir = path.resolve(
+      this.options.uploadDir || this.options.uploaddir || os.tmpdir(),
+    );
 
     this.uploaddir = dir;
     this.uploadDir = dir;
@@ -317,8 +319,8 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
-    const newName = this._getNewName(part)
-    const finalPath  = this._joinDirectoryName(newName);
+    const newName = this._getNewName(part);
+    const finalPath = this._joinDirectoryName(newName);
     const file = this._newFile({
       newName,
       path: finalPath,
@@ -481,11 +483,11 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ path, filename, mime, newName }) {
+  _newFile({ path: filePath, filename, mime, newName }) {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
           newName,
-          path,
+          path: filePath, // avoid shadow
           filename,
           mime,
           createFileWriteStream: this.options.fileWriteStreamHandler,
@@ -493,7 +495,7 @@ class IncomingForm extends EventEmitter {
         })
       : new PersistentFile({
           newName,
-          path,
+          path: filePath,
           filename,
           mime,
           hash: this.options.hash,
@@ -544,7 +546,7 @@ class IncomingForm extends EventEmitter {
 
     return name;
   }
-  
+
   _joinDirectoryName(name) {
     const newPath = path.join(this.uploadDir, name);
 
@@ -560,16 +562,16 @@ class IncomingForm extends EventEmitter {
     const hasRename = typeof this.options.filename === 'function';
     if (hasRename) {
       this._getNewName = (part) => {
-        let ext = "";
+        let ext = '';
         let name = this.options.defaultInvalidName;
-        if (part.filename) { // can be null
-          ({ext, name} = path.parse(part.filename));
+        if (part.filename) {
+          // can be null
+          ({ ext, name } = path.parse(part.filename));
           if (!this.options.keepExtensions) {
-            ext = ""
+            ext = '';
           }
         }
         return this.options.filename.call(this, name, ext, part, this);
-
       };
     } else {
       this._getNewName = (part) => this._uploadPath(part);

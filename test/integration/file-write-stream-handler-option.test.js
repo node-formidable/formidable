@@ -38,7 +38,8 @@ test('file write stream handler', (done) => {
     createDirs([DEFAULT_UPLOAD_DIR, CUSTOM_UPLOAD_DIR]);
     const form = formidable({
       uploadDir: DEFAULT_UPLOAD_DIR,
-      fileWriteStreamHandler: () => fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH)
+      fileWriteStreamHandler: () =>
+        fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
     });
 
     form.parse(req, (err, fields, files) => {

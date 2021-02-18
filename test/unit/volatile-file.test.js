@@ -44,7 +44,6 @@ describe('VolatileFile', () => {
 
   test('toJSON()', () => {
     const obj = file.toJSON();
-    const len = Object.keys(obj).length;
 
     expect(obj.mime).toBe('image/png');
     expect(obj.filename).toBe('cat.png');

@@ -29,10 +29,10 @@ function init(_self, _opts) {
 
   const thisPart = {
     filename,
-    mime
+    mime,
   };
-  const newName = this._getNewName(thisPart)
-  const finalPath  = this._joinDirectoryName(newName);
+  const newName = this._getNewName(thisPart);
+  const finalPath = this._joinDirectoryName(newName);
   const file = this._newFile({
     newName,
     path: finalPath,

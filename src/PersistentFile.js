@@ -9,7 +9,7 @@ const { EventEmitter } = require('events');
 class PersistentFile extends EventEmitter {
   constructor(properties) {
     super();
-    
+
     Object.assign(this, properties);
 
     this.size = 0;
