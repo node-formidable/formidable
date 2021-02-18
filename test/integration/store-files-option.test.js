@@ -36,7 +36,7 @@ test('store files option', (done) => {
       const { file } = files;
 
       assert.strictEqual(file.size, 301);
-      assert.ok(file.path === undefined);
+      assert.strictEqual(typeof file.path, 'string');
 
       const uploadedFileStats = fs.statSync(CUSTOM_UPLOAD_FILE_PATH);
       assert.ok(uploadedFileStats.size === file.size);

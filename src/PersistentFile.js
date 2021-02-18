@@ -33,12 +33,11 @@ class PersistentFile extends EventEmitter {
     const json = {
       size: this.size,
       path: this.path,
-      name: this.filename,
-      type: this.mime,
+      newName: this.newName,
+      mime: this.mime,
       mtime: this.lastModifiedDate,
       length: this.length,
       filename: this.filename,
-      mime: this.mime,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;

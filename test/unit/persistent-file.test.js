@@ -15,14 +15,9 @@ const file = new PersistentFile({
 
 test('PersistentFile#toJSON()', () => {
   const obj = file.toJSON();
-  const len = Object.keys(obj).length;
 
-  expect(1024).toBe(obj.size);
   expect('/tmp/cat.png').toBe(obj.path);
-  expect('cat.png').toBe(obj.name);
-  expect('image/png').toBe(obj.type);
   expect('image/png').toBe(obj.mime);
   expect('cat.png').toBe(obj.filename);
   expect(now).toBe(obj.mtime);
-  expect(len).toBe(8);
 });

@@ -35,8 +35,7 @@ class VolatileFile extends EventEmitter {
   toJSON() {
     const json = {
       size: this.size,
-      name: this.filename,
-      type: this.mime,
+      newName: this.newName,
       length: this.length,
       filename: this.filename,
       mime: this.mime,

@@ -69,7 +69,7 @@ test('fixtures', (done) => {
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.name, expectedPart.filename);
+          assert.strictEqual(file.filename, expectedPart.filename);
 
           if (expectedPart.sha1) {
             assert.strictEqual(

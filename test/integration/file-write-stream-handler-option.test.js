@@ -38,8 +38,7 @@ test('file write stream handler', (done) => {
     createDirs([DEFAULT_UPLOAD_DIR, CUSTOM_UPLOAD_DIR]);
     const form = formidable({
       uploadDir: DEFAULT_UPLOAD_DIR,
-      fileWriteStreamHandler: () =>
-        fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
+      fileWriteStreamHandler: () => fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH)
     });
 
     form.parse(req, (err, fields, files) => {
@@ -47,7 +46,7 @@ test('file write stream handler', (done) => {
       const { file } = files;
 
       assert.strictEqual(file.size, 301);
-      assert.ok(file.path === undefined);
+      assert.strictEqual(typeof file.path, 'string');
 
       const dirFiles = fs.readdirSync(DEFAULT_UPLOAD_DIR);
       assert.ok(dirFiles.length === 0);
