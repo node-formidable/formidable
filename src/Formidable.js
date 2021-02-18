@@ -528,14 +528,15 @@ class IncomingForm extends EventEmitter {
   }
 
   _uploadPath(part, fp) {
-    const name = fp || `${this.uploadDir}${path.sep}${toHexoId()}`;
+    const name = fp || toHexoId();
+    const filePath = `${this.uploadDir}${path.sep}${name}`;
 
     if (part && this.options.keepExtensions) {
       const filename = typeof part === 'string' ? part : part.filename;
-      return `${name}${this._getExtension(filename)}`;
+      return `${filePath}${this._getExtension(filename)}`;
     }
 
-    return name;
+    return filePath;
   }
 
   _setUpRename() {
