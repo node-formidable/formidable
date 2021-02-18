@@ -22,7 +22,7 @@ class VolatileFile extends EventEmitter {
   }
 
   open() {
-    this._writeStream = this.createFileWriteStream(this.filename);
+    this._writeStream = this.createFileWriteStream(this);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
