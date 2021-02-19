@@ -37,7 +37,7 @@ class VolatileFile extends EventEmitter {
       size: this.size,
       newFilename: this.newFilename,
       length: this.length,
-      filename: this.filename,
+      originalFilename: this.originalFilename,
       mimetype: this.mimetype,
     };
     if (this.hash && this.hash !== '') {
@@ -47,7 +47,7 @@ class VolatileFile extends EventEmitter {
   }
 
   toString() {
-    return `VolatileFile: ${this.filename}`;
+    return `VolatileFile: ${this.originalFilename}`;
   }
 
   write(buffer, cb) {

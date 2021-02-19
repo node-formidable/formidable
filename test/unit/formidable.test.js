@@ -12,52 +12,52 @@ const mod = require('../../src/index');
 function getForm(name, opts) {
   return name === 'formidable' ? mod.formidable(opts) : new mod[name](opts);
 }
-function makeHeader(filename) {
-  return `Content-Disposition: form-data; name="upload"; filename="${filename}"`;
+function makeHeader(originalFilename) {
+  return `Content-Disposition: form-data; name="upload"; filename="${originalFilename}"`;
 }
 
 ['IncomingForm', 'Formidable', 'formidable'].forEach((name) => {
   test(`${name}#_getFileName with regular characters`, () => {
-    const filename = 'foo.txt';
+    const originalFilename = 'foo.txt';
     const form = getForm(name);
 
-    expect(form._getFileName(makeHeader(filename))).toBe('foo.txt');
+    expect(form._getFileName(makeHeader(originalFilename))).toBe('foo.txt');
   });
 
   test(`${name}#_getFileName with unescaped quote`, () => {
-    const filename = 'my".txt';
+    const originalFilename = 'my".txt';
     const form = getForm(name);
 
-    expect(form._getFileName(makeHeader(filename))).toBe('my".txt');
+    expect(form._getFileName(makeHeader(originalFilename))).toBe('my".txt');
   });
 
   test(`${name}#_getFileName with escaped quote`, () => {
-    const filename = 'my%22.txt';
+    const originalFilename = 'my%22.txt';
     const form = getForm(name);
 
-    expect(form._getFileName(makeHeader(filename))).toBe('my".txt');
+    expect(form._getFileName(makeHeader(originalFilename))).toBe('my".txt');
   });
 
   test(`${name}#_getFileName with bad quote and additional sub-header`, () => {
-    const filename = 'my".txt';
+    const originalFilename = 'my".txt';
     const form = getForm(name);
 
-    const header = `${makeHeader(filename)}; foo="bar"`;
-    expect(form._getFileName(header)).toBe(filename);
+    const header = `${makeHeader(originalFilename)}; foo="bar"`;
+    expect(form._getFileName(header)).toBe(originalFilename);
   });
 
   test(`${name}#_getFileName with semicolon`, () => {
-    const filename = 'my;.txt';
+    const originalFilename = 'my;.txt';
     const form = getForm(name);
 
-    expect(form._getFileName(makeHeader(filename))).toBe('my;.txt');
+    expect(form._getFileName(makeHeader(originalFilename))).toBe('my;.txt');
   });
 
   test(`${name}#_getFileName with utf8 character`, () => {
-    const filename = 'my&#9731;.txt';
+    const originalFilename = 'my&#9731;.txt';
     const form = getForm(name);
 
-    expect(form._getFileName(makeHeader(filename))).toBe('my☃.txt');
+    expect(form._getFileName(makeHeader(originalFilename))).toBe('my☃.txt');
   });
 
   test(`${name}#_getNewName strips harmful characters from extension when keepExtensions`, () => {
@@ -75,12 +75,12 @@ function makeHeader(filename) {
     ext = path.extname(basename);
     expect(ext).toBe('');
 
-    basename = getBasename({ filename: 'super.cr2+dsad' });
+    basename = getBasename({ originalFilename: 'super.cr2+dsad' });
     expect(basename).toHaveLength(29);
     ext = path.extname(basename);
     expect(ext).toBe('.cr2');
 
-    basename = getBasename({ filename: 'super.gz' });
+    basename = getBasename({ originalFilename: 'super.gz' });
     expect(basename).toHaveLength(28);
     ext = path.extname(basename);
     expect(ext).toBe('.gz');
@@ -272,9 +272,9 @@ function makeHeader(filename) {
     });
   });
 
-  // test(`${name}: use custom options.filename instead of form._uploadPath`, () => {
+  // test(`${name}: use custom options.originalFilename instead of form._uploadPath`, () => {
   //   const form = getForm(name, {
-  //     filename: (_) => path.join(__dirname, 'sasa'),
+  //     originalFilename: (_) => path.join(__dirname, 'sasa'),
   //   });
   // });
 });

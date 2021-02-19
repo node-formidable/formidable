@@ -58,7 +58,7 @@ function createInitMultipart(boundary) {
         part.readable = true;
         part.headers = {};
         part.name = null;
-        part.filename = null;
+        part.originalFilename = null;
         part.mimetype = null;
 
         part.transferEncoding = this.options.encoding;
@@ -84,7 +84,7 @@ function createInitMultipart(boundary) {
             part.name = m[2] || m[3] || '';
           }
 
-          part.filename = this._getFileName(headerValue);
+          part.originalFilename = this._getFileName(headerValue);
         } else if (headerField === 'content-type') {
           part.mimetype = headerValue;
         } else if (headerField === 'content-transfer-encoding') {

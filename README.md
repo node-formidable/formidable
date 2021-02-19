@@ -569,7 +569,7 @@ const form = formidable();
 
 form.onPart = function (part) {
   // let formidable handle only non-file parts
-  if (part.filename === '' || !part.mimetype) {
+  if (part.originalFilename === '' || !part.mimetype) {
     // used internally, please do not override!
     form._handlePart(part);
   }
@@ -639,7 +639,7 @@ file system.
 form.on('fileBegin', (formName, file) => {
     // accessible here 
     // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
-    // file.name http filename or null if there was a parsing error
+    // file.originalFilename http filename or null if there was a parsing error
     // file.newFilename generated hexoid or what options.filename returned
     // file.path default pathnme as per options.uploadDir and options.filename
     // file.path = CUSTOM_PATH // to change the final path

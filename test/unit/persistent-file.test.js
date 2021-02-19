@@ -9,7 +9,7 @@ const file = new PersistentFile({
   name: 'cat.png',
   type: 'image/png',
   lastModifiedDate: now,
-  filename: 'cat.png',
+  originalFilename: 'cat.png',
   mimetype: 'image/png',
 });
 
@@ -18,6 +18,6 @@ test('PersistentFile#toJSON()', () => {
 
   expect(obj.path).toBe('/tmp/cat.png');
   expect(obj.mimetype).toBe('image/png');
-  expect(obj.filename).toBe('cat.png');
+  expect(obj.originalFilename).toBe('cat.png');
   expect(obj.mtime).toBe(now);
 });

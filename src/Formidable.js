@@ -270,17 +270,17 @@ class IncomingForm extends EventEmitter {
   }
 
   _handlePart(part) {
-    if (part.filename && typeof part.filename !== 'string') {
+    if (part.originalFilename && typeof part.originalFilename !== 'string') {
       this._error(
         new FormidableError(
-          `the part.filename should be string when it exists`,
+          `the part.originalFilename should be string when it exists`,
           errors.filenameNotString,
         ),
       );
       return;
     }
 
-    // This MUST check exactly for undefined. You can not change it to !part.filename.
+    // This MUST check exactly for undefined. You can not change it to !part.originalFilename.
 
     // todo: uncomment when switch tests to Jest
     // console.log(part);
@@ -289,7 +289,7 @@ class IncomingForm extends EventEmitter {
     // from somewhere else. Where recently I changed the return statements
     // and such thing because code style
     // ? NOTE(@tunnckocore): or even better, if there is no mimetype, then it's for sure a field
-    // ? NOTE(@tunnckocore): filename is an empty string when a field?
+    // ? NOTE(@tunnckocore): originalFilename is an empty string when a field?
     if (!part.mimetype) {
       let value = '';
       const decoder = new StringDecoder(
@@ -324,7 +324,7 @@ class IncomingForm extends EventEmitter {
     const file = this._newFile({
       newFilename,
       path: finalPath,
-      filename: part.filename,
+      originalFilename: part.originalFilename,
       mimetype: part.mimetype,
     });
     file.on('error', (err) => {
@@ -483,12 +483,12 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ path: filePath, filename, mimetype, newFilename }) {
+  _newFile({ path: filePath, originalFilename, mimetype, newFilename }) {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
           newFilename,
           path: filePath, // avoid shadow
-          filename,
+          originalFilename,
           mimetype,
           createFileWriteStream: this.options.fileWriteStreamHandler,
           hash: this.options.hash,
@@ -496,7 +496,7 @@ class IncomingForm extends EventEmitter {
       : new PersistentFile({
           newFilename,
           path: filePath,
-          filename,
+          originalFilename,
           mimetype,
           hash: this.options.hash,
         });
@@ -510,13 +510,13 @@ class IncomingForm extends EventEmitter {
     if (!m) return null;
 
     const match = m[2] || m[3] || '';
-    let filename = match.substr(match.lastIndexOf('\\') + 1);
-    filename = filename.replace(/%22/g, '"');
-    filename = filename.replace(/&#([\d]{4});/g, (_, code) =>
+    let originalFilename = match.substr(match.lastIndexOf('\\') + 1);
+    originalFilename = originalFilename.replace(/%22/g, '"');
+    originalFilename = originalFilename.replace(/&#([\d]{4});/g, (_, code) =>
       String.fromCharCode(code),
     );
 
-    return filename;
+    return originalFilename;
   }
 
   _getExtension(str) {
@@ -555,9 +555,9 @@ class IncomingForm extends EventEmitter {
       this._getNewName = (part) => {
         let ext = '';
         let name = this.options.defaultInvalidName;
-        if (part.filename) {
+        if (part.originalFilename) {
           // can be null
-          ({ ext, name } = path.parse(part.filename));
+          ({ ext, name } = path.parse(part.originalFilename));
           if (this.options.keepExtensions !== true) {
             ext = '';
           }
@@ -569,8 +569,8 @@ class IncomingForm extends EventEmitter {
         const name = toHexoId();
 
         if (part && this.options.keepExtensions) {
-          const filename = typeof part === 'string' ? part : part.filename;
-          return `${name}${this._getExtension(filename)}`;
+          const originalFilename = typeof part === 'string' ? part : part.originalFilename;
+          return `${name}${this._getExtension(originalFilename)}`;
         }
     
         return name;

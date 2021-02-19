@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
       uploadDir: `uploads`,
       keepExtensions: true,
       filename(/*name, ext, part, form*/) {
-        /* name basename of the http filename
+        /* name basename of the http originalFilename
           ext with the dot ".txt" only if keepExtension is true
          */
         // slugify to avoid invalid filenames

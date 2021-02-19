@@ -1,12 +1,12 @@
 const properFilename = 'funkyfilename.txt';
 
-function expect(filename) {
+function expect(originalFilename) {
   return [
-    { type: 'field', name: 'title', value: 'Weird filename' },
+    { type: 'field', name: 'title', value: 'Weird originalFilename' },
     {
       type: 'file',
       name: 'upload',
-      filename,
+      originalFilename,
       fixture: properFilename,
     },
   ];

@@ -37,7 +37,7 @@ class PersistentFile extends EventEmitter {
       mimetype: this.mimetype,
       mtime: this.lastModifiedDate,
       length: this.length,
-      filename: this.filename,
+      originalFilename: this.originalFilename,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;
@@ -46,7 +46,7 @@ class PersistentFile extends EventEmitter {
   }
 
   toString() {
-    return `PersistentFile: ${this.filename}, Path: ${this.path}`;
+    return `PersistentFile: ${this.originalFilename}, Path: ${this.path}`;
   }
 
   write(buffer, cb) {
