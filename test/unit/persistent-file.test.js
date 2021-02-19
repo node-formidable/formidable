@@ -16,8 +16,8 @@ const file = new PersistentFile({
 test('PersistentFile#toJSON()', () => {
   const obj = file.toJSON();
 
-  expect('/tmp/cat.png').toBe(obj.path);
-  expect('image/png').toBe(obj.mimetype);
-  expect('cat.png').toBe(obj.filename);
-  expect(now).toBe(obj.mtime);
+  expect(obj.path).toBe('/tmp/cat.png');
+  expect(obj.mimetype).toBe('image/png');
+  expect(obj.filename).toBe('cat.png');
+  expect(obj.mtime).toBe(now);
 });
