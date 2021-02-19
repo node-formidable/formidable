@@ -567,7 +567,7 @@ class IncomingForm extends EventEmitter {
         if (part.filename) {
           // can be null
           ({ ext, name } = path.parse(part.filename));
-          if (!this.options.keepExtensions) {
+          if (this.options.keepExtensions !== true) {
             ext = '';
           }
         }
