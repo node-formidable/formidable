@@ -10,14 +10,14 @@ const file = new PersistentFile({
   type: 'image/png',
   lastModifiedDate: now,
   filename: 'cat.png',
-  mime: 'image/png',
+  mimetype: 'image/png',
 });
 
 test('PersistentFile#toJSON()', () => {
   const obj = file.toJSON();
 
   expect('/tmp/cat.png').toBe(obj.path);
-  expect('image/png').toBe(obj.mime);
+  expect('image/png').toBe(obj.mimetype);
   expect('cat.png').toBe(obj.filename);
   expect(now).toBe(obj.mtime);
 });

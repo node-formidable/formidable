@@ -19,7 +19,7 @@ describe('VolatileFile', () => {
     file = new VolatileFile({
       name: 'cat.png',
       filename: 'cat.png',
-      mime: 'image/png',
+      mimetype: 'image/png',
       createFileWriteStream: writeStreamMock,
     });
 
@@ -45,7 +45,7 @@ describe('VolatileFile', () => {
   test('toJSON()', () => {
     const obj = file.toJSON();
 
-    expect(obj.mime).toBe('image/png');
+    expect(obj.mimetype).toBe('image/png');
     expect(obj.filename).toBe('cat.png');
   });
 

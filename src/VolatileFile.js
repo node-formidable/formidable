@@ -38,7 +38,7 @@ class VolatileFile extends EventEmitter {
       newName: this.newName,
       length: this.length,
       filename: this.filename,
-      mime: this.mime,
+      mimetype: this.mimetype,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;

@@ -25,11 +25,11 @@ module.exports = function plugin(formidable, options) {
 function init(_self, _opts) {
   this.type = 'octet-stream';
   const filename = this.headers['x-file-name'];
-  const mime = this.headers['content-type'];
+  const mimetype = this.headers['content-type'];
 
   const thisPart = {
     filename,
-    mime,
+    mimetype,
   };
   const newName = this._getNewName(thisPart);
   const finalPath = this._joinDirectoryName(newName);
@@ -37,7 +37,7 @@ function init(_self, _opts) {
     newName,
     path: finalPath,
     filename,
-    mime,
+    mimetype,
   });
 
   this.emit('fileBegin', filename, file);

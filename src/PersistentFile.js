@@ -34,7 +34,7 @@ class PersistentFile extends EventEmitter {
       size: this.size,
       path: this.path,
       newName: this.newName,
-      mime: this.mime,
+      mimetype: this.mimetype,
       mtime: this.lastModifiedDate,
       length: this.length,
       filename: this.filename,

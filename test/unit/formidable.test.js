@@ -180,7 +180,7 @@ function makeHeader(filename) {
           });
 
           const part = new Stream();
-          part.mime = 'text/plain';
+          part.mimetype = 'text/plain';
           // eslint-disable-next-line max-nested-callbacks
           form.on('error', (error) => {
             expect(error.message).toBe(
@@ -202,7 +202,7 @@ function makeHeader(filename) {
           const formEmitSpy = jest.spyOn(form, 'emit');
 
           const part = new Stream();
-          part.mime = 'text/plain';
+          part.mimetype = 'text/plain';
           form.onPart(part);
           part.emit('data', Buffer.alloc(1));
           expect(formEmitSpy).not.toBeCalledWith('error');
@@ -216,7 +216,7 @@ function makeHeader(filename) {
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
-        part.mime = 'text/plain';
+        part.mimetype = 'text/plain';
         form.onPart(part);
         part.emit('end');
         expect(formEmitSpy).not.toBeCalledWith('error');
@@ -228,7 +228,7 @@ function makeHeader(filename) {
         const form = getForm(name, { multiples: true, minFileSize: 5 });
 
         const part = new Stream();
-        part.mime = 'text/plain';
+        part.mimetype = 'text/plain';
         form.on('error', (error) => {
           expect(error.message).toBe(
             'options.minFileSize (5 bytes) inferior, received 4 bytes of file data',
@@ -246,7 +246,7 @@ function makeHeader(filename) {
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
-        part.mime = 'text/plain';
+        part.mimetype = 'text/plain';
         form.onPart(part);
         part.emit('data', Buffer.alloc(11));
         expect(formEmitSpy).not.toBeCalledWith('error');

@@ -569,7 +569,7 @@ const form = formidable();
 
 form.onPart = function (part) {
   // let formidable handle only non-file parts
-  if (part.filename === '' || !part.mime) {
+  if (part.filename === '' || !part.mimetype) {
     // used internally, please do not override!
     form._handlePart(part);
   }

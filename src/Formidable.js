@@ -288,9 +288,9 @@ class IncomingForm extends EventEmitter {
     // ? NOTE(@tunnckocore): no it can be any falsey value, it most probably depends on what's returned
     // from somewhere else. Where recently I changed the return statements
     // and such thing because code style
-    // ? NOTE(@tunnckocore): or even better, if there is no mime, then it's for sure a field
+    // ? NOTE(@tunnckocore): or even better, if there is no mimetype, then it's for sure a field
     // ? NOTE(@tunnckocore): filename is an empty string when a field?
-    if (!part.mime) {
+    if (!part.mimetype) {
       let value = '';
       const decoder = new StringDecoder(
         part.transferEncoding || this.options.encoding,
@@ -325,7 +325,7 @@ class IncomingForm extends EventEmitter {
       newName,
       path: finalPath,
       filename: part.filename,
-      mime: part.mime,
+      mimetype: part.mimetype,
     });
     file.on('error', (err) => {
       this._error(err);
@@ -483,13 +483,13 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ path: filePath, filename, mime, newName }) {
+  _newFile({ path: filePath, filename, mimetype, newName }) {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
           newName,
           path: filePath, // avoid shadow
           filename,
-          mime,
+          mimetype,
           createFileWriteStream: this.options.fileWriteStreamHandler,
           hash: this.options.hash,
         })
@@ -497,7 +497,7 @@ class IncomingForm extends EventEmitter {
           newName,
           path: filePath,
           filename,
-          mime,
+          mimetype,
           hash: this.options.hash,
         });
   }
