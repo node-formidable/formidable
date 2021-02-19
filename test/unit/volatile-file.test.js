@@ -17,7 +17,7 @@ describe('VolatileFile', () => {
     writeStreamMock = jest.fn(() => writeStreamInstanceMock);
 
     file = new VolatileFile({
-      name: 'cat.png',
+      xname: 'cat.png',
       filename: 'cat.png',
       mimetype: 'image/png',
       createFileWriteStream: writeStreamMock,
