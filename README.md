@@ -355,7 +355,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   attribute. Also, the `fields` argument will contain arrays of values for
   fields that have names ending with '[]'.
 - `options.filename` **{function}** - default `undefined` Use it to control
-  newName. Must return a string. Will be joined with options.uploadDir.
+  newFilename. Must return a string. Will be joined with options.uploadDir.
 
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
 
@@ -640,7 +640,7 @@ form.on('fileBegin', (formName, file) => {
     // accessible here 
     // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
     // file.name http filename or null if there was a parsing error
-    // file.newName generated hexoid or what options.filename returned
+    // file.newFilename generated hexoid or what options.filename returned
     // file.path default pathnme as per options.uploadDir and options.filename
     // file.path = CUSTOM_PATH // to change the final path
 });

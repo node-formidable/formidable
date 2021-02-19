@@ -319,10 +319,10 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
-    const newName = this._getNewName(part);
-    const finalPath = this._joinDirectoryName(newName);
+    const newFilename = this._getNewName(part);
+    const finalPath = this._joinDirectoryName(newFilename);
     const file = this._newFile({
-      newName,
+      newFilename,
       path: finalPath,
       filename: part.filename,
       mimetype: part.mimetype,
@@ -483,10 +483,10 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ path: filePath, filename, mimetype, newName }) {
+  _newFile({ path: filePath, filename, mimetype, newFilename }) {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
-          newName,
+          newFilename,
           path: filePath, // avoid shadow
           filename,
           mimetype,
@@ -494,7 +494,7 @@ class IncomingForm extends EventEmitter {
           hash: this.options.hash,
         })
       : new PersistentFile({
-          newName,
+          newFilename,
           path: filePath,
           filename,
           mimetype,

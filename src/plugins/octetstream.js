@@ -31,10 +31,10 @@ function init(_self, _opts) {
     filename,
     mimetype,
   };
-  const newName = this._getNewName(thisPart);
-  const finalPath = this._joinDirectoryName(newName);
+  const newFilename = this._getNewName(thisPart);
+  const finalPath = this._joinDirectoryName(newFilename);
   const file = this._newFile({
-    newName,
+    newFilename,
     path: finalPath,
     filename,
     mimetype,
