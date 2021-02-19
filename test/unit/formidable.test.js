@@ -60,10 +60,10 @@ function makeHeader(filename) {
     expect(form._getFileName(makeHeader(filename))).toBe('my☃.txt');
   });
 
-  test(`${name}#_uploadPath strips harmful characters from extension when keepExtensions`, () => {
+  test(`${name}#_getNewName strips harmful characters from extension when keepExtensions`, () => {
     const form = getForm(name, { keepExtensions: true });
 
-    const getBasename = (part) => path.basename(form._uploadPath(part));
+    const getBasename = (part) => path.basename(form._getNewName(part));
 
     let basename = getBasename('fine.jpg?foo=bar');
     expect(basename).toHaveLength(29);

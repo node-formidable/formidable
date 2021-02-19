@@ -536,16 +536,7 @@ class IncomingForm extends EventEmitter {
     return basename.slice(firstDot, lastDot) + extname;
   }
 
-  _uploadPath(part) {
-    const name = toHexoId();
 
-    if (part && this.options.keepExtensions) {
-      const filename = typeof part === 'string' ? part : part.filename;
-      return `${name}${this._getExtension(filename)}`;
-    }
-
-    return name;
-  }
 
   _joinDirectoryName(name) {
     const newPath = path.join(this.uploadDir, name);
@@ -574,7 +565,16 @@ class IncomingForm extends EventEmitter {
         return this.options.filename.call(this, name, ext, part, this);
       };
     } else {
-      this._getNewName = (part) => this._uploadPath(part);
+      this._getNewName = (part) => {
+        const name = toHexoId();
+
+        if (part && this.options.keepExtensions) {
+          const filename = typeof part === 'string' ? part : part.filename;
+          return `${name}${this._getExtension(filename)}`;
+        }
+    
+        return name;
+      }
     }
   }
 
