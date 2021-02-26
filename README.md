@@ -335,7 +335,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
   limit the amount of memory all fields together (except files) can allocate in
   bytes.
-- `options.hash` **{string | false}** - default `false`; include checksums calculated
+- `options.hashAlgorithm` **{string | false}** - default `false`; include checksums calculated
   for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
   for available algorithms
@@ -532,7 +532,7 @@ you can remove it from the `options.enabledPlugins`, like so
 const { Formidable } = require('formidable');
 
 const form = new Formidable({
-  hash: 'sha1',
+  hashAlgorithm: 'sha1',
   enabledPlugins: ['octetstream', 'querystring', 'json'],
 });
 ```
@@ -599,8 +599,9 @@ export interface File {
   // Mostly here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
   file.lastModifiedDate: Date | null;
 
-  // If `options.hash` calculation was set, you can read the hex digest out of this var.
-  file.hash: string | 'sha1' | 'md5' | 'sha256' | null;
+  file.hashAlgorithm: false | |'sha1' | 'md5' | 'sha256'
+  // If `options.hashAlgorithm` calculation was set, you can read the hex digest out of this var.
+  file.hash: string | object | null;
 }
 ```
 

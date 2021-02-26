@@ -89,7 +89,7 @@ test('fixtures', (done) => {
     server.once('request', (req, res) => {
       const form = formidable({
         uploadDir: UPLOAD_DIR,
-        hash: 'sha1',
+        hashAlgorithm: 'sha1',
         multiples: true,
       });
       form.parse(req);

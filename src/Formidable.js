@@ -22,7 +22,7 @@ const DEFAULT_OPTIONS = {
   allowEmptyFiles: true,
   keepExtensions: false,
   encoding: 'utf-8',
-  hash: false,
+  hashAlgorithm: false,
   uploadDir: os.tmpdir(),
   multiples: false,
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
@@ -491,14 +491,14 @@ class IncomingForm extends EventEmitter {
           originalFilename,
           mimetype,
           createFileWriteStream: this.options.fileWriteStreamHandler,
-          hash: this.options.hash,
+          hashAlgorithm: this.options.hashAlgorithm,
         })
       : new PersistentFile({
           newFilename,
           filepath,
           originalFilename,
           mimetype,
-          hash: this.options.hash,
+          hashAlgorithm: this.options.hashAlgorithm,
         });
   }
 

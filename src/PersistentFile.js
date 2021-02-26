@@ -15,8 +15,8 @@ class PersistentFile extends EventEmitter {
     this.size = 0;
     this._writeStream = null;
 
-    if (typeof this.hash === 'string') {
-      this.hash = crypto.createHash(properties.hash);
+    if (typeof this.hashAlgorithm === 'string') {
+      this.hash = crypto.createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
     }
