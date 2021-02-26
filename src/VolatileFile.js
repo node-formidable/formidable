@@ -6,11 +6,11 @@ const crypto = require('crypto');
 const { EventEmitter } = require('events');
 
 class VolatileFile extends EventEmitter {
-  constructor(properties) {
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }) {
     super();
 
     this.lastModifiedDate = null;
-    Object.assign(this, properties);
+    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream });
 
     this.size = 0;
     this._writeStream = null;

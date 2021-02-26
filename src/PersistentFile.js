@@ -7,11 +7,11 @@ const crypto = require('crypto');
 const { EventEmitter } = require('events');
 
 class PersistentFile extends EventEmitter {
-  constructor(properties) {
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }) {
     super();
 
     this.lastModifiedDate = null;
-    Object.assign(this, properties);
+    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm });
 
     this.size = 0;
     this._writeStream = null;

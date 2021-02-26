@@ -19,5 +19,4 @@ test('PersistentFile#toJSON()', () => {
   expect(obj.filepath).toBe('/tmp/cat.png');
   expect(obj.mimetype).toBe('image/png');
   expect(obj.originalFilename).toBe('cat.png');
-  expect(obj.mtime).toBe(now);
 });
