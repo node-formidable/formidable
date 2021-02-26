@@ -32,10 +32,10 @@ function init(_self, _opts) {
     mimetype,
   };
   const newFilename = this._getNewName(thisPart);
-  const finalPath = this._joinDirectoryName(newFilename);
+  const filepath = this._joinDirectoryName(newFilename);
   const file = this._newFile({
     newFilename,
-    filepath: finalPath,
+    filepath,
     originalFilename,
     mimetype,
   });

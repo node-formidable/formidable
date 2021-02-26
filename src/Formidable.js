@@ -320,10 +320,10 @@ class IncomingForm extends EventEmitter {
     this._flushing += 1;
 
     const newFilename = this._getNewName(part);
-    const finalPath = this._joinDirectoryName(newFilename);
+    const filepath = this._joinDirectoryName(newFilename);
     const file = this._newFile({
       newFilename,
-      filepath: finalPath,
+      filepath,
       originalFilename: part.originalFilename,
       mimetype: part.mimetype,
     });
