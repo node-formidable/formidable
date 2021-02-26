@@ -9,10 +9,10 @@ class VolatileFile extends EventEmitter {
   constructor(properties) {
     super();
 
+    this.lastModifiedDate = null;
     Object.assign(this, properties);
 
     this.size = 0;
-    this.lastModifiedDate = null;
     this._writeStream = null;
 
     if (typeof this.hashAlgorithm === 'string') {
