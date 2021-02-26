@@ -75,7 +75,7 @@ test('fixtures', (done) => {
             assert.strictEqual(
               file.hash,
               expectedPart.sha1,
-              `SHA1 error ${file.name} on ${file.path}`,
+              `SHA1 error ${file.name} on ${file.filepath}`,
             );
           }
         }

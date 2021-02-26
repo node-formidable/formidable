@@ -23,7 +23,7 @@ class PersistentFile extends EventEmitter {
   }
 
   open() {
-    this._writeStream = new fs.WriteStream(this.path);
+    this._writeStream = new fs.WriteStream(this.filepath);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
@@ -32,7 +32,7 @@ class PersistentFile extends EventEmitter {
   toJSON() {
     const json = {
       size: this.size,
-      path: this.path,
+      filepath: this.filepath,
       newFilename: this.newFilename,
       mimetype: this.mimetype,
       mtime: this.lastModifiedDate,
@@ -46,7 +46,7 @@ class PersistentFile extends EventEmitter {
   }
 
   toString() {
-    return `PersistentFile: ${this.originalFilename}, Path: ${this.path}`;
+    return `PersistentFile: ${this.originalFilename}, filepath: ${this.filepath}`;
   }
 
   write(buffer, cb) {

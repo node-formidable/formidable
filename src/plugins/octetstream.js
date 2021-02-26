@@ -35,7 +35,7 @@ function init(_self, _opts) {
   const finalPath = this._joinDirectoryName(newFilename);
   const file = this._newFile({
     newFilename,
-    path: finalPath,
+    filepath: finalPath,
     originalFilename,
     mimetype,
   });

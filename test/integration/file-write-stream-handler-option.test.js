@@ -47,7 +47,7 @@ test('file write stream handler', (done) => {
       const { file } = files;
 
       assert.strictEqual(file.size, 301);
-      assert.strictEqual(typeof file.path, 'string');
+      assert.strictEqual(typeof file.filepath, 'string');
 
       const dirFiles = fs.readdirSync(DEFAULT_UPLOAD_DIR);
       assert.ok(dirFiles.length === 0);

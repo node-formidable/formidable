@@ -8,7 +8,7 @@ module.exports['generic.http'] = [
   },
 ];
 
-module.exports['originalFilename-name.http'] = [
+module.exports['filename-name.http'] = [
   {
     type: 'file',
     name: 'upload',

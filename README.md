@@ -587,7 +587,7 @@ export interface File {
 
   // The path this file is being written to. You can modify this in the `'fileBegin'` event in
   // case you are unhappy with the way formidable generates a temporary path for your files.
-  file.path: string;
+  file.filepath: string;
 
   // The name this file had according to the uploading client.
   file.name: string | null;
@@ -641,8 +641,8 @@ form.on('fileBegin', (formName, file) => {
     // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
     // file.originalFilename http filename or null if there was a parsing error
     // file.newFilename generated hexoid or what options.filename returned
-    // file.path default pathnme as per options.uploadDir and options.filename
-    // file.path = CUSTOM_PATH // to change the final path
+    // file.filepath default pathnme as per options.uploadDir and options.filename
+    // file.filepath = CUSTOM_PATH // to change the final path
 });
 ```
 
@@ -654,7 +654,7 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 ```js
 form.on('file', (formname, file) => {
     // same as fileBegin, except
-    // it is too late to change file.path
+    // it is too late to change file.filepath
     // file.hash is available if options.hash was used
 });
 ```

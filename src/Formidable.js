@@ -323,7 +323,7 @@ class IncomingForm extends EventEmitter {
     const finalPath = this._joinDirectoryName(newFilename);
     const file = this._newFile({
       newFilename,
-      path: finalPath,
+      filepath: finalPath,
       originalFilename: part.originalFilename,
       mimetype: part.mimetype,
     });
@@ -461,7 +461,7 @@ class IncomingForm extends EventEmitter {
     if (Array.isArray(this.openedFiles)) {
       this.openedFiles.forEach((file) => {
         file.destroy();
-        setTimeout(fs.unlink, 0, file.path, () => {});
+        setTimeout(fs.unlink, 0, file.filepath, () => {});
       });
     }
   }
@@ -483,11 +483,11 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ path: filePath, originalFilename, mimetype, newFilename }) {
+  _newFile({ filepath, originalFilename, mimetype, newFilename }) {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
           newFilename,
-          path: filePath, // avoid shadow
+          filepath,
           originalFilename,
           mimetype,
           createFileWriteStream: this.options.fileWriteStreamHandler,
@@ -495,7 +495,7 @@ class IncomingForm extends EventEmitter {
         })
       : new PersistentFile({
           newFilename,
-          path: filePath,
+          filepath,
           originalFilename,
           mimetype,
           hash: this.options.hash,
