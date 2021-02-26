@@ -47,7 +47,7 @@ class PersistentFile extends EventEmitter {
   }
 
   toString() {
-    return `PersistentFile: ${this.originalFilename}, filepath: ${this.filepath}`;
+    return `PersistentFile: ${this._file.newFilename}, Original: ${this._file.originalFilename}, Path: ${this._file.filepath}`;
   }
 
   write(buffer, cb) {
