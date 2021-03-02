@@ -2,6 +2,12 @@
 
 ### Unreleased (`canary` & `dev` dist-tags)
 
+ * rename option hash into hashAlgorithm
+ * rename file.path into file.filepath
+ * rename file.type into file.mimetype
+ * split file.name into file.newFilename and file.originalFilename
+ * prevent directory traversal attacks by default
+ * options.fileWriteStreamHandler receives the entire file instance (including file.newFilename)
  * Add fileWriteStreamHandler option
  * Add allowEmptyFiles and minFileSize options
  * Test only on Node.js >= v10. Support only Node LTS and latest ([#515](https://github.com/node-formidable/node-formidable/pull/515))
