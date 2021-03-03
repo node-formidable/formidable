@@ -13,10 +13,29 @@ const file = new PersistentFile({
   mimetype: 'image/png',
 });
 
-test('PersistentFile#toJSON()', () => {
-  const obj = file.toJSON();
 
-  expect(obj.filepath).toBe('/tmp/cat.png');
-  expect(obj.mimetype).toBe('image/png');
-  expect(obj.originalFilename).toBe('cat.png');
+jest.mock('fs', () => {
+  const fs = jest.requireActual('fs');
+  return {
+    ...fs,
+    unlink: jest.fn(),
+  };
+});
+
+describe('PersistentFile', () => {
+  test('toJSON()', () => {
+    const obj = file.toJSON();
+    const len = Object.keys(obj).length;
+
+    expect(obj.filepath).toBe('/tmp/cat.png');
+    expect(obj.mimetype).toBe('image/png');
+    expect(obj.originalFilename).toBe('cat.png');
+  });
+
+  test('destroy()', () => {
+    file.open();
+    file.destroy();
+    // eslint-disable-next-line global-require
+    expect(require('fs').unlink).toBeCalled();
+  });
 });

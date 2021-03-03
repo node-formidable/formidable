@@ -4,7 +4,6 @@
 'use strict';
 
 const os = require('os');
-const fs = require('fs');
 const path = require('path');
 const hexoid = require('hexoid');
 const once = require('once');
@@ -461,7 +460,6 @@ class IncomingForm extends EventEmitter {
     if (Array.isArray(this.openedFiles)) {
       this.openedFiles.forEach((file) => {
         file.destroy();
-        setTimeout(fs.unlink, 0, file.filepath, () => {});
       });
     }
   }
