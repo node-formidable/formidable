@@ -13,16 +13,33 @@ const file = new PersistentFile({
   mime: 'image/png',
 });
 
-test('PersistentFile#toJSON()', () => {
-  const obj = file.toJSON();
-  const len = Object.keys(obj).length;
+jest.mock('fs', () => {
+  const fs = jest.requireActual('fs');
+  return {
+    ...fs,
+    unlink: jest.fn(),
+  };
+});
 
-  expect(1024).toBe(obj.size);
-  expect('/tmp/cat.png').toBe(obj.path);
-  expect('cat.png').toBe(obj.name);
-  expect('image/png').toBe(obj.type);
-  expect('image/png').toBe(obj.mime);
-  expect('cat.png').toBe(obj.filename);
-  expect(now).toBe(obj.mtime);
-  expect(len).toBe(8);
+describe('PersistentFile', () => {
+  test('toJSON()', () => {
+    const obj = file.toJSON();
+    const len = Object.keys(obj).length;
+
+    expect(1024).toBe(obj.size);
+    expect('/tmp/cat.png').toBe(obj.path);
+    expect('cat.png').toBe(obj.name);
+    expect('image/png').toBe(obj.type);
+    expect('image/png').toBe(obj.mime);
+    expect('cat.png').toBe(obj.filename);
+    expect(now).toBe(obj.mtime);
+    expect(len).toBe(8);
+  });
+
+  test('destroy()', () => {
+    file.open();
+    file.destroy();
+    // eslint-disable-next-line global-require
+    expect(require('fs').unlink).toBeCalled();
+  });
 });
