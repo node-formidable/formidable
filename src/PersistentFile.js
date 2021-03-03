@@ -89,6 +89,7 @@ class PersistentFile extends EventEmitter {
 
   destroy() {
     this._writeStream.destroy();
+    fs.unlink(this.path, () => {});
   }
 }
 
