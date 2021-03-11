@@ -27,6 +27,9 @@ const DEFAULT_OPTIONS = {
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
+  filter: function () {
+    return true;
+  },
 };
 
 const PersistentFile = require('./PersistentFile');
@@ -313,6 +316,10 @@ class IncomingForm extends EventEmitter {
       part.on('end', () => {
         this.emit('field', part.name, value);
       });
+      return;
+    }
+
+    if (!this.options.filter(part)) {
       return;
     }
 
