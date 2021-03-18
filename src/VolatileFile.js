@@ -6,30 +6,24 @@ const crypto = require('crypto');
 const { EventEmitter } = require('events');
 
 class VolatileFile extends EventEmitter {
-  constructor(properties) {
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }) {
     super();
 
-    this.size = 0;
-    this.name = null;
-    this.type = null;
-    this.hash = null;
+    this.lastModifiedDate = null;
+    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream });
 
+    this.size = 0;
     this._writeStream = null;
 
-    // eslint-disable-next-line guard-for-in, no-restricted-syntax
-    for (const key in properties) {
-      this[key] = properties[key];
-    }
-
-    if (typeof this.hash === 'string') {
-      this.hash = crypto.createHash(properties.hash);
+    if (typeof this.hashAlgorithm === 'string') {
+      this.hash = crypto.createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
     }
   }
 
   open() {
-    this._writeStream = this.createFileWriteStream(this.name);
+    this._writeStream = this.createFileWriteStream(this);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
@@ -42,11 +36,10 @@ class VolatileFile extends EventEmitter {
   toJSON() {
     const json = {
       size: this.size,
-      name: this.name,
-      type: this.type,
+      newFilename: this.newFilename,
       length: this.length,
-      filename: this.filename,
-      mime: this.mime,
+      originalFilename: this.originalFilename,
+      mimetype: this.mimetype,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;
@@ -55,7 +48,7 @@ class VolatileFile extends EventEmitter {
   }
 
   toString() {
-    return `VolatileFile: ${this.name}`;
+    return `VolatileFile: ${this.originalFilename}`;
   }
 
   write(buffer, cb) {

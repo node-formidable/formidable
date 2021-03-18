@@ -335,7 +335,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
   limit the amount of memory all fields together (except files) can allocate in
   bytes.
-- `options.hash` **{string | false}** - default `false`; include checksums calculated
+- `options.hashAlgorithm` **{string | false}** - default `false`; include checksums calculated
   for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
   for available algorithms
@@ -354,6 +354,10 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   files for inputs which submit multiple files using the HTML5 `multiple`
   attribute. Also, the `fields` argument will contain arrays of values for
   fields that have names ending with '[]'.
+- `options.filename` **{function}** - default `undefined` Use it to control
+  newFilename. Must return a string. Will be joined with options.uploadDir.
+
+#### `options.filename`  **{function}** function (name, ext, part, form) -> string
 
 _**Note:** If this size of combined fields, or size of some file is exceeded, an
 `'error'` event is fired._
@@ -528,7 +532,7 @@ you can remove it from the `options.enabledPlugins`, like so
 const { Formidable } = require('formidable');
 
 const form = new Formidable({
-  hash: 'sha1',
+  hashAlgorithm: 'sha1',
   enabledPlugins: ['octetstream', 'querystring', 'json'],
 });
 ```
@@ -565,9 +569,9 @@ const form = formidable();
 
 form.onPart = function (part) {
   // let formidable handle only non-file parts
-  if (part.filename === '' || !part.mime) {
+  if (part.originalFilename === '' || !part.mimetype) {
     // used internally, please do not override!
-    form.handlePart(part);
+    form._handlePart(part);
   }
 };
 ```
@@ -583,7 +587,7 @@ export interface File {
 
   // The path this file is being written to. You can modify this in the `'fileBegin'` event in
   // case you are unhappy with the way formidable generates a temporary path for your files.
-  file.path: string;
+  file.filepath: string;
 
   // The name this file had according to the uploading client.
   file.name: string | null;
@@ -595,8 +599,9 @@ export interface File {
   // Mostly here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
   file.lastModifiedDate: Date | null;
 
-  // If `options.hash` calculation was set, you can read the hex digest out of this var.
-  file.hash: string | 'sha1' | 'md5' | 'sha256' | null;
+  file.hashAlgorithm: false | |'sha1' | 'md5' | 'sha256'
+  // If `options.hashAlgorithm` calculation was set, you can read the hex digest out of this var.
+  file.hash: string | object | null;
 }
 ```
 
@@ -634,10 +639,11 @@ file system.
 ```js
 form.on('fileBegin', (formName, file) => {
     // accessible here 
-    // formName the name in the form (<input name="thisname" type="file">)
-    // file.name http filename or null if there was a parsing error
-    // file.path default pathnme as per options.uploadDir and options.filename
-    // file.path = CUSTOM_PATH // to change the final path
+    // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
+    // file.originalFilename http filename or null if there was a parsing error
+    // file.newFilename generated hexoid or what options.filename returned
+    // file.filepath default pathnme as per options.uploadDir and options.filename
+    // file.filepath = CUSTOM_PATH // to change the final path
 });
 ```
 
@@ -649,7 +655,7 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 ```js
 form.on('file', (formname, file) => {
     // same as fileBegin, except
-    // it is too late to change file.path
+    // it is too late to change file.filepath
     // file.hash is available if options.hash was used
 });
 ```

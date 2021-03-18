@@ -25,7 +25,7 @@ test('octet stream', (done) => {
 
       assert.strictEqual(file.size, 301);
 
-      const uploaded = fs.readFileSync(file.path);
+      const uploaded = fs.readFileSync(file.filepath);
       const original = fs.readFileSync(testFilePath);
 
       assert.deepStrictEqual(uploaded, original);

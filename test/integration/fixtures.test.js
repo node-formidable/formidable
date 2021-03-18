@@ -69,13 +69,13 @@ test('fixtures', (done) => {
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.name, expectedPart.filename);
+          assert.strictEqual(file.originalFilename, expectedPart.originalFilename);
 
           if (expectedPart.sha1) {
             assert.strictEqual(
               file.hash,
               expectedPart.sha1,
-              `SHA1 error ${file.name} on ${file.path}`,
+              `SHA1 error ${file.name} on ${file.filepath}`,
             );
           }
         }
@@ -89,7 +89,7 @@ test('fixtures', (done) => {
     server.once('request', (req, res) => {
       const form = formidable({
         uploadDir: UPLOAD_DIR,
-        hash: 'sha1',
+        hashAlgorithm: 'sha1',
         multiples: true,
       });
       form.parse(req);

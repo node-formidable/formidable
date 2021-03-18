@@ -7,8 +7,6 @@ test('on constructor', () => {
   expect(parser.constructor.name).toBe('QuerystringParser');
 });
 
-
-
 // ! skip
 // test(function end =>
 //   const FIELDS = { a: ['b', { c: 'd' }], e: 'f' };

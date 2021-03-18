@@ -7,32 +7,24 @@ const crypto = require('crypto');
 const { EventEmitter } = require('events');
 
 class PersistentFile extends EventEmitter {
-  constructor(properties) {
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }) {
     super();
 
-    this.size = 0;
-    this.path = null;
-    this.name = null;
-    this.type = null;
-    this.hash = null;
     this.lastModifiedDate = null;
+    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm });
 
+    this.size = 0;
     this._writeStream = null;
 
-    // eslint-disable-next-line guard-for-in, no-restricted-syntax
-    for (const key in properties) {
-      this[key] = properties[key];
-    }
-
-    if (typeof this.hash === 'string') {
-      this.hash = crypto.createHash(properties.hash);
+    if (typeof this.hashAlgorithm === 'string') {
+      this.hash = crypto.createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
     }
   }
 
   open() {
-    this._writeStream = new fs.WriteStream(this.path);
+    this._writeStream = new fs.WriteStream(this.filepath);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
@@ -41,13 +33,12 @@ class PersistentFile extends EventEmitter {
   toJSON() {
     const json = {
       size: this.size,
-      path: this.path,
-      name: this.name,
-      type: this.type,
+      filepath: this.filepath,
+      newFilename: this.newFilename,
+      mimetype: this.mimetype,
       mtime: this.lastModifiedDate,
       length: this.length,
-      filename: this.filename,
-      mime: this.mime,
+      originalFilename: this.originalFilename,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;
@@ -56,7 +47,7 @@ class PersistentFile extends EventEmitter {
   }
 
   toString() {
-    return `PersistentFile: ${this.name}, Path: ${this.path}`;
+    return `PersistentFile: ${this._file.newFilename}, Original: ${this._file.originalFilename}, Path: ${this._file.filepath}`;
   }
 
   write(buffer, cb) {

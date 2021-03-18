@@ -62,7 +62,7 @@ class MultipartParser extends Transform {
     this.flags = 0;
   }
 
-  _final(done) {
+  _flush(done) {
     if (
       (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
       (this.state === STATE.PART_DATA && this.index === this.boundary.length)

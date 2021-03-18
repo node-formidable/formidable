@@ -17,11 +17,9 @@ describe('VolatileFile', () => {
     writeStreamMock = jest.fn(() => writeStreamInstanceMock);
 
     file = new VolatileFile({
-      size: 1024,
-      name: 'cat.png',
-      type: 'image/png',
-      filename: 'cat.png',
-      mime: 'image/png',
+      xname: 'cat.png',
+      originalFilename: 'cat.png',
+      mimetype: 'image/png',
       createFileWriteStream: writeStreamMock,
     });
 
@@ -37,7 +35,7 @@ describe('VolatileFile', () => {
 
     file.emit('error', error);
 
-    expect(writeStreamMock).toBeCalledWith('cat.png');
+    expect(writeStreamMock).toBeCalled();
     expect(writeStreamInstanceMock.on).toBeCalledWith(
       'error',
       expect.any(Function),
@@ -46,14 +44,9 @@ describe('VolatileFile', () => {
 
   test('toJSON()', () => {
     const obj = file.toJSON();
-    const len = Object.keys(obj).length;
 
-    expect(obj.size).toBe(1024);
-    expect(obj.name).toBe('cat.png');
-    expect(obj.type).toBe('image/png');
-    expect(obj.mime).toBe('image/png');
-    expect(obj.filename).toBe('cat.png');
-    expect(6).toBe(len);
+    expect(obj.mimetype).toBe('image/png');
+    expect(obj.originalFilename).toBe('cat.png');
   });
 
   test('toString()', () => {
@@ -65,9 +58,6 @@ describe('VolatileFile', () => {
     writeStreamInstanceMock.write.mockImplementationOnce((writeBuffer, cb) => {
       expect(buffer).toBe(writeBuffer);
       cb();
-    });
-    file.on('progress', (size) => {
-      expect(size).toBe(1029);
     });
 
     file.write(buffer, () => {

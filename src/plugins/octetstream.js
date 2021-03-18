@@ -24,16 +24,23 @@ module.exports = function plugin(formidable, options) {
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
 function init(_self, _opts) {
   this.type = 'octet-stream';
-  const filename = this.headers['x-file-name'];
-  const mime = this.headers['content-type'];
+  const originalFilename = this.headers['x-file-name'];
+  const mimetype = this.headers['content-type'];
 
+  const thisPart = {
+    originalFilename,
+    mimetype,
+  };
+  const newFilename = this._getNewName(thisPart);
+  const filepath = this._joinDirectoryName(newFilename);
   const file = this._newFile({
-    path: this._uploadPath(filename),
-    filename,
-    mime,
+    newFilename,
+    filepath,
+    originalFilename,
+    mimetype,
   });
 
-  this.emit('fileBegin', filename, file);
+  this.emit('fileBegin', originalFilename, file);
   file.open();
   this.openedFiles.push(file);
   this._flushing += 1;
