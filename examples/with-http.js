@@ -24,6 +24,7 @@ const server = http.createServer((req, res) => {
         // keep only images
         return mimetype && mimetype.includes("image");
       }
+
     });
 
     form.parse(req, (err, fields, files) => {

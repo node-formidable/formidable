@@ -356,8 +356,10 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   fields that have names ending with '[]'.
 - `options.filename` **{function}** - default `undefined` Use it to control
   newFilename. Must return a string. Will be joined with options.uploadDir.
+
 - `options.filter` **{function}** - default function that always returns true.
   Use it to filter files before they are uploaded. Must return a boolean.
+
 
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
 
