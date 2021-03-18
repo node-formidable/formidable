@@ -357,6 +357,10 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.filename` **{function}** - default `undefined` Use it to control
   newFilename. Must return a string. Will be joined with options.uploadDir.
 
+- `options.filter` **{function}** - default function that always returns true.
+  Use it to filter files before they are uploaded. Must return a boolean.
+
+
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
 
 _**Note:** If this size of combined fields, or size of some file is exceeded, an
@@ -371,6 +375,20 @@ form.bytesReceived;
 // The expected number of bytes in this form.
 form.bytesExpected;
 ```
+
+#### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
+
+**Note:** use an outside variable to cancel all uploads upon the first error 
+
+```js
+const options {
+  filter: function ({name, originalFilename, mimetype}) {
+    // keep only images
+    return mimetype && mimetype.includes("image");
+  }
+};
+```
+
 
 ### .parse(request, callback)
 
