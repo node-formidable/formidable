@@ -2,23 +2,28 @@
 
 ### Unreleased (`canary` & `dev` dist-tags)
 
- * rename option hash into hashAlgorithm
- * rename file.path into file.filepath
- * rename file.type into file.mimetype
- * split file.name into file.newFilename and file.originalFilename
- * prevent directory traversal attacks by default
- * options.fileWriteStreamHandler receives the entire file instance (including file.newFilename)
- * Add fileWriteStreamHandler option
- * Add allowEmptyFiles and minFileSize options
- * Test only on Node.js >= v10. Support only Node LTS and latest ([#515](https://github.com/node-formidable/node-formidable/pull/515))
- * stop using deprecated features ([#516](https://github.com/node-formidable/node-formidable/pull/516), [#472](https://github.com/node-formidable/node-formidable/issues/472), [#406](https://github.com/node-formidable/node-formidable/issues/406))
- * throw error during data parsing ([#513](https://github.com/node-formidable/node-formidable/pull/513))
- * Array support for fields and files ([#380](https://github.com/node-formidable/node-formidable/pull/380), [#340](https://github.com/node-formidable/node-formidable/pull/340), [#367](https://github.com/node-formidable/node-formidable/pull/367), [#33](https://github.com/node-formidable/node-formidable/issues/33), [#498](https://github.com/node-formidable/node-formidable/issues/498), [#280](https://github.com/node-formidable/node-formidable/issues/280), [#483](https://github.com/node-formidable/node-formidable/issues/483))
+ * feat: add options.filter
+ * feat: add code and httpCode to most errors
+ * meta: stop including test files in npm
+ * fix: handle invlid filenames
+ * rename: option.hash into option.hashAlgorithm
+ * rename: file.path into file.filepath
+ * rename: file.type into file.mimetype
+ * refactor: split file.name into file.newFilename and file.originalFilename
+ * feat: prevent directory traversal attacks by default
+ * feat: options.fileWriteStreamHandler receives the entire file instance (including file.newFilename)
+ * feat: add fileWriteStreamHandler option
+ * feat: add allowEmptyFiles and minFileSize options
+ * feat: add options.filename
+ * meta: Test only on Node.js >= v10. Support only Node LTS and latest ([#515](https://github.com/node-formidable/node-formidable/pull/515))
+ * refactor: stop using deprecated features ([#516](https://github.com/node-formidable/node-formidable/pull/516), [#472](https://github.com/node-formidable/node-formidable/issues/472), [#406](https://github.com/node-formidable/node-formidable/issues/406))
+ * feat: throw error during data parsing ([#513](https://github.com/node-formidable/node-formidable/pull/513))
+ * feat: Array support for fields and files ([#380](https://github.com/node-formidable/node-formidable/pull/380), [#340](https://github.com/node-formidable/node-formidable/pull/340), [#367](https://github.com/node-formidable/node-formidable/pull/367), [#33](https://github.com/node-formidable/node-formidable/issues/33), [#498](https://github.com/node-formidable/node-formidable/issues/498), [#280](https://github.com/node-formidable/node-formidable/issues/280), [#483](https://github.com/node-formidable/node-formidable/issues/483))
  * possible partial fix of [#386](https://github.com/node-formidable/node-formidable/pull/386) with #380 (need tests and better implementation)
- * use hasOwnProperty in check against files/fields ([#522](https://github.com/node-formidable/node-formidable/pull/522))
- * do not promote `IncomingForm` and add `exports.default` ([#529](https://github.com/node-formidable/node-formidable/pull/529))
- * Improve examples and tests ([#523](https://github.com/node-formidable/node-formidable/pull/523))
- * First step of Code quality improvements ([#525](https://github.com/node-formidable/node-formidable/pull/525))
+ * refactor: use hasOwnProperty in check against files/fields ([#522](https://github.com/node-formidable/node-formidable/pull/522))
+ * meta: do not promote `IncomingForm` and add `exports.default` ([#529](https://github.com/node-formidable/node-formidable/pull/529))
+ * meta: Improve examples and tests ([#523](https://github.com/node-formidable/node-formidable/pull/523))
+ * refactor: First step of Code quality improvements ([#525](https://github.com/node-formidable/node-formidable/pull/525))
  * chore(funding): remove patreon & add npm funding field ([#525](https://github.com/node-formidable/node-formidable/pull/532)
  * feat: use Modern Streams API ([#531](https://github.com/node-formidable/node-formidable/pull/531))
  * fix: remove gently hijack and tests ([#539](https://github.com/node-formidable/node-formidable/pull/539))
