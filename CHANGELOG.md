@@ -2,13 +2,15 @@
 
 ### Unreleased (`canary` & `dev` dist-tags)
 
- * feat: add options.filter
- * feat: add code and httpCode to most errors
- * rename: option.hash into option.hashAlgorithm
- * rename: file.path into file.filepath
- * rename: file.type into file.mimetype
- * refactor: split file.name into file.newFilename and file.originalFilename
- * feat: prevent directory traversal attacks by default
+ * feat: add options.filter ([#716](https://github.com/node-formidable/formidable/pull/716))
+ * feat: add code and httpCode to most errors ([#686](https://github.com/node-formidable/formidable/pull/686))
+ * rename: option.hash into option.hashAlgorithm ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * rename: file.path into file.filepath ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * rename: file.type into file.mimetype ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * refactor: split file.name into file.newFilename and file.originalFilename ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * feat: prevent directory traversal attacks by default ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * meta: stop including test files in npm ([7003c](https://github.com/node-formidable/formidable/commit/7003cd6133f90c384081accb51743688d5e1f4be))
+ * fix: handle invalid filenames ([d0a34](https://github.com/node-formidable/formidable/commit/d0a3484b048b8c177e62d66aecb03f5928f7a857))
  * feat: add fileWriteStreamHandler option
  * feat: add allowEmptyFiles and minFileSize options
  * feat: Array support for fields and files ([#380](https://github.com/node-formidable/node-formidable/pull/380), [#340](https://github.com/node-formidable/node-formidable/pull/340), [#367](https://github.com/node-formidable/node-formidable/pull/367), [#33](https://github.com/node-formidable/node-formidable/issues/33), [#498](https://github.com/node-formidable/node-formidable/issues/498), [#280](https://github.com/node-formidable/node-formidable/issues/280), [#483](https://github.com/node-formidable/node-formidable/issues/483))
