@@ -2,22 +2,17 @@
 
 ### Unreleased (`canary` & `dev` dist-tags)
 
- * feat: add options.filter
- * feat: add code and httpCode to most errors
- * meta: stop including test files in npm
- * fix: handle invlid filenames
- * rename: option.hash into option.hashAlgorithm
- * rename: file.path into file.filepath
- * rename: file.type into file.mimetype
- * refactor: split file.name into file.newFilename and file.originalFilename
- * feat: prevent directory traversal attacks by default
- * feat: options.fileWriteStreamHandler receives the entire file instance (including file.newFilename)
+ * feat: add options.filter ([#716](https://github.com/node-formidable/formidable/pull/716))
+ * feat: add code and httpCode to most errors ([#686](https://github.com/node-formidable/formidable/pull/686))
+ * rename: option.hash into option.hashAlgorithm ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * rename: file.path into file.filepath ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * rename: file.type into file.mimetype ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * refactor: split file.name into file.newFilename and file.originalFilename ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * feat: prevent directory traversal attacks by default ([#689](https://github.com/node-formidable/formidable/pull/689))
+ * meta: stop including test files in npm ([7003c](https://github.com/node-formidable/formidable/commit/7003cd6133f90c384081accb51743688d5e1f4be))
+ * fix: handle invalid filenames ([d0a34](https://github.com/node-formidable/formidable/commit/d0a3484b048b8c177e62d66aecb03f5928f7a857))
  * feat: add fileWriteStreamHandler option
  * feat: add allowEmptyFiles and minFileSize options
- * feat: add options.filename
- * meta: Test only on Node.js >= v10. Support only Node LTS and latest ([#515](https://github.com/node-formidable/node-formidable/pull/515))
- * refactor: stop using deprecated features ([#516](https://github.com/node-formidable/node-formidable/pull/516), [#472](https://github.com/node-formidable/node-formidable/issues/472), [#406](https://github.com/node-formidable/node-formidable/issues/406))
- * feat: throw error during data parsing ([#513](https://github.com/node-formidable/node-formidable/pull/513))
  * feat: Array support for fields and files ([#380](https://github.com/node-formidable/node-formidable/pull/380), [#340](https://github.com/node-formidable/node-formidable/pull/340), [#367](https://github.com/node-formidable/node-formidable/pull/367), [#33](https://github.com/node-formidable/node-formidable/issues/33), [#498](https://github.com/node-formidable/node-formidable/issues/498), [#280](https://github.com/node-formidable/node-formidable/issues/280), [#483](https://github.com/node-formidable/node-formidable/issues/483))
  * possible partial fix of [#386](https://github.com/node-formidable/node-formidable/pull/386) with #380 (need tests and better implementation)
  * refactor: use hasOwnProperty in check against files/fields ([#522](https://github.com/node-formidable/node-formidable/pull/522))
@@ -26,22 +21,15 @@
  * refactor: First step of Code quality improvements ([#525](https://github.com/node-formidable/node-formidable/pull/525))
  * chore(funding): remove patreon & add npm funding field ([#525](https://github.com/node-formidable/node-formidable/pull/532)
  * feat: use Modern Streams API ([#531](https://github.com/node-formidable/node-formidable/pull/531))
- * fix: remove gently hijack and tests ([#539](https://github.com/node-formidable/node-formidable/pull/539))
- * docs: Clarify supported hash algorithms ([#537](https://github.com/node-formidable/node-formidable/pull/537))
- * feat: better tests, add Airbnb + Prettier ([#542](https://github.com/node-formidable/node-formidable/pull/542))
- * fix(incomingForm): better detection of fields vs files
- * fix: resolves [#128](https://github.com/node-formidable/node-formidable/pull/128)
  * fix: urlencoded parsing to emit end [#543](https://github.com/node-formidable/node-formidable/pull/543), introduced in [#531](https://github.com/node-formidable/node-formidable/pull/531)
  * fix(tests): include multipart and qs parser unit tests, part of [#415](https://github.com/node-formidable/node-formidable/issues/415)
  * fix: reorganize exports + move parsers to `src/parsers/`
  * fix: update docs and examples [#544](https://github.com/node-formidable/node-formidable/pull/544) ([#248](https://github.com/node-formidable/node-formidable/issues/248), [#335](https://github.com/node-formidable/node-formidable/issues/335), [#371](https://github.com/node-formidable/node-formidable/issues/371), [#372](https://github.com/node-formidable/node-formidable/issues/372), [#387](https://github.com/node-formidable/node-formidable/issues/387), partly [#471](https://github.com/node-formidable/node-formidable/issues/471), [#535](https://github.com/node-formidable/node-formidable/issues/535))
  * feat: introduce Plugins API, fix silent failing tests ([#545](https://github.com/node-formidable/node-formidable/pull/545), [#391](https://github.com/node-formidable/node-formidable/pull/391), [#407](https://github.com/node-formidable/node-formidable/pull/407), [#386](https://github.com/node-formidable/node-formidable/pull/386), [#374](https://github.com/node-formidable/node-formidable/pull/374), [#521](https://github.com/node-formidable/node-formidable/pull/521), [#267](https://github.com/node-formidable/node-formidable/pull/267))
- * respect form hash option on incoming octect/stream requests ([#407](https://github.com/node-formidable/node-formidable/pull/407))
  * fix: exposing file writable stream errors ([#520](https://github.com/node-formidable/node-formidable/pull/520), [#316](https://github.com/node-formidable/node-formidable/pull/316), [#469](https://github.com/node-formidable/node-formidable/pull/469), [#470](https://github.com/node-formidable/node-formidable/pull/470))
  * feat: custom file (re)naming, thru options.filename ([#591](https://github.com/node-formidable/node-formidable/pull/591), [#84](https://github.com/node-formidable/node-formidable/issues/84), [#86](https://github.com/node-formidable/node-formidable/issues/86), [#94](https://github.com/node-formidable/node-formidable/issues/94), [#154](https://github.com/node-formidable/node-formidable/issues/154), [#158](https://github.com/node-formidable/node-formidable/issues/158), [#488](https://github.com/node-formidable/node-formidable/issues/488), [#595](https://github.com/node-formidable/node-formidable/issues/595))
- * fix: make opts.filename from #591 work with opts.keepExtensions ([#597](https://github.com/node-formidable/node-formidable/pull/597))
- * fix: better handling of nested arrays when options.multiples ([#621](https://github.com/node-formidable/node-formidable/pull/621))
- * fix: a regression causing cyrillic to fail ([#624](https://github.com/node-formidable/node-formidable/pull/624), [#623](https://github.com/node-formidable/node-formidable/issues/623))
+
+
  
 ### v1.2.1 (2018-03-20)
 
