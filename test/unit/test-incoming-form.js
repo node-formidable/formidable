@@ -3,6 +3,7 @@ var test         = require('utest');
 var assert       = common.assert;
 var IncomingForm = common.require('incoming_form').IncomingForm;
 var path         = require('path');
+var events       = require('events');
 
 var form;
 test('IncomingForm', {
@@ -59,6 +60,20 @@ test('IncomingForm', {
     ext = path.extname(form._uploadPath('file.aAa'));
     assert.equal(ext, '.aAa');
   },
+
+  '#_write emit error when used with dummyParser' : function() {
+    var error = null;
+    var req = new events.EventEmitter();
+    req.headers = {};
+
+    form.parse(req, function (e) {
+      error = e;
+    });
+    req.emit('data', Buffer.alloc(1));
+
+    assert.ok(error, 'expected error to be emitted');
+    assert.strictEqual(error.message, 'did not expect data');
+  }
 });
 
 function makeHeader(filename) {
