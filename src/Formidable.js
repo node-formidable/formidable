@@ -3,14 +3,20 @@
 
 'use strict';
 
-const os = require('os');
-const path = require('path');
-const hexoid = require('hexoid');
-const once = require('once');
-const dezalgo = require('dezalgo');
-const { EventEmitter } = require('events');
-const { StringDecoder } = require('string_decoder');
-const qs = require('qs');
+import { tmpdir } from 'os';
+import { resolve, join, basename as _basename, extname as _extname, parse as _parse } from 'path';
+import hexoid from 'hexoid';
+import once from 'once';
+import dezalgo from 'dezalgo';
+import { EventEmitter } from 'events';
+import { StringDecoder } from 'string_decoder';
+import { stringify, parse as __parse } from 'qs';
+import {
+  octetstream,
+  querystring,
+  multipart,
+  json,
+} from "./plugins/index.js";
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
@@ -22,9 +28,14 @@ const DEFAULT_OPTIONS = {
   keepExtensions: false,
   encoding: 'utf-8',
   hashAlgorithm: false,
-  uploadDir: os.tmpdir(),
+  uploadDir: tmpdir(),
   multiples: false,
-  enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
+  enabledPlugins: [
+    octetstream,
+    querystring,
+    multipart,
+    json,
+  ],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
   filter: function () {
@@ -32,13 +43,13 @@ const DEFAULT_OPTIONS = {
   },
 };
 
-const PersistentFile = require('./PersistentFile');
-const VolatileFile = require('./VolatileFile');
-const DummyParser = require('./parsers/Dummy');
-const MultipartParser = require('./parsers/Multipart');
-const errors = require('./FormidableError.js');
+import PersistentFile from './PersistentFile.js';
+import VolatileFile from './VolatileFile.js';
+import DummyParser from './parsers/Dummy.js';
+import MultipartParser from './parsers/Multipart.js';
+import * as errors from './FormidableError.js';
+import FormidableError from './FormidableError.js';
 
-const { FormidableError } = errors;
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -50,8 +61,8 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
 
-    const dir = path.resolve(
-      this.options.uploadDir || this.options.uploaddir || os.tmpdir(),
+    const dir = resolve(
+      this.options.uploadDir || this.options.uploaddir || tmpdir(),
     );
 
     this.uploaddir = dir;
@@ -88,10 +99,8 @@ class IncomingForm extends EventEmitter {
       );
     }
 
-    this.options.enabledPlugins.forEach((pluginName) => {
-      const plgName = pluginName.toLowerCase();
-      // eslint-disable-next-line import/no-dynamic-require, global-require
-      this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
+    this.options.enabledPlugins.forEach((plugin) => {
+      this.use(plugin);
     });
 
     this._setUpMaxFields();
@@ -152,8 +161,8 @@ class IncomingForm extends EventEmitter {
         ) {
           const mObj = { [name]: value };
           mockFields = mockFields
-            ? `${mockFields}&${qs.stringify(mObj)}`
-            : `${qs.stringify(mObj)}`;
+            ? `${mockFields}&${stringify(mObj)}`
+            : `${stringify(mObj)}`;
         } else {
           fields[name] = value;
         }
@@ -178,7 +187,7 @@ class IncomingForm extends EventEmitter {
       });
       this.on('end', () => {
         if (this.options.multiples) {
-          Object.assign(fields, qs.parse(mockFields));
+          Object.assign(fields, __parse(mockFields));
         }
         callback(null, fields, files);
       });
@@ -529,10 +538,10 @@ class IncomingForm extends EventEmitter {
       return '';
     }
 
-    const basename = path.basename(str);
+    const basename = _basename(str);
     const firstDot = basename.indexOf('.');
     const lastDot = basename.lastIndexOf('.');
-    const extname = path.extname(basename).replace(/(\.[a-z0-9]+).*/i, '$1');
+    const extname = _extname(basename).replace(/(\.[a-z0-9]+).*/i, '$1');
 
     if (firstDot === lastDot) {
       return extname;
@@ -544,11 +553,11 @@ class IncomingForm extends EventEmitter {
 
 
   _joinDirectoryName(name) {
-    const newPath = path.join(this.uploadDir, name);
+    const newPath = join(this.uploadDir, name);
 
     // prevent directory traversal attacks
     if (!newPath.startsWith(this.uploadDir)) {
-      return path.join(this.uploadDir, this.options.defaultInvalidName);
+      return join(this.uploadDir, this.options.defaultInvalidName);
     }
 
     return newPath;
@@ -562,7 +571,7 @@ class IncomingForm extends EventEmitter {
         let name = this.options.defaultInvalidName;
         if (part.originalFilename) {
           // can be null
-          ({ ext, name } = path.parse(part.originalFilename));
+          ({ ext, name } = _parse(part.originalFilename));
           if (this.options.keepExtensions !== true) {
             ext = '';
           }
@@ -613,5 +622,8 @@ class IncomingForm extends EventEmitter {
   }
 }
 
-IncomingForm.DEFAULT_OPTIONS = DEFAULT_OPTIONS;
-module.exports = IncomingForm;
+
+export default IncomingForm;
+export {
+    DEFAULT_OPTIONS,
+};

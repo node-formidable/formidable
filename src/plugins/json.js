@@ -1,11 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const JSONParser = require('../parsers/JSON');
+import JSONParser from '../parsers/JSON.js';
 
 // the `options` is also available through the `this.options` / `formidable.options`
-module.exports = function plugin(formidable, options) {
+export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
 

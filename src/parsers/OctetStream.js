@@ -1,6 +1,4 @@
-'use strict';
-
-const { PassThrough } = require('stream');
+import { PassThrough } from 'stream';
 
 class OctetStreamParser extends PassThrough {
   constructor(options = {}) {
@@ -9,4 +7,4 @@ class OctetStreamParser extends PassThrough {
   }
 }
 
-module.exports = OctetStreamParser;
+export default OctetStreamParser;

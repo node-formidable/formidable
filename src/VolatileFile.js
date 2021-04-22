@@ -1,9 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const crypto = require('crypto');
-const { EventEmitter } = require('events');
+import { createHash } from 'crypto';
+import { EventEmitter } from 'events';
 
 class VolatileFile extends EventEmitter {
   constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }) {
@@ -16,7 +14,7 @@ class VolatileFile extends EventEmitter {
     this._writeStream = null;
 
     if (typeof this.hashAlgorithm === 'string') {
-      this.hash = crypto.createHash(this.hashAlgorithm);
+      this.hash = createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
     }
@@ -79,4 +77,4 @@ class VolatileFile extends EventEmitter {
   }
 }
 
-module.exports = VolatileFile;
+export default VolatileFile;

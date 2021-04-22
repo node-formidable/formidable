@@ -1,9 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const { Transform } = require('stream');
-const querystring = require('querystring');
+import { Transform } from 'stream';
+import { parse } from 'querystring';
 
 // This is a buffering parser, not quite as nice as the multipart one.
 // If I find time I'll rewrite this to be fully streaming as well
@@ -22,7 +20,7 @@ class QuerystringParser extends Transform {
   }
 
   _flush(callback) {
-    const fields = querystring.parse(this.buffer, '&', '=');
+    const fields = parse(this.buffer, '&', '=');
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const key in fields) {
       this.push({
@@ -35,4 +33,4 @@ class QuerystringParser extends Transform {
   }
 }
 
-module.exports = QuerystringParser;
+export default QuerystringParser;

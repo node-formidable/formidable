@@ -6,6 +6,7 @@
   "homepage": "https://github.com/node-formidable/formidable",
   "funding": "https://ko-fi.com/tunnckoCore/commissions",
   "repository": "node-formidable/formidable",
+  "type": "module",
   "main": "./src/index.js",
   "files": [
     "src",

@@ -3,12 +3,11 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
 
-const { Transform } = require('stream');
-const errors = require('../FormidableError.js');
+import { Transform } from 'stream';
+import * as errors from '../FormidableError.js';
+import FormidableError from '../FormidableError.js';
 
-const { FormidableError } = errors;
 
 let s = 0;
 const STATE = {
@@ -42,10 +41,10 @@ function lower(c) {
   return c | 0x20;
 }
 
-exports.STATES = {};
+export const STATES = {};
 
 Object.keys(STATE).forEach((stateName) => {
-  exports.STATES[stateName] = STATE[stateName];
+  STATES[stateName] = STATE[stateName];
 });
 
 class MultipartParser extends Transform {
@@ -344,4 +343,4 @@ MultipartParser.stateToString = (stateNumber) => {
   }
 };
 
-module.exports = Object.assign(MultipartParser, { STATES: exports.STATES });
+export default Object.assign(MultipartParser, { STATES: STATES });

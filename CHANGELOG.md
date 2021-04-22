@@ -1,5 +1,9 @@
 # Changelog
 
+### 3.0
+
+Use ES modules
+
 ### Unreleased (`canary` & `dev` dist-tags)
 
  * feat: add options.filter ([#716](https://github.com/node-formidable/formidable/pull/716))
