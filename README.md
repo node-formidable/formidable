@@ -531,9 +531,10 @@ which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
 you can remove it from the `options.enabledPlugins`, like so
 
 ```js
+import formidable, {octetstream, querystring, json} from "formidable";
 const form = formidable({
   hashAlgorithm: 'sha1',
-  enabledPlugins: ['octetstream', 'querystring', 'json'],
+  enabledPlugins: [octetstream, querystring, json],
 });
 ```
 

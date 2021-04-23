@@ -1,8 +1,10 @@
 # Changelog
 
-### 3.0
+### Unreleased 3.0
 
-Use ES modules
+ * feat: Use ES modules ([727](https://github.com/node-formidable/formidable/pull/727))
+ * options.enabledPlugins must contain the plugin themselves instead of the plugins names 
+
 
 ### Unreleased (`canary` & `dev` dist-tags)
 
