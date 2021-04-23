@@ -1,41 +1,38 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 
-'use strict';
+import { readdirSync, createReadStream } from 'fs';
+import { createConnection } from 'net';
+import { join, basename } from 'path';
+import { createServer } from 'http';
+import { strictEqual } from 'assert';
 
-const fs = require('fs');
-const net = require('net');
-const path = require('path');
-const http = require('http');
-const assert = require('assert');
-
-const formidable = require('../../src/index');
+import formidable from '../../src/index.js';
 
 const PORT = 13534;
 const CWD = process.cwd();
-const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
-const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
-const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
+const FIXTURES_PATH = join(CWD, 'test', 'fixture', 'js');
+const FIXTURES_HTTP = join(CWD, 'test', 'fixture', 'http');
+const UPLOAD_DIR = join(CWD, 'test', 'tmp');
 
 test('fixtures', (done) => {
-  const server = http.createServer();
+  const server = createServer();
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
-    const results = fs
-      .readdirSync(FIXTURES_PATH)
+    const results = readdirSync(FIXTURES_PATH)
       // .filter((x) => /workarounds/.test(x))
       .filter((x) => /\.js$/.test(x))
       .reduce((acc, fp) => {
-        const group = path.basename(fp, '.js');
-        const filepath = path.join(FIXTURES_PATH, fp);
+        const group = basename(fp, '.js');
+        const filepath = join(FIXTURES_PATH, fp);
         const mod = require(filepath);
 
         Object.keys(mod).forEach((k) => {
           Object.keys(mod[k]).forEach((_fixture) => {
             acc.push({
               fixture: mod[k],
-              name: path.join(group, k),
+              name: join(group, k),
             });
           });
         });
@@ -64,15 +61,15 @@ test('fixtures', (done) => {
 
       fixture.forEach((expectedPart, i) => {
         const parsedPart = parts[i];
-        assert.strictEqual(parsedPart.type, expectedPart.type);
-        assert.strictEqual(parsedPart.name, expectedPart.name);
+        strictEqual(parsedPart.type, expectedPart.type);
+        strictEqual(parsedPart.name, expectedPart.name);
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.originalFilename, expectedPart.originalFilename);
+          strictEqual(file.originalFilename, expectedPart.originalFilename);
 
           if (expectedPart.sha1) {
-            assert.strictEqual(
+            strictEqual(
               file.hash,
               expectedPart.sha1,
               `SHA1 error ${file.name} on ${file.filepath}`,
@@ -117,9 +114,9 @@ test('fixtures', (done) => {
         });
     });
 
-    const socket = net.createConnection(PORT);
-    const fixturePath = path.join(FIXTURES_HTTP, fixtureName);
-    const file = fs.createReadStream(fixturePath);
+    const socket = createConnection(PORT);
+    const fixturePath = join(FIXTURES_HTTP, fixtureName);
+    const file = createReadStream(fixturePath);
 
     file.pipe(socket, { end: false });
 

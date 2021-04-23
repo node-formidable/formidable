@@ -1,8 +1,6 @@
-'use strict';
-
-const http = require('http');
-const assert = require('assert');
-const formidable = require('../../src/index');
+import { createServer, request as _request } from 'http';
+import assert, { deepStrictEqual } from 'assert';
+import formidable from '../../src/index.js';
 
 const testData = {
   numbers: [1, 2, 3, 4, 5],
@@ -11,11 +9,11 @@ const testData = {
 
 const PORT = 13535;
 test('json', (done) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     const form = formidable({ multiples: true });
 
     form.parse(req, (err, fields) => {
-      assert.deepStrictEqual(fields, {
+      deepStrictEqual(fields, {
         numbers: [1, 2, 3, 4, 5],
         nested: { key: 'val' },
       });
@@ -29,7 +27,7 @@ test('json', (done) => {
   server.listen(PORT, (err) => {
     assert(!err, 'should not have error, but be falsey');
 
-    const request = http.request({
+    const request = _request({
       port: PORT,
       method: 'POST',
       headers: {

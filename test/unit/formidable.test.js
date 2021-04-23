@@ -1,16 +1,16 @@
 /* eslint-disable max-statements */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
+import {jest} from '@jest/globals';
+import Stream from 'stream';
+import http from 'http';
+import path from 'path';
 
-const path = require('path');
-const Stream = require('stream');
-const Request = require('http').ClientRequest;
-
-const mod = require('../../src/index');
+import formidable from '../../src/index.js';
+import * as mod from '../../src/index.js';
 
 function getForm(name, opts) {
-  return name === 'formidable' ? mod.formidable(opts) : new mod[name](opts);
+  return name === 'formidable' ? formidable(opts) : new mod[name](opts);
 }
 function makeHeader(originalFilename) {
   return `Content-Disposition: form-data; name="upload"; filename="${originalFilename}"`;
@@ -99,7 +99,7 @@ function makeHeader(originalFilename) {
   test(`${name}#_Array parameters support`, () => {
     const form = getForm(name, { multiples: true });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
@@ -117,7 +117,7 @@ function makeHeader(originalFilename) {
   test(`${name}#_Nested array parameters support`, () => {
     const form = getForm(name, { multiples: true });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
@@ -137,7 +137,7 @@ function makeHeader(originalFilename) {
   test(`${name}#_Object parameters support`, () => {
     const form = getForm(name, { multiples: true });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
@@ -154,7 +154,7 @@ function makeHeader(originalFilename) {
   test(`${name}#_Nested object parameters support`, () => {
     const form = getForm(name, { multiples: true });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',

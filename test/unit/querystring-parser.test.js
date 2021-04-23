@@ -1,6 +1,4 @@
-'use strict';
-
-const { QuerystringParser } = require('../../src/index');
+import { QuerystringParser } from '../../src/index.js';
 
 test('on constructor', () => {
   const parser = new QuerystringParser();

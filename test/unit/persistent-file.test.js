@@ -1,6 +1,5 @@
-'use strict';
-
-const PersistentFile = require('../../src/PersistentFile');
+import {jest} from '@jest/globals';
+import PersistentFile from '../../src/PersistentFile.js';
 
 const now = new Date();
 const file = new PersistentFile({

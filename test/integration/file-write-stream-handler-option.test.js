@@ -1,25 +1,27 @@
-'use strict';
+import { existsSync, mkdirSync, createWriteStream, readdirSync, statSync, unlinkSync, createReadStream } from 'fs';
+import { tmpdir } from 'os';
+import { createServer, request as _request } from 'http';
+import path, { join, dirname } from 'path';
+import url from 'url';
+import assert, { strictEqual, ok } from 'assert';
 
-const fs = require('fs');
-const os = require('os');
-const http = require('http');
-const path = require('path');
-const assert = require('assert');
+import formidable from '../../src/index.js';
 
-const formidable = require('../../src/index');
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 13533;
-const DEFAULT_UPLOAD_DIR = path.join(
-  os.tmpdir(),
+const DEFAULT_UPLOAD_DIR = join(
+  tmpdir(),
   'test-store-files-option-default',
 );
-const CUSTOM_UPLOAD_DIR = path.join(
-  os.tmpdir(),
+const CUSTOM_UPLOAD_DIR = join(
+  tmpdir(),
   'test-store-files-option-custom',
 );
-const CUSTOM_UPLOAD_FILE_PATH = path.join(CUSTOM_UPLOAD_DIR, 'test-file');
-const testFilePath = path.join(
-  path.dirname(__dirname),
+const CUSTOM_UPLOAD_FILE_PATH = join(CUSTOM_UPLOAD_DIR, 'test-file');
+const testFilePath = join(
+  dirname(__dirname),
   'fixture',
   'file',
   'binaryfile.tar.gz',
@@ -27,35 +29,35 @@ const testFilePath = path.join(
 
 const createDirs = (dirs) => {
   dirs.forEach((dir) => {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
+    if (!existsSync(dir)) {
+      mkdirSync(dir);
     }
   });
 };
 
 test('file write stream handler', (done) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     createDirs([DEFAULT_UPLOAD_DIR, CUSTOM_UPLOAD_DIR]);
     const form = formidable({
       uploadDir: DEFAULT_UPLOAD_DIR,
       fileWriteStreamHandler: () =>
-        fs.createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
+        createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
     });
 
     form.parse(req, (err, fields, files) => {
-      assert.strictEqual(Object.keys(files).length, 1);
+      strictEqual(Object.keys(files).length, 1);
       const { file } = files;
 
-      assert.strictEqual(file.size, 301);
-      assert.strictEqual(typeof file.filepath, 'string');
+      strictEqual(file.size, 301);
+      strictEqual(typeof file.filepath, 'string');
 
-      const dirFiles = fs.readdirSync(DEFAULT_UPLOAD_DIR);
-      assert.ok(dirFiles.length === 0);
+      const dirFiles = readdirSync(DEFAULT_UPLOAD_DIR);
+      ok(dirFiles.length === 0);
 
-      const uploadedFileStats = fs.statSync(CUSTOM_UPLOAD_FILE_PATH);
-      assert.ok(uploadedFileStats.size === file.size);
+      const uploadedFileStats = statSync(CUSTOM_UPLOAD_FILE_PATH);
+      ok(uploadedFileStats.size === file.size);
 
-      fs.unlinkSync(CUSTOM_UPLOAD_FILE_PATH);
+      unlinkSync(CUSTOM_UPLOAD_FILE_PATH);
       res.end();
       server.close();
       done();
@@ -65,7 +67,7 @@ test('file write stream handler', (done) => {
   server.listen(PORT, (err) => {
     assert(!err, 'should not have error, but be falsey');
 
-    const request = http.request({
+    const request = _request({
       port: PORT,
       method: 'POST',
       headers: {
@@ -73,6 +75,6 @@ test('file write stream handler', (done) => {
       },
     });
 
-    fs.createReadStream(testFilePath).pipe(request);
+    createReadStream(testFilePath).pipe(request);
   });
 });
