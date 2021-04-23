@@ -1,9 +1,7 @@
-'use strict';
+import http from 'http';
+import util from 'util';
+import formidable from '../src/index.js';
 
-const http = require('http');
-const util = require('util');
-
-const { Formidable } = require('../src/index');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
@@ -16,7 +14,7 @@ const server = http.createServer((req, res) => {
       </form>
     `);
   } else if (req.url === '/post') {
-    const form = new Formidable();
+    const form = formidable();
     const fields = [];
 
     form

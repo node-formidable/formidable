@@ -1,8 +1,8 @@
-
-import { createServer } from 'http';
+import http from 'http';
 import formidable from '../src/index.js';
 
-const server = createServer((req, res) => {
+
+const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
