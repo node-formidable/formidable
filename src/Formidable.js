@@ -3,8 +3,8 @@
 
 'use strict';
 
-import { tmpdir } from 'os';
-import { resolve, join, basename as _basename, extname as _extname, parse as _parse } from 'path';
+import os from 'os';
+import path from 'path';
 import hexoid from 'hexoid';
 import once from 'once';
 import dezalgo from 'dezalgo';
@@ -28,7 +28,7 @@ const DEFAULT_OPTIONS = {
   keepExtensions: false,
   encoding: 'utf-8',
   hashAlgorithm: false,
-  uploadDir: tmpdir(),
+  uploadDir: os.tmpdir(),
   multiples: false,
   enabledPlugins: [
     octetstream,
@@ -61,8 +61,8 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
 
-    const dir = resolve(
-      this.options.uploadDir || this.options.uploaddir || tmpdir(),
+    const dir = path.resolve(
+      this.options.uploadDir || this.options.uploaddir || os.tmpdir(),
     );
 
     this.uploaddir = dir;
@@ -538,10 +538,10 @@ class IncomingForm extends EventEmitter {
       return '';
     }
 
-    const basename = _basename(str);
+    const basename = path.basename(str);
     const firstDot = basename.indexOf('.');
     const lastDot = basename.lastIndexOf('.');
-    const extname = _extname(basename).replace(/(\.[a-z0-9]+).*/i, '$1');
+    const extname = path.extname(basename).replace(/(\.[a-z0-9]+).*/i, '$1');
 
     if (firstDot === lastDot) {
       return extname;
@@ -553,11 +553,11 @@ class IncomingForm extends EventEmitter {
 
 
   _joinDirectoryName(name) {
-    const newPath = join(this.uploadDir, name);
+    const newPath = path.join(this.uploadDir, name);
 
     // prevent directory traversal attacks
     if (!newPath.startsWith(this.uploadDir)) {
-      return join(this.uploadDir, this.options.defaultInvalidName);
+      return path.join(this.uploadDir, this.options.defaultInvalidName);
     }
 
     return newPath;
@@ -571,7 +571,7 @@ class IncomingForm extends EventEmitter {
         let name = this.options.defaultInvalidName;
         if (part.originalFilename) {
           // can be null
-          ({ ext, name } = _parse(part.originalFilename));
+          ({ ext, name } = path.parse(part.originalFilename));
           if (this.options.keepExtensions !== true) {
             ext = '';
           }
