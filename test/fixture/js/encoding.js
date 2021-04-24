@@ -1,4 +1,11 @@
-module.exports['menu_seperator.png.http'] = [
+export {
+    menu_seperator_png_http,
+    beta_sticker_1_png_http,
+    blank_gif_http,
+    binaryfile_tar_gz_http,
+    plain_txt_http,
+};
+const menu_seperator_png_http = [
   {
     type: 'file',
     name: 'image',
@@ -8,7 +15,7 @@ module.exports['menu_seperator.png.http'] = [
   },
 ];
 
-module.exports['beta-sticker-1.png.http'] = [
+const beta_sticker_1_png_http = [
   {
     type: 'file',
     name: 'sticker',
@@ -18,7 +25,7 @@ module.exports['beta-sticker-1.png.http'] = [
   },
 ];
 
-module.exports['blank.gif.http'] = [
+const blank_gif_http = [
   {
     type: 'file',
     name: 'file',
@@ -28,7 +35,7 @@ module.exports['blank.gif.http'] = [
   },
 ];
 
-module.exports['binaryfile.tar.gz.http'] = [
+const binaryfile_tar_gz_http = [
   {
     type: 'file',
     name: 'file',
@@ -38,7 +45,7 @@ module.exports['binaryfile.tar.gz.http'] = [
   },
 ];
 
-module.exports['plain.txt.http'] = [
+const plain_txt_http = [
   {
     type: 'file',
     name: 'file',

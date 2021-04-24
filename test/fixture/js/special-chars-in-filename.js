@@ -12,16 +12,18 @@ function expect(originalFilename) {
   ];
 }
 
-const webkit = ' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt';
-const ffOrIe = ' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt';
+const webkit = expect(' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt');
+const ffOrIe = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt');
+const lineSeparator = expect(null);
 
-module.exports = {
-  'osx-chrome-13.http': expect(webkit),
-  'osx-firefox-3.6.http': expect(ffOrIe),
-  'osx-safari-5.http': expect(webkit),
-  'xp-chrome-12.http': expect(webkit),
-  'xp-ie-7.http': expect(ffOrIe),
-  'xp-ie-8.http': expect(ffOrIe),
-  'xp-safari-5.http': expect(webkit),
-  'line-separator.http': expect(null),
+export {
+  webkit as osx_chrome_13_http,
+  webkit as osx_firefox_3_6_http,
+  webkit as osx_safari_5_http,
+  webkit as xp_chrome_12_http,
+  webkit as xp_safari_5_http,
+
+  ffOrIe as xp_ie_7_http,
+  ffOrIe as xp_ie_8_http,
+  lineSeparator as line_separator_http,
 };

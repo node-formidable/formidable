@@ -1,4 +1,9 @@
-module.exports['missing-hyphens1.http'] = [
+export {
+    missing_hyphens1_http,
+    missing_hyphens2_http,
+}
+
+const missing_hyphens1_http = [
   {
     type: 'file',
     name: 'upload',
@@ -7,7 +12,8 @@ module.exports['missing-hyphens1.http'] = [
     sha1: '8c26b82ec9107e99b3486844644e92558efe0c73',
   },
 ];
-module.exports['missing-hyphens2.http'] = [
+
+const missing_hyphens2_http = [
   {
     type: 'file',
     name: 'upload',

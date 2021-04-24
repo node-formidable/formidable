@@ -1,4 +1,9 @@
-module.exports['generic.http'] = [
+export {
+    generic_http,
+    filename_name_http,
+}
+
+const generic_http = [
   {
     type: 'file',
     name: 'upload',
@@ -8,7 +13,7 @@ module.exports['generic.http'] = [
   },
 ];
 
-module.exports['filename-name.http'] = [
+const filename_name_http = [
   {
     type: 'file',
     name: 'upload',
