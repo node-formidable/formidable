@@ -1,11 +1,11 @@
 export {
-    menu_seperator_png_http,
+    menu_separator_png_http,
     beta_sticker_1_png_http,
     blank_gif_http,
     binaryfile_tar_gz_http,
     plain_txt_http,
 };
-const menu_seperator_png_http = [
+const menu_separator_png_http = [
   {
     type: 'file',
     name: 'image',
