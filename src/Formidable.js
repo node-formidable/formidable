@@ -1,8 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
 import os from 'os';
 import path from 'path';
 import hexoid from 'hexoid';
@@ -10,7 +8,6 @@ import once from 'once';
 import dezalgo from 'dezalgo';
 import { EventEmitter } from 'events';
 import { StringDecoder } from 'string_decoder';
-import { stringify, parse as __parse } from 'qs';
 import {
   octetstream,
   querystring,

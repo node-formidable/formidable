@@ -30,13 +30,12 @@
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
     "test": "node  --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
     "pretest:ci": "yarn run pretest",
-    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --coverage" 
+    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --coverage"
   },
   "dependencies": {
     "dezalgo": "1.0.3",
     "hexoid": "1.0.0",
-    "once": "1.4.0",
-    "qs": "6.9.3"
+    "once": "1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
