@@ -49,6 +49,13 @@ const server = http.createServer((req, res) => {
       <div>File: <input type="file" name="multipleFiles" multiple="multiple" /></div>
       <input type="submit" value="Upload" />
     </form>
+
+    <form action="/api/upload" enctype="multipart/form-data" method="post">
+      <div>Text field title: <input type="text" name="title" /></div>
+      <div>Text field with same name: <input type="text" name="title" /></div>
+      <div>Other field <input type="text" name="other" /></div>
+      <input type="submit" value="submit simple" />
+    </form>
   `);
 });
 

@@ -20,12 +20,12 @@ class QuerystringParser extends Transform {
   }
 
   _flush(callback) {
-    const fields = parse(this.buffer, '&', '=');
+    const fields = new URLSearchParams(this.buffer);
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
-    for (const key in fields) {
+    for (const [key, values] of fields) {
       this.push({
         key,
-        value: fields[key],
+        value: values,
       });
     }
     this.buffer = '';

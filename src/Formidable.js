@@ -156,39 +156,30 @@ class IncomingForm extends EventEmitter {
 
       this.on('field', (name, value) => {
         if (
-          this.options.multiples &&
-          (this.type === 'multipart' || this.type === 'urlencoded')
+          this.type === 'multipart' || this.type === 'urlencoded'
         ) {
-          const mObj = { [name]: value };
-          mockFields = mockFields
-            ? `${mockFields}&${stringify(mObj)}`
-            : `${stringify(mObj)}`;
+          if (!hasOwnProp(fields, name)) {
+            fields[name] = [value];
+          } else {
+            fields[name].push(value);
+          }
+          
         } else {
           fields[name] = value;
         }
       });
       this.on('file', (name, file) => {
-        // TODO: too much nesting
-        if (this.options.multiples) {
-          if (hasOwnProp(files, name)) {
-            if (!Array.isArray(files[name])) {
-              files[name] = [files[name]];
-            }
-            files[name].push(file);
+          if (!hasOwnProp(files, name)) {
+              files[name] = [file];
           } else {
-            files[name] = file;
+              files[name].push(file);
           }
-        } else {
-          files[name] = file;
-        }
+        
       });
       this.on('error', (err) => {
         callback(err, fields, files);
       });
       this.on('end', () => {
-        if (this.options.multiples) {
-          Object.assign(fields, __parse(mockFields));
-        }
         callback(null, fields, files);
       });
     }
