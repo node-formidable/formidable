@@ -1,7 +1,6 @@
-'use strict';
+import http from 'http';
+import formidable from '../src/index.js';
 
-const http = require('http');
-const formidable = require('../src/index');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {

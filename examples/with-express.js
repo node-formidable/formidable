@@ -1,7 +1,5 @@
-'use strict';
-
-const express = require('express');
-const formidable = require('../src/index');
+import express from 'express';
+import formidable from '../src/index.js';
 
 const app = express();
 

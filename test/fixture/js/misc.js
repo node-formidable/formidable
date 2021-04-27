@@ -1,7 +1,13 @@
-module.exports = {
-  'empty.http': [],
-  'empty-urlencoded.http': [],
-  'empty-multipart.http': [],
-  'empty-multipart2.http': [],
-  'minimal.http': [],
+export {
+  empty_http,
+  empty_urlencoded_http,
+  empty_multipart_http,
+  empty_multipart2_http,
+  _minimal_http,
 };
+
+const empty_http = [];
+const empty_urlencoded_http = [];
+const empty_multipart_http = [];
+const empty_multipart2_http = [];
+const _minimal_http = [];

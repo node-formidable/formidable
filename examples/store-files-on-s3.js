@@ -1,12 +1,10 @@
 // To test this example you have to install aws-sdk nodejs package and create a bucket named "demo-bucket"
 
-'use strict';
+import http from 'http';
+import { PassThrough } from 'stream';
+import AWS from 'aws-sdk';
+import formidable from '../src/index.js';
 
-const http = require('http');
-const { PassThrough } = require('stream');
-// eslint-disable-next-line import/no-unresolved
-const AWS = require('aws-sdk');
-const formidable = require('../src/index');
 
 const s3Client = new AWS.S3({
   credentials: {

@@ -1,7 +1,6 @@
-'use strict';
+import Koa from 'koa';
+import formidable from '../src/index.js';
 
-const Koa = require('koa');
-const formidable = require('../src/index');
 
 const app = new Koa();
 

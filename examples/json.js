@@ -1,8 +1,7 @@
-'use strict';
+import http from 'http';
+import util from 'util';
+import formidable from '../src/index.js';
 
-const http = require('http');
-const util = require('util');
-const { formidable } = require('../src/index');
 
 const PORT = 3000;
 const server = http.createServer((req, res) => {

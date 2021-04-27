@@ -3,14 +3,20 @@
 
 'use strict';
 
-const os = require('os');
-const path = require('path');
-const hexoid = require('hexoid');
-const once = require('once');
-const dezalgo = require('dezalgo');
-const { EventEmitter } = require('events');
-const { StringDecoder } = require('string_decoder');
-const qs = require('qs');
+import os from 'os';
+import path from 'path';
+import hexoid from 'hexoid';
+import once from 'once';
+import dezalgo from 'dezalgo';
+import { EventEmitter } from 'events';
+import { StringDecoder } from 'string_decoder';
+import { stringify, parse as __parse } from 'qs';
+import {
+  octetstream,
+  querystring,
+  multipart,
+  json,
+} from "./plugins/index.js";
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
@@ -24,7 +30,12 @@ const DEFAULT_OPTIONS = {
   hashAlgorithm: false,
   uploadDir: os.tmpdir(),
   multiples: false,
-  enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
+  enabledPlugins: [
+    octetstream,
+    querystring,
+    multipart,
+    json,
+  ],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
   filter: function () {
@@ -32,13 +43,13 @@ const DEFAULT_OPTIONS = {
   },
 };
 
-const PersistentFile = require('./PersistentFile');
-const VolatileFile = require('./VolatileFile');
-const DummyParser = require('./parsers/Dummy');
-const MultipartParser = require('./parsers/Multipart');
-const errors = require('./FormidableError.js');
+import PersistentFile from './PersistentFile.js';
+import VolatileFile from './VolatileFile.js';
+import DummyParser from './parsers/Dummy.js';
+import MultipartParser from './parsers/Multipart.js';
+import * as errors from './FormidableError.js';
+import FormidableError from './FormidableError.js';
 
-const { FormidableError } = errors;
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -88,10 +99,8 @@ class IncomingForm extends EventEmitter {
       );
     }
 
-    this.options.enabledPlugins.forEach((pluginName) => {
-      const plgName = pluginName.toLowerCase();
-      // eslint-disable-next-line import/no-dynamic-require, global-require
-      this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
+    this.options.enabledPlugins.forEach((plugin) => {
+      this.use(plugin);
     });
 
     this._setUpMaxFields();
@@ -152,8 +161,8 @@ class IncomingForm extends EventEmitter {
         ) {
           const mObj = { [name]: value };
           mockFields = mockFields
-            ? `${mockFields}&${qs.stringify(mObj)}`
-            : `${qs.stringify(mObj)}`;
+            ? `${mockFields}&${stringify(mObj)}`
+            : `${stringify(mObj)}`;
         } else {
           fields[name] = value;
         }
@@ -178,7 +187,7 @@ class IncomingForm extends EventEmitter {
       });
       this.on('end', () => {
         if (this.options.multiples) {
-          Object.assign(fields, qs.parse(mockFields));
+          Object.assign(fields, __parse(mockFields));
         }
         callback(null, fields, files);
       });
@@ -613,5 +622,8 @@ class IncomingForm extends EventEmitter {
   }
 }
 
-IncomingForm.DEFAULT_OPTIONS = DEFAULT_OPTIONS;
-module.exports = IncomingForm;
+
+export default IncomingForm;
+export {
+    DEFAULT_OPTIONS,
+};

@@ -1,11 +1,9 @@
 /* eslint-disable max-nested-callbacks */
 
-'use strict';
-
-const net = require('net');
-const http = require('http');
-const assert = require('assert');
-const formidable = require('../../src/index');
+import { createConnection } from 'net';
+import { createServer } from 'http';
+import { strictEqual } from 'assert';
+import formidable from '../../src/index.js';
 
 let ok = 0;
 let errors = 0;
@@ -13,7 +11,7 @@ let errors = 0;
 const PORT = 0;
 
 test('keep alive error', (done) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     const form = formidable();
     form.on('error', () => {
       errors += 1;
@@ -31,7 +29,7 @@ test('keep alive error', (done) => {
   server.listen(PORT, () => {
     const choosenPort = server.address().port;
 
-    const client = net.createConnection(choosenPort);
+    const client = createConnection(choosenPort);
 
     // first send malformed (boundary / hyphens) post upload
     client.write(
@@ -50,9 +48,9 @@ test('keep alive error', (done) => {
       client.end();
 
       setTimeout(() => {
-        assert.strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
+        strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
 
-        const clientTwo = net.createConnection(choosenPort);
+        const clientTwo = createConnection(choosenPort);
 
         // correct post upload (with hyphens)
         clientTwo.write(
@@ -67,7 +65,7 @@ test('keep alive error', (done) => {
 
         setTimeout(() => {
           // ? yup, quite true, it makes sense to be 2
-          assert.strictEqual(ok, 2, `should "ok" count === 2, has: ${ok}`);
+          strictEqual(ok, 2, `should "ok" count === 2, has: ${ok}`);
 
           server.close();
           done();

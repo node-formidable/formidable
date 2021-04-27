@@ -104,8 +104,8 @@ Parse an incoming file upload, with the
 [Node.js's built-in `http` module](https://nodejs.org/api/http.html).
 
 ```js
-const http = require('http');
-const formidable = require('formidable');
+import http from 'http';
+import formidable from 'formidable';
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
@@ -152,8 +152,8 @@ Or try the
 [examples/with-express.js](https://github.com/node-formidable/formidable/blob/master/examples/with-express.js)
 
 ```js
-const express = require('express');
-const formidable = require('formidable');
+import express from 'express';
+import formidable from 'formidable';
 
 const app = express();
 
@@ -198,8 +198,8 @@ which is Node.js's Request, and **NOT** the `ctx.request` which is Koa's Request
 object - there is a difference._
 
 ```js
-const Koa = require('koa');
-const formidable = require('formidable');
+import Koa from 'Koa';
+import formidable from 'formidable';
 
 const app = new Koa();
 
@@ -298,20 +298,8 @@ _Please pass [`options`](#options) to the function/constructor, not by assigning
 them to the instance `form`_
 
 ```js
-const formidable = require('formidable');
+import formidable from 'formidable';
 const form = formidable(options);
-
-// or
-const { formidable } = require('formidable');
-const form = formidable(options);
-
-// or
-const { IncomingForm } = require('formidable');
-const form = new IncomingForm(options);
-
-// or
-const { Formidable } = require('formidable');
-const form = new Formidable(options);
 ```
 
 ### Options
@@ -396,8 +384,6 @@ Parses an incoming Node.js `request` containing form data. If `callback` is
 provided, all fields and files are collected and passed to the callback.
 
 ```js
-const formidable = require('formidable');
-
 const form = formidable({ multiples: true, uploadDir: __dirname });
 
 form.parse(req, (err, fields, files) => {
@@ -521,8 +507,6 @@ Formidable instance (the `form` across the README examples) and the options.
 **Note:** the plugin function's `this` context is also the same instance.
 
 ```js
-const formidable = require('formidable');
-
 const form = formidable({ keepExtensions: true });
 
 form.use((self, options) => {
@@ -547,11 +531,10 @@ which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
 you can remove it from the `options.enabledPlugins`, like so
 
 ```js
-const { Formidable } = require('formidable');
-
-const form = new Formidable({
+import formidable, {octetstream, querystring, json} from "formidable";
+const form = formidable({
   hashAlgorithm: 'sha1',
-  enabledPlugins: ['octetstream', 'querystring', 'json'],
+  enabledPlugins: [octetstream, querystring, json],
 });
 ```
 

@@ -1,8 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
 
-const { Transform } = require('stream');
+import { Transform } from 'stream';
 
 class JSONParser extends Transform {
   constructor(options = {}) {
@@ -32,4 +31,4 @@ class JSONParser extends Transform {
   }
 }
 
-module.exports = JSONParser;
+export default JSONParser;

@@ -1,4 +1,9 @@
-module.exports['crlf.http'] = [
+export {
+    crlf_http,
+    preamble_http,
+};
+
+const crlf_http = [
   {
     type: 'file',
     name: 'upload',
@@ -8,7 +13,7 @@ module.exports['crlf.http'] = [
   },
 ];
 
-module.exports['preamble.http'] = [
+const preamble_http = [
   {
     type: 'file',
     name: 'upload',

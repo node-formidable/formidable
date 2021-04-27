@@ -1,6 +1,4 @@
-'use strict';
-
-const { MultipartParser } = require('../../src/index');
+import { MultipartParser } from '../../src/index.js';
 
 test('on constructor', () => {
   const parser = new MultipartParser();
