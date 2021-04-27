@@ -29,7 +29,6 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hashAlgorithm: false,
   uploadDir: os.tmpdir(),
-  multiples: false,
   enabledPlugins: [
     octetstream,
     querystring,
