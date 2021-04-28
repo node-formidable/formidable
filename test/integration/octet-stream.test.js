@@ -23,7 +23,7 @@ test('octet stream', (done) => {
 
     form.parse(req, (err, fields, files) => {
       strictEqual(Object.keys(files).length, 1);
-      const { file } = files;
+      const file = files.file[0];
 
       strictEqual(file.size, 301);
 

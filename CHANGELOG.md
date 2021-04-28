@@ -5,6 +5,7 @@
  * feat: remove options.multiples ([730](https://github.com/node-formidable/formidable/pull/730))
  * use modern URLSearchParams https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams internally
  * files and fields values are always arrays
+ * fields with [] in the name do not receive special treatment
  * remove unused qs and querystring dependency
  * feat: Use ES modules ([727](https://github.com/node-formidable/formidable/pull/727))
  * options.enabledPlugins must contain the plugin themselves instead of the plugins names 

@@ -109,8 +109,8 @@ function makeHeader(originalFilename) {
       expect(fields.a[0]).toBe('1');
       expect(fields.a[1]).toBe('2');
     });
-    form.emit('field', 'a[]', '1');
-    form.emit('field', 'a[]', '2');
+    form.emit('field', 'a', '1');
+    form.emit('field', 'a', '2');
     form.emit('end');
   });
 
@@ -123,14 +123,14 @@ function makeHeader(originalFilename) {
       'content-type': 'multipart/form-data; boundary=----TLVx',
     };
     form.parse(req, (error, fields) => {
-      expect(Array.isArray(fields.a)).toBe(true);
-      expect(fields.a[0][0]).toBe('a');
-      expect(fields.a[0][1]).toBe('b');
-      expect(fields.a[1][0]).toBe('c');
+      expect(Array.isArray(fields[`a[0]`])).toBe(true);
+      expect(fields[`a[0]`][0]).toBe('a');
+      expect(fields[`a[0]`][1]).toBe('b');
+      expect(fields[`a[1]`][0]).toBe('c');
     });
-    form.emit('field', 'a[0][]', 'a');
-    form.emit('field', 'a[0][]', 'b');
-    form.emit('field', 'a[1][]', 'c');
+    form.emit('field', 'a[0]', 'a');
+    form.emit('field', 'a[0]', 'b');
+    form.emit('field', 'a[1]', 'c');
     form.emit('end');
   });
 
@@ -143,15 +143,15 @@ function makeHeader(originalFilename) {
       'content-type': 'multipart/form-data; boundary=----TLVx',
     };
     form.parse(req, (error, fields) => {
-      expect(fields.a.x).toBe('1');
-      expect(fields.a.y).toBe('2');
+      expect(fields[`a[x]`][0]).toBe('1');
+      expect(fields[`a[y]`][0]).toBe('2');
     });
     form.emit('field', 'a[x]', '1');
     form.emit('field', 'a[y]', '2');
     form.emit('end');
   });
 
-  test(`${name}#_Nested object parameters support`, () => {
+  xtest(`${name}#_Nested object parameters support`, () => {
     const form = getForm(name, { multiples: true });
 
     const req = new http.ClientRequest();
