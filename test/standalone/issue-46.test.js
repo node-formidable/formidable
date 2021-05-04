@@ -47,7 +47,7 @@ test('issue 46', (done) => {
       const obj = JSON.parse(body);
 
       ok(obj.fields.foo, 'should have fields.foo === barry');
-      strictEqual(obj.fields.foo, 'barry');
+      strictEqual(obj.fields.foo[0], 'barry');
 
       server.close();
       done();

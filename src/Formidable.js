@@ -1,8 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
 import os from 'os';
 import path from 'path';
 import hexoid from 'hexoid';
@@ -10,7 +8,6 @@ import once from 'once';
 import dezalgo from 'dezalgo';
 import { EventEmitter } from 'events';
 import { StringDecoder } from 'string_decoder';
-import { stringify, parse as __parse } from 'qs';
 import {
   octetstream,
   querystring,
@@ -29,7 +26,6 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hashAlgorithm: false,
   uploadDir: os.tmpdir(),
-  multiples: false,
   enabledPlugins: [
     octetstream,
     querystring,
@@ -156,39 +152,30 @@ class IncomingForm extends EventEmitter {
 
       this.on('field', (name, value) => {
         if (
-          this.options.multiples &&
-          (this.type === 'multipart' || this.type === 'urlencoded')
+          this.type === 'multipart' || this.type === 'urlencoded'
         ) {
-          const mObj = { [name]: value };
-          mockFields = mockFields
-            ? `${mockFields}&${stringify(mObj)}`
-            : `${stringify(mObj)}`;
+          if (!hasOwnProp(fields, name)) {
+            fields[name] = [value];
+          } else {
+            fields[name].push(value);
+          }
+          
         } else {
           fields[name] = value;
         }
       });
       this.on('file', (name, file) => {
-        // TODO: too much nesting
-        if (this.options.multiples) {
-          if (hasOwnProp(files, name)) {
-            if (!Array.isArray(files[name])) {
-              files[name] = [files[name]];
-            }
-            files[name].push(file);
+          if (!hasOwnProp(files, name)) {
+              files[name] = [file];
           } else {
-            files[name] = file;
+              files[name].push(file);
           }
-        } else {
-          files[name] = file;
-        }
+        
       });
       this.on('error', (err) => {
         callback(err, fields, files);
       });
       this.on('end', () => {
-        if (this.options.multiples) {
-          Object.assign(fields, __parse(mockFields));
-        }
         callback(null, fields, files);
       });
     }
