@@ -381,7 +381,7 @@ form.bytesExpected;
 **Note:** use an outside variable to cancel all uploads upon the first error 
 
 ```js
-const options {
+const options = {
   filter: function ({name, originalFilename, mimetype}) {
     // keep only images
     return mimetype && mimetype.includes("image");
