@@ -16,11 +16,11 @@ const s3Client = new AWS.S3({
 });
 
 const uploadStream = (file) => {
-  const pass = PassThrough();
+  const pass = new PassThrough();
   s3Client.upload(
     {
       Bucket: 'demo-bucket',
-      Key: file.newName,
+      Key: file.newFilename,
       Body: pass,
     },
     (err, data) => {
