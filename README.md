@@ -351,6 +351,12 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
 
+where part can be decomposed as
+
+```js
+const { originalFilename, mimetype} = part;
+```
+
 _**Note:** If this size of combined fields, or size of some file is exceeded, an
 `'error'` event is fired._
 
