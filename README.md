@@ -626,7 +626,7 @@ requests.
 #### `'progress'`
 
 Emitted after each incoming chunk of data that has been parsed. Can be used to
-roll your own progress bar.
+roll your own progress bar. **Warning** Use this only for server side progress bar. On the client side better use `XMLHttpRequest` with `xhr.upload.onprogress =`
 
 ```js
 form.on('progress', (bytesReceived, bytesExpected) => {});
