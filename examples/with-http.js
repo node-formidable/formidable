@@ -3,6 +3,12 @@ import formidable from '../src/index.js';
 
 
 const server = http.createServer((req, res) => {
+  // handle common internet errors
+  // to avoid server crash
+  req.on('error', console.error);
+  res.on('error', console.error);
+
+
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
@@ -39,7 +45,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // show a file upload form
+  // else show a file upload form
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
