@@ -6,7 +6,6 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
-      multiples: true,
       uploadDir: `uploads`,
       keepExtensions: true,
       // filename(/*name, ext, part, form*/) {

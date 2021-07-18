@@ -15,7 +15,7 @@ const server = http.createServer((req, res) => {
       </form>
     `);
   } else if (req.url === '/upload') {
-    const form = formidable({ multiples: true, uploadDir: os.tmpdir() });
+    const form = formidable({ uploadDir: os.tmpdir() });
     const files = [];
     const fields = [];
 

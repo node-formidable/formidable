@@ -10,7 +10,7 @@ const testData = {
 const PORT = 13535;
 test('json', (done) => {
   const server = createServer((req, res) => {
-    const form = formidable({ multiples: true });
+    const form = formidable({ });
 
     form.parse(req, (err, fields) => {
       deepStrictEqual(fields, {

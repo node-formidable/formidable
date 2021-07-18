@@ -97,7 +97,7 @@ function makeHeader(originalFilename) {
   });
 
   test(`${name}#_Array parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
     const req = new http.ClientRequest();
     req.headers = {
@@ -115,7 +115,7 @@ function makeHeader(originalFilename) {
   });
 
   test(`${name}#_Nested array parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
     const req = new http.ClientRequest();
     req.headers = {
@@ -135,7 +135,7 @@ function makeHeader(originalFilename) {
   });
 
   test(`${name}#_Object parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
     const req = new http.ClientRequest();
     req.headers = {
@@ -152,7 +152,7 @@ function makeHeader(originalFilename) {
   });
 
   xtest(`${name}#_Nested object parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
     const req = new http.ClientRequest();
     req.headers = {
@@ -175,7 +175,6 @@ function makeHeader(originalFilename) {
       describe('when file is empty', () => {
         test('emits error when part is received', (done) => {
           const form = getForm(name, {
-            multiples: true,
             allowEmptyFiles: false,
           });
 
@@ -196,7 +195,6 @@ function makeHeader(originalFilename) {
       describe('when file is not empty', () => {
         test('not emits error when part is received', () => {
           const form = getForm(name, {
-            multiples: true,
             allowEmptyFiles: false,
           });
           const formEmitSpy = jest.spyOn(form, 'emit');
@@ -212,7 +210,7 @@ function makeHeader(originalFilename) {
 
     describe('when allow empty files', () => {
       test('not emits error when part is received', () => {
-        const form = getForm(name, { multiples: true });
+        const form = getForm(name, {  });
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
@@ -225,7 +223,7 @@ function makeHeader(originalFilename) {
 
     describe('when file uploaded size is inferior than minFileSize option', () => {
       test('emits error when part is received', (done) => {
-        const form = getForm(name, { multiples: true, minFileSize: 5 });
+        const form = getForm(name, { minFileSize: 5 });
 
         const part = new Stream();
         part.mimetype = 'text/plain';
@@ -242,7 +240,7 @@ function makeHeader(originalFilename) {
 
     describe('when file uploaded size is superior than minFileSize option', () => {
       test('not emits error when part is received', () => {
-        const form = getForm(name, { multiples: true, minFileSize: 10 });
+        const form = getForm(name, { minFileSize: 10 });
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
@@ -256,7 +254,6 @@ function makeHeader(originalFilename) {
     describe('when there are more fields than maxFields', () => {
       test('emits error', (done) => {
         const form = getForm(name, {
-          multiples: true,
           maxFields: 1,
         });
 

@@ -12,7 +12,6 @@ app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
     let i = 0;
     const form = formidable({
-      multiples: true,
       keepExtensions: true,
       // must return absolute path
       filename: (part, $self) => {

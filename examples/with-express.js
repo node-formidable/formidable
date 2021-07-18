@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/upload', (req, res, next) => {
-  const form = formidable({ multiples: true });
+  const form = formidable({ });
 
   form.parse(req, (err, fields, files) => {
     if (err) {

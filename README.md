@@ -110,7 +110,7 @@ import formidable from 'formidable';
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
-    const form = formidable({ multiples: true });
+    const form = formidable({});
 
     form.parse(req, (err, fields, files) => {
       if (err) {
@@ -169,7 +169,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/upload', (req, res, next) => {
-  const form = formidable({ multiples: true });
+  const form = formidable({});
 
   form.parse(req, (err, fields, files) => {
     if (err) {
@@ -209,7 +209,7 @@ app.on('error', (err) => {
 
 app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
-    const form = formidable({ multiples: true });
+    const form = formidable({});
 
     // not very elegant, but that's for now if you don't want to use `koa-better-body`
     // or other middlewares.
@@ -337,11 +337,6 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   (AWS S3, Azure blob storage, Google cloud storage) or private file storage,
   this is the option you're looking for. When this option is defined the default
   behavior of writing the file in the host machine file system is lost.
-- `options.multiples` **{boolean}** - default `false`; when you call the
-  `.parse` method, the `files` argument (of the callback) will contain arrays of
-  files for inputs which submit multiple files using the HTML5 `multiple`
-  attribute. Also, the `fields` argument will contain arrays of values for
-  fields that have names ending with '[]'.
 - `options.filename` **{function}** - default `undefined` Use it to control
   newFilename. Must return a string. Will be joined with options.uploadDir.
 
@@ -390,7 +385,7 @@ Parses an incoming Node.js `request` containing form data. If `callback` is
 provided, all fields and files are collected and passed to the callback.
 
 ```js
-const form = formidable({ multiples: true, uploadDir: __dirname });
+const form = formidable({ uploadDir: __dirname });
 
 form.parse(req, (err, fields, files) => {
   console.log('fields:', fields);
