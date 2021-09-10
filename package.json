@@ -87,6 +87,9 @@
       ":pinAllExceptPeerDependencies"
     ]
   },
+  "engines": {
+    "pm": "yarn@1.x"
+  },
   "keywords": [
     "multipart",
     "form",
