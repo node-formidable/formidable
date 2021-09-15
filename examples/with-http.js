@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
       //    */
       //   // slugify to avoid invalid filenames
       //   // substr to define a maximum length
-      //   // return `${slugify(name).${slugify(ext, separator: '')}`.substr(0, 100);
+      //   // return `${slugify(name)}.${slugify(ext, {separator: ''})}`.substr(0, 100);
       //   return 'yo.txt'; // or completly different name
       //   // return 'z/yo.txt'; // subdirectory
       // },
