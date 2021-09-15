@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
       keepExtensions: true,
       // filename(/*name, ext, part, form*/) {
       //   /* name basename of the http originalFilename
-      //     ext with the dot ".txt" only if keepExtension is true
+      //     ext with the dot ".txt" only if keepExtensions is true
       //    */
       //   // slugify to avoid invalid filenames
       //   // substr to define a maximum length
