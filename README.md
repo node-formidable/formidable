@@ -704,7 +704,7 @@ form.on('end', () => {});
 Gets first values of fields, like pre 3.0.0 without multiples pass in a list of optional exceptions where arrays of strings is still wanted (`<select mulitple>` for example)
 
 ```js
-import { firstValues } from 'formidable/src/helpers/firstValues.js";
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
 
 // ...
 form.parse(request, async (error, fieldsMultiple, files) => {
@@ -722,8 +722,8 @@ Html form input type="checkbox" only send the value "on" if checked,
 convert it to booleans for each input that is expected to be sent as a checkbox, only use after firstValues or similar was called.
 
 ```js
-import { firstValues } from 'formidable/src/helpers/firstValues.js";
-import { readBooleans } from 'formidable/src/helpers/readBooleans.js";
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
+import { readBooleans } from 'formidable/src/helpers/readBooleans.js';
 
 // ...
 form.parse(request, async (error, fieldsMultiple, files) => {
