@@ -701,7 +701,7 @@ form.on('end', () => {});
 
 #### firstValues
 
-Gets first values of fields, like pre 3.0.0 without multiples pass in a list of optional exceptions where arrays of strings is still wanted (`<select mulitple>` for example)
+Gets first values of fields, like pre 3.0.0 without multiples pass in a list of optional exceptions where arrays of strings is still wanted (`<select multiple>` for example)
 
 ```js
 import { firstValues } from 'formidable/src/helpers/firstValues.js';
