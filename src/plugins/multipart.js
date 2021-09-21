@@ -8,6 +8,7 @@ import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
 
 
+export const multipartType = 'multipart';
 // the `options` is also available through the `options` / `formidable.options`
 export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
@@ -42,7 +43,7 @@ export default function plugin(formidable, options) {
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
 function createInitMultipart(boundary) {
   return function initMultipart() {
-    this.type = 'multipart';
+    this.type = multipartType;
 
     const parser = new MultipartParser(this.options);
     let headerField;
