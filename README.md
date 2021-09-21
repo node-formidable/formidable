@@ -730,7 +730,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
     if (error) {
         //...
     }
-    const fieldsSingle = firstValues(form, fieldsMultiple, exceptions);
+    const fieldsSingle = firstValues(form, fieldsMultiple);
     
     const expectedBooleans = ['checkbox1', 'wantsNewsLetter', 'hasACar'];
     const fieldsWithBooleans = readBooleans(fieldsSingle, expectedBooleans);
