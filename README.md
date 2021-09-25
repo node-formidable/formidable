@@ -697,6 +697,46 @@ finished flushing to disk. This is a great place for you to send your response.
 form.on('end', () => {});
 ```
 
+### Helpers
+
+#### firstValues
+
+Gets first values of fields, like pre 3.0.0 without multiples pass in a list of optional exceptions where arrays of strings is still wanted (`<select multiple>` for example)
+
+```js
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
+
+// ...
+form.parse(request, async (error, fieldsMultiple, files) => {
+    if (error) {
+        //...
+    }
+    const exceptions = ['thisshouldbeanarray'];
+    const fieldsSingle = firstValues(form, fieldsMultiple, exceptions);
+    // ...
+```
+
+#### readBooleans
+
+Html form input type="checkbox" only send the value "on" if checked,
+convert it to booleans for each input that is expected to be sent as a checkbox, only use after firstValues or similar was called.
+
+```js
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
+import { readBooleans } from 'formidable/src/helpers/readBooleans.js';
+
+// ...
+form.parse(request, async (error, fieldsMultiple, files) => {
+    if (error) {
+        //...
+    }
+    const fieldsSingle = firstValues(form, fieldsMultiple);
+    
+    const expectedBooleans = ['checkbox1', 'wantsNewsLetter', 'hasACar'];
+    const fieldsWithBooleans = readBooleans(fieldsSingle, expectedBooleans);
+    // ...
+```
+
 ## Ports & Credits
 
 - [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++

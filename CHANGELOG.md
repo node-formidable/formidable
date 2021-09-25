@@ -1,5 +1,9 @@
 # Changelog
 
+### Unreleased 3.1
+
+ * feat: add firstValues, readBooleans helpers
+
 ### Unreleased 3.0
 
  * feat: remove options.multiples ([730](https://github.com/node-formidable/formidable/pull/730))

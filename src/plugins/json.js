@@ -2,6 +2,7 @@
 
 import JSONParser from '../parsers/JSON.js';
 
+export const jsonType = 'json';
 // the `options` is also available through the `this.options` / `formidable.options`
 export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
@@ -19,7 +20,7 @@ export default function plugin(formidable, options) {
 // of the passed `options` (second) param, because when you decide
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
 function init(_self, _opts) {
-  this.type = 'json';
+  this.type = jsonType;
 
   const parser = new JSONParser(this.options);
 
