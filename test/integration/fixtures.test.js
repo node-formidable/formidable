@@ -1,9 +1,9 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 
-import { readdirSync, createReadStream } from 'fs';
+import { createReadStream } from 'fs';
 import { createConnection } from 'net';
-import { join, basename } from 'path';
+import { join } from 'path';
 import { createServer } from 'http';
 import { strictEqual } from 'assert';
 
@@ -11,36 +11,40 @@ import formidable from '../../src/index.js';
 
 const PORT = 13534;
 const CWD = process.cwd();
-const FIXTURES_PATH = join(CWD, 'test', 'fixture', 'js');
 const FIXTURES_HTTP = join(CWD, 'test', 'fixture', 'http');
 const UPLOAD_DIR = join(CWD, 'test', 'tmp');
+import * as encoding from "../fixture/js/encoding.js";
+import * as misc from "../fixture/js/misc.js";
+import * as noFilename from "../fixture/js/no-filename.js";
+import * as preamble from "../fixture/js/preamble.js";
+import * as workarounds from "../fixture/js/workarounds.js";
+import * as specialCharsInFilename from "../fixture/js/special-chars-in-filename.js";
+
+const fixtures= {
+  encoding,
+  misc,
+  [`no-filename`]: noFilename,
+  preamble, 
+  [`special-chars-in-filename`]: specialCharsInFilename,
+  workarounds,
+};
 
 test('fixtures', (done) => {
   const server = createServer();
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
-    const results = readdirSync(FIXTURES_PATH)
-      // .filter((x) => /workarounds/.test(x))
-      .filter((x) => /\.js$/.test(x))
-      .reduce((acc, fp) => {
-        const group = basename(fp, '.js');
-        const filepath = join(FIXTURES_PATH, fp);
-        const mod = require(filepath);
-
-        Object.keys(mod).forEach((k) => {
-          Object.keys(mod[k]).forEach((_fixture) => {
-            acc.push({
-              fixture: mod[k],
-              name: join(group, k),
-            });
+      const results = Object.entries(fixtures).map(([fixtureGroup, fixture]) => {
+        return Object.entries(fixture).map(([k, v]) => {
+          return v.map(details => {
+            return {
+              fixture: v,
+              name: `${fixtureGroup}/${details.fixture}.http`
+            };
           });
         });
-
-        return acc;
-      }, []);
-
-    testNext(results);
+      }).flat(Infinity);
+      testNext(results);
   }
 
   function testNext(results) {

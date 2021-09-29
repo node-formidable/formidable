@@ -1,29 +1,38 @@
 const properFilename = 'funkyfilename.txt';
 
-function expect(originalFilename) {
+function expect(originalFilename, fixtureName) {
   return [
-    { type: 'field', name: 'title', value: 'Weird originalFilename' },
+    { 
+      type: 'field',
+      name: 'title',
+      originalFilename: properFilename,
+      fixture: fixtureName,
+    },
     {
       type: 'file',
       name: 'upload',
-      originalFilename,
-      fixture: properFilename,
+      originalFilename: originalFilename,
+      fixture: fixtureName,
     },
   ];
 }
 
-const webkit = expect(' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt');
-const ffOrIe = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt');
-const lineSeparator = expect(null);
+const osx_chrome_13_http = expect(' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'osx-chrome-13');
+const osx_firefox_3_6_http = expect(' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'osx-firefox-3.6');
+
+const xp_ie_7_http = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'xp-ie-7');
+const xp_ie_8_http = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'xp-ie-8');
+const lineSeparator = expect(null, 'line-separator');
 
 export {
-  webkit as osx_chrome_13_http,
-  webkit as osx_firefox_3_6_http,
-  webkit as osx_safari_5_http,
-  webkit as xp_chrome_12_http,
-  webkit as xp_safari_5_http,
+  osx_chrome_13_http,
+  osx_firefox_3_6_http,
+  // webkit as osx_firefox_3_6_http,
+  // webkit as osx_safari_5_http,
+  // webkit as xp_chrome_12_http,
+  // webkit as xp_safari_5_http,
 
-  ffOrIe as xp_ie_7_http,
-  ffOrIe as xp_ie_8_http,
-  lineSeparator as line_separator_http,
+  // xp_ie_7_http,
+  // xp_ie_8_http,
+  // lineSeparator,
 };
