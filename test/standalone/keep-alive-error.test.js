@@ -38,7 +38,7 @@ test('keep alive error', (done) => {
         'Connection: keep-alive\r\n' +
         'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
         'Content-Length: 10011\r\n\r\n' +
-        '------aaa\n\r',
+        '------XXX\n\r',
     );
 
     setTimeout(() => {
