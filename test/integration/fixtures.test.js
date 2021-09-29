@@ -48,14 +48,14 @@ test('fixtures', (done) => {
   }
 
   function testNext(results) {
-    let fixture = results.shift();
-    if (!fixture) {
+    const fixtureWithName = results.shift();
+    if (!fixtureWithName) {
       server.close();
       done();
       return;
     }
-    const fixtureName = fixture.name;
-    fixture = fixture.fixture;
+    const fixtureName = fixtureWithName.name;
+    const fixture = fixtureWithName.fixture;
 
     uploadFixture(fixtureName, (err, parts) => {
       if (err) {
