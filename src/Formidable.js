@@ -146,7 +146,7 @@ class IncomingForm extends EventEmitter {
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const callback = once(dezalgo(cb));
-      const fields = {};
+      this.fields = {};
       let mockFields = '';
       const files = {};
 
@@ -154,14 +154,14 @@ class IncomingForm extends EventEmitter {
         if (
           this.type === 'multipart' || this.type === 'urlencoded'
         ) {
-          if (!hasOwnProp(fields, name)) {
-            fields[name] = [value];
+          if (!hasOwnProp(this.fields, name)) {
+            this.fields[name] = [value];
           } else {
-            fields[name].push(value);
+            this.fields[name].push(value);
           }
           
         } else {
-          fields[name] = value;
+          this.fields[name] = value;
         }
       });
       this.on('file', (name, file) => {
@@ -176,7 +176,7 @@ class IncomingForm extends EventEmitter {
         callback(err, fields, files);
       });
       this.on('end', () => {
-        callback(null, fields, files);
+        callback(null, this.fields, files);
       });
     }
 

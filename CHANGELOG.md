@@ -1,5 +1,9 @@
 # Changelog
 
+### Unreleased 3.1.1
+
+ * feat: handle top level json array, string and number
+
 ### Unreleased 3.1
 
  * feat: add firstValues, readBooleans helpers

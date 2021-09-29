@@ -24,8 +24,8 @@ function init(_self, _opts) {
 
   const parser = new JSONParser(this.options);
 
-  parser.on('data', ({ key, value }) => {
-    this.emit('field', key, value);
+  parser.on('data', (fields) => {
+    this.fields = fields;
   });
 
   parser.once('end', () => {
