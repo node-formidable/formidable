@@ -173,7 +173,7 @@ class IncomingForm extends EventEmitter {
         
       });
       this.on('error', (err) => {
-        callback(err, fields, files);
+        callback(err, this.fields, files);
       });
       this.on('end', () => {
         callback(null, this.fields, files);
