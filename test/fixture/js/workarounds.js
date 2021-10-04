@@ -1,8 +1,3 @@
-export {
-    missing_hyphens1_http,
-    missing_hyphens2_http,
-}
-
 const missing_hyphens1_http = [
   {
     type: 'file',
@@ -22,3 +17,5 @@ const missing_hyphens2_http = [
     sha1: '798e39a4a1034232ed26e0aadd67f5d1ff10b966',
   },
 ];
+
+export { missing_hyphens1_http, missing_hyphens2_http };

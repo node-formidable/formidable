@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-
 import { Transform } from 'stream';
 
 class JSONParser extends Transform {

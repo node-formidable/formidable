@@ -1,10 +1,3 @@
-export {
-    menu_separator_png_http,
-    beta_sticker_1_png_http,
-    blank_gif_http,
-    binaryfile_tar_gz_http,
-    plain_txt_http,
-};
 const menu_separator_png_http = [
   {
     type: 'file',
@@ -54,3 +47,11 @@ const plain_txt_http = [
     sha1: 'b31d07bac24ac32734de88b3687dddb10e976872',
   },
 ];
+
+export {
+  menu_separator_png_http,
+  beta_sticker_1_png_http,
+  blank_gif_http,
+  binaryfile_tar_gz_http,
+  plain_txt_http,
+};

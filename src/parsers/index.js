@@ -1,5 +1,3 @@
-'use strict';
-
 import JSONParser from './JSON.js';
 import DummyParser from './Dummy.js';
 import MultipartParser from './Multipart.js';

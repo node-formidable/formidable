@@ -1,12 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
 import { Stream } from 'stream';
 import MultipartParser from '../parsers/Multipart.js';
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
-
 
 export const multipartType = 'multipart';
 // the `options` is also available through the `options` / `formidable.options`
@@ -36,7 +33,7 @@ export default function plugin(formidable, options) {
       self._error(err);
     }
   }
-};
+}
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
