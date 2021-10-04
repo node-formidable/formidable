@@ -8,12 +8,13 @@ import once from 'once';
 import dezalgo from 'dezalgo';
 import { EventEmitter } from 'events';
 import { StringDecoder } from 'string_decoder';
-import {
-  octetstream,
-  querystring,
-  multipart,
-  json,
-} from "./plugins/index.js";
+import { octetstream, querystring, multipart, json } from './plugins/index.js';
+import PersistentFile from './PersistentFile.js';
+import VolatileFile from './VolatileFile.js';
+import DummyParser from './parsers/Dummy.js';
+import MultipartParser from './parsers/Multipart.js';
+import * as errors from './FormidableError.js';
+import FormidableError from './FormidableError.js';
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
@@ -26,26 +27,13 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hashAlgorithm: false,
   uploadDir: os.tmpdir(),
-  enabledPlugins: [
-    octetstream,
-    querystring,
-    multipart,
-    json,
-  ],
+  enabledPlugins: [octetstream, querystring, multipart, json],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
-  filter: function () {
+  filter() {
     return true;
   },
 };
-
-import PersistentFile from './PersistentFile.js';
-import VolatileFile from './VolatileFile.js';
-import DummyParser from './parsers/Dummy.js';
-import MultipartParser from './parsers/Multipart.js';
-import * as errors from './FormidableError.js';
-import FormidableError from './FormidableError.js';
-
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -151,26 +139,22 @@ class IncomingForm extends EventEmitter {
       const files = {};
 
       this.on('field', (name, value) => {
-        if (
-          this.type === 'multipart' || this.type === 'urlencoded'
-        ) {
+        if (this.type === 'multipart' || this.type === 'urlencoded') {
           if (!hasOwnProp(this.fields, name)) {
             this.fields[name] = [value];
           } else {
             this.fields[name].push(value);
           }
-          
         } else {
           this.fields[name] = value;
         }
       });
       this.on('file', (name, file) => {
-          if (!hasOwnProp(files, name)) {
-              files[name] = [file];
-          } else {
-              files[name].push(file);
-          }
-        
+        if (!hasOwnProp(files, name)) {
+          files[name] = [file];
+        } else {
+          files[name].push(file);
+        }
       });
       this.on('error', (err) => {
         callback(err, this.fields, files);
@@ -537,8 +521,6 @@ class IncomingForm extends EventEmitter {
     return basename.slice(firstDot, lastDot) + extname;
   }
 
-
-
   _joinDirectoryName(name) {
     const newPath = path.join(this.uploadDir, name);
 
@@ -570,12 +552,13 @@ class IncomingForm extends EventEmitter {
         const name = toHexoId();
 
         if (part && this.options.keepExtensions) {
-          const originalFilename = typeof part === 'string' ? part : part.originalFilename;
+          const originalFilename =
+            typeof part === 'string' ? part : part.originalFilename;
           return `${name}${this._getExtension(originalFilename)}`;
         }
-    
+
         return name;
-      }
+      };
     }
   }
 
@@ -609,8 +592,5 @@ class IncomingForm extends EventEmitter {
   }
 }
 
-
 export default IncomingForm;
-export {
-    DEFAULT_OPTIONS,
-};
+export { DEFAULT_OPTIONS };

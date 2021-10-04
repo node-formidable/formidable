@@ -3,11 +3,9 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
 
-
 import { Transform } from 'stream';
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
-
 
 let s = 0;
 const STATE = {
@@ -343,4 +341,4 @@ MultipartParser.stateToString = (stateNumber) => {
   }
 };
 
-export default Object.assign(MultipartParser, { STATES: STATES });
+export default Object.assign(MultipartParser, { STATES });

@@ -1,8 +1,3 @@
-export {
-    crlf_http,
-    preamble_http,
-};
-
 const crlf_http = [
   {
     type: 'file',
@@ -22,3 +17,5 @@ const preamble_http = [
     sha1: 'a47f7a8a7959f36c3f151ba8b0bd28f2d6b606e2',
   },
 ];
+
+export { crlf_http, preamble_http };

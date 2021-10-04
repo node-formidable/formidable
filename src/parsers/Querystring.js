@@ -2,7 +2,6 @@
 
 import { Transform } from 'stream';
 
-
 // This is a buffering parser, not quite as nice as the multipart one.
 // If I find time I'll rewrite this to be fully streaming as well
 class QuerystringParser extends Transform {

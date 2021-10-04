@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-
 import OctetStreamParser from '../parsers/OctetStream.js';
 
 export const octetStreamType = 'octet-stream';
@@ -17,7 +16,7 @@ export default function plugin(formidable, options) {
   }
 
   return self;
-};
+}
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide

@@ -2,7 +2,7 @@ const properFilename = 'funkyfilename.txt';
 
 function expect(originalFilename, fixtureName) {
   return [
-    { 
+    {
       type: 'field',
       name: 'title',
       originalFilename: properFilename,
@@ -11,7 +11,7 @@ function expect(originalFilename, fixtureName) {
     {
       type: 'file',
       name: 'upload',
-      originalFilename: originalFilename,
+      originalFilename,
       fixture: fixtureName,
     },
   ];

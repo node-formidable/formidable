@@ -1,4 +1,3 @@
-
 const missingPlugin = 1000;
 const pluginFunction = 1001;
 const aborted = 1002;
