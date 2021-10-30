@@ -15,7 +15,7 @@
 If you have any _how-to_ kind of questions, please read the [Contributing
 Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
 documents.<br /> For bugs reports and feature requests, [please create an
-issue][open-issue-url] or ping [@tunnckoCore](https://twitter.com/tunnckoCore)
+issue][open-issue-url] or ping [@tunnckoCore / @3a1FcBx0](https://twitter.com/3a1FcBx0)
 at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
@@ -39,7 +39,9 @@ use._
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
 
-## Status: Maintained [![npm version][npmv-canary-img]][npmv-url]
+## Project Status: Maintained
+
+_Check [VERSION_NOTES.md](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 release plans, NPM dist-tags and GitHub branches._
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
@@ -53,13 +55,6 @@ are always welcome! :heart: Jump on
 [issue #412](https://github.com/felixge/node-formidable/issues/412) which is
 closed, but if you are interested we can discuss it and add you after strict
 rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
-
-_**Note:** The github `master` branch is a "canary" branch - try it with
-`npm i formidable@canary`. Do not expect (for now) things from it to be inside
-the`latest` "dist-tag" in the Npm. The`formidable@latest`is the`v1.2.1` version
-and probably it will be the last`v1` release!_
-
-_**Note: v2 is coming soon!**_
 
 ## Highlights
 
@@ -801,8 +796,8 @@ Formidable is licensed under the [MIT License][license-url].
 [renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
 [prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
 [prs-welcome-url]: http://makeapullrequest.com
-[twitter-url]: https://twitter.com/tunnckoCore
-[twitter-img]: https://badgen.net/twitter/follow/tunnckoCore?icon=twitter&color=1da1f2&cache=300
+[twitter-url]: https://twitter.com/3a1fcBx0
+[twitter-img]: https://badgen.net/twitter/follow/3a1fcBx0?icon=twitter&color=1da1f2&cache=300
 
 [npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
 [npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
@@ -825,8 +820,8 @@ Formidable is licensed under the [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable/master/ubuntu?cache=300&label=linux%20build&icon=github
-[macos-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable/master/macos?cache=300&label=macos%20build&icon=github
-[windows-build-img]: https://badgen-net.charlike.now.sh/github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
+[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/ubuntu?cache=300&label=linux%20build&icon=github
+[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/macos?cache=300&label=macos%20build&icon=github
+[windows-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
 [build-url]: https://github.com/node-formidable/formidable/actions?query=workflow%3Anodejs
 <!-- prettier-ignore-end -->
