@@ -41,7 +41,7 @@ use._
 
 ## Project Status: Maintained
 
-_Check [VERSION_NOTES.md](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 release plans, NPM dist-tags and GitHub branches._
+_Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
@@ -72,22 +72,21 @@ This project requires `Node.js >= 10.13`. Install it using
 [yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly
 recommend to use Yarn when you think to contribute to this project._
 
-```sh
-npm install formidable
-# or the canary version
-npm install formidable@canary
-```
-
-or with Yarn v1/v2
-
-```sh
-yarn add formidable
-# or the canary version
-yarn add formidable@canary
-```
-
 This is a low-level package, and if you're using a high-level framework it _may_
-already be included. Check the examples below and the `examples/` folder.
+already be included. Check the examples below and the [examples/](https://github.com/node-formidable/formidable/tree/master/examples) folder.
+
+```sh
+# v2
+npm install formidable
+npm install formidable@latest
+npm install formidable@v2
+
+# or v3
+npm install formidable@v3
+```
+
+_**Note:** In near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will continue to be published on `canary` dist-tag._
+
 
 ## Examples
 
