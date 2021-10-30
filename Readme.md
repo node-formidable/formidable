@@ -1,21 +1,104 @@
-# Formidable
+<p align="center">
+  <img alt="npm formidable package logo" src="https://raw.githubusercontent.com/node-formidable/formidable/master/logo.png" />
+</p>
 
-## Purpose
+# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url]
 
-A Node.js module for parsing form data, especially file uploads.
+> A Node.js module for parsing form data, especially file uploads.
 
+### Important Notes
 
-## Changelog
+For more info, check the [CHANGELOG](https://github.com/node-formidable/formidable/blob/master/CHANGELOG.md) on the master branch.
 
-[./CHANGELOG.md](https://github.com/node-formidable/formidable/blob/master/CHANGELOG.md)
+#### v1 is deprecated
 
-## Current status
+All `v1` versions are deprecated in NPM for over 2 years. You can find it at `formidable@v1` on NPM, and on [v1 branch][v1branch] on GitHub.  
+We highly recommend to use `v2` or `v3`. Both are already in use by many, especially `v2` which was on `formidable@canary` for 2 years.
 
-**Maintainers Wanted:** Please see https://github.com/felixge/node-formidable/issues/412
+- We won't provide support or accept reports on that version.
+- **No Backporting:** bugfixes, security fixes, or new features WILL NOT happen!
+- Please move to at least **v2**! 
+- Try with installing `formidable@v2` and if still have the problem - report!
 
-This module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading
-and encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from
-a large variety of clients and is considered production-ready.
+---
+
+#### v2
+The `v2` will be simultaneously on two places for some time - `formidable@latest` and `formidable@v2`.
+The source code be available **only** on [v2 branch][v2branch].
+If you want to use v2, it's recommended to lock and use the v2 dist-tag `formidable@v2`. 
+
+**Main Differences from v1:**
+- Better organization and modernized code, requiring newer Node.js versions (>= v10).
+- A lot of bugfixes, closed issues, merged or closed PRs.
+- **Backward compatible to v1!** Should not have problems, the major version bump is just for ensurance.
+- Better docs, new features (plugins, parsers, options) and optimizations.
+
+---
+
+#### v3
+We recommend to use `formidable@v3` to install, as it uses more modern Node.js Streams, has support for Promises and more stuff.
+You can see more info and track some ideas on [issue#635](https://github.com/node-formidable/formidable/issues/635).
+
+- The source code can be found on the [master branch](https://github.com/node-formidable/formidable) on GitHub.
+- It will be published on `formidable@latest` after some time.
+- Dropping older Node.js versions, requiring higher than v12-v14.
+- Dropping v1 compatibility.
+- Rewritten to ESModules, more optimizations.
+- Moving to monorepo structure, more plugins & helper utils.
+
+[v1branch]: https://github.com/node-formidable/formidable/tree/v1
+[v2branch]: https://github.com/node-formidable/formidable/tree/v2
+[v3branch]: https://github.com/node-formidable/formidable/tree/v3
+
+---
+
+[![Code style][codestyle-img]][codestyle-url]
+[![codecoverage][codecov-img]][codecov-url]
+[![linux build status][linux-build-img]][build-url]
+[![windows build status][windows-build-img]][build-url]
+[![macos build status][macos-build-img]][build-url]
+
+If you have any _how-to_ kind of questions, please read the [Contributing
+Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
+documents.<br /> For bugs reports and feature requests, [please create an
+issue][open-issue-url] or ping [@tunnckoCore](https://twitter.com/tunnckoCore)
+at Twitter.
+
+[![Conventional Commits][ccommits-img]][ccommits-url]
+[![Minimum Required Nodejs][nodejs-img]][npmv-url]
+[![Tidelift Subcsription][tidelift-img]][tidelift-url]
+[![Buy me a Kofi][kofi-img]][kofi-url]
+[![Renovate App Status][renovateapp-img]][renovateapp-url]
+[![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+
+This project is [semantically versioned](https://semver.org) and available as
+part of the [Tidelift Subscription][tidelift-url] for professional grade
+assurances, enhanced support and security.
+[Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise)
+
+_The maintainers of `formidable` and thousands of other packages are working
+with Tidelift to deliver commercial support and maintenance for the Open Source
+dependencies you use to build your applications. Save time, reduce risk, and
+improve code health, while paying the maintainers of the exact dependencies you
+use._
+
+[![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
+[![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
+
+## Status: Maintained
+
+This module was initially developed by
+[**@felixge**](https://github.com/felixge) for
+[Transloadit](http://transloadit.com/), a service focused on uploading and
+encoding images and videos. It has been battle-tested against hundreds of GBs of
+file uploads from a large variety of clients and is considered production-ready
+and is used in production for years.
+
+Currently, we are few maintainers trying to deal with it. :) More contributors
+are always welcome! :heart: Jump on
+[issue #412](https://github.com/felixge/node-formidable/issues/412) which is
+closed, but if you are interested we can discuss it and add you after strict
+rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
 
 ## Features
 
@@ -28,11 +111,9 @@ a large variety of clients and is considered production-ready.
 ## Installation
 
 ```sh
-npm install formidable@1.x
-# or the canary version
-npm install formidable@canary
-## 3.x
-npm install formidable@3.x
+npm install formidable@v1
+npm install formidable@v2
+npm install formidable@v3
 ```
 
 This is a low-level package, and if you're using a high-level framework it may already be included. However, [Express v4](http://expressjs.com) does not include any multipart handling, nor does [body-parser](https://github.com/expressjs/body-parser).
@@ -281,63 +362,84 @@ Emitted when the entire request has been received, and all contained files have 
 
 ## Changelog
 
-### v1.1.1 (2017-01-15)
-
- * Fix DeprecationWarning about os.tmpDir() (Christian)
- * Update `buffer.write` order of arguments for Node 7 (Kornel Lesiński)
- * JSON Parser emits error events to the IncomingForm (alessio.montagnani)
- * Improved Content-Disposition parsing (Sebastien)
- * Access WriteStream of fs during runtime instead of include time (Jonas Amundsen)
- * Use built-in toString to convert buffer to hex (Charmander)
- * Add hash to json if present (Nick Stamas)
- * Add license to package.json (Simen Bekkhus)
-
-### v1.0.14 (2013-05-03)
-
-* Add failing hash tests. (Ben Trask)
-* Enable hash calculation again (Eugene Girshov)
-* Test for immediate data events (Tim Smart)
-* Re-arrange IncomingForm#parse (Tim Smart)
-
-### v1.0.13
-
-* Only update hash if update method exists (Sven Lito)
-* According to travis v0.10 needs to go quoted (Sven Lito)
-* Bumping build node versions (Sven Lito)
-* Additional fix for empty requests (Eugene Girshov)
-* Change the default to 1000, to match the new Node behaviour. (OrangeDog)
-* Add ability to control maxKeys in the querystring parser. (OrangeDog)
-* Adjust test case to work with node 0.9.x (Eugene Girshov)
-* Update package.json (Sven Lito)
-* Path adjustment according to eb4468b (Markus Ast)
-
-### v1.0.12
-
-* Emit error on aborted connections (Eugene Girshov)
-* Add support for empty requests (Eugene Girshov)
-* Fix name/filename handling in Content-Disposition (jesperp)
-* Tolerate malformed closing boundary in multipart (Eugene Girshov)
-* Ignore preamble in multipart messages (Eugene Girshov)
-* Add support for application/json (Mike Frey, Carlos Rodriguez)
-* Add support for Base64 encoding (Elmer Bulthuis)
-* Add File#toJSON (TJ Holowaychuk)
-* Remove support for Node.js 0.4 & 0.6 (Andrew Kelley)
-* Documentation improvements (Sven Lito, Andre Azevedo)
-* Add support for application/octet-stream (Ion Lupascu, Chris Scribner)
-* Use os.tmpdir() to get tmp directory (Andrew Kelley)
-* Improve package.json (Andrew Kelley, Sven Lito)
-* Fix benchmark script (Andrew Kelley)
-* Fix scope issue in incoming_forms (Sven Lito)
-* Fix file handle leak on error (OrangeDog)
-
-## License
-
-Formidable is licensed under the MIT license.
-
-## Ports
-
-* [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable
+[./CHANGELOG.md](./CHANGELOG.md)
 
 ## Credits
 
-* [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js
+- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++
+  parser based on formidable
+- [Ryan Dahl](http://twitter.com/ryah) for his work on
+  [http-parser](http://github.com/ry/http-parser) which heavily inspired the
+  initial `multipart_parser.js`.
+
+From [Felix blog post](https://felixge.de/2013/03/11/the-pull-request-hack/):
+
+- [Sven Lito](https://github.com/svnlto) for fixing bugs and merging patches
+- [egirshov](https://github.com/egirshov) for contributing many improvements to the node-formidable multipart parser
+- [Andrew Kelley](https://github.com/superjoe30) for also helping with fixing bugs and making improvements
+- [Mike Frey](https://github.com/mikefrey) for contributing JSON support
+
+
+## Contributing
+
+If the documentation is unclear or has a typo, please click on the page's `Edit`
+button (pencil icon) and suggest a correction. If you would like to help us fix
+a bug or add a new feature, please check our [Contributing
+Guide][contributing-url]. Pull requests are welcome!
+
+
+## License
+
+Formidable is licensed under the [MIT License][license-url].
+
+<!-- badges -->
+<!-- prettier-ignore-start -->
+
+[codestyle-url]: https://github.com/airbnb/javascript
+[codestyle-img]: https://badgen.net/badge/code%20style/airbnb%20%2B%20prettier/ff5a5f?icon=airbnb&cache=300
+[codecov-url]: https://codecov.io/gh/node-formidable/formidable
+[codecov-img]: https://badgen.net/codecov/c/github/node-formidable/formidable/master?icon=codecov
+[npmv-canary-img]: https://badgen.net/npm/v/formidable/canary?icon=npm
+[npmv-dev-img]: https://badgen.net/npm/v/formidable/dev?icon=npm
+[npmv-img]: https://badgen.net/npm/v/formidable?icon=npm
+[npmv-url]: https://npmjs.com/package/formidable
+[license-img]: https://badgen.net/npm/license/formidable
+[license-url]: https://github.com/node-formidable/formidable/blob/master/LICENSE
+[chat-img]: https://badgen.net/badge/chat/on%20gitter/46BC99?icon=gitter
+[chat-url]: https://gitter.im/node-formidable/Lobby
+[libera-manifesto-url]: https://liberamanifesto.com
+[libera-manifesto-img]: https://badgen.net/badge/libera/manifesto/grey
+[renovateapp-url]: https://renovatebot.com
+[renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
+[prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
+[prs-welcome-url]: http://makeapullrequest.com
+[twitter-url]: https://twitter.com/tunnckoCore
+[twitter-img]: https://badgen.net/twitter/follow/tunnckoCore?icon=twitter&color=1da1f2&cache=300
+
+[npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
+[npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
+[npm-yearly-img]: https://badgen.net/npm/dy/formidable?icon=npm&cache=300
+[npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300&label=total%20downloads
+
+[nodejs-img]: https://badgen.net/badge/node/>=%2010.13/green?cache=300
+
+[ccommits-url]: https://conventionalcommits.org/
+[ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300
+
+[contributing-url]: https://github.com/node-formidable/.github/blob/master/CONTRIBUTING.md
+[code_of_conduct-url]: https://github.com/node-formidable/.github/blob/master/CODE_OF_CONDUCT.md
+
+[open-issue-url]: https://github.com/node-formidable/formidable/issues/new
+
+[tidelift-url]: https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise
+[tidelift-img]: https://badgen.net/badge/tidelift/subscription/4B5168?labelColor=F6914D
+
+[kofi-url]: https://ko-fi.com/tunnckoCore/commissions
+[kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
+
+[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/ubuntu?cache=300&label=linux%20build&icon=github
+[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/macos?cache=300&label=macos%20build&icon=github
+[windows-build-img]: https://badgen.net//github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
+[build-url]: https://github.com/node-formidable/formidable/actions?query=workflow%3Anodejs
+<!-- prettier-ignore-end -->
+
