@@ -738,7 +738,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
     const fieldsWithBooleans = readBooleans(fieldsSingle, expectedBooleans);
     // ...
 ```
-## Chagelog
+## Changelog
 
 [./CHANGELOG.md](./CHANGELOG.md)
 
