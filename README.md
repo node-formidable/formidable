@@ -75,20 +75,16 @@ recommend to use Yarn when you think to contribute to this project._
 This is a low-level package, and if you're using a high-level framework it _may_
 already be included. Check the examples below and the [examples/](https://github.com/node-formidable/formidable/tree/master/examples) folder.
 
-```sh
+```
 # v2
 npm install formidable
+npm install formidable@v2
 
-## 3.x
-npm install formidable@3.x
-```
-
-
-# or v3
+# v3
 npm install formidable@v3
 ```
 
-_**Note:** In near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will continue to be published on `canary` dist-tag._
+_**Note:** In the near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
 
 
 ## Examples
