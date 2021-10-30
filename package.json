@@ -1,9 +1,19 @@
 {
   "name": "formidable",
-  "description": "A node.js module for parsing form data, especially file uploads.",
-  "homepage": "https://github.com/felixge/node-formidable",
+  "version": "1.2.5",
   "license": "MIT",
-  "version": "1.2.4",
+  "description": "(DEPRECATED! Install formidable@v2) A node.js module for parsing form data, especially file uploads.",
+  "homepage": "https://github.com/node-formidable/formidable",
+  "funding": "https://ko-fi.com/tunnckoCore/commissions",
+  "repository": "node-formidable/formidable",
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "legacy"
+  },
   "devDependencies": {
     "gently": "^0.8.0",
     "findit": "^0.1.2",
@@ -12,30 +22,8 @@
     "utest": "^0.0.8",
     "request": "^2.11.4"
   },
-  "directories": {
-    "lib": "./lib"
-  },
-  "files": [
-    "Readme.md",
-    "LICENSE",
-    "index.js",
-    "lib"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "tag": "1.x"
-  },
-  "main": "./lib/index",
   "scripts": {
     "test": "node test/run.js",
     "clean": "rm test/tmp/*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/felixge/node-formidable.git"
-  },
-  "bugs": {
-    "url": "http://github.com/felixge/node-formidable/issues"
-  },
-  "optionalDependencies": {}
+  }
 }

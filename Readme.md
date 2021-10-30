@@ -12,7 +12,7 @@ For more info, check the [CHANGELOG](https://github.com/node-formidable/formidab
 
 #### v1 is deprecated
 
-All `v1` versions are deprecated in NPM for over 2 years. You can find it at `formidable@v1` on NPM, and on [v1 branch][v1branch] on GitHub.  
+All `v1` versions are deprecated in NPM for over 2 years. You can find it at `formidable@v1` or `formidable@legacy` on NPM, and on [v1-legacy branch][v1branch] on GitHub.  
 We highly recommend to use `v2` or `v3`. Both are already in use by many, especially `v2` which was on `formidable@canary` for 2 years.
 
 - **Status: Not Maintained!**
@@ -26,7 +26,7 @@ We highly recommend to use `v2` or `v3`. Both are already in use by many, especi
 #### v2 is the new `latest`
 The `v2` will be simultaneously on two places for some time - `formidable@latest` and `formidable@v2`.
 The source code be available **only** on [v2 branch][v2branch].
-If you want to use v2, it's recommended to lock and use the v2 dist-tag `formidable@v2`. 
+If you want to use v2, it's recommended to use the v2 dist-tag `formidable@v2`. 
 
 **Main Differences from v1:**
 - Better organization and modernized code, requiring newer Node.js versions (>= v10).
@@ -37,7 +37,7 @@ If you want to use v2, it's recommended to lock and use the v2 dist-tag `formida
 ---
 
 #### v3 - ESModules, Promises, Monorepo structure
-We recommend to use `formidable@v3` to install, as it uses more modern Node.js Streams, has support for Promises and more stuff.
+We recommend to use `formidable@v3`, as it uses more modern Node.js Streams, has support for Promises and more stuff.
 You can see more info and track some ideas on [issue#635](https://github.com/node-formidable/formidable/issues/635).
 
 - The source code can be found on the [master branch](https://github.com/node-formidable/formidable) on GitHub.
@@ -47,7 +47,7 @@ You can see more info and track some ideas on [issue#635](https://github.com/nod
 - Rewritten to ESModules, more optimizations.
 - Moving to monorepo structure, more plugins & helper utils.
 
-[v1branch]: https://github.com/node-formidable/formidable/tree/v1
+[v1branch]: https://github.com/node-formidable/formidable/tree/v1-legacy
 [v2branch]: https://github.com/node-formidable/formidable/tree/v2
 [v3branch]: https://github.com/node-formidable/formidable/tree/v3
 
