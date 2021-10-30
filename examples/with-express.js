@@ -1,7 +1,5 @@
-'use strict';
-
-const express = require('express');
-const formidable = require('../src/index');
+import express from 'express';
+import formidable from '../src/index.js';
 
 const app = express();
 
@@ -17,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/upload', (req, res, next) => {
-  const form = formidable({ multiples: true });
+  const form = formidable({ });
 
   form.parse(req, (err, fields, files) => {
     if (err) {

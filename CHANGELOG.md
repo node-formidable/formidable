@@ -1,5 +1,24 @@
 # Changelog
 
+### Unreleased 3.1.1
+
+ * feat: handle top level json array, string and number
+
+### Unreleased 3.1
+
+ * feat: add firstValues, readBooleans helpers
+
+### Unreleased 3.0
+
+ * feat: remove options.multiples ([730](https://github.com/node-formidable/formidable/pull/730))
+ * use modern URLSearchParams https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams internally
+ * files and fields values are always arrays
+ * fields with [] in the name do not receive special treatment
+ * remove unused qs and querystring dependency
+ * feat: Use ES modules ([727](https://github.com/node-formidable/formidable/pull/727))
+ * options.enabledPlugins must contain the plugin themselves instead of the plugins names 
+
+
 ### Unreleased (`canary` & `dev` dist-tags)
 
  * feat: add options.filter ([#716](https://github.com/node-formidable/formidable/pull/716))

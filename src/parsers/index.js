@@ -1,17 +1,15 @@
-'use strict';
+import JSONParser from './JSON.js';
+import DummyParser from './Dummy.js';
+import MultipartParser from './Multipart.js';
+import OctetStreamParser from './OctetStream.js';
+import QueryStringParser from './Querystring.js';
 
-const JSONParser = require('./JSON');
-const DummyParser = require('./Dummy');
-const MultipartParser = require('./Multipart');
-const OctetStreamParser = require('./OctetStream');
-const QueryStringParser = require('./Querystring');
-
-Object.assign(exports, {
+export {
   JSONParser,
   DummyParser,
   MultipartParser,
   OctetStreamParser,
-  OctetstreamParser: OctetStreamParser,
+  OctetStreamParser as OctetstreamParser,
   QueryStringParser,
-  QuerystringParser: QueryStringParser,
-});
+  QueryStringParser as QuerystringParser,
+};

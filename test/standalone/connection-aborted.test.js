@@ -1,14 +1,12 @@
-'use strict';
-
-const assert = require('assert');
-const http = require('http');
-const net = require('net');
-const formidable = require('../../src/index');
+import assert from 'assert';
+import { createServer } from 'http';
+import { connect } from 'net';
+import formidable from '../../src/index.js';
 
 const PORT = 13539;
 
 test('connection aborted', (done) => {
-  const server = http.createServer((req) => {
+  const server = createServer((req) => {
     const form = formidable();
 
     let abortedReceived = false;
@@ -36,7 +34,7 @@ test('connection aborted', (done) => {
   server.listen(PORT, 'localhost', () => {
     const choosenPort = server.address().port;
 
-    const client = net.connect(choosenPort);
+    const client = connect(choosenPort);
 
     client.write(
       'POST / HTTP/1.1\r\n' +

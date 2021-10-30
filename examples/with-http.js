@@ -1,22 +1,26 @@
-'use strict';
+import http from 'http';
+import formidable from '../src/index.js';
 
-const http = require('http');
-const formidable = require('../src/index');
 
 const server = http.createServer((req, res) => {
+  // handle common internet errors
+  // to avoid server crash
+  req.on('error', console.error);
+  res.on('error', console.error);
+
+
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
-      multiples: true,
       uploadDir: `uploads`,
       keepExtensions: true,
       // filename(/*name, ext, part, form*/) {
       //   /* name basename of the http originalFilename
-      //     ext with the dot ".txt" only if keepExtension is true
+      //     ext with the dot ".txt" only if keepExtensions is true
       //    */
       //   // slugify to avoid invalid filenames
       //   // substr to define a maximum length
-      //   // return `${slugify(name).${slugify(ext, separator: '')}`.substr(0, 100);
+      //   // return `${slugify(name)}.${slugify(ext, {separator: ''})}`.substr(0, 100);
       //   return 'yo.txt'; // or completly different name
       //   // return 'z/yo.txt'; // subdirectory
       // },
@@ -41,7 +45,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // show a file upload form
+  // else show a file upload form
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
@@ -49,6 +53,13 @@ const server = http.createServer((req, res) => {
       <div>Text field title: <input type="text" name="title" /></div>
       <div>File: <input type="file" name="multipleFiles" multiple="multiple" /></div>
       <input type="submit" value="Upload" />
+    </form>
+
+    <form action="/api/upload" enctype="multipart/form-data" method="post">
+      <div>Text field title: <input type="text" name="title" /></div>
+      <div>Text field with same name: <input type="text" name="title" /></div>
+      <div>Other field <input type="text" name="other" /></div>
+      <input type="submit" value="submit simple" />
     </form>
   `);
 });

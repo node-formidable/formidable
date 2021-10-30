@@ -1,13 +1,6 @@
-'use strict';
+import octetstream from './octetstream.js';
+import querystring from './querystring.js';
+import multipart from './multipart.js';
+import json from './json.js';
 
-const octetstream = require('./octetstream');
-const querystring = require('./querystring');
-const multipart = require('./multipart');
-const json = require('./json');
-
-Object.assign(exports, {
-  octetstream,
-  querystring,
-  multipart,
-  json,
-});
+export { octetstream, querystring, multipart, json };

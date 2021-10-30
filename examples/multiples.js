@@ -1,8 +1,7 @@
-'use strict';
+import http from 'http';
+import os from 'os';
+import formidable from '../src/index.js';
 
-const os = require('os');
-const http = require('http');
-const { Formidable } = require('../src/index');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
@@ -28,7 +27,7 @@ const server = http.createServer((req, res) => {
       </form>
     `);
   } else if (req.url === '/upload') {
-    const form = new Formidable({ multiples: true, uploadDir: os.tmpdir() });
+    const form = formidable({ uploadDir: os.tmpdir() });
 
     form.parse(req, (err, fields, files) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });

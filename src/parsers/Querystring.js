@@ -1,9 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const { Transform } = require('stream');
-const querystring = require('querystring');
+import { Transform } from 'stream';
 
 // This is a buffering parser, not quite as nice as the multipart one.
 // If I find time I'll rewrite this to be fully streaming as well
@@ -22,12 +19,11 @@ class QuerystringParser extends Transform {
   }
 
   _flush(callback) {
-    const fields = querystring.parse(this.buffer, '&', '=');
-    // eslint-disable-next-line no-restricted-syntax, guard-for-in
-    for (const key in fields) {
+    const fields = new URLSearchParams(this.buffer);
+    for (const [key, value] of fields) {
       this.push({
         key,
-        value: fields[key],
+        value,
       });
     }
     this.buffer = '';
@@ -35,4 +31,4 @@ class QuerystringParser extends Transform {
   }
 }
 
-module.exports = QuerystringParser;
+export default QuerystringParser;

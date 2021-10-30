@@ -1,12 +1,8 @@
 // not used
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const { Transform } = require('stream');
-const errors = require('../FormidableError.js');
-
-const { FormidableError } = errors;
+import { Transform } from 'stream';
+import FormidableError, { maxFieldsSizeExceeded } from '../FormidableError.js';
 
 const AMPERSAND = 38;
 const EQUALS = 61;
@@ -61,7 +57,7 @@ class QuerystringParser extends Transform {
               this.readingKey ? 'Key' : `Value for ${this.key}`
             } longer than maxFieldLength`,
           ),
-          errors.maxFieldsSizeExceeded,
+          maxFieldsSizeExceeded,
           413,
         );
       }
@@ -82,9 +78,9 @@ class QuerystringParser extends Transform {
     // Emit the last field
     if (this.readingKey) {
       // we only have a key if there's something in the buffer. We definitely have no value
-        if (this.buffer && this.buffer.length){
-          this.emitField(this.buffer.toString('ascii'));
-        }
+      if (this.buffer && this.buffer.length) {
+        this.emitField(this.buffer.toString('ascii'));
+      }
     } else {
       // We have a key, we may or may not have a value
       this.emitField(
@@ -109,7 +105,7 @@ class QuerystringParser extends Transform {
   }
 }
 
-module.exports = QuerystringParser;
+export default QuerystringParser;
 
 // const q = new QuerystringParser({maxFieldSize: 100});
 // (async function() {

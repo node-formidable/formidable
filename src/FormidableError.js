@@ -1,5 +1,3 @@
-/* eslint-disable no-plusplus */
-
 const missingPlugin = 1000;
 const pluginFunction = 1001;
 const aborted = 1002;
@@ -24,7 +22,7 @@ const FormidableError = class extends Error {
   }
 };
 
-module.exports = {
+export {
   missingPlugin,
   pluginFunction,
   aborted,
@@ -40,6 +38,6 @@ module.exports = {
   malformedMultipart,
   missingMultipartBoundary,
   unknownTransferEncoding,
-
-  FormidableError,
 };
+
+export default FormidableError;

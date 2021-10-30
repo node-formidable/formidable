@@ -78,8 +78,11 @@ already be included. Check the examples below and the [examples/](https://github
 ```sh
 # v2
 npm install formidable
-npm install formidable@latest
-npm install formidable@v2
+
+## 3.x
+npm install formidable@3.x
+```
+
 
 # or v3
 npm install formidable@v3
@@ -98,13 +101,13 @@ Parse an incoming file upload, with the
 [Node.js's built-in `http` module](https://nodejs.org/api/http.html).
 
 ```js
-const http = require('http');
-const formidable = require('formidable');
+import http from 'http';
+import formidable from 'formidable';
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
-    const form = formidable({ multiples: true });
+    const form = formidable({});
 
     form.parse(req, (err, fields, files) => {
       if (err) {
@@ -146,8 +149,8 @@ Or try the
 [examples/with-express.js](https://github.com/node-formidable/formidable/blob/master/examples/with-express.js)
 
 ```js
-const express = require('express');
-const formidable = require('formidable');
+import express from 'express';
+import formidable from 'formidable';
 
 const app = express();
 
@@ -163,7 +166,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/upload', (req, res, next) => {
-  const form = formidable({ multiples: true });
+  const form = formidable({});
 
   form.parse(req, (err, fields, files) => {
     if (err) {
@@ -192,8 +195,8 @@ which is Node.js's Request, and **NOT** the `ctx.request` which is Koa's Request
 object - there is a difference._
 
 ```js
-const Koa = require('koa');
-const formidable = require('formidable');
+import Koa from 'Koa';
+import formidable from 'formidable';
 
 const app = new Koa();
 
@@ -203,7 +206,7 @@ app.on('error', (err) => {
 
 app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
-    const form = formidable({ multiples: true });
+    const form = formidable({});
 
     // not very elegant, but that's for now if you don't want to use `koa-better-body`
     // or other middlewares.
@@ -292,20 +295,8 @@ _Please pass [`options`](#options) to the function/constructor, not by assigning
 them to the instance `form`_
 
 ```js
-const formidable = require('formidable');
+import formidable from 'formidable';
 const form = formidable(options);
-
-// or
-const { formidable } = require('formidable');
-const form = formidable(options);
-
-// or
-const { IncomingForm } = require('formidable');
-const form = new IncomingForm(options);
-
-// or
-const { Formidable } = require('formidable');
-const form = new Formidable(options);
 ```
 
 ### Options
@@ -343,11 +334,6 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   (AWS S3, Azure blob storage, Google cloud storage) or private file storage,
   this is the option you're looking for. When this option is defined the default
   behavior of writing the file in the host machine file system is lost.
-- `options.multiples` **{boolean}** - default `false`; when you call the
-  `.parse` method, the `files` argument (of the callback) will contain arrays of
-  files for inputs which submit multiple files using the HTML5 `multiple`
-  attribute. Also, the `fields` argument will contain arrays of values for
-  fields that have names ending with '[]'.
 - `options.filename` **{function}** - default `undefined` Use it to control
   newFilename. Must return a string. Will be joined with options.uploadDir.
 
@@ -356,6 +342,12 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 
 
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
+
+where part can be decomposed as
+
+```js
+const { originalFilename, mimetype} = part;
+```
 
 _**Note:** If this size of combined fields, or size of some file is exceeded, an
 `'error'` event is fired._
@@ -390,9 +382,7 @@ Parses an incoming Node.js `request` containing form data. If `callback` is
 provided, all fields and files are collected and passed to the callback.
 
 ```js
-const formidable = require('formidable');
-
-const form = formidable({ multiples: true, uploadDir: __dirname });
+const form = formidable({ uploadDir: __dirname });
 
 form.parse(req, (err, fields, files) => {
   console.log('fields:', fields);
@@ -515,8 +505,6 @@ Formidable instance (the `form` across the README examples) and the options.
 **Note:** the plugin function's `this` context is also the same instance.
 
 ```js
-const formidable = require('formidable');
-
 const form = formidable({ keepExtensions: true });
 
 form.use((self, options) => {
@@ -541,11 +529,10 @@ which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
 you can remove it from the `options.enabledPlugins`, like so
 
 ```js
-const { Formidable } = require('formidable');
-
-const form = new Formidable({
+import formidable, {octetstream, querystring, json} from "formidable";
+const form = formidable({
   hashAlgorithm: 'sha1',
-  enabledPlugins: ['octetstream', 'querystring', 'json'],
+  enabledPlugins: [octetstream, querystring, json],
 });
 ```
 
@@ -631,7 +618,7 @@ requests.
 #### `'progress'`
 
 Emitted after each incoming chunk of data that has been parsed. Can be used to
-roll your own progress bar.
+roll your own progress bar. **Warning** Use this only for server side progress bar. On the client side better use `XMLHttpRequest` with `xhr.upload.onprogress =`
 
 ```js
 form.on('progress', (bytesReceived, bytesExpected) => {});
@@ -705,6 +692,47 @@ finished flushing to disk. This is a great place for you to send your response.
 
 ```js
 form.on('end', () => {});
+```
+
+
+### Helpers
+
+#### firstValues
+
+Gets first values of fields, like pre 3.0.0 without multiples pass in a list of optional exceptions where arrays of strings is still wanted (`<select multiple>` for example)
+
+```js
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
+
+// ...
+form.parse(request, async (error, fieldsMultiple, files) => {
+    if (error) {
+        //...
+    }
+    const exceptions = ['thisshouldbeanarray'];
+    const fieldsSingle = firstValues(form, fieldsMultiple, exceptions);
+    // ...
+```
+
+#### readBooleans
+
+Html form input type="checkbox" only send the value "on" if checked,
+convert it to booleans for each input that is expected to be sent as a checkbox, only use after firstValues or similar was called.
+
+```js
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
+import { readBooleans } from 'formidable/src/helpers/readBooleans.js';
+
+// ...
+form.parse(request, async (error, fieldsMultiple, files) => {
+    if (error) {
+        //...
+    }
+    const fieldsSingle = firstValues(form, fieldsMultiple);
+    
+    const expectedBooleans = ['checkbox1', 'wantsNewsLetter', 'hasACar'];
+    const fieldsWithBooleans = readBooleans(fieldsSingle, expectedBooleans);
+    // ...
 ```
 
 ## Changelog

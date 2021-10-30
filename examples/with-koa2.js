@@ -1,7 +1,6 @@
-'use strict';
+import Koa from 'koa';
+import formidable from '../src/index.js';
 
-const Koa = require('koa');
-const formidable = require('../src/index');
 
 const app = new Koa();
 
@@ -13,7 +12,6 @@ app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
     let i = 0;
     const form = formidable({
-      multiples: true,
       keepExtensions: true,
       // must return absolute path
       filename: (part, $self) => {

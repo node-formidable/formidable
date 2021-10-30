@@ -1,15 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
+import { Stream } from 'stream';
+import MultipartParser from '../parsers/Multipart.js';
+import * as errors from '../FormidableError.js';
+import FormidableError from '../FormidableError.js';
 
-const { Stream } = require('stream');
-const MultipartParser = require('../parsers/Multipart');
-const errors = require('../FormidableError.js');
-
-const { FormidableError } = errors;
-
+export const multipartType = 'multipart';
 // the `options` is also available through the `options` / `formidable.options`
-module.exports = function plugin(formidable, options) {
+export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
 
@@ -35,14 +33,14 @@ module.exports = function plugin(formidable, options) {
       self._error(err);
     }
   }
-};
+}
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
 function createInitMultipart(boundary) {
   return function initMultipart() {
-    this.type = 'multipart';
+    this.type = multipartType;
 
     const parser = new MultipartParser(this.options);
     let headerField;

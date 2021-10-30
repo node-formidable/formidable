@@ -1,11 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
+import OctetStreamParser from '../parsers/OctetStream.js';
 
-const OctetStreamParser = require('../parsers/OctetStream');
-
+export const octetStreamType = 'octet-stream';
 // the `options` is also available through the `options` / `formidable.options`
-module.exports = function plugin(formidable, options) {
+export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
 
@@ -17,13 +16,13 @@ module.exports = function plugin(formidable, options) {
   }
 
   return self;
-};
+}
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
 function init(_self, _opts) {
-  this.type = 'octet-stream';
+  this.type = octetStreamType;
   const originalFilename = this.headers['x-file-name'];
   const mimetype = this.headers['content-type'];
 

@@ -1,16 +1,20 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const os = require('os');
-const path = require('path');
-const hexoid = require('hexoid');
-const once = require('once');
-const dezalgo = require('dezalgo');
-const { EventEmitter } = require('events');
-const { StringDecoder } = require('string_decoder');
-const qs = require('qs');
+import os from 'os';
+import path from 'path';
+import hexoid from 'hexoid';
+import once from 'once';
+import dezalgo from 'dezalgo';
+import { EventEmitter } from 'events';
+import { StringDecoder } from 'string_decoder';
+import { octetstream, querystring, multipart, json } from './plugins/index.js';
+import PersistentFile from './PersistentFile.js';
+import VolatileFile from './VolatileFile.js';
+import DummyParser from './parsers/Dummy.js';
+import MultipartParser from './parsers/Multipart.js';
+import * as errors from './FormidableError.js';
+import FormidableError from './FormidableError.js';
 
 const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
@@ -23,22 +27,13 @@ const DEFAULT_OPTIONS = {
   encoding: 'utf-8',
   hashAlgorithm: false,
   uploadDir: os.tmpdir(),
-  multiples: false,
-  enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
+  enabledPlugins: [octetstream, querystring, multipart, json],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
-  filter: function () {
+  filter() {
     return true;
   },
 };
-
-const PersistentFile = require('./PersistentFile');
-const VolatileFile = require('./VolatileFile');
-const DummyParser = require('./parsers/Dummy');
-const MultipartParser = require('./parsers/Multipart');
-const errors = require('./FormidableError.js');
-
-const { FormidableError } = errors;
 
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -88,10 +83,8 @@ class IncomingForm extends EventEmitter {
       );
     }
 
-    this.options.enabledPlugins.forEach((pluginName) => {
-      const plgName = pluginName.toLowerCase();
-      // eslint-disable-next-line import/no-dynamic-require, global-require
-      this.use(require(path.join(__dirname, 'plugins', `${plgName}.js`)));
+    this.options.enabledPlugins.forEach((plugin) => {
+      this.use(plugin);
     });
 
     this._setUpMaxFields();
@@ -141,46 +134,33 @@ class IncomingForm extends EventEmitter {
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const callback = once(dezalgo(cb));
-      const fields = {};
+      this.fields = {};
       let mockFields = '';
       const files = {};
 
       this.on('field', (name, value) => {
-        if (
-          this.options.multiples &&
-          (this.type === 'multipart' || this.type === 'urlencoded')
-        ) {
-          const mObj = { [name]: value };
-          mockFields = mockFields
-            ? `${mockFields}&${qs.stringify(mObj)}`
-            : `${qs.stringify(mObj)}`;
+        if (this.type === 'multipart' || this.type === 'urlencoded') {
+          if (!hasOwnProp(this.fields, name)) {
+            this.fields[name] = [value];
+          } else {
+            this.fields[name].push(value);
+          }
         } else {
-          fields[name] = value;
+          this.fields[name] = value;
         }
       });
       this.on('file', (name, file) => {
-        // TODO: too much nesting
-        if (this.options.multiples) {
-          if (hasOwnProp(files, name)) {
-            if (!Array.isArray(files[name])) {
-              files[name] = [files[name]];
-            }
-            files[name].push(file);
-          } else {
-            files[name] = file;
-          }
+        if (!hasOwnProp(files, name)) {
+          files[name] = [file];
         } else {
-          files[name] = file;
+          files[name].push(file);
         }
       });
       this.on('error', (err) => {
-        callback(err, fields, files);
+        callback(err, this.fields, files);
       });
       this.on('end', () => {
-        if (this.options.multiples) {
-          Object.assign(fields, qs.parse(mockFields));
-        }
-        callback(null, fields, files);
+        callback(null, this.fields, files);
       });
     }
 
@@ -541,8 +521,6 @@ class IncomingForm extends EventEmitter {
     return basename.slice(firstDot, lastDot) + extname;
   }
 
-
-
   _joinDirectoryName(name) {
     const newPath = path.join(this.uploadDir, name);
 
@@ -574,12 +552,13 @@ class IncomingForm extends EventEmitter {
         const name = toHexoId();
 
         if (part && this.options.keepExtensions) {
-          const originalFilename = typeof part === 'string' ? part : part.originalFilename;
+          const originalFilename =
+            typeof part === 'string' ? part : part.originalFilename;
           return `${name}${this._getExtension(originalFilename)}`;
         }
-    
+
         return name;
-      }
+      };
     }
   }
 
@@ -613,5 +592,5 @@ class IncomingForm extends EventEmitter {
   }
 }
 
-IncomingForm.DEFAULT_OPTIONS = DEFAULT_OPTIONS;
-module.exports = IncomingForm;
+export default IncomingForm;
+export { DEFAULT_OPTIONS };

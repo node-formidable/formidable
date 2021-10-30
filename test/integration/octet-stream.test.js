@@ -1,34 +1,36 @@
-'use strict';
+import { readFileSync, createReadStream } from 'fs';
+import { createServer, request as _request } from 'http';
+import path, { join, dirname } from 'path';
+import url from 'url';
+import assert, { strictEqual, deepStrictEqual } from 'assert';
 
-const fs = require('fs');
-const http = require('http');
-const path = require('path');
-const assert = require('assert');
+import formidable from '../../src/index.js';
 
-const formidable = require('../../src/index');
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 13536;
-const testFilePath = path.join(
-  path.dirname(__dirname),
+const testFilePath = join(
+  dirname(__dirname),
   'fixture',
   'file',
   'binaryfile.tar.gz',
 );
 
 test('octet stream', (done) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     const form = formidable();
 
     form.parse(req, (err, fields, files) => {
-      assert.strictEqual(Object.keys(files).length, 1);
-      const { file } = files;
+      strictEqual(Object.keys(files).length, 1);
+      const file = files.file[0];
 
-      assert.strictEqual(file.size, 301);
+      strictEqual(file.size, 301);
 
-      const uploaded = fs.readFileSync(file.filepath);
-      const original = fs.readFileSync(testFilePath);
+      const uploaded = readFileSync(file.filepath);
+      const original = readFileSync(testFilePath);
 
-      assert.deepStrictEqual(uploaded, original);
+      deepStrictEqual(uploaded, original);
 
       res.end();
       server.close();
@@ -39,7 +41,7 @@ test('octet stream', (done) => {
   server.listen(PORT, (err) => {
     assert(!err, 'should not have error, but be falsey');
 
-    const request = http.request({
+    const request = _request({
       port: PORT,
       method: 'POST',
       headers: {
@@ -47,6 +49,6 @@ test('octet stream', (done) => {
       },
     });
 
-    fs.createReadStream(testFilePath).pipe(request);
+    createReadStream(testFilePath).pipe(request);
   });
 });

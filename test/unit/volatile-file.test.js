@@ -1,6 +1,6 @@
-'use strict';
+import {jest} from '@jest/globals';
+import VolatileFile from '../../src/VolatileFile.js';
 
-const VolatileFile = require('../../src/VolatileFile');
 
 describe('VolatileFile', () => {
   let file;

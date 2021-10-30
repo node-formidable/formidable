@@ -1,17 +1,15 @@
-'use strict';
+import { join } from 'path';
+import { createServer, request } from 'http';
+import { strictEqual } from 'assert';
 
-const path = require('path');
-const http = require('http');
-const assert = require('assert');
+import formidable from '../../src/index.js';
 
-const formidable = require('../../src/index');
-
-const UPLOAD_DIR = path.join(process.cwd(), 'test', 'tmp');
+const UPLOAD_DIR = join(process.cwd(), 'test', 'tmp');
 
 // OS choosing port
 const PORT = 13530;
 test('content transfer encoding', (done) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     const form = formidable();
     form.uploadDir = UPLOAD_DIR;
     form.on('end', () => {
@@ -39,7 +37,7 @@ test('content transfer encoding', (done) => {
       '\r\nThis is the second file\r\n' +
       '--foo--\r\n';
 
-    const req = http.request({
+    const req = request({
       method: 'POST',
       port: choosenPort,
       headers: {
@@ -49,7 +47,7 @@ test('content transfer encoding', (done) => {
     });
 
     req.on('response', (res) => {
-      assert.strictEqual(res.statusCode, 500);
+      strictEqual(res.statusCode, 500);
       res.on('data', () => {});
       res.on('end', () => {
         server.close();

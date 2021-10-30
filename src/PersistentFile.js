@@ -1,10 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const fs = require('fs');
-const crypto = require('crypto');
-const { EventEmitter } = require('events');
+import { WriteStream, unlink } from 'fs';
+import { createHash } from 'crypto';
+import { EventEmitter } from 'events';
 
 class PersistentFile extends EventEmitter {
   constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }) {
@@ -17,14 +15,14 @@ class PersistentFile extends EventEmitter {
     this._writeStream = null;
 
     if (typeof this.hashAlgorithm === 'string') {
-      this.hash = crypto.createHash(this.hashAlgorithm);
+      this.hash = createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
     }
   }
 
   open() {
-    this._writeStream = new fs.WriteStream(this.filepath);
+    this._writeStream = new WriteStream(this.filepath);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
@@ -80,8 +78,8 @@ class PersistentFile extends EventEmitter {
 
   destroy() {
     this._writeStream.destroy();
-    fs.unlink(this.filepath, () => {});
+    unlink(this.filepath, () => {});
   }
 }
 
-module.exports = PersistentFile;
+export default PersistentFile;

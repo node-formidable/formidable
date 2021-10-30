@@ -1,8 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
-
-const { Transform } = require('stream');
+import { Transform } from 'stream';
 
 class DummyParser extends Transform {
   constructor(incomingForm, options = {}) {
@@ -18,4 +16,4 @@ class DummyParser extends Transform {
   }
 }
 
-module.exports = DummyParser;
+export default DummyParser;

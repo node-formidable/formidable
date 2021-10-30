@@ -1,13 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
+import { join } from 'path';
 
-const path = require('path');
+import Koa from 'koa';
+import request from 'supertest';
 
-const Koa = require('koa');
-const request = require('supertest');
-
-const { formidable } = require('../../src/index');
+import { formidable, json, octetstream, multipart } from '../../src/index.js';
 
 function createServer(options, handler) {
   const app = new Koa();
@@ -22,7 +20,7 @@ function createServer(options, handler) {
 }
 
 function fromFixtures(...args) {
-  return path.join(process.cwd(), 'test', 'fixture', ...args);
+  return join(process.cwd(), 'test', 'fixture', ...args);
 }
 
 // function makeRequest(server, options) {
@@ -57,7 +55,7 @@ function fromFixtures(...args) {
 // ! tests
 
 test('should call 3 custom and 1 builtin plugins, when .parse() is called', async () => {
-  const server = createServer({ enabledPlugins: ['json'] }, (ctx, form) => {
+  const server = createServer({ enabledPlugins: [json] }, (ctx, form) => {
     form.on('plugin', () => {
       ctx.__pluginsCount = ctx.__pluginsCount || 0;
       ctx.__pluginsCount += 1;
@@ -106,7 +104,7 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
 
 test('.parse throw error when some plugin fail', async () => {
   const server = createServer(
-    { enabledPlugins: ['octetstream', 'json'] },
+    { enabledPlugins: [octetstream, json] },
     (ctx, form) => {
       // const failedIsOkay = false;
       // ! not emitted?
@@ -164,7 +162,7 @@ test('.parse throw error when some plugin fail', async () => {
 
 test('multipart plugin fire `error` event when malformed boundary', async () => {
   const server = createServer(
-    { enabledPlugins: ['json', 'multipart'] },
+    { enabledPlugins: [json, multipart] },
     (ctx, form) => {
       let failedIsOkay = false;
 

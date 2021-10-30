@@ -1,60 +1,61 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 
-'use strict';
+import { createReadStream } from 'fs';
+import { createConnection } from 'net';
+import { join } from 'path';
+import { createServer } from 'http';
+import { strictEqual } from 'assert';
 
-const fs = require('fs');
-const net = require('net');
-const path = require('path');
-const http = require('http');
-const assert = require('assert');
-
-const formidable = require('../../src/index');
+import formidable from '../../src/index.js';
 
 const PORT = 13534;
 const CWD = process.cwd();
-const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
-const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
-const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
+const FIXTURES_HTTP = join(CWD, 'test', 'fixture', 'http');
+const UPLOAD_DIR = join(CWD, 'test', 'tmp');
+import * as encoding from "../fixture/js/encoding.js";
+import * as misc from "../fixture/js/misc.js";
+import * as noFilename from "../fixture/js/no-filename.js";
+import * as preamble from "../fixture/js/preamble.js";
+import * as workarounds from "../fixture/js/workarounds.js";
+import * as specialCharsInFilename from "../fixture/js/special-chars-in-filename.js";
+
+const fixtures= {
+  encoding,
+  misc,
+  [`no-filename`]: noFilename,
+  preamble, 
+  [`special-chars-in-filename`]: specialCharsInFilename,
+  workarounds,
+};
 
 test('fixtures', (done) => {
-  const server = http.createServer();
+  const server = createServer();
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
-    const results = fs
-      .readdirSync(FIXTURES_PATH)
-      // .filter((x) => /workarounds/.test(x))
-      .filter((x) => /\.js$/.test(x))
-      .reduce((acc, fp) => {
-        const group = path.basename(fp, '.js');
-        const filepath = path.join(FIXTURES_PATH, fp);
-        const mod = require(filepath);
-
-        Object.keys(mod).forEach((k) => {
-          Object.keys(mod[k]).forEach((_fixture) => {
-            acc.push({
-              fixture: mod[k],
-              name: path.join(group, k),
-            });
+      const results = Object.entries(fixtures).map(([fixtureGroup, fixture]) => {
+        return Object.entries(fixture).map(([k, v]) => {
+          return v.map(details => {
+            return {
+              fixture: v,
+              name: `${fixtureGroup}/${details.fixture}.http`
+            };
           });
         });
-
-        return acc;
-      }, []);
-
-    testNext(results);
+      }).flat(Infinity);
+      testNext(results);
   }
 
   function testNext(results) {
-    let fixture = results.shift();
-    if (!fixture) {
+    const fixtureWithName = results.shift();
+    if (!fixtureWithName) {
       server.close();
       done();
       return;
     }
-    const fixtureName = fixture.name;
-    fixture = fixture.fixture;
+    const fixtureName = fixtureWithName.name;
+    const fixture = fixtureWithName.fixture;
 
     uploadFixture(fixtureName, (err, parts) => {
       if (err) {
@@ -64,15 +65,15 @@ test('fixtures', (done) => {
 
       fixture.forEach((expectedPart, i) => {
         const parsedPart = parts[i];
-        assert.strictEqual(parsedPart.type, expectedPart.type);
-        assert.strictEqual(parsedPart.name, expectedPart.name);
+        strictEqual(parsedPart.type, expectedPart.type);
+        strictEqual(parsedPart.name, expectedPart.name);
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.originalFilename, expectedPart.originalFilename);
+          strictEqual(file.originalFilename, expectedPart.originalFilename);
 
           if (expectedPart.sha1) {
-            assert.strictEqual(
+            strictEqual(
               file.hash,
               expectedPart.sha1,
               `SHA1 error ${file.name} on ${file.filepath}`,
@@ -90,7 +91,6 @@ test('fixtures', (done) => {
       const form = formidable({
         uploadDir: UPLOAD_DIR,
         hashAlgorithm: 'sha1',
-        multiples: true,
       });
       form.parse(req);
 
@@ -117,9 +117,9 @@ test('fixtures', (done) => {
         });
     });
 
-    const socket = net.createConnection(PORT);
-    const fixturePath = path.join(FIXTURES_HTTP, fixtureName);
-    const file = fs.createReadStream(fixturePath);
+    const socket = createConnection(PORT);
+    const fixturePath = join(FIXTURES_HTTP, fixtureName);
+    const file = createReadStream(fixturePath);
 
     file.pipe(socket, { end: false });
 

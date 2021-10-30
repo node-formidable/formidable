@@ -1,16 +1,16 @@
 /* eslint-disable max-statements */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
+import {jest} from '@jest/globals';
+import Stream from 'stream';
+import http from 'http';
+import path from 'path';
 
-const path = require('path');
-const Stream = require('stream');
-const Request = require('http').ClientRequest;
-
-const mod = require('../../src/index');
+import formidable from '../../src/index.js';
+import * as mod from '../../src/index.js';
 
 function getForm(name, opts) {
-  return name === 'formidable' ? mod.formidable(opts) : new mod[name](opts);
+  return name === 'formidable' ? formidable(opts) : new mod[name](opts);
 }
 function makeHeader(originalFilename) {
   return `Content-Disposition: form-data; name="upload"; filename="${originalFilename}"`;
@@ -97,9 +97,9 @@ function makeHeader(originalFilename) {
   });
 
   test(`${name}#_Array parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
@@ -109,52 +109,52 @@ function makeHeader(originalFilename) {
       expect(fields.a[0]).toBe('1');
       expect(fields.a[1]).toBe('2');
     });
-    form.emit('field', 'a[]', '1');
-    form.emit('field', 'a[]', '2');
+    form.emit('field', 'a', '1');
+    form.emit('field', 'a', '2');
     form.emit('end');
   });
 
   test(`${name}#_Nested array parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
     };
     form.parse(req, (error, fields) => {
-      expect(Array.isArray(fields.a)).toBe(true);
-      expect(fields.a[0][0]).toBe('a');
-      expect(fields.a[0][1]).toBe('b');
-      expect(fields.a[1][0]).toBe('c');
+      expect(Array.isArray(fields[`a[0]`])).toBe(true);
+      expect(fields[`a[0]`][0]).toBe('a');
+      expect(fields[`a[0]`][1]).toBe('b');
+      expect(fields[`a[1]`][0]).toBe('c');
     });
-    form.emit('field', 'a[0][]', 'a');
-    form.emit('field', 'a[0][]', 'b');
-    form.emit('field', 'a[1][]', 'c');
+    form.emit('field', 'a[0]', 'a');
+    form.emit('field', 'a[0]', 'b');
+    form.emit('field', 'a[1]', 'c');
     form.emit('end');
   });
 
   test(`${name}#_Object parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+    const form = getForm(name, {  });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
     };
     form.parse(req, (error, fields) => {
-      expect(fields.a.x).toBe('1');
-      expect(fields.a.y).toBe('2');
+      expect(fields[`a[x]`][0]).toBe('1');
+      expect(fields[`a[y]`][0]).toBe('2');
     });
     form.emit('field', 'a[x]', '1');
     form.emit('field', 'a[y]', '2');
     form.emit('end');
   });
 
-  test(`${name}#_Nested object parameters support`, () => {
-    const form = getForm(name, { multiples: true });
+  xtest(`${name}#_Nested object parameters support`, () => {
+    const form = getForm(name, {  });
 
-    const req = new Request();
+    const req = new http.ClientRequest();
     req.headers = {
       'content-length': '8',
       'content-type': 'multipart/form-data; boundary=----TLVx',
@@ -175,7 +175,6 @@ function makeHeader(originalFilename) {
       describe('when file is empty', () => {
         test('emits error when part is received', (done) => {
           const form = getForm(name, {
-            multiples: true,
             allowEmptyFiles: false,
           });
 
@@ -196,7 +195,6 @@ function makeHeader(originalFilename) {
       describe('when file is not empty', () => {
         test('not emits error when part is received', () => {
           const form = getForm(name, {
-            multiples: true,
             allowEmptyFiles: false,
           });
           const formEmitSpy = jest.spyOn(form, 'emit');
@@ -212,7 +210,7 @@ function makeHeader(originalFilename) {
 
     describe('when allow empty files', () => {
       test('not emits error when part is received', () => {
-        const form = getForm(name, { multiples: true });
+        const form = getForm(name, {  });
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
@@ -225,7 +223,7 @@ function makeHeader(originalFilename) {
 
     describe('when file uploaded size is inferior than minFileSize option', () => {
       test('emits error when part is received', (done) => {
-        const form = getForm(name, { multiples: true, minFileSize: 5 });
+        const form = getForm(name, { minFileSize: 5 });
 
         const part = new Stream();
         part.mimetype = 'text/plain';
@@ -242,7 +240,7 @@ function makeHeader(originalFilename) {
 
     describe('when file uploaded size is superior than minFileSize option', () => {
       test('not emits error when part is received', () => {
-        const form = getForm(name, { multiples: true, minFileSize: 10 });
+        const form = getForm(name, { minFileSize: 10 });
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
@@ -256,7 +254,6 @@ function makeHeader(originalFilename) {
     describe('when there are more fields than maxFields', () => {
       test('emits error', (done) => {
         const form = getForm(name, {
-          multiples: true,
           maxFields: 1,
         });
 

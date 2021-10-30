@@ -1,9 +1,7 @@
-'use strict';
-
-const http = require('http');
-const assert = require('assert');
-const request = require('request');
-const formidable = require('../../src/index');
+import { createServer } from 'http';
+import { ok, strictEqual } from 'assert';
+import request from 'request';
+import formidable from '../../src/index.js';
 
 // OS choosing port
 const PORT = 13531;
@@ -16,7 +14,7 @@ const indexForm = `
 `;
 
 test('issue 46', (done) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     // Show a form for testing purposes.
     if (req.method === 'GET') {
       res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -48,8 +46,8 @@ test('issue 46', (done) => {
     request({ method: 'POST', url, multipart: parts }, (e, res, body) => {
       const obj = JSON.parse(body);
 
-      assert.ok(obj.fields.foo, 'should have fields.foo === barry');
-      assert.strictEqual(obj.fields.foo, 'barry');
+      ok(obj.fields.foo, 'should have fields.foo === barry');
+      strictEqual(obj.fields.foo[0], 'barry');
 
       server.close();
       done();
