@@ -713,7 +713,7 @@ finished flushing to disk. This is a great place for you to send your response.
 form.on('end', () => {});
 ```
 
-## Chagelog
+## Changelog
 
 [./CHANGELOG.md](./CHANGELOG.md)
 
