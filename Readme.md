@@ -15,6 +15,7 @@ For more info, check the [CHANGELOG](https://github.com/node-formidable/formidab
 All `v1` versions are deprecated in NPM for over 2 years. You can find it at `formidable@v1` on NPM, and on [v1 branch][v1branch] on GitHub.  
 We highly recommend to use `v2` or `v3`. Both are already in use by many, especially `v2` which was on `formidable@canary` for 2 years.
 
+- **Status: Not Maintained!**
 - We won't provide support or accept reports on that version.
 - **No Backporting:** bugfixes, security fixes, or new features WILL NOT happen!
 - Please move to at least **v2**! 
@@ -85,7 +86,9 @@ use._
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
 
-## Status: Maintained
+## v1 status: not maintained!
+
+## Project Status: Maintained
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
