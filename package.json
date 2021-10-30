@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "3.1.1-canary.20210926",
+  "version": "3.1.1-canary.20211030",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
@@ -16,7 +16,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "canary"
+    "tag": "3.x"
   },
   "scripts": {
     "bench": "node benchmark",

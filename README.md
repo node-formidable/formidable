@@ -81,6 +81,8 @@ recommend to use Yarn when you think to contribute to this project._
 npm install formidable
 # or the canary version
 npm install formidable@canary
+## 3.x
+npm install formidable@3.x
 ```
 
 or with Yarn v1/v2
