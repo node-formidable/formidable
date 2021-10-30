@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "license": "MIT",
   "description": "(DEPRECATED! Install formidable@v2) A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
@@ -12,7 +12,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "legacy"
+    "tag": "v1"
   },
   "devDependencies": {
     "gently": "^0.8.0",
