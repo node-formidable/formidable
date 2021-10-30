@@ -22,7 +22,7 @@ We highly recommend to use `v2` or `v3`. Both are already in use by many, especi
 
 ---
 
-#### v2
+#### v2 is the new `latest`
 The `v2` will be simultaneously on two places for some time - `formidable@latest` and `formidable@v2`.
 The source code be available **only** on [v2 branch][v2branch].
 If you want to use v2, it's recommended to lock and use the v2 dist-tag `formidable@v2`. 
@@ -35,7 +35,7 @@ If you want to use v2, it's recommended to lock and use the v2 dist-tag `formida
 
 ---
 
-#### v3
+#### v3 - ESModules, Promises, Monorepo structure
 We recommend to use `formidable@v3` to install, as it uses more modern Node.js Streams, has support for Promises and more stuff.
 You can see more info and track some ideas on [issue#635](https://github.com/node-formidable/formidable/issues/635).
 
