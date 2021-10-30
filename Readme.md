@@ -1,10 +1,13 @@
 # Formidable
 
-[![Build Status](https://travis-ci.org/felixge/node-formidable.svg?branch=master)](https://travis-ci.org/felixge/node-formidable)
-
 ## Purpose
 
 A Node.js module for parsing form data, especially file uploads.
+
+
+## Changelog
+
+[./CHANGELOG.md](https://github.com/node-formidable/formidable/blob/master/CHANGELOG.md)
 
 ## Current status
 
@@ -25,7 +28,11 @@ a large variety of clients and is considered production-ready.
 ## Installation
 
 ```sh
-npm i -S formidable
+npm install formidable@1.x
+# or the canary version
+npm install formidable@canary
+## 3.x
+npm install formidable@3.x
 ```
 
 This is a low-level package, and if you're using a high-level framework it may already be included. However, [Express v4](http://expressjs.com) does not include any multipart handling, nor does [body-parser](https://github.com/expressjs/body-parser).

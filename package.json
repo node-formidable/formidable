@@ -15,6 +15,16 @@
   "directories": {
     "lib": "./lib"
   },
+  "files": [
+    "Readme.md",
+    "LICENSE",
+    "index.js",
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "1.x"
+  },
   "main": "./lib/index",
   "scripts": {
     "test": "node test/run.js",
