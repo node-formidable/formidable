@@ -22,11 +22,10 @@ If you want to use v2, it's recommended to lock and use the v2 dist-tag `formida
 **Main Differences from v1:**
 - Better organization and modernized code, requiring newer Node.js versions (>= v10).
 - A lot of bugfixes, closed issues, merged or closed PRs.
-- **Backward compatible to v1!** Should not have problems, the major version bump is just for ensurance.
 - Better docs, new features (plugins, parsers, options) and optimizations.
 
-## v3 - ESModules, Promises, Monorepo structure
-We recommend to use `formidable@v3` to install, as it uses more modern Node.js Streams, has support for Promises and more stuff.
+## v3 - ESModules, Monorepo structure
+We recommend to use `formidable@v3` to install, as it uses more modern Node.js Streams, has support for more stuff.
 You can see more info and track some ideas on [issue#635](https://github.com/node-formidable/formidable/issues/635).
 
 - The source code can be found on the [master branch](https://github.com/node-formidable/formidable) on GitHub.
@@ -36,6 +35,6 @@ You can see more info and track some ideas on [issue#635](https://github.com/nod
 - Rewritten to ESModules, more optimizations.
 - Moving to monorepo structure, more plugins & helper utils.
 
-[v1branch]: https://github.com/node-formidable/formidable/tree/v1
-[v2branch]: https://github.com/node-formidable/formidable/tree/v2
+[v1branch]: https://github.com/node-formidable/formidable/tree/v1-legacy
+[v2branch]: https://github.com/node-formidable/formidable/tree/v2-latest
 [v3branch]: https://github.com/node-formidable/formidable/tree/v3
