@@ -2,8 +2,7 @@
 
 import { Transform } from 'stream';
 
-// This is a buffering parser, not quite as nice as the multipart one.
-// If I find time I'll rewrite this to be fully streaming as well
+// This is a buffering parser, have a look at StreamingQuerystring.js for a streaming parser
 class QuerystringParser extends Transform {
   constructor(options = {}) {
     super({ readableObjectMode: true });
