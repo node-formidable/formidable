@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import { Stream } from 'stream';
+import { Stream } from 'node:stream';
 import MultipartParser from '../parsers/Multipart.js';
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';

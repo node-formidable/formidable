@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import { join } from 'path';
+import { join } from 'node:path';
 
 import Koa from 'koa';
 import request from 'supertest';

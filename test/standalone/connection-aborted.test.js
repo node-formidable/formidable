@@ -1,6 +1,6 @@
-import assert from 'assert';
-import { createServer } from 'http';
-import { connect } from 'net';
+import assert from 'node:assert';
+import { createServer } from 'node:http';
+import { connect } from 'node:net';
 import formidable from '../../src/index.js';
 
 const PORT = 13539;

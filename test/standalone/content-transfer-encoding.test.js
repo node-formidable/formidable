@@ -1,6 +1,6 @@
-import { join } from 'path';
-import { createServer, request } from 'http';
-import { strictEqual } from 'assert';
+import { join } from 'node:path';
+import { createServer, request } from 'node:http';
+import { strictEqual } from 'node:assert';
 
 import formidable from '../../src/index.js';
 

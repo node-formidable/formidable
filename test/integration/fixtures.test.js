@@ -1,11 +1,11 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 
-import { createReadStream } from 'fs';
-import { createConnection } from 'net';
-import { join } from 'path';
-import { createServer } from 'http';
-import { strictEqual } from 'assert';
+import { createReadStream } from 'node:fs';
+import { createConnection } from 'node:net';
+import { join } from 'node:path';
+import { createServer } from 'node:http';
+import { strictEqual } from 'node:assert';
 
 import formidable from '../../src/index.js';
 

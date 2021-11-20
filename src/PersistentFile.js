@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
-import { WriteStream, unlink } from 'fs';
-import { createHash } from 'crypto';
-import { EventEmitter } from 'events';
+import { WriteStream, unlink } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { EventEmitter } from 'node:events';
 
 class PersistentFile extends EventEmitter {
   constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }) {

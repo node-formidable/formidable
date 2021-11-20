@@ -1,8 +1,8 @@
-import { readFileSync, createReadStream } from 'fs';
-import { createServer, request as _request } from 'http';
-import path, { join, dirname } from 'path';
-import url from 'url';
-import assert, { strictEqual, deepStrictEqual } from 'assert';
+import { readFileSync, createReadStream } from 'node:fs';
+import { createServer, request as _request } from 'node:http';
+import path, { join, dirname } from 'node:path';
+import url from 'node:url';
+import assert, { strictEqual, deepStrictEqual } from 'node:assert';
 
 import formidable from '../../src/index.js';
 

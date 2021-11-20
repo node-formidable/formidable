@@ -3,7 +3,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'stream';
+import { Transform } from 'node:stream';
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
 

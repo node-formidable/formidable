@@ -1,7 +1,7 @@
 // To test this example you have to install aws-sdk nodejs package and create a bucket named "demo-bucket"
 
-import http from 'http';
-import { PassThrough } from 'stream';
+import http from 'node:http';
+import { PassThrough } from 'node:stream';
 import AWS from 'aws-sdk';
 import formidable from '../src/index.js';
 

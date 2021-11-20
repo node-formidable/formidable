@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'stream';
+import { Transform } from 'node:stream';
 
 // This is a buffering parser, have a look at StreamingQuerystring.js for a streaming parser
 class QuerystringParser extends Transform {

@@ -1,5 +1,5 @@
-import http from 'http';
-import os from 'os';
+import http from 'node:http';
+import os from 'node:os';
 import formidable from '../src/index.js';
 
 
