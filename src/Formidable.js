@@ -333,7 +333,7 @@ class IncomingForm extends EventEmitter {
         this._error(
           new FormidableError(
             `options.maxTotalFileSize (${this.options.maxTotalFileSize} bytes) exceeded, received ${this._totalFileSize} bytes of file data`,
-            errors.biggerThanMaxFileSize,
+            errors.biggerThanTotalMaxFileSize,
             413,
           ),
         );
