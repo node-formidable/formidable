@@ -13,6 +13,7 @@ const missingContentType = 1011;
 const malformedMultipart = 1012;
 const missingMultipartBoundary = 1013;
 const unknownTransferEncoding = 1014;
+const maxFilesExceeded = 1015;
 
 const FormidableError = class extends Error {
   constructor(message, internalCode, httpCode = 500) {
@@ -31,6 +32,7 @@ export {
   filenameNotString,
   maxFieldsSizeExceeded,
   maxFieldsExceeded,
+  maxFilesExceeded,
   smallerThanMinFileSize,
   biggerThanMaxFileSize,
   noEmptyFiles,

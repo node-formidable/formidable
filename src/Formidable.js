@@ -20,6 +20,7 @@ const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
+  maxFiles: 1000,
   maxFileSize: 200 * 1024 * 1024,
   minFileSize: 1,
   allowEmptyFiles: true,
@@ -88,6 +89,7 @@ class IncomingForm extends EventEmitter {
     });
 
     this._setUpMaxFields();
+    this._setUpMaxFiles();
   }
 
   use(plugin) {
@@ -572,6 +574,24 @@ class IncomingForm extends EventEmitter {
             new FormidableError(
               `options.maxFields (${this.options.maxFields}) exceeded`,
               errors.maxFieldsExceeded,
+              413,
+            ),
+          );
+        }
+      });
+    }
+  }
+
+  _setUpMaxFiles() {
+    if (this.options.maxFiles !== 0) {
+      let fileCount = 0;
+      this.on('file', () => {
+        fileCount += 1;
+        if (fileCount > this.options.maxFiles) {
+          this._error(
+            new FormidableError(
+              `options.maxFiles (${this.options.maxFiles}) exceeded`,
+              errors.maxFilesExceeded,
               413,
             ),
           );
