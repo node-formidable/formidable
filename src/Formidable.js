@@ -308,6 +308,7 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
+    let fileSize = 0;
     const newFilename = this._getNewName(part);
     const filepath = this._joinDirectoryName(newFilename);
     const file = this._newFile({
@@ -326,16 +327,8 @@ class IncomingForm extends EventEmitter {
 
     part.on('data', (buffer) => {
       this._totalFileSize += buffer.length;
-      if (this._totalFileSize < this.options.minFileSize) {
-        this._error(
-          new FormidableError(
-            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${this._totalFileSize} bytes of file data`,
-            errors.smallerThanMinFileSize,
-            400,
-          ),
-        );
-        return;
-      }
+      fileSize += buffer.length;
+      
       if (this._totalFileSize > this.options.maxTotalFileSize) {
         this._error(
           new FormidableError(
@@ -356,11 +349,21 @@ class IncomingForm extends EventEmitter {
     });
 
     part.on('end', () => {
-      if (!this.options.allowEmptyFiles && this._totalFileSize === 0) {
+      if (!this.options.allowEmptyFiles && fileSize === 0) {
         this._error(
           new FormidableError(
             `options.allowEmptyFiles is false, file size should be greather than 0`,
             errors.noEmptyFiles,
+            400,
+          ),
+        );
+        return;
+      }
+      if (fileSize < this.options.minFileSize) {
+        this._error(
+          new FormidableError(
+            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${fileSize} bytes of file data`,
+            errors.smallerThanMinFileSize,
             400,
           ),
         );
