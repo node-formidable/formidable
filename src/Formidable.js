@@ -369,6 +369,16 @@ class IncomingForm extends EventEmitter {
         );
         return;
       }
+      if (fileSize > this.options.maxFileSize) {
+        this._error(
+          new FormidableError(
+            `options.maxFileSize (${this.options.maxFileSize} bytes), received ${fileSize} bytes of file data`,
+            errors.biggerThanMaxFileSize,
+            413,
+          ),
+        );
+        return;
+      }
 
       file.end(() => {
         this._flushing -= 1;
