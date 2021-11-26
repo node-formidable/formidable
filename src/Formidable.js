@@ -24,7 +24,7 @@ const DEFAULT_OPTIONS = {
   maxFileSize: 200 * 1024 * 1024,
   maxTotalFileSize: 200 * 1024 * 1024,
   minFileSize: 1,
-  allowEmptyFiles: true,
+  allowEmptyFiles: false,
   keepExtensions: false,
   encoding: 'utf-8',
   hashAlgorithm: false,
