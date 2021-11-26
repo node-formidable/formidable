@@ -22,6 +22,7 @@ const DEFAULT_OPTIONS = {
   maxFieldsSize: 20 * 1024 * 1024,
   maxFiles: 1000,
   maxFileSize: 200 * 1024 * 1024,
+  maxTotalFileSize: 200 * 1024 * 1024,
   minFileSize: 1,
   allowEmptyFiles: true,
   keepExtensions: false,
@@ -69,7 +70,7 @@ class IncomingForm extends EventEmitter {
 
     this._flushing = 0;
     this._fieldsSize = 0;
-    this._fileSize = 0;
+    this._totalFileSize = 0;
     this._plugins = [];
     this.openedFiles = [];
 
@@ -324,21 +325,21 @@ class IncomingForm extends EventEmitter {
     this.openedFiles.push(file);
 
     part.on('data', (buffer) => {
-      this._fileSize += buffer.length;
-      if (this._fileSize < this.options.minFileSize) {
+      this._totalFileSize += buffer.length;
+      if (this._totalFileSize < this.options.minFileSize) {
         this._error(
           new FormidableError(
-            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${this._fileSize} bytes of file data`,
+            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${this._totalFileSize} bytes of file data`,
             errors.smallerThanMinFileSize,
             400,
           ),
         );
         return;
       }
-      if (this._fileSize > this.options.maxFileSize) {
+      if (this._totalFileSize > this.options.maxTotalFileSize) {
         this._error(
           new FormidableError(
-            `options.maxFileSize (${this.options.maxFileSize} bytes) exceeded, received ${this._fileSize} bytes of file data`,
+            `options.maxTotalFileSize (${this.options.maxTotalFileSize} bytes) exceeded, received ${this._totalFileSize} bytes of file data`,
             errors.biggerThanMaxFileSize,
             413,
           ),
@@ -355,7 +356,7 @@ class IncomingForm extends EventEmitter {
     });
 
     part.on('end', () => {
-      if (!this.options.allowEmptyFiles && this._fileSize === 0) {
+      if (!this.options.allowEmptyFiles && this._totalFileSize === 0) {
         this._error(
           new FormidableError(
             `options.allowEmptyFiles is false, file size should be greather than 0`,
