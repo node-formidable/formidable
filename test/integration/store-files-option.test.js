@@ -1,10 +1,10 @@
-import { existsSync, mkdirSync, WriteStream, statSync, unlinkSync, createReadStream } from 'fs';
-import { tmpdir } from 'os';
+import { existsSync, mkdirSync, WriteStream, statSync, unlinkSync, createReadStream } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { createServer, request as _request } from 'http';
-import assert, { strictEqual, ok } from 'assert';
+import assert, { strictEqual, ok } from 'node:assert';
 
-import path, { join, dirname } from 'path';
-import url from 'url';
+import path, { join, dirname } from 'node:path';
+import url from 'node:url';
 
 import formidable from '../../src/index.js';
 

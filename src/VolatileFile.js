@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
-import { createHash } from 'crypto';
-import { EventEmitter } from 'events';
+import { createHash } from 'node:crypto';
+import { EventEmitter } from 'node:events';
 
 class VolatileFile extends EventEmitter {
   constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }) {

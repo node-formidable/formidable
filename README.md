@@ -97,7 +97,7 @@ Parse an incoming file upload, with the
 [Node.js's built-in `http` module](https://nodejs.org/api/http.html).
 
 ```js
-import http from 'http';
+import http from 'node:http';
 import formidable from 'formidable';
 
 const server = http.createServer((req, res) => {

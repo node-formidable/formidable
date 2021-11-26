@@ -1,8 +1,8 @@
 /* eslint-disable max-nested-callbacks */
 
-import { createConnection } from 'net';
-import { createServer } from 'http';
-import { strictEqual } from 'assert';
+import { createConnection } from 'node:net';
+import { createServer } from 'node:http';
+import { strictEqual } from 'node:assert';
 import formidable from '../../src/index.js';
 
 let ok = 0;

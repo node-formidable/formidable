@@ -1,5 +1,5 @@
-import { createServer, request as _request } from 'http';
-import assert, { deepStrictEqual } from 'assert';
+import { createServer, request as _request } from 'node:http';
+import assert, { deepStrictEqual } from 'node:assert';
 import formidable from '../../src/index.js';
 
 const testData = {

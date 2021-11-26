@@ -1,5 +1,5 @@
-import http from 'http';
-import { Writable } from 'stream';
+import http from 'node:http';
+import { Writable } from 'node:stream';
 import formidable from '../src/index.js';
 
 

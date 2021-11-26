@@ -1,5 +1,5 @@
-import { createServer } from 'http';
-import { ok, strictEqual } from 'assert';
+import { createServer } from 'node:http';
+import { ok, strictEqual } from 'node:assert';
 import request from 'request';
 import formidable from '../../src/index.js';
 

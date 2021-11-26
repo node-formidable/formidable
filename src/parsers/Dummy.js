@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'stream';
+import { Transform } from 'node:stream';
 
 class DummyParser extends Transform {
   constructor(incomingForm, options = {}) {

@@ -2,9 +2,9 @@
 /* eslint-disable no-underscore-dangle */
 
 import {jest} from '@jest/globals';
-import Stream from 'stream';
-import http from 'http';
-import path from 'path';
+import Stream from 'node:stream';
+import http from 'node:http';
+import path from 'node:path';
 
 import formidable from '../../src/index.js';
 import * as mod from '../../src/index.js';

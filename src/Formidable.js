@@ -1,13 +1,13 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 
-import os from 'os';
-import path from 'path';
+import os from 'node:os';
+import path from 'node:path';
+import { EventEmitter } from 'node:events';
+import { StringDecoder } from 'node:string_decoder';
 import hexoid from 'hexoid';
 import once from 'once';
 import dezalgo from 'dezalgo';
-import { EventEmitter } from 'events';
-import { StringDecoder } from 'string_decoder';
 import { octetstream, querystring, multipart, json } from './plugins/index.js';
 import PersistentFile from './PersistentFile.js';
 import VolatileFile from './VolatileFile.js';

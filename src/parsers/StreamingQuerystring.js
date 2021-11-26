@@ -1,7 +1,7 @@
 // not used
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'stream';
+import { Transform } from 'node:stream';
 import FormidableError, { maxFieldsSizeExceeded } from '../FormidableError.js';
 
 const AMPERSAND = 38;

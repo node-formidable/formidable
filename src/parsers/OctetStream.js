@@ -1,4 +1,4 @@
-import { PassThrough } from 'stream';
+import { PassThrough } from 'node:stream';
 
 class OctetStreamParser extends PassThrough {
   constructor(options = {}) {
