@@ -22,7 +22,7 @@ const DEFAULT_OPTIONS = {
   maxFieldsSize: 20 * 1024 * 1024,
   maxFiles: 1000,
   maxFileSize: 200 * 1024 * 1024,
-  maxTotalFileSize: 200 * 1024 * 1024,
+  maxTotalFileSize: undefined,
   minFileSize: 1,
   allowEmptyFiles: false,
   keepExtensions: false,
@@ -46,6 +46,9 @@ class IncomingForm extends EventEmitter {
     super();
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
+    if (!this.options.maxTotalFileSize) {
+      this.options.maxTotalFileSize = this.options.maxFiles * this.options.maxFileSize
+    }
 
     const dir = path.resolve(
       this.options.uploadDir || this.options.uploaddir || os.tmpdir(),
