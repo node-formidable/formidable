@@ -15,6 +15,7 @@ const missingMultipartBoundary = 1013;
 const unknownTransferEncoding = 1014;
 const maxFilesExceeded = 1015;
 const biggerThanMaxFileSize = 1016;
+const pluginFailed = 1017;
 
 const FormidableError = class extends Error {
   constructor(message, internalCode, httpCode = 500) {
@@ -41,7 +42,8 @@ export {
   malformedMultipart,
   missingMultipartBoundary,
   unknownTransferEncoding,
-  biggerThanTotalMaxFileSize
+  biggerThanTotalMaxFileSize,
+  pluginFailed,
 };
 
 export default FormidableError;

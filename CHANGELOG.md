@@ -1,5 +1,10 @@
 # Changelog
 
+### 3.1.4
+
+ * fix: add missing pluginFailed error ([#794](https://github.com/node-formidable/formidable/pull/794))
+ * refactor: use explicit node imports (#786)
+
 ### 3.1.1
 
  * feat: handle top level json array, string and number

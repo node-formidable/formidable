@@ -32,9 +32,10 @@ const DEFAULT_OPTIONS = {
   enabledPlugins: [octetstream, querystring, multipart, json],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
-  filter() {
+  filter(_part) {
     return true;
   },
+  filename: undefined,
 };
 
 function hasOwnProp(obj, key) {
@@ -94,6 +95,8 @@ class IncomingForm extends EventEmitter {
 
     this._setUpMaxFields();
     this._setUpMaxFiles();
+    this.ended = undefined;
+    this.type = undefined;
   }
 
   use(plugin) {
