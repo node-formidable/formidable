@@ -13,6 +13,7 @@ const missingContentType = 1011;
 const malformedMultipart = 1012;
 const missingMultipartBoundary = 1013;
 const unknownTransferEncoding = 1014;
+const pluginFailed = 1017;
 
 const FormidableError = class extends Error {
   constructor(message, internalCode, httpCode = 500) {
@@ -38,6 +39,7 @@ export {
   malformedMultipart,
   missingMultipartBoundary,
   unknownTransferEncoding,
+  pluginFailed,
 };
 
 export default FormidableError;
