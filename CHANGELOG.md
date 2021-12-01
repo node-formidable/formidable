@@ -1,5 +1,20 @@
 # Changelog
 
+
+### 4.0.0
+
+
+ * feat: maxFileSize option is now per file (as the name suggests)
+ * feat: add maxFiles option, default 2000
+ * feat: add maxTotalFileSize, if undefined is maxFileSize * maxFiles
+ * fix: minFileSize is per file
+ * fix: allowEmptyFiles fix in cases where one file is not empty
+ * fix: allowEmptyFiles false option by default 
+ * fix: rename wrongly named error
+ * refactor: rename wrongly named maxFileSize into maxTotalFileSize
+
+This is a breaking change if care about maximum file sizes and maximum files. maxFileSize is per file instead of per form upload, which means if options are left unchanged, the total amount of Bytes per form is bigger than it was before.
+
 ### 3.1.4
 
  * fix: add missing pluginFailed error ([#794](https://github.com/node-formidable/formidable/pull/794))
