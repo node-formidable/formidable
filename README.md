@@ -310,11 +310,11 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   files
 - `options.minFileSize` **{number}** - default `1` (1byte); the minium size of
   uploaded file.
-- `options.maxFiles` **{number}** - default `2000`;
+- `options.maxFiles` **{number}** - default `Infinity`;
   limit the amount of uploaded files.
 - `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
   limit the size of each uploaded file.
-- `options.maxTotalFileSize` **{number}** - default `options.maxFileSize * options.maxFiles`;
+- `options.maxTotalFileSize` **{number}** - default `options.maxFileSize`;
   limit the size of the batch of uploaded files.
 - `options.maxFields` **{number}** - default `1000`; limit the number of fields, set 0 for unlimited
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);

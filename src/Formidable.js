@@ -20,7 +20,7 @@ const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
-  maxFiles: 1000,
+  maxFiles: Infinity,
   maxFileSize: 200 * 1024 * 1024,
   maxTotalFileSize: undefined,
   minFileSize: 1,
@@ -48,7 +48,7 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
     if (!this.options.maxTotalFileSize) {
-      this.options.maxTotalFileSize = this.options.maxFiles * this.options.maxFileSize
+      this.options.maxTotalFileSize = this.options.maxFileSize
     }
 
     const dir = path.resolve(
@@ -603,7 +603,7 @@ class IncomingForm extends EventEmitter {
   }
 
   _setUpMaxFiles() {
-    if (this.options.maxFiles !== 0) {
+    if (this.options.maxFiles !== Infinity) {
       let fileCount = 0;
       this.on('file', () => {
         fileCount += 1;
