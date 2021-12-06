@@ -13,6 +13,9 @@
  * fix: rename wrongly named error
  * refactor: rename wrongly named maxFileSize into maxTotalFileSize
 
+### 3.1.5
+
+ * fix: PersistentFile.toString ([#796](https://github.com/node-formidable/formidable/pull/796))
 
 ### 3.1.4
 
