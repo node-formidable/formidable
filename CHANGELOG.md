@@ -1,5 +1,9 @@
 # Changelog
 
+### 3.1.5
+
+ * fix: PersistentFile.toString ([#796](https://github.com/node-formidable/formidable/pull/796))
+
 ### 3.1.4
 
  * fix: add missing pluginFailed error ([#794](https://github.com/node-formidable/formidable/pull/794))
