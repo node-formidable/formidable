@@ -13,7 +13,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "v4"
+    "tag": "v3"
   },
   "scripts": {
     "bench": "node benchmark",
