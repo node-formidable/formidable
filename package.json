@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "3.1.5",
+  "version": "3.2.0",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
@@ -13,7 +13,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "v3"
+    "tag": "v4"
   },
   "scripts": {
     "bench": "node benchmark",

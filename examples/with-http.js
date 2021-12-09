@@ -12,7 +12,7 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
-      uploadDir: `uploads`,
+      // uploadDir: `uploads`,
       keepExtensions: true,
       // filename(/*name, ext, part, form*/) {
       //   /* name basename of the http originalFilename
@@ -24,10 +24,12 @@ const server = http.createServer((req, res) => {
       //   return 'yo.txt'; // or completly different name
       //   // return 'z/yo.txt'; // subdirectory
       // },
-      filter: function ({name, originalFilename, mimetype}) {
-        // keep only images
-        return mimetype && mimetype.includes("image");
-      }
+      // filter: function ({name, originalFilename, mimetype}) {
+      //   // keep only images
+      //   return mimetype && mimetype.includes("image");
+      // }
+      // maxTotalFileSize: 4000,
+      // maxFileSize: 1000,
 
     });
 

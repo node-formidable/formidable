@@ -1,5 +1,18 @@
 # Changelog
 
+
+### 3.2.0
+
+
+ * feat: maxFileSize option is now per file (as the name suggests)
+ * feat: add maxFiles option, default Infinity
+ * feat: add maxTotalFileSize, default is maxFileSize (for backwards compatibility)
+ * fix: minFileSize is per file
+ * fix: allowEmptyFiles fix in cases where one file is not empty
+ * fix: allowEmptyFiles false option by default 
+ * fix: rename wrongly named error
+ * refactor: rename wrongly named maxFileSize into maxTotalFileSize
+
 ### 3.1.5
 
  * fix: PersistentFile.toString ([#796](https://github.com/node-formidable/formidable/pull/796))

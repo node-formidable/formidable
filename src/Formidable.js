@@ -20,9 +20,11 @@ const toHexoId = hexoid(25);
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
+  maxFiles: Infinity,
   maxFileSize: 200 * 1024 * 1024,
+  maxTotalFileSize: undefined,
   minFileSize: 1,
-  allowEmptyFiles: true,
+  allowEmptyFiles: false,
   keepExtensions: false,
   encoding: 'utf-8',
   hashAlgorithm: false,
@@ -45,6 +47,9 @@ class IncomingForm extends EventEmitter {
     super();
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
+    if (!this.options.maxTotalFileSize) {
+      this.options.maxTotalFileSize = this.options.maxFileSize
+    }
 
     const dir = path.resolve(
       this.options.uploadDir || this.options.uploaddir || os.tmpdir(),
@@ -69,7 +74,7 @@ class IncomingForm extends EventEmitter {
 
     this._flushing = 0;
     this._fieldsSize = 0;
-    this._fileSize = 0;
+    this._totalFileSize = 0;
     this._plugins = [];
     this.openedFiles = [];
 
@@ -89,6 +94,7 @@ class IncomingForm extends EventEmitter {
     });
 
     this._setUpMaxFields();
+    this._setUpMaxFiles();
     this.ended = undefined;
     this.type = undefined;
   }
@@ -308,6 +314,7 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
+    let fileSize = 0;
     const newFilename = this._getNewName(part);
     const filepath = this._joinDirectoryName(newFilename);
     const file = this._newFile({
@@ -325,22 +332,14 @@ class IncomingForm extends EventEmitter {
     this.openedFiles.push(file);
 
     part.on('data', (buffer) => {
-      this._fileSize += buffer.length;
-      if (this._fileSize < this.options.minFileSize) {
+      this._totalFileSize += buffer.length;
+      fileSize += buffer.length;
+      
+      if (this._totalFileSize > this.options.maxTotalFileSize) {
         this._error(
           new FormidableError(
-            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${this._fileSize} bytes of file data`,
-            errors.smallerThanMinFileSize,
-            400,
-          ),
-        );
-        return;
-      }
-      if (this._fileSize > this.options.maxFileSize) {
-        this._error(
-          new FormidableError(
-            `options.maxFileSize (${this.options.maxFileSize} bytes) exceeded, received ${this._fileSize} bytes of file data`,
-            errors.biggerThanMaxFileSize,
+            `options.maxTotalFileSize (${this.options.maxTotalFileSize} bytes) exceeded, received ${this._totalFileSize} bytes of file data`,
+            errors.biggerThanTotalMaxFileSize,
             413,
           ),
         );
@@ -356,12 +355,32 @@ class IncomingForm extends EventEmitter {
     });
 
     part.on('end', () => {
-      if (!this.options.allowEmptyFiles && this._fileSize === 0) {
+      if (!this.options.allowEmptyFiles && fileSize === 0) {
         this._error(
           new FormidableError(
             `options.allowEmptyFiles is false, file size should be greather than 0`,
             errors.noEmptyFiles,
             400,
+          ),
+        );
+        return;
+      }
+      if (fileSize < this.options.minFileSize) {
+        this._error(
+          new FormidableError(
+            `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${fileSize} bytes of file data`,
+            errors.smallerThanMinFileSize,
+            400,
+          ),
+        );
+        return;
+      }
+      if (fileSize > this.options.maxFileSize) {
+        this._error(
+          new FormidableError(
+            `options.maxFileSize (${this.options.maxFileSize} bytes), received ${fileSize} bytes of file data`,
+            errors.biggerThanMaxFileSize,
+            413,
           ),
         );
         return;
@@ -575,6 +594,24 @@ class IncomingForm extends EventEmitter {
             new FormidableError(
               `options.maxFields (${this.options.maxFields}) exceeded`,
               errors.maxFieldsExceeded,
+              413,
+            ),
+          );
+        }
+      });
+    }
+  }
+
+  _setUpMaxFiles() {
+    if (this.options.maxFiles !== Infinity) {
+      let fileCount = 0;
+      this.on('file', () => {
+        fileCount += 1;
+        if (fileCount > this.options.maxFiles) {
+          this._error(
+            new FormidableError(
+              `options.maxFiles (${this.options.maxFiles}) exceeded`,
+              errors.maxFilesExceeded,
               413,
             ),
           );
