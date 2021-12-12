@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 3.2.1
+
+
+ * fix: do not let empty file on error ([#796](https://github.com/node-formidable/formidable/pull/796))
+ * it was probably due to the fact that .destroy on a file stream does not always complete on time
+
 ### 3.2.0
 
 
