@@ -78,7 +78,10 @@ class PersistentFile extends EventEmitter {
 
   destroy() {
     this._writeStream.destroy();
-    unlink(this.filepath, () => {});
+    const filepath = this.filepath; 
+    setTimeout(function () {
+        unlink(filepath, () => {});
+    }, 1)
   }
 }
 
