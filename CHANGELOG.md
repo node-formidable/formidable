@@ -10,7 +10,7 @@
 ### 3.2.0
 
 
- * feat: maxFileSize option is now per file (as the name suggests)
+ * feat: maxFileSize option is now per file (as the name suggests) ([#791](https://github.com/node-formidable/formidable/pull/791))
  * feat: add maxFiles option, default Infinity
  * feat: add maxTotalFileSize, default is maxFileSize (for backwards compatibility)
  * fix: minFileSize is per file
