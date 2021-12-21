@@ -404,8 +404,8 @@ class IncomingForm extends EventEmitter {
       return;
     }
 
-    const results = [];
-    const _dummyParser = new DummyParser(this, this.options);
+
+    new DummyParser(this, this.options);
 
     // eslint-disable-next-line no-plusplus
     for (let idx = 0; idx < this._plugins.length; idx++) {
