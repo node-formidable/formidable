@@ -435,22 +435,9 @@ class IncomingForm extends EventEmitter {
     }
 
     this.emit('pluginsResults', results);
-
-    // NOTE: probably not needed, because we check options.enabledPlugins in the constructor
-    // if (results.length === 0 /* && results.length !== this._plugins.length */) {
-    //   this._error(
-    //     new Error(
-    //       `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
-    //     ),
-    //   );
-    // }
   }
 
   _error(err, eventName = 'error') {
-    // if (!err && this.error) {
-    //   this.emit('error', this.error);
-    //   return;
-    // }
     if (this.error || this.ended) {
       return;
     }
@@ -612,9 +599,6 @@ class IncomingForm extends EventEmitter {
   }
 
   _maybeEnd() {
-    // console.log('ended', this.ended);
-    // console.log('_flushing', this._flushing);
-    // console.log('error', this.error);
     if (!this.ended || this._flushing || this.error) {
       return;
     }
