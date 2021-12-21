@@ -125,22 +125,23 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
+  resume () {
+    try {
+      this.req.resume();
+    } catch (err) {
+      // the stream was destroyed
+      if (!this.ended) {
+        // before it was completed, crash & burn
+        this._error(err);
+      }
+      return false;
+    }
+
+    return true;
+  }
+
   parse(req, cb) {
     this.req = req;
-    this.resume = () => {
-      try {
-        req.resume();
-      } catch (err) {
-        // the stream was destroyed
-        if (!this.ended) {
-          // before it was completed, crash & burn
-          this._error(err);
-        }
-        return false;
-      }
-
-      return true;
-    };
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
