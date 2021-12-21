@@ -60,10 +60,6 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
       ctx.__pluginsCount = ctx.__pluginsCount || 0;
       ctx.__pluginsCount += 1;
     });
-    form.on('pluginsResults', (results) => {
-      expect(results.length).toBe(4);
-      ctx.__pluginsResults = true;
-    });
     form.on('end', () => {
       ctx.__ends = 1;
       expect(ctx.__customPlugin1).toBe(111);
@@ -116,9 +112,6 @@ test('.parse throw error when some plugin fail', async () => {
       form.on('plugin', () => {
         ctx.__pluginsCount = ctx.__pluginsCount || 0;
         ctx.__pluginsCount += 1;
-      });
-      form.on('pluginsResults', () => {
-        throw new Error('should not be called');
       });
 
       form.once('error', () => {
