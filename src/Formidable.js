@@ -66,6 +66,7 @@ class IncomingForm extends EventEmitter {
       'bytesExpected',
       'bytesReceived',
       '_parser',
+      'req',
     ].forEach((key) => {
       this[key] = null;
     });
@@ -110,21 +111,22 @@ class IncomingForm extends EventEmitter {
     return this;
   }
 
-  parse(req, cb) {
-    this.pause = () => {
-      try {
-        req.pause();
-      } catch (err) {
-        // the stream was destroyed
-        if (!this.ended) {
-          // before it was completed, crash & burn
-          this._error(err);
-        }
-        return false;
+  pause () {
+    try {
+      this.req.pause();
+    } catch (err) {
+      // the stream was destroyed
+      if (!this.ended) {
+        // before it was completed, crash & burn
+        this._error(err);
       }
-      return true;
-    };
+      return false;
+    }
+    return true;
+  }
 
+  parse(req, cb) {
+    this.req = req;
     this.resume = () => {
       try {
         req.resume();
@@ -462,6 +464,7 @@ class IncomingForm extends EventEmitter {
       return;
     }
 
+    this.req = null;
     this.error = err;
     this.emit(eventName, err);
 
@@ -626,7 +629,7 @@ class IncomingForm extends EventEmitter {
     if (!this.ended || this._flushing || this.error) {
       return;
     }
-
+    this.req = null;
     this.emit('end');
   }
 }
