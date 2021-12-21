@@ -247,16 +247,6 @@ class IncomingForm extends EventEmitter {
     return this.bytesReceived;
   }
 
-  pause() {
-    // this does nothing, unless overwritten in IncomingForm.parse
-    return false;
-  }
-
-  resume() {
-    // this does nothing, unless overwritten in IncomingForm.parse
-    return false;
-  }
-
   onPart(part) {
     // this method can be overwritten by the user
     this._handlePart(part);
