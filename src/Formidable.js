@@ -584,7 +584,7 @@ class IncomingForm extends EventEmitter {
   }
 
   _setUpMaxFields() {
-    if (this.options.maxFields !== 0) {
+    if (this.options.maxFields !== Infinity) {
       let fieldsCount = 0;
       this.on('field', () => {
         fieldsCount += 1;
