@@ -144,7 +144,6 @@ class IncomingForm extends EventEmitter {
     if (cb) {
       const callback = once(dezalgo(cb));
       this.fields = {};
-      let mockFields = '';
       const files = {};
 
       this.on('field', (name, value) => {
