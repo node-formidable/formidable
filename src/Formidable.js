@@ -407,10 +407,7 @@ class IncomingForm extends EventEmitter {
 
     new DummyParser(this, this.options);
 
-    // eslint-disable-next-line no-plusplus
-    for (let idx = 0; idx < this._plugins.length; idx++) {
-      const plugin = this._plugins[idx];
-  
+    this._plugins.forEach((plugin, idx) => {  
       try {
         plugin(this, this.options) || this;
       } catch (err) {
@@ -427,7 +424,7 @@ class IncomingForm extends EventEmitter {
 
       // todo: use Set/Map and pass plugin name instead of the `idx` index
       this.emit('plugin', idx);
-    }
+    });
   }
 
   _error(err, eventName = 'error') {
