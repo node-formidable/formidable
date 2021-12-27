@@ -66,6 +66,7 @@ class IncomingForm extends EventEmitter {
       'bytesExpected',
       'bytesReceived',
       '_parser',
+      'req',
     ].forEach((key) => {
       this[key] = null;
     });
@@ -110,41 +111,42 @@ class IncomingForm extends EventEmitter {
     return this;
   }
 
+  pause () {
+    try {
+      this.req.pause();
+    } catch (err) {
+      // the stream was destroyed
+      if (!this.ended) {
+        // before it was completed, crash & burn
+        this._error(err);
+      }
+      return false;
+    }
+    return true;
+  }
+
+  resume () {
+    try {
+      this.req.resume();
+    } catch (err) {
+      // the stream was destroyed
+      if (!this.ended) {
+        // before it was completed, crash & burn
+        this._error(err);
+      }
+      return false;
+    }
+
+    return true;
+  }
+
   parse(req, cb) {
-    this.pause = () => {
-      try {
-        req.pause();
-      } catch (err) {
-        // the stream was destroyed
-        if (!this.ended) {
-          // before it was completed, crash & burn
-          this._error(err);
-        }
-        return false;
-      }
-      return true;
-    };
-
-    this.resume = () => {
-      try {
-        req.resume();
-      } catch (err) {
-        // the stream was destroyed
-        if (!this.ended) {
-          // before it was completed, crash & burn
-          this._error(err);
-        }
-        return false;
-      }
-
-      return true;
-    };
+    this.req = req;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const callback = once(dezalgo(cb));
       this.fields = {};
-      let mockFields = '';
       const files = {};
 
       this.on('field', (name, value) => {
@@ -243,16 +245,6 @@ class IncomingForm extends EventEmitter {
     this._parser.write(buffer);
 
     return this.bytesReceived;
-  }
-
-  pause() {
-    // this does nothing, unless overwritten in IncomingForm.parse
-    return false;
-  }
-
-  resume() {
-    // this does nothing, unless overwritten in IncomingForm.parse
-    return false;
   }
 
   onPart(part) {
@@ -412,17 +404,12 @@ class IncomingForm extends EventEmitter {
       return;
     }
 
-    const results = [];
-    const _dummyParser = new DummyParser(this, this.options);
 
-    // eslint-disable-next-line no-plusplus
-    for (let idx = 0; idx < this._plugins.length; idx++) {
-      const plugin = this._plugins[idx];
+    new DummyParser(this, this.options);
 
-      let pluginReturn = null;
-
+    this._plugins.forEach((plugin, idx) => {  
       try {
-        pluginReturn = plugin(this, this.options) || this;
+        plugin(this, this.options) || this;
       } catch (err) {
         // directly throw from the `form.parse` method;
         // there is no other better way, except a handle through options
@@ -435,42 +422,23 @@ class IncomingForm extends EventEmitter {
         throw error;
       }
 
-      Object.assign(this, pluginReturn);
-
       // todo: use Set/Map and pass plugin name instead of the `idx` index
-      this.emit('plugin', idx, pluginReturn);
-      results.push(pluginReturn);
-    }
-
-    this.emit('pluginsResults', results);
-
-    // NOTE: probably not needed, because we check options.enabledPlugins in the constructor
-    // if (results.length === 0 /* && results.length !== this._plugins.length */) {
-    //   this._error(
-    //     new Error(
-    //       `bad content-type header, unknown content-type: ${this.headers['content-type']}`,
-    //     ),
-    //   );
-    // }
+      this.emit('plugin', idx);
+    });
   }
 
   _error(err, eventName = 'error') {
-    // if (!err && this.error) {
-    //   this.emit('error', this.error);
-    //   return;
-    // }
     if (this.error || this.ended) {
       return;
     }
 
+    this.req = null;
     this.error = err;
     this.emit(eventName, err);
 
-    if (Array.isArray(this.openedFiles)) {
-      this.openedFiles.forEach((file) => {
-        file.destroy();
-      });
-    }
+    this.openedFiles.forEach((file) => {
+      file.destroy();
+    });
   }
 
   _parseContentLength() {
@@ -585,7 +553,7 @@ class IncomingForm extends EventEmitter {
   }
 
   _setUpMaxFields() {
-    if (this.options.maxFields !== 0) {
+    if (this.options.maxFields !== Infinity) {
       let fieldsCount = 0;
       this.on('field', () => {
         fieldsCount += 1;
@@ -621,13 +589,10 @@ class IncomingForm extends EventEmitter {
   }
 
   _maybeEnd() {
-    // console.log('ended', this.ended);
-    // console.log('_flushing', this._flushing);
-    // console.log('error', this.error);
     if (!this.ended || this._flushing || this.error) {
       return;
     }
-
+    this.req = null;
     this.emit('end');
   }
 }
