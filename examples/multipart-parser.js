@@ -1,13 +1,23 @@
+import { Blob } from 'node:buffer';
+import { Readable } from 'node:stream';
+import { FormData, formDataToBlob } from 'formdata-polyfill/esm.min.js'
 import { MultipartParser } from '../src/index.js';
 
-
-// hand crafted multipart
-const boundary = '--abcxyz';
-const next = '\r\n';
-const formData = 'Content-Disposition: form-data; ';
-const bufferToWrite = Buffer.from(
-  `${boundary}${next}${formData}name="text"${next}${next}some text ...${next}${next}${boundary}${next}${formData}name="z"${next}${next}text inside z${next}${next}${boundary}${next}${formData}name="file1"; filename="a.txt"${next}Content-Type: text/plain${next}${next}Content of a.txt.${next}${next}${boundary}${next}${formData}name="file2"; filename="a.html"${next}Content-Type: text/html${next}${next}<!DOCTYPE html><title>Content of a.html.</title>${next}${next}${boundary}--`,
+const blob1 = new Blob(
+  ['Content of a.txt.'],
+  { type: 'text/plain' }
 );
+
+const blob2 = new Blob(
+  ['<!DOCTYPE html><title>Content of a.html.</title>'],
+  { type: 'text/html' }
+);
+
+const fd = new FormData();
+fd.set('text', 'some text ...');
+fd.set('z', 'text inside z');
+fd.set('file1', blob1, 'a.txt');
+fd.set('file2', blob2, 'a.html');
 
 const multipartParser = new MultipartParser();
 multipartParser.on('data', ({ name, buffer, start, end }) => {
@@ -17,12 +27,11 @@ multipartParser.on('data', ({ name, buffer, start, end }) => {
   }
   console.log();
 });
-multipartParser.on('error', (error) => {
-  console.error(error);
-});
+multipartParser.on('error', console.error);
 
-multipartParser.initWithBoundary(boundary.substring(2)); // todo make better error message when it is forgotten
-// const shouldWait = !multipartParser.write(buffer);
-multipartParser.write(bufferToWrite);
-multipartParser.end();
-// multipartParser.destroy();
+const blob = formDataToBlob(fd);
+const boundary = blob.type.split('boundary=')[1];
+
+multipartParser.initWithBoundary(boundary);
+
+Readable.from(blob.stream()).pipe(multipartParser);
