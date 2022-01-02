@@ -1,34 +1,23 @@
-import { createServer } from 'node:http';
-import { ok, strictEqual } from 'node:assert';
-import request from 'request';
-import formidable from '../../src/index.js';
+import { createServer, request } from "node:http";
+import { ok, strictEqual } from "node:assert";
+import { Buffer } from 'node:buffer';
+import formidable from "../../src/index.js";
 
 // OS choosing port
 const PORT = 13531;
+const type = "multipart/related; boundary=a7a65b99-8a61-4e2c-b149-f73a3b35f923"
+const body = "LS1hN2E2NWI5OS04YTYxLTRlMmMtYjE0OS1mNzNhM2IzNWY5MjMNCmNvbnRlbnQtZGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZm9vIg0KDQpiYXJyeQ0KLS1hN2E2NWI5OS04YTYxLTRlMmMtYjE0OS1mNzNhM2IzNWY5MjMtLQ";
+const buffer = Buffer.from(body, 'base64url');
 
-const indexForm = `
-  <form action="/" method="post" enctype="multipart/form-data">
-    <input type="text" name="foo" />
-    <input type="submit" />
-  </form>
-`;
-
-test('issue 46', (done) => {
+test("issue 46", (done) => {
   const server = createServer((req, res) => {
-    // Show a form for testing purposes.
-    if (req.method === 'GET') {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(indexForm);
-      return;
-    }
-
     // Parse form and write results to response.
     const form = formidable();
     form.parse(req, (err, fields, files) => {
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
-      // ? old, makes more sense to be passed to `.end()`?
-      // res.write(JSON.stringify({ err, fields, files }));
-      res.end(JSON.stringify({ err, fields, files }));
+      ok(fields.foo, 'should have fields.foo === barry');
+      strictEqual(fields.foo[0], 'barry');
+      server.close();
+      done();
     });
   });
 
@@ -36,21 +25,15 @@ test('issue 46', (done) => {
     const choosenPort = server.address().port;
     const url = `http://localhost:${choosenPort}`;
 
-    const parts = [
-      {
-        'content-disposition': 'form-data; name="foo"',
-        body: 'barry',
-      },
-    ];
-
-    request({ method: 'POST', url, multipart: parts }, (e, res, body) => {
-      const obj = JSON.parse(body);
-
-      ok(obj.fields.foo, 'should have fields.foo === barry');
-      strictEqual(obj.fields.foo[0], 'barry');
-
-      server.close();
-      done();
+    const req = request(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": type,
+        "Content-Length": buffer.byteLength
+      }
     });
+
+    req.write(buffer);
+    req.end();
   });
 });
