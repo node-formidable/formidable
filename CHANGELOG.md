@@ -49,6 +49,7 @@
 
 ### 2.0.0
 
+ * feat: files are detected if a mimetype is present (previously it was based on filename)
  * feat: add options.filter ([#716](https://github.com/node-formidable/formidable/pull/716))
  * feat: add code and httpCode to most errors ([#686](https://github.com/node-formidable/formidable/pull/686))
  * rename: option.hash into option.hashAlgorithm ([#689](https://github.com/node-formidable/formidable/pull/689))
