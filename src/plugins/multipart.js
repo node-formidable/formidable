@@ -33,6 +33,7 @@ export default function plugin(formidable, options) {
       self._error(err);
     }
   }
+  return self;
 }
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
