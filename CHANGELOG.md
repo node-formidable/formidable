@@ -1,6 +1,10 @@
 # Changelog
 
 
+### 3.2.2
+
+ * refactor: ([#801](https://github.com/node-formidable/formidable/pull/801))
+
 ### 3.2.1
 
 

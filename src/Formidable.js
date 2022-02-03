@@ -407,9 +407,11 @@ class IncomingForm extends EventEmitter {
 
     new DummyParser(this, this.options);
 
-    this._plugins.forEach((plugin, idx) => {  
+    const results = [];
+    this._plugins.forEach((plugin, idx) => {
+      let pluginReturn = null;
       try {
-        plugin(this, this.options) || this;
+        pluginReturn = plugin(this, this.options) || this;
       } catch (err) {
         // directly throw from the `form.parse` method;
         // there is no other better way, except a handle through options
@@ -421,10 +423,12 @@ class IncomingForm extends EventEmitter {
         error.idx = idx;
         throw error;
       }
+      Object.assign(this, pluginReturn);
 
       // todo: use Set/Map and pass plugin name instead of the `idx` index
-      this.emit('plugin', idx);
+      this.emit('plugin', idx, pluginReturn);
     });
+    this.emit('pluginsResults', results);
   }
 
   _error(err, eventName = 'error') {
