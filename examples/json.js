@@ -1,5 +1,5 @@
 import http from 'node:http';
-import util from 'util';
+import util from 'node:util';
 import formidable from '../src/index.js';
 
 
