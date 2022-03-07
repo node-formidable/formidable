@@ -54,7 +54,7 @@
     "nyc": "15.1.0",
     "prettier": "2.0.5",
     "prettier-plugin-pkgjson": "0.2.8",
-    "supertest": "6.1.6"
+    "supertest": "6.2.2"
   },
   "jest": {
     "verbose": true
