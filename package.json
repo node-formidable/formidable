@@ -84,7 +84,7 @@
       ":pinAllExceptPeerDependencies"
     ]
   },
-  "packageManager": "yarn@1.22.17",
+  "packageManager": "yarn@1.22.18",
   "keywords": [
     "multipart",
     "form",
