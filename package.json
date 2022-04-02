@@ -52,7 +52,7 @@
     "lint-staged": "10.2.7",
     "make-dir-cli": "2.0.0",
     "nyc": "15.1.0",
-    "prettier": "2.0.5",
+    "prettier": "2.6.2",
     "prettier-plugin-pkgjson": "0.2.8",
     "supertest": "6.1.6"
   },
