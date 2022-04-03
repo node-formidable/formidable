@@ -21,4 +21,4 @@ updates:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "all"
     rebase-strategy: "auto"
-    reviewers: ["node-formidable/core"]
+    reviewers: []
