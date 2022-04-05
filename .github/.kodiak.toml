@@ -30,3 +30,7 @@ usernames = ["dependabot", "renovate"]
 
 [approve]
 auto_approve_usernames = ["dependabot", "renovate"]
+
+[update]
+always = true
+require_automerge_label = true
