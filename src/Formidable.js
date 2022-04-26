@@ -3,6 +3,7 @@
 
 import os from 'node:os';
 import path from 'node:path';
+import fs from 'node:fs';
 import { EventEmitter } from 'node:events';
 import { StringDecoder } from 'node:string_decoder';
 import hexoid from 'hexoid';
@@ -25,6 +26,7 @@ const DEFAULT_OPTIONS = {
   maxTotalFileSize: undefined,
   minFileSize: 1,
   allowEmptyFiles: false,
+  createDirsFromUploads: false,
   keepExtensions: false,
   encoding: 'utf-8',
   hashAlgorithm: false,
@@ -41,6 +43,15 @@ const DEFAULT_OPTIONS = {
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
+
+
+const createNecessaryDirectoriesSync = function (filePath) {
+  const directoryname = path.dirname(filePath);
+  if (fs.existsSync(directoryname)) {
+    return;
+  }
+  fs.mkdirSync(directoryname, { recursive: true });
+};
 
 class IncomingForm extends EventEmitter {
   constructor(options = {}) {
@@ -463,22 +474,26 @@ class IncomingForm extends EventEmitter {
   }
 
   _newFile({ filepath, originalFilename, mimetype, newFilename }) {
-    return this.options.fileWriteStreamHandler
-      ? new VolatileFile({
-          newFilename,
-          filepath,
-          originalFilename,
-          mimetype,
-          createFileWriteStream: this.options.fileWriteStreamHandler,
-          hashAlgorithm: this.options.hashAlgorithm,
-        })
-      : new PersistentFile({
-          newFilename,
-          filepath,
-          originalFilename,
-          mimetype,
-          hashAlgorithm: this.options.hashAlgorithm,
-        });
+    if (this.options.fileWriteStreamHandler) {
+      return new VolatileFile({
+        newFilename,
+        filepath,
+        originalFilename,
+        mimetype,
+        createFileWriteStream: this.options.fileWriteStreamHandler,
+        hashAlgorithm: this.options.hashAlgorithm,
+      });
+    }
+    if (this.options.createDirsFromUploads) {
+      createNecessaryDirectoriesSync(filepath);
+    }
+    return new PersistentFile({
+      newFilename,
+      filepath,
+      originalFilename,
+      mimetype,
+      hashAlgorithm: this.options.hashAlgorithm,
+    });
   }
 
   _getFileName(headerValue) {
