@@ -64,8 +64,7 @@ test('keep alive error', (done) => {
         clientTwo.end();
 
         setTimeout(() => {
-          // ? yup, quite true, it makes sense to be 2
-          strictEqual(ok, 2, `should "ok" count === 2, has: ${ok}`);
+          strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
 
           server.close();
           done();
