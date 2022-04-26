@@ -201,7 +201,6 @@ class IncomingForm extends EventEmitter {
         if (this._parser) {
           this._parser.end();
         }
-        this._maybeEnd();
       });
 
     return this;
