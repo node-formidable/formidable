@@ -1,6 +1,10 @@
 # Changelog
 
 
+### 3.2.3
+
+ * fix: ([#852](https://github.com/node-formidable/formidable/pull/852)) end event is emitted once
+
 ### 3.2.2
 
  * refactor: ([#801](https://github.com/node-formidable/formidable/pull/801))
