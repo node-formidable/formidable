@@ -3,7 +3,7 @@
 
 import os from 'node:os';
 import path from 'node:path';
-import fs from 'node:fs';
+import fsPromises from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { StringDecoder } from 'node:string_decoder';
 import hexoid from 'hexoid';
@@ -45,12 +45,9 @@ function hasOwnProp(obj, key) {
 }
 
 
-const createNecessaryDirectoriesSync = function (filePath) {
+const createNecessaryDirectoriesAsync = function (filePath) {
   const directoryname = path.dirname(filePath);
-  if (fs.existsSync(directoryname)) {
-    return;
-  }
-  fs.mkdirSync(directoryname, { recursive: true });
+  return fsPromises.mkdir(directoryname, { recursive: true });
 };
 
 class IncomingForm extends EventEmitter {
@@ -259,10 +256,10 @@ class IncomingForm extends EventEmitter {
 
   onPart(part) {
     // this method can be overwritten by the user
-    this._handlePart(part);
+    return this._handlePart(part);
   }
 
-  _handlePart(part) {
+  async _handlePart(part) {
     if (part.originalFilename && typeof part.originalFilename !== 'string') {
       this._error(
         new FormidableError(
@@ -319,7 +316,7 @@ class IncomingForm extends EventEmitter {
     let fileSize = 0;
     const newFilename = this._getNewName(part);
     const filepath = this._joinDirectoryName(newFilename);
-    const file = this._newFile({
+    const file = await this._newFile({
       newFilename,
       filepath,
       originalFilename: part.originalFilename,
@@ -472,7 +469,7 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ filepath, originalFilename, mimetype, newFilename }) {
+  async _newFile({ filepath, originalFilename, mimetype, newFilename }) {
     if (this.options.fileWriteStreamHandler) {
       return new VolatileFile({
         newFilename,
@@ -484,7 +481,7 @@ class IncomingForm extends EventEmitter {
       });
     }
     if (this.options.createDirsFromUploads) {
-      createNecessaryDirectoriesSync(filepath);
+      await createNecessaryDirectoriesAsync(filepath);
     }
     return new PersistentFile({
       newFilename,
