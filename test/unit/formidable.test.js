@@ -65,6 +65,7 @@ function makeHeader(originalFilename) {
 
     const getBasename = (part) => path.basename(form._getNewName(part));
 
+    // tests below assume baseline hexoid 25 chars + a few more for the extension
     let basename = getBasename('fine.jpg?foo=bar');
     expect(basename).toHaveLength(29);
     let ext = path.extname(basename);
@@ -94,6 +95,16 @@ function makeHeader(originalFilename) {
     expect(basename).toHaveLength(30);
     ext = path.extname(basename);
     expect(ext).toBe('.QxZs');
+
+    basename = getBasename('test.pdf.jqlnn<img src=a onerror=alert(1)>.png');
+    expect(basename).toHaveLength(35);
+    ext = path.extname(basename);
+    expect(ext).toBe('.jqlnn');
+
+    basename = getBasename('test.<a.png');
+    expect(basename).toHaveLength(25);
+    ext = path.extname(basename);
+    expect(ext).toBe('');
   });
 
   test(`${name}#_Array parameters support`, () => {

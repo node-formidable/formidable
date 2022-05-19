@@ -1,4 +1,5 @@
 import http from 'node:http';
+import slugify from '@sindresorhus/slugify';
 import formidable from '../src/index.js';
 
 
@@ -14,16 +15,16 @@ const server = http.createServer((req, res) => {
     const form = formidable({
       // uploadDir: `uploads`,
       keepExtensions: true,
-      // filename(/*name, ext, part, form*/) {
-      //   /* name basename of the http originalFilename
-      //     ext with the dot ".txt" only if keepExtensions is true
-      //    */
-      //   // slugify to avoid invalid filenames
-      //   // substr to define a maximum length
-      //   // return `${slugify(name)}.${slugify(ext, {separator: ''})}`.substr(0, 100);
-      //   return 'yo.txt'; // or completly different name
-      //   // return 'z/yo.txt'; // subdirectory
-      // },
+      filename(name, ext, part, form) {
+        /* name basename of the http originalFilename
+          ext with the dot ".txt" only if keepExtensions is true
+         */
+        // slugify to avoid invalid filenames
+        // substr to define a maximum 
+        return `${slugify(name)}.${slugify(ext, {separator: ''})}`.substr(0, 100);
+        // return 'yo.txt'; // or completly different name
+        // return 'z/yo.txt'; // subdirectory
+      },
       // filter: function ({name, originalFilename, mimetype}) {
       //   // keep only images
       //   return mimetype && mimetype.includes("image");
