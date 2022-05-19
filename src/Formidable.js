@@ -524,11 +524,17 @@ class IncomingForm extends EventEmitter {
       rawExtname =  basename.slice(firstDot);
     }
 
+    let filtered;
     const firstInvalidIndex = Array.from(rawExtname).findIndex(invalidExtensionChar);
     if (firstInvalidIndex === -1) {
-      return rawExtname;
+      filtered = rawExtname;
+    } else {
+      filtered = rawExtname.substring(0, firstInvalidIndex);
     }
-    return rawExtname.substring(0, firstInvalidIndex);
+    if (filtered === '.') {
+      return '';
+    }
+    return filtered;
   }
 
   _joinDirectoryName(name) {

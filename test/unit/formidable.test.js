@@ -97,14 +97,14 @@ function makeHeader(originalFilename) {
     expect(ext).toBe('.QxZs');
 
     basename = getBasename('test.pdf.jqlnn<img src=a onerror=alert(1)>.png');
-    expect(basename).toHaveLength(29);
+    expect(basename).toHaveLength(35);
     ext = path.extname(basename);
-    expect(ext).toBe('.png');
+    expect(ext).toBe('.jqlnn');
 
     basename = getBasename('test.<a.png');
-    expect(basename).toHaveLength(29);
+    expect(basename).toHaveLength(25);
     ext = path.extname(basename);
-    expect(ext).toBe('.png');
+    expect(ext).toBe('');
   });
 
   test(`${name}#_Array parameters support`, () => {
