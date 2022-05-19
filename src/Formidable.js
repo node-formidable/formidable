@@ -42,9 +42,9 @@ function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
-const validExtensionChar = (c) => {
+const invalidExtensionChar = (c) => {
   const code = c.charCodeAt(0);
-  return (
+  return !(
     code === 46 || // .
     (code >= 65 && code <= 90) ||
     (code >= 97 && code <= 122)
@@ -523,7 +523,11 @@ class IncomingForm extends EventEmitter {
       rawExtname =  basename.slice(firstDot);
     }
 
-    return Array.from(rawExtname).filter(validExtensionChar).join('');
+    const firstInvalidIndex = Array.from(rawExtname).findIndex(invalidExtensionChar);
+    if (firstInvalidIndex === -1) {
+      return rawExtname;
+    }
+    return rawExtname.substring(0, firstInvalidIndex);
   }
 
   _joinDirectoryName(name) {
