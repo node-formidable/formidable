@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
-import { WriteStream, unlink } from 'node:fs';
-import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import crypto from 'node:crypto';
 import { EventEmitter } from 'node:events';
 
 class PersistentFile extends EventEmitter {
@@ -15,14 +15,14 @@ class PersistentFile extends EventEmitter {
     this._writeStream = null;
 
     if (typeof this.hashAlgorithm === 'string') {
-      this.hash = createHash(this.hashAlgorithm);
+      this.hash = crypto.createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
     }
   }
 
   open() {
-    this._writeStream = new WriteStream(this.filepath);
+    this._writeStream = fs.createWriteStream(this.filepath);
     this._writeStream.on('error', (err) => {
       this.emit('error', err);
     });
@@ -80,7 +80,7 @@ class PersistentFile extends EventEmitter {
     this._writeStream.destroy();
     const filepath = this.filepath; 
     setTimeout(function () {
-        unlink(filepath, () => {});
+        fs.unlink(filepath, () => {});
     }, 1)
   }
 }
