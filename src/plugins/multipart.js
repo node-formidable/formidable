@@ -159,8 +159,9 @@ function createInitMultipart(boundary) {
               ),
             );
         }
-
+        this._parser.pause();
         await this.onPart(part);
+        this._parser.resume();
       } else if (name === 'end') {
         this.ended = true;
         this._maybeEnd();

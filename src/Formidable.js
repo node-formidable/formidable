@@ -45,10 +45,30 @@ function hasOwnProp(obj, key) {
 }
 
 
-const createNecessaryDirectoriesAsync = function (filePath) {
+const decorateForceSequential = function (promiseCreator) {
+  /* forces a function that returns a promise to be sequential
+  useful for fs  for example */
+  let lastPromise = Promise.resolve();
+  return async function (...x) {
+      const promiseWeAreWaitingFor = lastPromise;
+      let currentPromise;
+      let callback;
+      // we need to change lastPromise before await anything,
+      // otherwise 2 calls might wait the same thing
+      lastPromise = new Promise(function (resolve) {
+          callback = resolve;
+      });
+      await promiseWeAreWaitingFor;
+      currentPromise = promiseCreator(...x);
+      currentPromise.then(callback).catch(callback);
+      return currentPromise;
+  };
+};
+
+const createNecessaryDirectoriesAsync = decorateForceSequential(function (filePath) {
   const directoryname = path.dirname(filePath);
   return fsPromises.mkdir(directoryname, { recursive: true });
-};
+});
 
 class IncomingForm extends EventEmitter {
   constructor(options = {}) {
