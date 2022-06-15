@@ -467,6 +467,12 @@ class IncomingForm extends EventEmitter {
     this.error = err;
     this.emit(eventName, err);
 
+    this.openedFolders.filter(Boolean).forEach((folderPath) => {
+      fsPromises.rm(folderPath, {
+        force: true,
+        recursive: true,
+      }).catch((e) => {console.error(e)});
+    });
     this.openedFiles.forEach((file) => {
       file.destroy();
     });
@@ -502,7 +508,8 @@ class IncomingForm extends EventEmitter {
     }
     if (this.options.createDirsFromUploads) {
       try {
-        await createNecessaryDirectoriesAsync(filepath);
+        const createdPath = await createNecessaryDirectoriesAsync(filepath);
+        this.openedFolders.push(createdPath);
       } catch (errorCreatingDir) {
         this._error(
           new FormidableError(
