@@ -501,7 +501,16 @@ class IncomingForm extends EventEmitter {
       });
     }
     if (this.options.createDirsFromUploads) {
-      await createNecessaryDirectoriesAsync(filepath);
+      try {
+        await createNecessaryDirectoriesAsync(filepath);
+      } catch (errorCreatingDir) {
+        this._error(
+          new FormidableError(
+          `cannot create directory`,
+          errors.cannotCreateDir,
+          409,
+        ),);
+      }
     }
     return new PersistentFile({
       newFilename,
