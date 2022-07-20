@@ -1,4 +1,5 @@
 import http from 'node:http';
+import slugify from '@sindresorhus/slugify';
 import formidable from '../src/index.js';
 
 
@@ -19,16 +20,28 @@ const server = http.createServer((req, res) => {
       allowEmptyFiles: true,
       minFileSize: 0,
       filename(name, ext, part, form) {
-        // todo use only valid chars and check length
+        /* name basename of the http originalFilename
+          ext with the dot ".txt" only if keepExtensions is true
+         */
         // originalFilename will have slashes with relative path if a
         // directory was uploaded
-        return part.originalFilename;
+        const {originalFilename} = part;
+        if (!originalFilename) {
+          return 'invalid';
+        }
+        return originalFilename.split("/").map((subdir) => {
+          return slugify(subdir, {separator: ''});  // slugify to avoid invalid filenames
+        }).join("/").substr(0, 100); // substr to define a maximum 
+        
+        // return 'yo.txt'; // or completly different name
+        // return 'z/yo.txt'; // subdirectory
       },
       filter: function ({name, originalFilename, mimetype}) {
         return Boolean(originalFilename);
         // keep only images
         // return mimetype?.includes("image");
       }
+
       // maxTotalFileSize: 4000,
       // maxFileSize: 1000,
 

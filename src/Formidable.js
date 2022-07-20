@@ -70,6 +70,16 @@ const createNecessaryDirectoriesAsync = decorateForceSequential(function (filePa
   return fsPromises.mkdir(directoryname, { recursive: true });
 });
 
+const invalidExtensionChar = (c) => {
+  const code = c.charCodeAt(0);
+  return !(
+    code === 46 || // .
+    (code >= 48 && code <= 57) ||
+    (code >= 65 && code <= 90) ||
+    (code >= 97 && code <= 122)
+  );
+};
+
 class IncomingForm extends EventEmitter {
   constructor(options = {}) {
     super();
@@ -538,6 +548,9 @@ class IncomingForm extends EventEmitter {
     return originalFilename;
   }
 
+  // able to get composed extension with multiple dots
+  // "a.b.c" -> ".b.c"
+  // as opposed to path.extname -> ".c"
   _getExtension(str) {
     if (!str) {
       return '';
@@ -546,13 +559,23 @@ class IncomingForm extends EventEmitter {
     const basename = path.basename(str);
     const firstDot = basename.indexOf('.');
     const lastDot = basename.lastIndexOf('.');
-    const extname = path.extname(basename).replace(/(\.[a-z0-9]+).*/i, '$1');
+    let rawExtname = path.extname(basename);
 
-    if (firstDot === lastDot) {
-      return extname;
+    if (firstDot !== lastDot) {
+      rawExtname =  basename.slice(firstDot);
     }
 
-    return basename.slice(firstDot, lastDot) + extname;
+    let filtered;
+    const firstInvalidIndex = Array.from(rawExtname).findIndex(invalidExtensionChar);
+    if (firstInvalidIndex === -1) {
+      filtered = rawExtname;
+    } else {
+      filtered = rawExtname.substring(0, firstInvalidIndex);
+    }
+    if (filtered === '.') {
+      return '';
+    }
+    return filtered;
   }
 
   _joinDirectoryName(name) {
