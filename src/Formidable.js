@@ -599,7 +599,7 @@ class IncomingForm extends EventEmitter {
   _setUpMaxFiles() {
     if (this.options.maxFiles !== Infinity) {
       let fileCount = 0;
-      this.on('file', () => {
+      this.on('fileBegin', () => {
         fileCount += 1;
         if (fileCount > this.options.maxFiles) {
           this._error(
