@@ -36,6 +36,7 @@ const DEFAULT_OPTIONS = {
     return true;
   },
   filename: undefined,
+  longExtentions: false
 };
 
 function hasOwnProp(obj, key) {
@@ -510,7 +511,7 @@ class IncomingForm extends EventEmitter {
   // able to get composed extension with multiple dots
   // "a.b.c" -> ".b.c"
   // as opposed to path.extname -> ".c"
-  _getExtension(str) {
+  _getExtension(str, long) {
     if (!str) {
       return '';
     }
@@ -520,8 +521,8 @@ class IncomingForm extends EventEmitter {
     const lastDot = basename.lastIndexOf('.');
     let rawExtname = path.extname(basename);
 
-    if (firstDot !== lastDot) {
-      rawExtname =  basename.slice(firstDot);
+    if (long && firstDot !== lastDot) {
+      rawExtname = basename.slice(firstDot);
     }
 
     let filtered;
@@ -570,7 +571,7 @@ class IncomingForm extends EventEmitter {
         if (part && this.options.keepExtensions) {
           const originalFilename =
             typeof part === 'string' ? part : part.originalFilename;
-          return `${name}${this._getExtension(originalFilename)}`;
+          return `${name}${this._getExtension(originalFilename, this.options.longExtentions)}`;
         }
 
         return name;
