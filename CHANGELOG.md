@@ -1,5 +1,17 @@
 # Changelog
 
+### 3.2.5
+
+ * fix: ([#881](https://github.com/node-formidable/formidable/pull/881)) fail earlier when maxFiles is exceeded
+
+### 3.2.4
+
+ * fix: ([#857](https://github.com/node-formidable/formidable/pull/857)) improve keep extension
+ * The code from before 3.2.4 already removed some characters from the file extension. But not always. So it was inconsistent.
+ * The new code cuts the file extension at the first invalid character (invalid in a file extension).
+ * The characters that are considered invalid inside a file extension are all except the . numbers and a-Z.
+ * This change only has an effect if filename option is not used and keepextension option is used
+
 
 ### 3.2.3
 
@@ -46,12 +58,12 @@
 
 ### 3.0.0
 
- * feat: remove options.multiples ([730](https://github.com/node-formidable/formidable/pull/730))
+ * feat: remove options.multiples ([#730](https://github.com/node-formidable/formidable/pull/730))
  * use modern URLSearchParams https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams internally
  * files and fields values are always arrays
  * fields with [] in the name do not receive special treatment
  * remove unused qs and querystring dependency
- * feat: Use ES modules ([727](https://github.com/node-formidable/formidable/pull/727))
+ * feat: Use ES modules ([#727](https://github.com/node-formidable/formidable/pull/727))
  * options.enabledPlugins must contain the plugin themselves instead of the plugins names 
 
 
