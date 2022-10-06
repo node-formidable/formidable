@@ -31,7 +31,7 @@ jobs:
         node: [14.x]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.1.0
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
       - uses: actions/cache@v1
         id: nodejs-cache
@@ -59,7 +59,7 @@ jobs:
         node: [12.x, 14.x]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.1.0
         if: steps.nodejs-cache.outputs.cache-hit != 'true'
       - uses: actions/cache@v1
         id: nodejs-cache
