@@ -1,7 +1,6 @@
 import http from 'node:http';
 import slugify from '@sindresorhus/slugify';
-import formidable from '../src/index.js';
-
+import formidable, {errors as formidableErrors} from '../src/index.js';
 
 const server = http.createServer((req, res) => {
   // handle common internet errors
