@@ -98,7 +98,7 @@ Parse an incoming file upload, with the
 
 ```js
 import http from 'node:http';
-import formidable from 'formidable';
+import formidable, {errors as formidableErrors} from 'formidable';
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
@@ -107,6 +107,10 @@ const server = http.createServer((req, res) => {
 
     form.parse(req, (err, fields, files) => {
       if (err) {
+        // example to check for a very specific error
+        if (err.code === formidableErrors.maxFieldsExceeded) {
+
+        }
         res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
         res.end(String(err));
         return;
