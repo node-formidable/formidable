@@ -27,9 +27,9 @@ test('keep alive error', (done) => {
   });
 
   server.listen(PORT, () => {
-    const choosenPort = server.address().port;
+    const chosenPort = server.address().port;
 
-    const client = createConnection(choosenPort);
+    const client = createConnection(chosenPort);
 
     // first send malformed (boundary / hyphens) post upload
     client.write(
@@ -50,7 +50,7 @@ test('keep alive error', (done) => {
       setTimeout(() => {
         strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
 
-        const clientTwo = createConnection(choosenPort);
+        const clientTwo = createConnection(chosenPort);
 
         // correct post upload (with hyphens)
         clientTwo.write(
