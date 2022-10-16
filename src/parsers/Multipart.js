@@ -237,7 +237,7 @@ class MultipartParser extends Transform {
           prevIndex = index;
 
           if (index === 0) {
-            // boyer-moore derrived algorithm to safely skip non-boundary data
+            // boyer-moore derived algorithm to safely skip non-boundary data
             i += boundaryEnd;
             while (i < this.bufferLength && !(buffer[i] in boundaryChars)) {
               i += boundaryLength;
