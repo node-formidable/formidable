@@ -491,7 +491,7 @@ form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) =>
 ### .use(plugin: Plugin)
 
 A method that allows you to extend the Formidable library. By default we include
-4 plugins, which esentially are adapters to plug the different built-in parsers.
+4 plugins, which essentially are adapters to plug the different built-in parsers.
 
 **The plugins added by this method are always enabled.**
 
