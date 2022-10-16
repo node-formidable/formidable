@@ -20,7 +20,7 @@ at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
-[![Tidelift Subcsription][tidelift-img]][tidelift-url]
+[![Tidelift Subscription][tidelift-img]][tidelift-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
 [![Renovate App Status][renovateapp-img]][renovateapp-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
