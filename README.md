@@ -648,7 +648,7 @@ form.on('fileBegin', (formName, file) => {
     // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
     // file.originalFilename http filename or null if there was a parsing error
     // file.newFilename generated hexoid or what options.filename returned
-    // file.filepath default pathnme as per options.uploadDir and options.filename
+    // file.filepath default pathname as per options.uploadDir and options.filename
     // file.filepath = CUSTOM_PATH // to change the final path
 });
 ```
