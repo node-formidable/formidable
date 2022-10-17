@@ -359,7 +359,7 @@ class IncomingForm extends EventEmitter {
       if (!this.options.allowEmptyFiles && fileSize === 0) {
         this._error(
           new FormidableError(
-            `options.allowEmptyFiles is false, file size should be greather than 0`,
+            `options.allowEmptyFiles is false, file size should be greater than 0`,
             errors.noEmptyFiles,
             400,
           ),

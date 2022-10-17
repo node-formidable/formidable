@@ -34,8 +34,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  const choosenPort = server.address().port;
-  console.log(`Listening on http://localhost:${choosenPort}/`);
+  const chosenPort = server.address().port;
+  console.log(`Listening on http://localhost:${chosenPort}/`);
 
   const body = JSON.stringify({
     numbers: [1, 2, 3, 4, 5],
@@ -46,7 +46,7 @@ server.listen(PORT, () => {
     {
       host: 'localhost',
       path: '/',
-      port: choosenPort,
+      port: chosenPort,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

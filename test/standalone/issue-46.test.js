@@ -22,8 +22,8 @@ test("issue 46", (done) => {
   });
 
   server.listen(PORT, () => {
-    const choosenPort = server.address().port;
-    const url = `http://localhost:${choosenPort}`;
+    const chosenPort = server.address().port;
+    const url = `http://localhost:${chosenPort}`;
 
     const req = request(url, {
       method: "POST",

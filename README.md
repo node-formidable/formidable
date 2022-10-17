@@ -20,7 +20,7 @@ at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
-[![Tidelift Subcsription][tidelift-img]][tidelift-url]
+[![Tidelift Subscription][tidelift-img]][tidelift-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
 [![Renovate App Status][renovateapp-img]][renovateapp-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
@@ -491,7 +491,7 @@ form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) =>
 ### .use(plugin: Plugin)
 
 A method that allows you to extend the Formidable library. By default we include
-4 plugins, which esentially are adapters to plug the different built-in parsers.
+4 plugins, which essentially are adapters to plug the different built-in parsers.
 
 **The plugins added by this method are always enabled.**
 
@@ -648,7 +648,7 @@ form.on('fileBegin', (formName, file) => {
     // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
     // file.originalFilename http filename or null if there was a parsing error
     // file.newFilename generated hexoid or what options.filename returned
-    // file.filepath default pathnme as per options.uploadDir and options.filename
+    // file.filepath default pathname as per options.uploadDir and options.filename
     // file.filepath = CUSTOM_PATH // to change the final path
 });
 ```

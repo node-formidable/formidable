@@ -97,7 +97,7 @@ test('fixtures', (done) => {
       function callback(...args) {
         const realCallback = cb;
         // eslint-disable-next-line no-param-reassign
-        cb = function calbackFn() {};
+        cb = function callbackFn() {};
 
         realCallback(...args);
       }
