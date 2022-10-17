@@ -23,13 +23,13 @@ test('end event emitted twice', (done) => {
   });
 
   server.listen(PORT, 'localhost', () => {
-    const choosenPort = server.address().port;
+    const chosenPort = server.address().port;
 
-    const client = connect(choosenPort);
+    const client = connect(chosenPort);
 
     client.write(
 `POST /api/upload HTTP/1.1
-Host: localhost:${choosenPort}
+Host: localhost:${chosenPort}
 User-Agent: N
 Content-Type: multipart/form-data; boundary=---------------------------13068458571765726332503797717
 

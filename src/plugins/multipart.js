@@ -124,7 +124,7 @@ function createInitMultipart(boundary) {
                 /*
                   four bytes (chars) in base64 converts to three bytes in binary
                   encoding. So we should always work with a number of bytes that
-                  can be divided by 4, it will result in a number of buytes that
+                  can be divided by 4, it will result in a number of bytes that
                   can be divided vy 3.
                   */
                 const offset = parseInt(part.transferBuffer.length / 4, 10) * 4;

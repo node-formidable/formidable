@@ -32,9 +32,9 @@ test('connection aborted', (done) => {
   });
 
   server.listen(PORT, 'localhost', () => {
-    const choosenPort = server.address().port;
+    const chosenPort = server.address().port;
 
-    const client = connect(choosenPort);
+    const client = connect(chosenPort);
 
     client.write(
       'POST / HTTP/1.1\r\n' +

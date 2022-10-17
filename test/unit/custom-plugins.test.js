@@ -25,14 +25,14 @@ function fromFixtures(...args) {
 
 // function makeRequest(server, options) {
 //   server.listen(0, () => {
-//     const choosenPort = server.address().port;
-//     const url = `http://localhost:${choosenPort}`;
+//     const chosenPort = server.address().port;
+//     const url = `http://localhost:${chosenPort}`;
 
 //     const method = 'POST';
 
 //     const opts = {
 //       ...options,
-//       port: choosenPort,
+//       port: chosenPort,
 //       url,
 //       method,
 //     };
