@@ -1,5 +1,5 @@
 import {jest} from '@jest/globals';
-import PersistentFile from '../../src/PersistentFile.js';
+import PersistentFile from '../../lib/PersistentFile';
 
 const now = new Date();
 const file = new PersistentFile({

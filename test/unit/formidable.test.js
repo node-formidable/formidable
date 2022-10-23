@@ -6,8 +6,8 @@ import Stream from 'node:stream';
 import http from 'node:http';
 import path from 'node:path';
 
-import formidable from '../../src/index.js';
-import * as mod from '../../src/index.js';
+import formidable from '../../lib/index.js';
+import * as mod from '../../lib/index.js';
 
 function getForm(name, opts) {
   return name === 'formidable' ? formidable(opts) : new mod[name](opts);

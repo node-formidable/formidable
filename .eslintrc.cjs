@@ -166,7 +166,8 @@ module.exports = {
     commonjs: true,
   },
   extends: ['eslint:recommended', 'airbnb-base', 'plugin:prettier/recommended'],
-  plugins: ['prettier'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['prettier','@typescript-eslint'],
   rules: {
     ...additionalChanges,
     ...importRules,

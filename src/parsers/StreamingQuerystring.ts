@@ -1,18 +1,26 @@
 // not used
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'node:stream';
-import FormidableError, { maxFieldsSizeExceeded } from '../FormidableError.js';
+import { Transform, TransformCallback } from 'node:stream';
+import FormidableError, { maxFieldsSizeExceeded } from '../FormidableError';
+import { IFormidableOptions } from '../types';
 
 const AMPERSAND = 38;
 const EQUALS = 61;
 
 class QuerystringParser extends Transform {
-  constructor(options = {}) {
+  maxFieldLength: number;
+  buffer: Buffer | null;
+  fieldCount: number;
+  sectionStart: number;
+  key: string;
+  readingKey: boolean;
+
+  constructor(options: Partial<IFormidableOptions> = {}) {
     super({ readableObjectMode: true });
 
-    const { maxFieldSize } = options;
-    this.maxFieldLength = maxFieldSize;
+    const { maxFieldsSize } = options;
+    this.maxFieldLength = maxFieldsSize;
     this.buffer = Buffer.from('');
     this.fieldCount = 0;
     this.sectionStart = 0;
@@ -20,7 +28,7 @@ class QuerystringParser extends Transform {
     this.readingKey = true;
   }
 
-  _transform(buffer, encoding, callback) {
+  override _transform(buffer: any, encoding: BufferEncoding, callback: TransformCallback) {
     let len = buffer.length;
     if (this.buffer && this.buffer.length) {
       // we have some data left over from the last write which we are in the middle of processing
@@ -56,9 +64,9 @@ class QuerystringParser extends Transform {
             `${
               this.readingKey ? 'Key' : `Value for ${this.key}`
             } longer than maxFieldLength`,
-          ),
-          maxFieldsSizeExceeded,
-          413,
+            maxFieldsSizeExceeded,
+            413
+          )
         );
       }
     }
@@ -74,7 +82,7 @@ class QuerystringParser extends Transform {
     callback();
   }
 
-  _flush(callback) {
+  override _flush(callback: TransformCallback) {
     // Emit the last field
     if (this.readingKey) {
       // we only have a key if there's something in the buffer. We definitely have no value
@@ -88,17 +96,17 @@ class QuerystringParser extends Transform {
         this.buffer && this.buffer.length && this.buffer.toString('ascii'),
       );
     }
-    this.buffer = '';
+    this.buffer = Buffer.from('');
     callback();
   }
 
-  getSection(buffer, i) {
+  getSection(buffer: Buffer, i: number) {
     if (i === this.sectionStart) return '';
 
     return buffer.toString('ascii', this.sectionStart, i);
   }
 
-  emitField(key, val) {
+  emitField(key: string, val?: any) {
     this.key = '';
     this.readingKey = true;
     this.push({ key, value: val || '' });

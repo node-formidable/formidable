@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import formidable from '../src/index.js';
+import formidable from '../lib/index.js';
 
 
 const app = new Koa();

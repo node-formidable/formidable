@@ -1,5 +1,5 @@
 import {jest} from '@jest/globals';
-import VolatileFile from '../../src/VolatileFile.js';
+import VolatileFile from '../../lib/VolatileFile.js';
 
 
 describe('VolatileFile', () => {

@@ -3,7 +3,7 @@
 import { createConnection } from 'node:net';
 import { createServer } from 'node:http';
 import { strictEqual } from 'node:assert';
-import formidable from '../../src/index.js';
+import formidable from '../../lib/index.js';
 
 let ok = 0;
 let errors = 0;

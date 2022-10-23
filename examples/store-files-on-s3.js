@@ -3,7 +3,7 @@
 import http from 'node:http';
 import { PassThrough } from 'node:stream';
 import AWS from 'aws-sdk';
-import formidable from '../src/index.js';
+import formidable from '../lib/index.js';
 
 
 const s3Client = new AWS.S3({

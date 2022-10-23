@@ -1,7 +1,8 @@
-import { multipartType } from '../plugins/multipart.js';
-import { querystringType } from '../plugins/querystring.js';
+import { multipartType } from '../plugins/multipart';
+import { querystringType } from '../plugins/querystring';
+import { Formidable } from '../types';
 
-const firstValues = (form, fields, exceptions = []) => {
+const firstValues = (form: Formidable, fields, exceptions: string[] = []) => {
   if (form.type !== querystringType && form.type !== multipartType) {
     return fields;
   }

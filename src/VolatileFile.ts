@@ -1,14 +1,35 @@
 /* eslint-disable no-underscore-dangle */
 
-import { createHash } from 'node:crypto';
+import { createHash, Hash } from 'node:crypto';
 import { EventEmitter } from 'node:events';
+import fs from 'node:fs';
+import { Writable } from 'node:stream';
+import type { IFile } from './types'
 
-class VolatileFile extends EventEmitter {
-  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }) {
+class VolatileFile extends EventEmitter implements IFile {
+  lastModifiedDate: Date | null;
+  size: IFile['size'];
+  length: IFile['length'];
+  _writeStream: Writable | null;//fs.WriteStream | null;
+  hash: IFile['hash'];
+  filepath: IFile['filepath'];
+  newFilename: IFile['newFilename'];
+  originalFilename: IFile['originalFilename'];
+  mimetype: IFile['mimetype'];
+  hashAlgorithm: IFile['hashAlgorithm'];
+  createFileWriteStream: IFile['createFileWriteStream'];
+
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }: Partial<IFile>) {
     super();
 
     this.lastModifiedDate = null;
-    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream });
+
+    this.filepath = filepath;
+    this.newFilename = newFilename;
+    this.originalFilename = originalFilename;
+    this.mimetype = mimetype;
+    this.hashAlgorithm = hashAlgorithm;
+    this.createFileWriteStream = createFileWriteStream;
 
     this.size = 0;
     this._writeStream = null;
@@ -38,19 +59,17 @@ class VolatileFile extends EventEmitter {
       length: this.length,
       originalFilename: this.originalFilename,
       mimetype: this.mimetype,
+      ...((this.hash && this.hash !== '') && {hash: this.hash})
     };
-    if (this.hash && this.hash !== '') {
-      json.hash = this.hash;
-    }
     return json;
   }
 
-  toString() {
+  override toString() {
     return `VolatileFile: ${this.originalFilename}`;
   }
 
-  write(buffer, cb) {
-    if (this.hash) {
+  write(buffer: Buffer, cb?: any) {
+    if (this.hash && this.hash instanceof Hash) {
       this.hash.update(buffer);
     }
 
@@ -66,8 +85,8 @@ class VolatileFile extends EventEmitter {
     });
   }
 
-  end(cb) {
-    if (this.hash) {
+  end(cb: any) {
+    if (this.hash && this.hash instanceof Hash) {
       this.hash = this.hash.digest('hex');
     }
     this._writeStream.end(() => {

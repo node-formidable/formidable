@@ -1,7 +1,7 @@
 import {strictEqual} from 'node:assert';
 import { createServer } from 'node:http';
 import { connect } from 'node:net';
-import formidable from '../../src/index.js';
+import formidable from '../../lib/index.js';
 
 const PORT = 13539;
 

@@ -18,7 +18,11 @@ const biggerThanMaxFileSize = 1016;
 const pluginFailed = 1017;
 
 const FormidableError = class extends Error {
-  constructor(message, internalCode, httpCode = 500) {
+  code: number;
+  httpCode: number;
+  idx: number;
+
+  constructor(message: string, internalCode: number, httpCode = 500) {
     super(message);
     this.code = internalCode;
     this.httpCode = httpCode;

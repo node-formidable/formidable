@@ -5,7 +5,7 @@ import path, { join, dirname } from 'node:path';
 import url from 'node:url';
 import assert, { strictEqual, ok } from 'node:assert';
 
-import formidable from '../../src/index.js';
+import formidable from '../../lib/index.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

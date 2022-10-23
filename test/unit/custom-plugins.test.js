@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import Koa from 'koa';
 import request from 'supertest';
 
-import { formidable, json, octetstream, multipart } from '../../src/index.js';
+import { formidable, json, octetstream, multipart } from '../../lib/index.js';
 
 function createServer(options, handler) {
   const app = new Koa();
