@@ -1,5 +1,6 @@
 import { Stream, Writable } from 'node:stream';
 import * as crypto from 'node:crypto';
+import http from 'node:http';
 import Formidable from './Formidable'
 
 export { Formidable };
@@ -36,7 +37,7 @@ export interface IFiles {
 
 export interface IPart extends Stream {
   readable?: boolean;
-  headers?: IFields;
+  headers?: http.IncomingHttpHeaders;
   name?: string | null;
   originalFilename?: string | null;
   mimetype?: string | null;

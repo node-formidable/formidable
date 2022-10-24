@@ -62,16 +62,16 @@ class IncomingForm extends EventEmitter {
   error: any;
   headers: http.IncomingHttpHeaders | null;
   type: string | null;
-  bytesExpected: any;
-  bytesReceived: any;
-  _parser: JSONParser | DummyParser | typeof MultipartParser | OctetStreamParser | QueryStringParser;
+  bytesExpected: number | null;
+  bytesReceived: number | null;
+  _parser: JSONParser | DummyParser | MultipartParser | OctetStreamParser | QueryStringParser;
   req: http.IncomingMessage | null;
   _flushing: number;
   _fieldsSize: number;
   _totalFileSize: number;
   _plugins: any[];
   openedFiles: any[];
-  ended: any;
+  ended: undefined | boolean;
   _getNewName: ((part: Pick<IPart, 'originalFilename' | 'mimetype'>) => any) | ((part: Pick<IPart, 'originalFilename'> | string) => any);
   fields: IFields | null;
 

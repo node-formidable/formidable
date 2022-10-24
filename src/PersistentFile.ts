@@ -70,6 +70,7 @@ class PersistentFile extends EventEmitter implements IFile {
       this.hash.update(buffer);
     }
 
+    // @ts-ignore: Relies on undocumented Node internal. Documented as of Node v18.0.0
     if (this._writeStream.closed) {
       cb();
       return;

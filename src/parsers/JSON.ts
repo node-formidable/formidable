@@ -23,7 +23,11 @@ class JSONParser extends Transform {
       const fields = JSON.parse(this.chunks.join(''));
       this.push(fields);
     } catch (e) {
-      callback(e);
+      if (e instanceof Error) {
+        callback(e);
+      } else {
+        callback(new Error(e.toString?.() ?? JSON.stringify(e)));
+      }
       return;
     }
     this.chunks = [];

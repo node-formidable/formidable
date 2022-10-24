@@ -23,7 +23,7 @@ const STATE = {
   PART_DATA: s++,
   PART_END: s++,
   END: s++,
-};
+} as const;
 
 let f = 1;
 const FBOUNDARY = { PART_BOUNDARY: f, LAST_BOUNDARY: (f *= 2) };
@@ -36,15 +36,11 @@ const COLON = 58;
 const A = 97;
 const Z = 122;
 
-function lower(c) {
+function lower(c: any) {
   return c | 0x20;
 }
 
-export const STATES = {};
-
-Object.keys(STATE).forEach((stateName) => {
-  STATES[stateName] = STATE[stateName];
-});
+export const STATES = Object.assign({}, STATE);
 
 class MultipartParser extends Transform {
   boundary: Buffer | null;
@@ -120,10 +116,12 @@ class MultipartParser extends Transform {
     let cl = null;
 
     const setMark = (name: string, idx?: number) => {
+      // @ts-ignore: To be refactored
       this[`${name}Mark`] = typeof idx === 'number' ? idx : i;
     };
 
     const clearMarkSymbol = (name: string) => {
+      // @ts-ignore: To be refactored
       delete this[`${name}Mark`];
     };
 
@@ -134,9 +132,11 @@ class MultipartParser extends Transform {
       }
 
       if (!shouldClear) {
+        // @ts-ignore: To be refactored
         this._handleCallback(name, buffer, this[markSymbol], buffer.length);
         setMark(name, 0);
       } else {
+        // @ts-ignore: To be refactored
         this._handleCallback(name, buffer, this[markSymbol], i);
         clearMarkSymbol(name);
       }
@@ -340,14 +340,16 @@ class MultipartParser extends Transform {
   explain() {
     return `state = ${MultipartParser.stateToString(this.state)}`;
   }
+
+  // eslint-disable-next-line consistent-return
+  static stateToString = (stateNumber: number) => {
+    for (const stateName in STATE) {
+      const number = STATE[stateName as keyof typeof STATE];
+      if (number === stateNumber) return stateName;
+    }
+  }
 }
 
-// eslint-disable-next-line consistent-return
-MultipartParser.stateToString = (stateNumber: number) => {
-  for (const stateName in STATE) {
-    const number = STATE[stateName];
-    if (number === stateNumber) return stateName;
-  }
-};
+Object.assign(MultipartParser, { STATES });
 
-export default Object.assign(MultipartParser, { STATES });
+export default MultipartParser;

@@ -2,7 +2,6 @@
 
 import { createHash, Hash } from 'node:crypto';
 import { EventEmitter } from 'node:events';
-import fs from 'node:fs';
 import { Writable } from 'node:stream';
 import type { IFile } from './types'
 
@@ -10,7 +9,7 @@ class VolatileFile extends EventEmitter implements IFile {
   lastModifiedDate: Date | null;
   size: IFile['size'];
   length: IFile['length'];
-  _writeStream: Writable | null;//fs.WriteStream | null;
+  _writeStream: Writable | null;
   hash: IFile['hash'];
   filepath: IFile['filepath'];
   newFilename: IFile['newFilename'];
@@ -73,6 +72,7 @@ class VolatileFile extends EventEmitter implements IFile {
       this.hash.update(buffer);
     }
 
+    // @ts-ignore: Relies on undocumented Node internal. Documented as of Node v18.0.0
     if (this._writeStream.closed || this._writeStream.destroyed) {
       cb();
       return;

@@ -17,7 +17,6 @@ export default function plugin(this: Formidable, formidable: Formidable, options
 
   // NOTE: we (currently) support both multipart/form-data and multipart/related
   if (self.headers?.['content-type'] && /multipart/i.test(self.headers['content-type'])) {
-
     const m = self.headers['content-type'].match(
       /boundary=(?:"([^"]+)"|([^;]+))/i,
     );
@@ -54,12 +53,7 @@ function createInitMultipart(this: Formidable, boundary: string) {
     // eslint-disable-next-line max-statements, consistent-return
     parser.on('data', ({ name, buffer, start, end }) => {
       if (name === 'partBegin') {
-        part = Object.create(new Stream(), {
-          'readable': {
-            value: true,
-            writable: true
-          }
-        });
+        part = new Stream();
         part.readable = true;
         part.headers = {};
         part.name = null;
@@ -93,31 +87,26 @@ function createInitMultipart(this: Formidable, boundary: string) {
         } else if (headerField === 'content-type') {
           part.mimetype = headerValue;
         } else if (headerField === 'content-transfer-encoding') {
+          /*
           const lowercaseContentTransferEncoding = headerValue.toLowerCase();
-          if (lowercaseContentTransferEncoding === 'ascii' ||
-            lowercaseContentTransferEncoding === 'utf8' ||
-            lowercaseContentTransferEncoding === 'utf-8' ||
-            lowercaseContentTransferEncoding === 'utf16le' ||
-            lowercaseContentTransferEncoding === 'ucs2' ||
-            lowercaseContentTransferEncoding === 'ucs-2' ||
-            lowercaseContentTransferEncoding === 'base64' ||
-            lowercaseContentTransferEncoding === 'base64url' ||
-            lowercaseContentTransferEncoding === 'latin1' ||
-            lowercaseContentTransferEncoding === 'binary' ||
-            lowercaseContentTransferEncoding === 'hex' ||
+          if (lowercaseContentTransferEncoding === 'binary' ||
             lowercaseContentTransferEncoding === '7bit' ||
-            lowercaseContentTransferEncoding === '8bit'
-            ) {
+            lowercaseContentTransferEncoding === '8bit' ||
+            lowercaseContentTransferEncoding === 'utf-8' ||
+            lowercaseContentTransferEncoding === 'base64'
+          ) {
             part.transferEncoding = lowercaseContentTransferEncoding;
           } else {
             return this._error(
               new FormidableError(
-                'unknown transfer-encoding',
+                'unknown transfer-encoding1',
                 errors.unknownTransferEncoding,
                 501,
               ),
             );
           }
+          */
+          part.transferEncoding = headerValue.toLowerCase();
         }
 
         headerField = '';

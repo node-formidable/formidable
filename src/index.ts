@@ -1,12 +1,13 @@
 import PersistentFile from './PersistentFile';
 import VolatileFile from './VolatileFile';
 import Formidable, { DEFAULT_OPTIONS } from './Formidable';
+import { IFormidableOptions } from './types';
 
 
 
 // make it available without requiring the `new` keyword
 // if you want it access `const formidable.IncomingForm` as v1
-const formidable = (...args) => new Formidable(...args);
+const formidable = (...args: Partial<IFormidableOptions>[]) => new Formidable(...args);
 const {enabledPlugins} = DEFAULT_OPTIONS;
 
 export default formidable;
