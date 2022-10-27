@@ -1,4 +1,4 @@
 declare module 'dezalgo' {
-  function dezalgo(cb: Function): () => void;
+  function dezalgo<cbFn extends Function>(cb: cbFn): cbFn;
   export = dezalgo;
 }

@@ -28,7 +28,7 @@ export interface IFormidableOptions {
 }
 
 export interface IFields {
-  [field: string]: string[];
+  [field: string]: string | string[];
 }
 
 export interface IFiles {
@@ -103,6 +103,18 @@ export interface IFile {
   toJSON(): FileJSON;
 
   toString(): string;
+
+  open(): void;
+
+  write(buffer: Buffer, cb: () => void): void;
+
+  end(cb: () => void): void;
+
+  destroy(): void;
+
+  on(event: "progress", listener: (size: number) => void): this;
+  on(event: "error", listener: (err: Error) => void): this;
+  on(event: "end", listener: () => void): this;
 }
 
 interface FileJSON extends Pick<IFile, "size" | "originalFilename" | "mimetype" | "hash">, Partial<Pick<IFile, "filepath">> {

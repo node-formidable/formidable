@@ -106,7 +106,7 @@ class QuerystringParser extends Transform {
     return buffer.toString('ascii', this.sectionStart, i);
   }
 
-  emitField(key: string, val?: any) {
+  emitField(key: string, val?: string) {
     this.key = '';
     this.readingKey = true;
     this.push({ key, value: val || '' });

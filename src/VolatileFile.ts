@@ -67,7 +67,7 @@ class VolatileFile extends EventEmitter implements IFile {
     return `VolatileFile: ${this.originalFilename}`;
   }
 
-  write(buffer: Buffer, cb?: any) {
+  write(buffer: Buffer, cb: () => void) {
     if (this.hash && this.hash instanceof Hash) {
       this.hash.update(buffer);
     }
@@ -85,7 +85,7 @@ class VolatileFile extends EventEmitter implements IFile {
     });
   }
 
-  end(cb: any) {
+  end(cb: () => void) {
     if (this.hash && this.hash instanceof Hash) {
       this.hash = this.hash.digest('hex');
     }

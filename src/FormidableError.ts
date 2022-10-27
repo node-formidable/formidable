@@ -17,7 +17,7 @@ const maxFilesExceeded = 1015;
 const biggerThanMaxFileSize = 1016;
 const pluginFailed = 1017;
 
-const FormidableError = class extends Error {
+class FormidableError extends Error {
   code: number;
   httpCode: number;
   idx: number;

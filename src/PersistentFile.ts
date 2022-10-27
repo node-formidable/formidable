@@ -65,7 +65,7 @@ class PersistentFile extends EventEmitter implements IFile {
     return `PersistentFile: ${this.newFilename}, Original: ${this.originalFilename}, Path: ${this.filepath}`;
   }
 
-  write(buffer: Buffer, cb?: any) {
+  write(buffer: Buffer, cb: () => void) {
     if (this.hash && this.hash instanceof crypto.Hash) {
       this.hash.update(buffer);
     }
@@ -84,7 +84,7 @@ class PersistentFile extends EventEmitter implements IFile {
     });
   }
 
-  end(cb: any) {
+  end(cb: () => void) {
     if (this.hash && this.hash instanceof crypto.Hash) {
       this.hash = this.hash.digest('hex');
     }

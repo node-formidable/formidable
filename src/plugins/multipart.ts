@@ -39,7 +39,7 @@ export default function plugin(this: Formidable, formidable: Formidable, options
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
-function createInitMultipart(this: Formidable, boundary: string) {
+function createInitMultipart(boundary: string) {
   return function initMultipart(this: Formidable, formidable: Formidable, options: IFormidableOptions) {
     this.type = multipartType;
 

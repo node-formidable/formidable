@@ -55,6 +55,16 @@ const invalidExtensionChar = (c: string) => {
   );
 };
 
+declare interface IncomingForm {
+  on(event: "progress", listener: (bytesReceived: number, bytesExpected: number) => void): this;
+  on(event: "field", listener: (name: string, value: string) => void): this;
+  on(event: "fileBegin", listener: (formName: string, file: IFile) => void): this;
+  on(event: 'file', listener: (formname: string, file: IFile) => void): this;
+  on(event: 'error', listener: (err: FormidableError | Error) => void): this;
+  on(event: 'aborted', listener: () => void): this;
+  on(event: 'end', listener: () => void): this;
+};
+
 class IncomingForm extends EventEmitter {
   options: IFormidableOptions;
   uploaddir: string;
@@ -69,8 +79,8 @@ class IncomingForm extends EventEmitter {
   _flushing: number;
   _fieldsSize: number;
   _totalFileSize: number;
-  _plugins: any[];
-  openedFiles: any[];
+  _plugins: Array<(formidable: IncomingForm, options: IFormidableOptions) => IncomingForm>;
+  openedFiles: IFile[];
   ended: undefined | boolean;
   _getNewName: ((part: Pick<IPart, 'originalFilename' | 'mimetype'>) => any) | ((part: Pick<IPart, 'originalFilename'> | string) => any);
   fields: IFields | null;
@@ -134,6 +144,8 @@ class IncomingForm extends EventEmitter {
         errors.pluginFunction,
       );
     }
+    const a = plugin.bind(this);
+    type b = typeof a;
     this._plugins.push(plugin.bind(this));
     return this;
   }
@@ -172,11 +184,26 @@ class IncomingForm extends EventEmitter {
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
-      const callback: any = once(dezalgo(cb));
+      const callback = once(dezalgo(cb));
       this.fields = {};
       const files: IFiles = {};
 
       this.on('field', (name, value) => {
+        if (this.type === 'multipart' || this.type === 'urlencoded') {
+          if (this.fields[name] == null) {
+            this.fields[name] = [value];
+          } else {
+            if (Array.isArray(this.fields[name])) {
+              (this.fields[name] as string[]).push(value);
+            } else {
+              this.fields[name] = [value];
+            }
+          }
+        } else {
+          this.fields[name] = value;
+        }
+
+        /*
         if (this.type === 'multipart' || this.type === 'urlencoded') {
           if (!hasOwnProp(this.fields, name)) {
             this.fields[name] = [value];
@@ -186,6 +213,7 @@ class IncomingForm extends EventEmitter {
         } else {
           this.fields[name] = value;
         }
+        */
       });
       this.on('file', (name: string, file: IFile) => {
         if (!hasOwnProp(files, name)) {
@@ -457,7 +485,7 @@ class IncomingForm extends EventEmitter {
     this.emit('pluginsResults', results);
   }
 
-  _error(err: typeof FormidableError | Error | any, eventName = 'error') {
+  _error(err: FormidableError | Error | any, eventName = 'error') {
     if (this.error || this.ended) {
       return;
     }
@@ -488,7 +516,7 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ filepath, originalFilename, mimetype, newFilename }: Pick<IFile, 'filepath' | 'originalFilename' | 'mimetype' | 'newFilename'>) {
+  _newFile({ filepath, originalFilename, mimetype, newFilename }: Pick<IFile, 'filepath' | 'originalFilename' | 'mimetype' | 'newFilename'>): IFile {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
           newFilename,
