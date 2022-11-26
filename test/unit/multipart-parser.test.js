@@ -1,4 +1,4 @@
-import { MultipartParser } from '../../src/index.js';
+import { MultipartParser } from '../../lib/index.js';
 
 test('on constructor', () => {
   const parser = new MultipartParser();

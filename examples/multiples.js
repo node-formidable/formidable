@@ -1,6 +1,6 @@
 import http from 'node:http';
 import os from 'node:os';
-import formidable from '../src/index.js';
+import formidable from '../lib/index.js';
 
 
 const server = http.createServer((req, res) => {

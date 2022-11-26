@@ -1,13 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 
 import { Stream } from 'node:stream';
-import MultipartParser from '../parsers/Multipart.js';
-import * as errors from '../FormidableError.js';
-import FormidableError from '../FormidableError.js';
+import MultipartParser from '../parsers/Multipart';
+import * as errors from '../FormidableError';
+import FormidableError from '../FormidableError';
+import type { Formidable, IFormidableOptions, IPart } from '../types'
 
 export const multipartType = 'multipart';
 // the `options` is also available through the `options` / `formidable.options`
-export default function plugin(formidable, options) {
+export default function plugin(this: Formidable, formidable: Formidable, options: IFormidableOptions) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
 
@@ -15,9 +16,7 @@ export default function plugin(formidable, options) {
   const self = this || formidable;
 
   // NOTE: we (currently) support both multipart/form-data and multipart/related
-  const multipart = /multipart/i.test(self.headers['content-type']);
-
-  if (multipart) {
+  if (self.headers?.['content-type'] && /multipart/i.test(self.headers['content-type'])) {
     const m = self.headers['content-type'].match(
       /boundary=(?:"([^"]+)"|([^;]+))/i,
     );
@@ -33,20 +32,21 @@ export default function plugin(formidable, options) {
       self._error(err);
     }
   }
+
   return self;
 }
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
-function createInitMultipart(boundary) {
-  return function initMultipart() {
+function createInitMultipart(boundary: string) {
+  return function initMultipart(this: Formidable, formidable: Formidable, options: IFormidableOptions) {
     this.type = multipartType;
 
     const parser = new MultipartParser(this.options);
-    let headerField;
-    let headerValue;
-    let part;
+    let headerField: string;
+    let headerValue: string;
+    let part: IPart | undefined;
 
     parser.initWithBoundary(boundary);
 
@@ -87,6 +87,25 @@ function createInitMultipart(boundary) {
         } else if (headerField === 'content-type') {
           part.mimetype = headerValue;
         } else if (headerField === 'content-transfer-encoding') {
+          /*
+          const lowercaseContentTransferEncoding = headerValue.toLowerCase();
+          if (lowercaseContentTransferEncoding === 'binary' ||
+            lowercaseContentTransferEncoding === '7bit' ||
+            lowercaseContentTransferEncoding === '8bit' ||
+            lowercaseContentTransferEncoding === 'utf-8' ||
+            lowercaseContentTransferEncoding === 'base64'
+          ) {
+            part.transferEncoding = lowercaseContentTransferEncoding;
+          } else {
+            return this._error(
+              new FormidableError(
+                'unknown transfer-encoding1',
+                errors.unknownTransferEncoding,
+                501,
+              ),
+            );
+          }
+          */
           part.transferEncoding = headerValue.toLowerCase();
         }
 
@@ -98,12 +117,12 @@ function createInitMultipart(boundary) {
           case '7bit':
           case '8bit':
           case 'utf-8': {
-            const dataPropagation = (ctx) => {
+            const dataPropagation = (ctx: any) => {
               if (ctx.name === 'partData') {
                 part.emit('data', ctx.buffer.slice(ctx.start, ctx.end));
               }
             };
-            const dataStopPropagation = (ctx) => {
+            const dataStopPropagation = (ctx: any) => {
               if (ctx.name === 'partEnd') {
                 part.emit('end');
                 parser.off('data', dataPropagation);
@@ -115,7 +134,7 @@ function createInitMultipart(boundary) {
             break;
           }
           case 'base64': {
-            const dataPropagation = (ctx) => {
+            const dataPropagation = (ctx: any) => {
               if (ctx.name === 'partData') {
                 part.transferBuffer += ctx.buffer
                   .slice(ctx.start, ctx.end)
@@ -138,7 +157,7 @@ function createInitMultipart(boundary) {
                 part.transferBuffer = part.transferBuffer.substring(offset);
               }
             };
-            const dataStopPropagation = (ctx) => {
+            const dataStopPropagation = (ctx: any) => {
               if (ctx.name === 'partEnd') {
                 part.emit('data', Buffer.from(part.transferBuffer, 'base64'));
                 part.emit('end');

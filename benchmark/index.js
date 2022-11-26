@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 
-const MultipartParser = require('../src/parsers/Multipart');
+const MultipartParser = require('../lib/parsers/Multipart');
 
 const parser = new MultipartParser();
 const customBoundary = '-----------------------------168072824752491622650073';

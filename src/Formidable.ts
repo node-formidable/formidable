@@ -5,19 +5,22 @@ import os from 'node:os';
 import path from 'node:path';
 import { EventEmitter } from 'node:events';
 import { StringDecoder } from 'node:string_decoder';
+import http from 'node:http';
 import hexoid from 'hexoid';
 import once from 'once';
 import dezalgo from 'dezalgo';
-import { octetstream, querystring, multipart, json } from './plugins/index.js';
-import PersistentFile from './PersistentFile.js';
-import VolatileFile from './VolatileFile.js';
-import DummyParser from './parsers/Dummy.js';
-import MultipartParser from './parsers/Multipart.js';
-import * as errors from './FormidableError.js';
-import FormidableError from './FormidableError.js';
+import { octetstream, querystring, multipart, json } from './plugins/index';
+import PersistentFile from './PersistentFile';
+import VolatileFile from './VolatileFile';
+import { JSONParser, DummyParser, MultipartParser, OctetStreamParser, QueryStringParser } from './parsers/index';
+import * as errors from './FormidableError';
+import FormidableError from './FormidableError';
+import type { IFormidableOptions, IPart, FormidablePlugin, IFields, IFiles, IFile } from './types'
+
+
 
 const toHexoId = hexoid(25);
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IFormidableOptions = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
   maxFiles: Infinity,
@@ -38,11 +41,11 @@ const DEFAULT_OPTIONS = {
   filename: undefined,
 };
 
-function hasOwnProp(obj, key) {
+function hasOwnProp(obj: any, key: PropertyKey) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
-const invalidExtensionChar = (c) => {
+const invalidExtensionChar = (c: string) => {
   const code = c.charCodeAt(0);
   return !(
     code === 46 || // .
@@ -52,8 +55,37 @@ const invalidExtensionChar = (c) => {
   );
 };
 
+declare interface IncomingForm {
+  on(event: "progress", listener: (bytesReceived: number, bytesExpected: number) => void): this;
+  on(event: "field", listener: (name: string, value: string) => void): this;
+  on(event: "fileBegin", listener: (formName: string, file: IFile) => void): this;
+  on(event: 'file', listener: (formname: string, file: IFile) => void): this;
+  on(event: 'error', listener: (err: FormidableError | Error) => void): this;
+  on(event: 'aborted', listener: () => void): this;
+  on(event: 'end', listener: () => void): this;
+};
+
 class IncomingForm extends EventEmitter {
-  constructor(options = {}) {
+  options: IFormidableOptions;
+  uploaddir: string;
+  uploadDir: string;
+  error: any;
+  headers: http.IncomingHttpHeaders | null;
+  type: string | null;
+  bytesExpected: number | null;
+  bytesReceived: number | null;
+  _parser: JSONParser | DummyParser | MultipartParser | OctetStreamParser | QueryStringParser;
+  req: http.IncomingMessage | null;
+  _flushing: number;
+  _fieldsSize: number;
+  _totalFileSize: number;
+  _plugins: Array<(formidable: IncomingForm, options: IFormidableOptions) => IncomingForm>;
+  openedFiles: IFile[];
+  ended: undefined | boolean;
+  _getNewName: ((part: Pick<IPart, 'originalFilename' | 'mimetype'>) => any) | ((part: Pick<IPart, 'originalFilename'> | string) => any);
+  fields: IFields | null;
+
+  constructor(options: Partial<IFormidableOptions> = {}) {
     super();
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
@@ -68,18 +100,13 @@ class IncomingForm extends EventEmitter {
     this.uploaddir = dir;
     this.uploadDir = dir;
 
-    // initialize with null
-    [
-      'error',
-      'headers',
-      'type',
-      'bytesExpected',
-      'bytesReceived',
-      '_parser',
-      'req',
-    ].forEach((key) => {
-      this[key] = null;
-    });
+    this.error = null;
+    this.headers = null;
+    this.type = null;
+    this.bytesExpected = null;
+    this.bytesReceived = null;
+    this._parser = null;
+    this.req = null;
 
     this._setUpRename();
 
@@ -89,9 +116,7 @@ class IncomingForm extends EventEmitter {
     this._plugins = [];
     this.openedFiles = [];
 
-    this.options.enabledPlugins = []
-      .concat(this.options.enabledPlugins)
-      .filter(Boolean);
+    this.options.enabledPlugins = this.options.enabledPlugins.filter(Boolean);
 
     if (this.options.enabledPlugins.length === 0) {
       throw new FormidableError(
@@ -108,15 +133,19 @@ class IncomingForm extends EventEmitter {
     this._setUpMaxFiles();
     this.ended = undefined;
     this.type = undefined;
+
+    this.fields = null;
   }
 
-  use(plugin) {
+  use(plugin: FormidablePlugin) {
     if (typeof plugin !== 'function') {
       throw new FormidableError(
         '.use: expect `plugin` to be a function',
         errors.pluginFunction,
       );
     }
+    const a = plugin.bind(this);
+    type b = typeof a;
     this._plugins.push(plugin.bind(this));
     return this;
   }
@@ -150,16 +179,31 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
-  parse(req, cb) {
+  parse(req: http.IncomingMessage, cb: (err: Error, fields: IFields, files: IFiles) => void) {
     this.req = req;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
     if (cb) {
       const callback = once(dezalgo(cb));
       this.fields = {};
-      const files = {};
+      const files: IFiles = {};
 
       this.on('field', (name, value) => {
+        if (this.type === 'multipart' || this.type === 'urlencoded') {
+          if (this.fields[name] == null) {
+            this.fields[name] = [value];
+          } else {
+            if (Array.isArray(this.fields[name])) {
+              (this.fields[name] as string[]).push(value);
+            } else {
+              this.fields[name] = [value];
+            }
+          }
+        } else {
+          this.fields[name] = value;
+        }
+
+        /*
         if (this.type === 'multipart' || this.type === 'urlencoded') {
           if (!hasOwnProp(this.fields, name)) {
             this.fields[name] = [value];
@@ -169,8 +213,9 @@ class IncomingForm extends EventEmitter {
         } else {
           this.fields[name] = value;
         }
+        */
       });
-      this.on('file', (name, file) => {
+      this.on('file', (name: string, file: IFile) => {
         if (!hasOwnProp(files, name)) {
           files[name] = [file];
         } else {
@@ -216,7 +261,7 @@ class IncomingForm extends EventEmitter {
     return this;
   }
 
-  writeHeaders(headers) {
+  writeHeaders(headers: http.IncomingHttpHeaders) {
     this.headers = headers;
     this._parseContentLength();
     this._parseContentType();
@@ -232,12 +277,12 @@ class IncomingForm extends EventEmitter {
       return;
     }
 
-    this._parser.once('error', (error) => {
+    this._parser.once('error', (error: Error) => {
       this._error(error);
     });
   }
 
-  write(buffer) {
+  write(buffer: Buffer) {
     if (this.error) {
       return null;
     }
@@ -256,12 +301,12 @@ class IncomingForm extends EventEmitter {
     return this.bytesReceived;
   }
 
-  onPart(part) {
+  onPart(part: IPart) {
     // this method can be overwritten by the user
     this._handlePart(part);
   }
 
-  _handlePart(part) {
+  _handlePart(part: IPart) {
     if (part.originalFilename && typeof part.originalFilename !== 'string') {
       this._error(
         new FormidableError(
@@ -416,7 +461,7 @@ class IncomingForm extends EventEmitter {
 
     new DummyParser(this, this.options);
 
-    const results = [];
+    const results: any[] = [];
     this._plugins.forEach((plugin, idx) => {
       let pluginReturn = null;
       try {
@@ -425,7 +470,7 @@ class IncomingForm extends EventEmitter {
         // directly throw from the `form.parse` method;
         // there is no other better way, except a handle through options
         const error = new FormidableError(
-          `plugin on index ${idx} failed with: ${err.message}`,
+          `plugin on index ${idx} failed with: ${err instanceof Error ? err.message : (err.toString?.() ?? JSON.stringify(err))}`,
           errors.pluginFailed,
           500,
         );
@@ -440,7 +485,7 @@ class IncomingForm extends EventEmitter {
     this.emit('pluginsResults', results);
   }
 
-  _error(err, eventName = 'error') {
+  _error(err: FormidableError | Error | any, eventName = 'error') {
     if (this.error || this.ended) {
       return;
     }
@@ -471,7 +516,7 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ filepath, originalFilename, mimetype, newFilename }) {
+  _newFile({ filepath, originalFilename, mimetype, newFilename }: Pick<IFile, 'filepath' | 'originalFilename' | 'mimetype' | 'newFilename'>): IFile {
     return this.options.fileWriteStreamHandler
       ? new VolatileFile({
           newFilename,
@@ -490,7 +535,7 @@ class IncomingForm extends EventEmitter {
         });
   }
 
-  _getFileName(headerValue) {
+  _getFileName(headerValue: string) {
     // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
     const m = headerValue.match(
       /\bfilename=("(.*?)"|([^()<>{}[\]@,;:"?=\s/\t]+))($|;\s)/i,
@@ -510,7 +555,7 @@ class IncomingForm extends EventEmitter {
   // able to get composed extension with multiple dots
   // "a.b.c" -> ".b.c"
   // as opposed to path.extname -> ".c"
-  _getExtension(str) {
+  _getExtension(str: string | null) {
     if (!str) {
       return '';
     }
@@ -537,7 +582,7 @@ class IncomingForm extends EventEmitter {
     return filtered;
   }
 
-  _joinDirectoryName(name) {
+  _joinDirectoryName(name: string) {
     const newPath = path.join(this.uploadDir, name);
 
     // prevent directory traversal attacks
@@ -551,7 +596,7 @@ class IncomingForm extends EventEmitter {
   _setUpRename() {
     const hasRename = typeof this.options.filename === 'function';
     if (hasRename) {
-      this._getNewName = (part) => {
+      this._getNewName = (part: Pick<IPart, 'originalFilename' | 'mimetype'>) => {
         let ext = '';
         let name = this.options.defaultInvalidName;
         if (part.originalFilename) {
@@ -564,7 +609,7 @@ class IncomingForm extends EventEmitter {
         return this.options.filename.call(this, name, ext, part, this);
       };
     } else {
-      this._getNewName = (part) => {
+      this._getNewName = (part: Pick<IPart, 'originalFilename'> | string) => {
         const name = toHexoId();
 
         if (part && this.options.keepExtensions) {

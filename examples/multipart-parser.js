@@ -1,7 +1,7 @@
 import { Blob } from 'node:buffer';
 import { Readable } from 'node:stream';
 import { FormData, formDataToBlob } from 'formdata-polyfill/esm.min.js'
-import { MultipartParser } from '../src/index.js';
+import { MultipartParser } from '../lib/index.js';
 
 const blob1 = new Blob(
   ['Content of a.txt.'],

@@ -3,9 +3,10 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'node:stream';
-import * as errors from '../FormidableError.js';
-import FormidableError from '../FormidableError.js';
+import { Transform, TransformCallback } from 'node:stream';
+import * as errors from '../FormidableError';
+import FormidableError from '../FormidableError';
+import { IFormidableOptions } from '../types';
 
 let s = 0;
 const STATE = {
@@ -22,7 +23,7 @@ const STATE = {
   PART_DATA: s++,
   PART_END: s++,
   END: s++,
-};
+} as const;
 
 let f = 1;
 const FBOUNDARY = { PART_BOUNDARY: f, LAST_BOUNDARY: (f *= 2) };
@@ -35,18 +36,23 @@ const COLON = 58;
 const A = 97;
 const Z = 122;
 
-function lower(c) {
+function lower(c: any) {
   return c | 0x20;
 }
 
-export const STATES = {};
-
-Object.keys(STATE).forEach((stateName) => {
-  STATES[stateName] = STATE[stateName];
-});
+export const STATES = Object.assign({}, STATE);
 
 class MultipartParser extends Transform {
-  constructor(options = {}) {
+  boundary: Buffer | null;
+  boundaryChars: any;
+  lookbehind: Buffer | null;
+  bufferLength: number;
+  state: number;
+  globalOptions: Partial<IFormidableOptions> | null;
+  index: number | null;
+  flags: number;
+
+  constructor(options: Partial<IFormidableOptions> = {}) {
     super({ readableObjectMode: true });
     this.boundary = null;
     this.boundaryChars = null;
@@ -59,7 +65,7 @@ class MultipartParser extends Transform {
     this.flags = 0;
   }
 
-  _flush(done) {
+  override _flush(done: TransformCallback) {
     if (
       (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
       (this.state === STATE.PART_DATA && this.index === this.boundary.length)
@@ -78,7 +84,7 @@ class MultipartParser extends Transform {
     }
   }
 
-  initWithBoundary(str) {
+  initWithBoundary(str: string) {
     this.boundary = Buffer.from(`\r\n--${str}`);
     this.lookbehind = Buffer.alloc(this.boundary.length + 8);
     this.state = STATE.START;
@@ -90,7 +96,7 @@ class MultipartParser extends Transform {
   }
 
   // eslint-disable-next-line max-params
-  _handleCallback(name, buf, start, end) {
+  _handleCallback(name: string, buf?: Buffer, start?: number, end?: number) {
     if (start !== undefined && start === end) {
       return;
     }
@@ -98,7 +104,7 @@ class MultipartParser extends Transform {
   }
 
   // eslint-disable-next-line max-statements
-  _transform(buffer, _, done) {
+  override _transform(buffer: any, _: BufferEncoding, done: TransformCallback) {
     let i = 0;
     let prevIndex = this.index;
     let { index, state, flags } = this;
@@ -109,24 +115,28 @@ class MultipartParser extends Transform {
     let c = null;
     let cl = null;
 
-    const setMark = (name, idx) => {
+    const setMark = (name: string, idx?: number) => {
+      // @ts-ignore: To be refactored
       this[`${name}Mark`] = typeof idx === 'number' ? idx : i;
     };
 
-    const clearMarkSymbol = (name) => {
+    const clearMarkSymbol = (name: string) => {
+      // @ts-ignore: To be refactored
       delete this[`${name}Mark`];
     };
 
-    const dataCallback = (name, shouldClear) => {
+    const dataCallback = (name: string, shouldClear?: boolean) => {
       const markSymbol = `${name}Mark`;
       if (!(markSymbol in this)) {
         return;
       }
 
       if (!shouldClear) {
+        // @ts-ignore: To be refactored
         this._handleCallback(name, buffer, this[markSymbol], buffer.length);
         setMark(name, 0);
       } else {
+        // @ts-ignore: To be refactored
         this._handleCallback(name, buffer, this[markSymbol], i);
         clearMarkSymbol(name);
       }
@@ -330,15 +340,16 @@ class MultipartParser extends Transform {
   explain() {
     return `state = ${MultipartParser.stateToString(this.state)}`;
   }
+
+  // eslint-disable-next-line consistent-return
+  static stateToString = (stateNumber: number) => {
+    for (const stateName in STATE) {
+      const number = STATE[stateName as keyof typeof STATE];
+      if (number === stateNumber) return stateName;
+    }
+  }
 }
 
-// eslint-disable-next-line consistent-return
-MultipartParser.stateToString = (stateNumber) => {
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (const stateName in STATE) {
-    const number = STATE[stateName];
-    if (number === stateNumber) return stateName;
-  }
-};
+Object.assign(MultipartParser, { STATES });
 
-export default Object.assign(MultipartParser, { STATES });
+export default MultipartParser;

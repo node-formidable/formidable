@@ -1,6 +1,6 @@
 import { createServer, request as _request } from 'node:http';
 import assert, { deepStrictEqual } from 'node:assert';
-import formidable from '../../src/index.js';
+import formidable from '../../lib/index.js';
 
 const testData = {
   numbers: [1, 2, 3, 4, 5],

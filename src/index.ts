@@ -1,12 +1,13 @@
-import PersistentFile from './PersistentFile.js';
-import VolatileFile from './VolatileFile.js';
-import Formidable, { DEFAULT_OPTIONS } from './Formidable.js';
+import PersistentFile from './PersistentFile';
+import VolatileFile from './VolatileFile';
+import Formidable, { DEFAULT_OPTIONS } from './Formidable';
+import { IFormidableOptions } from './types';
 
 
 
 // make it available without requiring the `new` keyword
 // if you want it access `const formidable.IncomingForm` as v1
-const formidable = (...args) => new Formidable(...args);
+const formidable = (...args: Partial<IFormidableOptions>[]) => new Formidable(...args);
 const {enabledPlugins} = DEFAULT_OPTIONS;
 
 export default formidable;
@@ -27,6 +28,6 @@ export {
   enabledPlugins,  
 };
 
-export * from './parsers/index.js';
-export * from './plugins/index.js';
-export * as errors from './FormidableError.js';
+export * from './parsers/index';
+export * from './plugins/index';
+export * as errors from './FormidableError';

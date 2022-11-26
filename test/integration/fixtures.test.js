@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { createServer } from 'node:http';
 import { strictEqual } from 'node:assert';
 
-import formidable from '../../src/index.js';
+import formidable from '../../lib/index.js';
 
 const PORT = 13534;
 const CWD = process.cwd();

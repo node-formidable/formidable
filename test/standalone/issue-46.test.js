@@ -1,7 +1,7 @@
 import { createServer, request } from "node:http";
 import { ok, strictEqual } from "node:assert";
 import { Buffer } from 'node:buffer';
-import formidable from "../../src/index.js";
+import formidable from "../../lib/index.js";
 
 // OS choosing port
 const PORT = 13531;

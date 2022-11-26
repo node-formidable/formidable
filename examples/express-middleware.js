@@ -1,5 +1,5 @@
 import express from 'express';
-import formidable from '../src/index.js';
+import formidable from '../lib/index.js';
 
 const app = express();
 

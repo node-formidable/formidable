@@ -2,7 +2,7 @@ import { join } from 'node:path';
 import { createServer, request } from 'node:http';
 import { strictEqual } from 'node:assert';
 
-import formidable from '../../src/index.js';
+import formidable from '../../lib/index.js';
 
 const UPLOAD_DIR = join(process.cwd(), 'test', 'tmp');
 
