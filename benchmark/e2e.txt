@@ -1,0 +1,6 @@
+node ./benchmark/server.js
+bombardier --body-file="./README.md" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload 
+
+
+
+
