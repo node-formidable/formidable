@@ -514,12 +514,11 @@ class IncomingForm extends EventEmitter {
       try {
         await createNecessaryDirectoriesAsync(filepath);
       } catch (errorCreatingDir) {
-        this._error(
-          new FormidableError(
+        this._error(new FormidableError(
           `cannot create directory`,
           errors.cannotCreateDir,
           409,
-        ),);
+        ));
       }
     }
     return new PersistentFile({
