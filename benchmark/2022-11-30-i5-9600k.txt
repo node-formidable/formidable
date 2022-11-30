@@ -1,0 +1,18 @@
+npm run bench
+
+> formidable@3.2.5 bench
+> node benchmark
+
+4132.23 mb/sec
+PS C:\files\formidable> node -v      
+v18.0.0
+
+npm run bench
+
+> formidable@3.2.5 bench
+> node benchmark
+
+3952.57 mb/sec
+
+PS C:\files\formidable> node -v      
+v19.2.0
