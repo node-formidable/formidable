@@ -178,7 +178,7 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
-  parse(req, cb) {
+  async parse(req, cb) {
     this.req = req;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
@@ -214,7 +214,7 @@ class IncomingForm extends EventEmitter {
     }
 
     // Parse headers and setup the parser, ready to start listening for data.
-    this.writeHeaders(req.headers);
+    await this.writeHeaders(req.headers);
 
     // Start listening for data.
     req
@@ -244,10 +244,10 @@ class IncomingForm extends EventEmitter {
     return this;
   }
 
-  writeHeaders(headers) {
+  async writeHeaders(headers) {
     this.headers = headers;
     this._parseContentLength();
-    this._parseContentType();
+    await this._parseContentType();
 
     if (!this._parser) {
       this._error(
@@ -424,7 +424,7 @@ class IncomingForm extends EventEmitter {
   }
 
   // eslint-disable-next-line max-statements
-  _parseContentType() {
+  async _parseContentType() {
     if (this.bytesExpected === 0) {
       this._parser = new DummyParser(this, this.options);
       return;
@@ -445,10 +445,10 @@ class IncomingForm extends EventEmitter {
     new DummyParser(this, this.options);
 
     const results = [];
-    this._plugins.forEach((plugin, idx) => {
+    await Promise.all(this._plugins.map(async (plugin, idx) => {
       let pluginReturn = null;
       try {
-        pluginReturn = plugin(this, this.options) || this;
+        pluginReturn = await plugin(this, this.options) || this;
       } catch (err) {
         // directly throw from the `form.parse` method;
         // there is no other better way, except a handle through options
@@ -464,7 +464,7 @@ class IncomingForm extends EventEmitter {
 
       // todo: use Set/Map and pass plugin name instead of the `idx` index
       this.emit('plugin', idx, pluginReturn);
-    });
+    }));
     this.emit('pluginsResults', results);
   }
 
