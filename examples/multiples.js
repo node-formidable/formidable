@@ -20,8 +20,8 @@ const server = http.createServer((req, res) => {
         <label>file html array0<input type="file" name="filearray[]" /></label><br />
         <label>file html array1<input type="file" name="filearray[]" /></label><br />
 
-        <label>file html array and mulitple0<input type="file" name="filearray_with_multiple[]" multiple /></label><br />
-        <label>file html array and mulitple1<input type="file" name="filearray_with_multiple[]" multiple /></label><br />
+        <label>file html array and multiple0<input type="file" name="filearray_with_multiple[]" multiple /></label><br />
+        <label>file html array and multiple1<input type="file" name="filearray_with_multiple[]" multiple /></label><br />
         <br />
         <button>Upload</button>
       </form>

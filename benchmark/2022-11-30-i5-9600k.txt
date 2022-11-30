@@ -1,0 +1,30 @@
+npm run bench
+
+> formidable@3.2.5 bench
+> node benchmark
+
+4132.23 mb/sec
+PS C:\files\formidable> node -v      
+v18.0.0
+
+npm run bench
+
+> formidable@3.2.5 bench
+> node benchmark
+
+3952.57 mb/sec
+
+PS C:\files\formidable> node -v      
+v19.2.0
+
+C:\files\formidable> bombardier --body-file="./README.md" --method=POST 
+--duration=10s --connections=100 http://localhost:3000/api/upload 
+Bombarding http://localhost:3000/api/upload for 10s using 100 connection(s)[====================================================================] 10s 
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec      2824.09    1512.74    6881.85
+  Latency       35.51ms    37.38ms      0.98s
+  HTTP codes:
+    1xx - 0, 2xx - 28163, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:   102.08MB/s

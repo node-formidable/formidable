@@ -23,7 +23,7 @@ test('content transfer encoding', (done) => {
   });
 
   server.listen(PORT, () => {
-    const choosenPort = server.address().port;
+    const chosenPort = server.address().port;
 
     const body =
       '--foo\r\n' +
@@ -39,7 +39,7 @@ test('content transfer encoding', (done) => {
 
     const req = request({
       method: 'POST',
-      port: choosenPort,
+      port: chosenPort,
       headers: {
         'Content-Length': body.length,
         'Content-Type': 'multipart/form-data; boundary=foo',

@@ -194,7 +194,7 @@ function makeHeader(originalFilename) {
           // eslint-disable-next-line max-nested-callbacks
           form.on('error', (error) => {
             expect(error.message).toBe(
-              'options.allowEmptyFiles is false, file size should be greather than 0',
+              'options.allowEmptyFiles is false, file size should be greater than 0',
             );
             done();
           });

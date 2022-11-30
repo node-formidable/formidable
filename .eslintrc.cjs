@@ -18,7 +18,7 @@ const ignoredProps = bestPractices.rules[
   'cfg',
 );
 
-// Additional rules that are specific and overiding previous
+// Additional rules that are specific and overriding previous
 const additionalChanges = {
   strict: 'off',
 

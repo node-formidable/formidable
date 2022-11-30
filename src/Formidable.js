@@ -387,7 +387,7 @@ class IncomingForm extends EventEmitter {
       if (!this.options.allowEmptyFiles && fileSize === 0) {
         this._error(
           new FormidableError(
-            `options.allowEmptyFiles is false, file size should be greather than 0`,
+            `options.allowEmptyFiles is false, file size should be greater than 0`,
             errors.noEmptyFiles,
             400,
           ),
@@ -640,7 +640,7 @@ class IncomingForm extends EventEmitter {
   _setUpMaxFiles() {
     if (this.options.maxFiles !== Infinity) {
       let fileCount = 0;
-      this.on('file', () => {
+      this.on('fileBegin', () => {
         fileCount += 1;
         if (fileCount > this.options.maxFiles) {
           this._error(

@@ -12,11 +12,11 @@
 [![windows build status][windows-build-img]][build-url]
 [![macos build status][macos-build-img]][build-url]
 
-If you have any _how-to_ kind of questions, please read the [Contributing
-Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
-documents.<br /> For bugs reports and feature requests, [please create an
-issue][open-issue-url] or ping [@tunnckoCore / @3a1FcBx0](https://twitter.com/3a1FcBx0)
-at Twitter.
+Se você tiver qualquer tipo de pergunta sobre _como_ fazer, por favor leia o [Contributing
+Guia][contributing-url] e [Código de Conduta][code_of_conduct-url]
+documentos.<br /> Para relatórios de bugs e solicitações de recursos, [crie uma
+issue][open-issue-url] ou ping [@tunnckoCore / @3a1FcBx0](https://twitter.com/3a1FcBx0)
+no Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
@@ -25,55 +25,54 @@ at Twitter.
 [![Renovate App Status][renovateapp-img]][renovateapp-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
 
-This project is [semantically versioned](https://semver.org) and available as
-part of the [Tidelift Subscription][tidelift-url] for professional grade
-assurances, enhanced support and security.
-[Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise)
+Este projeto é [semanticamente versionado](https://semver.org) e está disponível como
+parte da [Assinatura Tidelift][tidelift-url] para nível profissional
+garantias, suporte aprimorado e segurança.
+[Saiba mais.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise)
 
-_The maintainers of `formidable` and thousands of other packages are working
-with Tidelift to deliver commercial support and maintenance for the Open Source
-dependencies you use to build your applications. Save time, reduce risk, and
-improve code health, while paying the maintainers of the exact dependencies you
-use._
+_Os mantenedores do `formidable` e milhares de outros pacotes estão trabalhando
+com Tidelift para fornecer suporte comercial e manutenção para o Open Source
+dependências que você usa para construir seus aplicativos. Economize tempo, reduza riscos e
+melhorar a integridade do código, enquanto paga aos mantenedores das dependências exatas que você
+usar._
 
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
 
-## Project Status: Maintained
+## Status do Projeto: Mantido
 
-_Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
+_Verifique [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) para obter mais informações sobre os planos v1, v2 e v3, NPM dist-tags e branches._
 
-This module was initially developed by
-[**@felixge**](https://github.com/felixge) for
-[Transloadit](http://transloadit.com/), a service focused on uploading and
-encoding images and videos. It has been battle-tested against hundreds of GBs of
-file uploads from a large variety of clients and is considered production-ready
-and is used in production for years.
+Este módulo foi inicialmente desenvolvido por
+[**@felixge**](https://github.com/felixge) para
+[Transloadit](http://transloadit.com/), um serviço focado em upload e
+codificação de imagens e vídeos. Foi testado em batalha contra centenas de GBs de
+uploads de arquivos de uma grande variedade de clientes e é considerado pronto para produção
+e é usado na produção por anos.
 
-Currently, we are few maintainers trying to deal with it. :) More contributors
-are always welcome! :heart: Jump on
-[issue #412](https://github.com/felixge/node-formidable/issues/412) which is
-closed, but if you are interested we can discuss it and add you after strict
-rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
+Atualmente, somos poucos mantenedores tentando lidar com isso. :) Mais contribuidores
+são sempre bem-vindos! ❤️ Pule
+[issue #412](https://github.com/felixge/node-formidable/issues/412) que está
+fechado, mas se você estiver interessado, podemos discuti-lo e adicioná-lo após regras estritas, como ativar o Two-Factor Auth em suas contas npm e GitHub.
 
-## Highlights
+## Destaques
 
-- [Fast (~900-2500 mb/sec)](#benchmarks) & streaming multipart parser
-- Automatically writing file uploads to disk (optional, see
-  [`options.fileWriteStreamHandler`](#options))
-- [Plugins API](#useplugin-plugin) - allowing custom parsers and plugins
-- Low memory footprint
-- Graceful error handling
-- Very high test coverage
+- [Rápido (~ 900-2500 mb/seg)](#benchmarks) e analisador multiparte de streaming
+- Gravar uploads de arquivos automaticamente no disco (opcional, consulte
+   [`options.fileWriteStreamHandler`](#options))
+- [API de plug-ins](#useplugin-plugin) - permitindo analisadores e plug-ins personalizados
+- Baixo consumo de memória
+- Tratamento de erros gracioso
+- Cobertura de teste muito alta
 
-## Install
+## Instalar
 
-This project requires `Node.js >= 10.13`. Install it using
-[yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly
-recommend to use Yarn when you think to contribute to this project._
+Este projeto requer `Node.js >= 10.13`. Instale-o usando
+[yarn](https://yarnpkg.com) ou [npm](https://npmjs.com).<br /> _Nós altamente
+recomendamos usar o Yarn quando pensar em contribuir para este projeto._
 
-This is a low-level package, and if you're using a high-level framework it _may_
-already be included. Check the examples below and the [examples/](https://github.com/node-formidable/formidable/tree/master/examples) folder.
+Este é um pacote de baixo nível e, se você estiver usando uma estrutura de alto nível, _pode_ já estar incluído. Verifique os exemplos 
+abaixo e a pasta [examples/](https://github.com/node-formidable/formidable/tree/master/examples).
 
 ```
 # v2
@@ -84,17 +83,18 @@ npm install formidable@v2
 npm install formidable@v3
 ```
 
-_**Note:** In the near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
+_**Nota:** Em um futuro próximo, a v3 será publicada na dist-tag `latest` do NPM. 
+Versões futuras não prontas serão publicadas nas dist-tags `*-next` para a versão correspondente._
 
 
-## Examples
+## Exemplos
 
-For more examples look at the `examples/` directory.
+Para mais exemplos veja o diretório `examples/`.
 
-### with Node.js http module
+### com módulo http Node.js
 
-Parse an incoming file upload, with the
-[Node.js's built-in `http` module](https://nodejs.org/api/http.html).
+Analisar um upload de arquivo de entrada, com o
+[Módulo `http` integrado do Node.js](https://nodejs.org/api/http.html).
 
 ```js
 import http from 'node:http';
@@ -102,12 +102,12 @@ import formidable, {errors as formidableErrors} from 'formidable';
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
-    // parse a file upload
+    // analisar um upload de arquivo
     const form = formidable({});
 
     form.parse(req, (err, fields, files) => {
       if (err) {
-        // example to check for a very specific error
+        // exemplo para verificar um erro muito específico
         if (err.code === formidableErrors.maxFieldsExceeded) {
 
         }
@@ -122,7 +122,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // show a file upload form
+  // mostrar um formulário de upload de arquivo
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
@@ -139,13 +139,12 @@ server.listen(8080, () => {
 });
 ```
 
-### with Express.js
+### com Express.js
 
-There are multiple variants to do this, but Formidable just need Node.js Request
-stream, so something like the following example should work just fine, without
-any third-party [Express.js](https://ghub.now.sh/express) middleware.
+Existem várias variantes para fazer isso, mas o Formidable só precisa do Node.js Request
+stream, então algo como o exemplo a seguir deve funcionar bem, sem nenhum middleware [Express.js](https://ghub.now.sh/express) de terceiros.
 
-Or try the
+Ou tente o
 [examples/with-express.js](https://github.com/node-formidable/formidable/blob/master/examples/with-express.js)
 
 ```js
@@ -182,17 +181,17 @@ app.listen(3000, () => {
 });
 ```
 
-### with Koa and Formidable
+### com Koa e Formidable
 
-Of course, with [Koa v1, v2 or future v3](https://ghub.now.sh/koa) the things
-are very similar. You can use `formidable` manually as shown below or through
-the [koa-better-body](https://ghub.now.sh/koa-better-body) package which is
-using `formidable` under the hood and support more features and different
-request bodies, check its documentation for more info.
+Claro, com [Koa v1, v2 ou future v3](https://ghub.now.sh/koa) as coisas
+sao muito parecidas. Você pode usar `formidable` manualmente como mostrado abaixo ou através
+do pacote [koa-better-body](https://ghub.now.sh/koa-better-body) que é
+usando `formidable` sob o capô e suporte a mais recursos e diferentes
+corpos de solicitação, verifique sua documentação para mais informações.
 
-_Note: this example is assuming Koa v2. Be aware that you should pass `ctx.req`
-which is Node.js's Request, and **NOT** the `ctx.request` which is Koa's Request
-object - there is a difference._
+_Nota: este exemplo está assumindo Koa v2. Esteja ciente de que você deve passar `ctx.req`
+que é a solicitação do Node.js e **NÃO** o `ctx.request` que é a solicitação do Koa
+objeto - há uma diferença._
 
 ```js
 import Koa from 'Koa';
@@ -207,9 +206,9 @@ app.on('error', (err) => {
 app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
     const form = formidable({});
-
-    // not very elegant, but that's for now if you don't want to use `koa-better-body`
-    // or other middlewares.
+    
+     // não muito elegante, mas é por enquanto se você não quiser usar `koa-better-body`
+     // ou outros middlewares.
     await new Promise((resolve, reject) => {
       form.parse(ctx.req, (err, fields, files) => {
         if (err) {
@@ -228,7 +227,7 @@ app.use(async (ctx, next) => {
     return;
   }
 
-  // show a file upload form
+  // mostrar um formulário de upload de arquivo
   ctx.set('Content-Type', 'text/html');
   ctx.status = 200;
   ctx.body = `
@@ -253,14 +252,14 @@ app.listen(3000, () => {
 
 ## Benchmarks
 
-The benchmark is quite old, from the old codebase. But maybe quite true though.
-Previously the numbers was around ~500 mb/sec. Currently with moving to the new
-Node.js Streams API it's faster. You can clearly see the differences between the
-Node versions.
+O benchmark é bastante antigo, da antiga base de código. Mas talvez seja bem verdade.
+Anteriormente, os números giravam em torno de ~ 500 mb/s. Atualmente com a mudança para o novo
+Node.js Streams API, é mais rápido. Você pode ver claramente as diferenças entre as
+versões do Node.
 
-_Note: a lot better benchmarking could and should be done in future._
+_Observação: um benchmarking muito melhor pode e deve ser feito no futuro._
 
-Benchmarked on 8GB RAM, Xeon X3440 (2.53 GHz, 4 cores, 8 threads)
+Benchmark realizado em 8 GB de RAM, Xeon X3440 (2,53 GHz, 4 núcleos, 8 threads)
 
 ```
 ~/github/node-formidable master
@@ -283,99 +282,89 @@ Benchmarked on 8GB RAM, Xeon X3440 (2.53 GHz, 4 cores, 8 threads)
 2566.42 mb/sec
 ```
 
-![benchmark January 29th, 2020](./benchmark/2020-01-29_xeon-x3440.png)
+![benchmark 29 de janeiro de 2020](./benchmark/2020-01-29_xeon-x3440.png)
 
 ## API
 
 ### Formidable / IncomingForm
 
-All shown are equivalent.
+Todos os mostrados são equivalentes.
 
-_Please pass [`options`](#options) to the function/constructor, not by assigning
-them to the instance `form`_
+_Por favor, passe [`options`](#options) para a função/construtor, não atribuindo
+eles para a instância `form`_
 
 ```js
 import formidable from 'formidable';
 const form = formidable(options);
 ```
 
-### Options
+### Opções
 
-See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
-(the `DEFAULT_OPTIONS` constant).
+Veja seus padrões em [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
+(a constante `DEFAULT_OPTIONS`).
 
-- `options.encoding` **{string}** - default `'utf-8'`; sets encoding for
-  incoming form fields,
-- `options.uploadDir` **{string}** - default `os.tmpdir()`; the directory for
-  placing file uploads in. You can move them later by using `fs.rename()`.
-- `options.keepExtensions` **{boolean}** - default `false`; to include the
-  extensions of the original files or not
-- `options.allowEmptyFiles` **{boolean}** - default `false`; allow upload empty
-  files
-- `options.minFileSize` **{number}** - default `1` (1byte); the minium size of
-  uploaded file.
-- `options.maxFiles` **{number}** - default `Infinity`;
-  limit the amount of uploaded files, set Infinity for unlimited
-- `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
-  limit the size of each uploaded file.
-- `options.maxTotalFileSize` **{number}** - default `options.maxFileSize`;
-  limit the size of the batch of uploaded files.
-- `options.maxFields` **{number}** - default `1000`; limit the number of fields, set Infinity for unlimited
-- `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
-  limit the amount of memory all fields together (except files) can allocate in
+- `options.encoding` **{string}** - padrão `'utf-8'`; define a codificação para campos de formulário de entrada,
+- `options.uploadDir` **{string}** - padrão `os.tmpdir()`; o diretório para colocar os uploads de arquivos. Você pode movê-los mais tarde usando `fs.rename()`.
+- `options.keepExtensions` **{boolean}** - padrão `false`; incluir as extensões dos arquivos originais ou não
+- `options.allowEmptyFiles` **{boolean}** - padrão `false`; permitir upload de arquivos vazios
+- `options.minFileSize` **{number}** - padrão `1` (1byte); o tamanho mínimo do arquivo carregado.
+- `options.maxFiles` **{number}** - padrão `Infinity`;
+  limitar a quantidade de arquivos carregados, defina Infinity para ilimitado
+- `options.maxFileSize` **{number}** - padrão `200 * 1024 * 1024` (200mb);
+  limitar o tamanho de cada arquivo carregado.
+- `options.maxTotalFileSize` **{number}** - padrão `options.maxFileSize`;
+  limitar o tamanho do lote de arquivos carregados.
+- `options.maxFields` **{number}** - padrão `1000`; limite o número de campos, defina Infinity para ilimitado
+- `options.maxFieldsSize` **{number}** - padrão `20 * 1024 * 1024` (20mb);
+  limitar a quantidade de memória que todos os campos juntos (exceto arquivos) podem alocar em
   bytes.
-- `options.hashAlgorithm` **{string | false}** - default `false`; include checksums calculated
-  for incoming files, set this to some hash algorithm, see
+- `options.hashAlgorithm` **{string | false}** - padrão `false`; incluir checksums calculados
+  para arquivos recebidos, defina isso para algum algoritmo de hash, consulte
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
-  for available algorithms
-- `options.fileWriteStreamHandler` **{function}** - default `null`, which by
-  default writes to host machine file system every file parsed; The function
-  should return an instance of a
-  [Writable stream](https://nodejs.org/api/stream.html#stream_class_stream_writable)
-  that will receive the uploaded file data. With this option, you can have any
-  custom behavior regarding where the uploaded file data will be streamed for.
-  If you are looking to write the file uploaded in other types of cloud storages
-  (AWS S3, Azure blob storage, Google cloud storage) or private file storage,
-  this is the option you're looking for. When this option is defined the default
-  behavior of writing the file in the host machine file system is lost.
-- `options.filename` **{function}** - default `undefined` Use it to control
-  newFilename. Must return a string. Will be joined with options.uploadDir.
+  para algoritmos disponíveis
+- `options.fileWriteStreamHandler` **{function}** - padrão `null`, que por padrão grava no sistema de arquivos da máquina host cada arquivo analisado; A função
+  deve retornar uma instância de um
+  [fluxo gravável](https://nodejs.org/api/stream.html#stream_class_stream_writable)
+  que receberá os dados do arquivo carregado. Com esta opção, você pode ter qualquer
+  comportamento personalizado em relação a onde os dados do arquivo carregado serão transmitidos.
+  Se você deseja gravar o arquivo carregado em outros tipos de armazenamento em nuvem
+  (AWS S3, armazenamento de blob do Azure, armazenamento em nuvem do Google) ou armazenamento de arquivo privado,
+  esta é a opção que você está procurando. Quando esta opção é definida, o comportamento padrão de gravar o arquivo no sistema de arquivos da máquina host é perdido.
+- `options.filename` **{function}** - padrão `undefined` Use-o para controlar newFilename. Deve retornar uma string. Será associado a options.uploadDir.
 
-- `options.filter` **{function}** - default function that always returns true.
-  Use it to filter files before they are uploaded. Must return a boolean.
-
-- `options.createDirsFromUploads` **{boolean}** - default false. If true, makes direct folder uploads possible. Use `<input type="file" name="folders" webkitdirectory directory multiple>` to create a form to upload folders. Has to be used with the options `options.uploadDir` and `options.filename` where `options.filename` has to return a string with the character `/` for folders to be created. The base will be `options.uploadDir`.
+- `options.filter` **{function}** - função padrão que sempre retorna verdadeiro.
+  Use-o para filtrar arquivos antes de serem carregados. Deve retornar um booleano.
 
 
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
 
-where part can be decomposed as
+onde a parte pode ser decomposta como
 
 ```js
 const { originalFilename, mimetype} = part;
 ```
 
-_**Note:** If this size of combined fields, or size of some file is exceeded, an
-`'error'` event is fired._
+_**Observação:** Se este tamanho de campos combinados, ou tamanho de algum arquivo for excedido, um
+O evento `'error'` é disparado._
 
 ```js
-// The amount of bytes received for this form so far.
+// A quantidade de bytes recebidos para este formulário até agora.
 form.bytesReceived;
 ```
 
 ```js
-// The expected number of bytes in this form.
+// O número esperado de bytes neste formulário.
 form.bytesExpected;
 ```
 
 #### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
 
-**Note:** use an outside variable to cancel all uploads upon the first error 
+**Observação:** use uma variável externa para cancelar todos os uploads no primeiro erro 
 
 ```js
 const options = {
   filter: function ({name, originalFilename, mimetype}) {
-    // keep only images
+    // manter apenas imagens
     return mimetype && mimetype.includes("image");
   }
 };
@@ -384,8 +373,8 @@ const options = {
 
 ### .parse(request, callback)
 
-Parses an incoming Node.js `request` containing form data. If `callback` is
-provided, all fields and files are collected and passed to the callback.
+Analisa uma `request` do Node.js recebida contendo dados de formulário. Se `callback` for
+fornecido, todos os campos e arquivos são coletados e passados para o retorno de chamada.
 
 ```js
 const form = formidable({ uploadDir: __dirname });
@@ -396,12 +385,11 @@ form.parse(req, (err, fields, files) => {
 });
 ```
 
-You may overwrite this method if you are interested in directly accessing the
-multipart stream. Doing so will disable any `'field'` / `'file'` events
-processing which would occur otherwise, making you fully responsible for
-handling the processing.
+Você pode substituir esse método se estiver interessado em acessar diretamente o 
+fluxo de várias partes. Fazer isso desativará qualquer processamento de eventos `'field'` / `'file'` 
+que ocorreria de outra forma, tornando você totalmente responsável por lidar com o processamento.
 
-About `uploadDir`, given the following directory structure 
+Sobre `uploadDir`, dada a seguinte estrutura de diretório
 ```
 project-name
 ├── src
@@ -411,21 +399,21 @@ project-name
     └── image.jpg
 ```
 
-`__dirname` would be the same directory as the source file itself (src)
+`__dirname` seria o mesmo diretório que o próprio arquivo de origem (src)
 
 
 ```js
  `${__dirname}/../uploads`
 ```
 
-to put files in uploads.
+para colocar arquivos em uploads.
 
-Omitting `__dirname` would make the path relative to the current working directory. This would be the same if server.js is launched from src but not project-name.
+Omitir `__dirname` tornaria o caminho relativo ao diretório de trabalho atual. Isso seria o mesmo se server.js fosse iniciado a partir de src, mas não de project-name.
 
 
-`null` will use default which is `os.tmpdir()`
+`null` usará o padrão que é `os.tmpdir()`
 
-Note: If the directory does not exist, the uploaded files are __silently discarded__. To make sure it exists:
+Nota: Se o diretório não existir, os arquivos carregados são __silenciosamente descartados__. Para ter certeza de que existe:
 
 ```js
 import {createNecessaryDirectoriesSync} from "filesac";
@@ -436,13 +424,12 @@ createNecessaryDirectoriesSync(`${uploadPath}/x`);
 ```
 
 
-In the example below, we listen on couple of events and direct them to the
-`data` listener, so you can do whatever you choose there, based on whether its
-before the file been emitted, the header value, the header name, on field, on
-file and etc.
+No exemplo abaixo, escutamos alguns eventos e os direcionamos para o ouvinte `data`, para 
+que você possa fazer o que quiser lá, com base em se é antes do arquivo ser emitido, o valor do
+cabeçalho, o nome do cabeçalho, no campo , em arquivo e etc.
 
-Or the other way could be to just override the `form.onPart` as it's shown a bit
-later.
+Ou a outra maneira poderia ser apenas substituir o `form.onPart` como é mostrado um pouco
+mais tarde.
 
 ```js
 form.once('error', console.error);
@@ -463,7 +450,7 @@ form.once('end', () => {
   console.log('Done!');
 });
 
-// If you want to customize whatever you want...
+// Se você quiser personalizar o que quiser...
 form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) => {
   if (name === 'partBegin') {
   }
@@ -492,23 +479,22 @@ form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) =>
 
 ### .use(plugin: Plugin)
 
-A method that allows you to extend the Formidable library. By default we include
-4 plugins, which essentially are adapters to plug the different built-in parsers.
+Um método que permite estender a biblioteca Formidable. Por padrão, incluímos
+4 plug-ins, que são essencialmente adaptadores para conectar os diferentes analisadores integrados.
 
-**The plugins added by this method are always enabled.**
+**Os plugins adicionados por este método estão sempre ativados.**
 
-_See [src/plugins/](./src/plugins/) for more detailed look on default plugins._
+_Consulte [src/plugins/](./src/plugins/) para uma visão mais detalhada dos plug-ins padrão._
 
-The `plugin` param has such signature:
+O parâmetro `plugin` tem essa assinatura:
 
 ```typescript
 function(formidable: Formidable, options: Options): void;
 ```
 
-The architecture is simple. The `plugin` is a function that is passed with the
-Formidable instance (the `form` across the README examples) and the options.
+A arquitetura é simples. O `plugin` é uma função que é passada com a instância Formidable (o `form` nos exemplos README) e as opções.
 
-**Note:** the plugin function's `this` context is also the same instance.
+**Observação:** o contexto `this` da função do plug-in também é a mesma instância.
 
 ```js
 const form = formidable({ keepExtensions: true });
@@ -516,23 +502,22 @@ const form = formidable({ keepExtensions: true });
 form.use((self, options) => {
   // self === this === form
   console.log('woohoo, custom plugin');
-  // do your stuff; check `src/plugins` for inspiration
+  // faça suas coisas; verifique `src/plugins` para inspiração
 });
 
 form.parse(req, (error, fields, files) => {
   console.log('done!');
 });
 ```
+**Importante observar**, é que dentro do plugin `this.options`, `self.options` e
+`options` PODEM ou NÃO ser iguais. A melhor prática geral é sempre usar o
+`this`, para que você possa testar seu plugin mais tarde de forma independente e mais fácil.
 
-**Important to note**, is that inside plugin `this.options`, `self.options` and
-`options` MAY or MAY NOT be the same. General best practice is to always use the
-`this`, so you can later test your plugin independently and more easily.
-
-If you want to disable some parsing capabilities of Formidable, you can disable
-the plugin which corresponds to the parser. For example, if you want to disable
-multipart parsing (so the [src/parsers/Multipart.js](./src/parsers/Multipart.js)
-which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
-you can remove it from the `options.enabledPlugins`, like so
+Se você quiser desabilitar alguns recursos de análise do Formidable, você pode desabilitar
+o plugin que corresponde ao analisador. Por exemplo, se você deseja desabilitar a análise de 
+várias partes (para que o [src/parsers/Multipart.js](./src/parsers/Multipart.js)
+que é usado em [src/plugins/multipart.js](./src/plugins/multipart.js)), então
+você pode removê-lo do `options.enabledPlugins`, assim
 
 ```js
 import formidable, {octetstream, querystring, json} from "formidable";
@@ -542,89 +527,87 @@ const form = formidable({
 });
 ```
 
-**Be aware** that the order _MAY_ be important too. The names corresponds 1:1 to
-files in [src/plugins/](./src/plugins) folder.
+**Esteja ciente** de que a ordem _PODE_ ser importante também. Os nomes correspondem 1:1 a
+arquivos na pasta [src/plugins/](./src/plugins).
 
-Pull requests for new built-in plugins MAY be accepted - for example, more
-advanced querystring parser. Add your plugin as a new file in `src/plugins/`
-folder (lowercased) and follow how the other plugins are made.
+Solicitações pull para novos plug-ins integrados PODEM ser aceitas - por exemplo, analisador de 
+querystring mais avançado. Adicione seu plugin como um novo arquivo na pasta `src/plugins/` (em letras minúsculas) e 
+siga como os outros plugins são feitos.
 
 ### form.onPart
 
-If you want to use Formidable to only handle certain parts for you, you can do
-something similar. Or see
-[#387](https://github.com/node-formidable/node-formidable/issues/387) for
-inspiration, you can for example validate the mime-type.
+Se você quiser usar Formidable para manipular apenas algumas partes para você, você pode fazer
+alguma coisa similar. ou ver
+[#387](https://github.com/node-formidable/node-formidable/issues/387) para
+inspiração, você pode, por exemplo, validar o tipo mime.
 
 ```js
 const form = formidable();
 
 form.onPart = (part) => {
   part.on('data', (buffer) => {
-    // do whatever you want here
+    // faça o que quiser aqui
   });
 };
 ```
 
-For example, force Formidable to be used only on non-file "parts" (i.e., html
-fields)
+Por exemplo, force Formidable a ser usado apenas em "partes" que não sejam de arquivo (ou seja, html
+Campos)
 
 ```js
 const form = formidable();
 
 form.onPart = function (part) {
-  // let formidable handle only non-file parts
+  // deixe formidável lidar apenas com partes não arquivadas
   if (part.originalFilename === '' || !part.mimetype) {
-    // used internally, please do not override!
+    // usado internamente, por favor, não substitua!
     form._handlePart(part);
   }
 };
 ```
 
-### File
+### Arquivo
 
 ```ts
 export interface File {
-  // The size of the uploaded file in bytes.
-  // If the file is still being uploaded (see `'fileBegin'` event),
-  // this property says how many bytes of the file have been written to disk yet.
+   // O tamanho do arquivo enviado em bytes.
+   // Se o arquivo ainda estiver sendo carregado (veja o evento `'fileBegin'`),
+   // esta propriedade diz quantos bytes do arquivo já foram gravados no disco.
   file.size: number;
 
-  // The path this file is being written to. You can modify this in the `'fileBegin'` event in
-  // case you are unhappy with the way formidable generates a temporary path for your files.
+   // O caminho em que este arquivo está sendo gravado. Você pode modificar isso no evento `'fileBegin'`
+   // caso você esteja insatisfeito com a forma como o formidable gera um caminho temporário para seus arquivos.
   file.filepath: string;
 
-  // The name this file had according to the uploading client.
+  // O nome que este arquivo tinha de acordo com o cliente de upload.
   file.originalFilename: string | null;
   
-  // calculated based on options provided
+  // calculado com base nas opções fornecidas.
   file.newFilename: string | null;
 
-  // The mime type of this file, according to the uploading client.
+  // O tipo mime deste arquivo, de acordo com o cliente de upload.
   file.mimetype: string | null;
 
-  // A Date object (or `null`) containing the time this file was last written to.
-  // Mostly here for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
+  // Um objeto Date (ou `null`) contendo a hora em que este arquivo foi gravado pela última vez.
+  // Principalmente aqui para compatibilidade com o [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).
   file.mtime: Date | null;
 
   file.hashAlgorithm: false | |'sha1' | 'md5' | 'sha256'
-  // If `options.hashAlgorithm` calculation was set, you can read the hex digest out of this var (at the end it will be a string)
+  // Se o cálculo `options.hashAlgorithm` foi definido, você pode ler o resumo hexadecimal desta var (no final, será uma string)
   file.hash: string | object | null;
 }
 ```
 
 #### file.toJSON()
 
-This method returns a JSON-representation of the file, allowing you to
-`JSON.stringify()` the file which is useful for logging and responding to
-requests.
+Este método retorna uma representação JSON do arquivo, permitindo que você `JSON.stringify()` 
+o arquivo que é útil para registrar e responder a solicitações.
 
-### Events
+### Eventos
 
 #### `'progress'`
-
-Emitted after each incoming chunk of data that has been parsed. Can be used to
-roll your own progress bar. **Warning** Use this only for server side progress bar. On the client side better use `XMLHttpRequest` with `xhr.upload.onprogress =`
+Emitido após cada bloco de entrada de dados que foi analisado. Pode ser usado para rolar sua própria barra de progresso. **Aviso** Use isso
+apenas para a barra de progresso do lado do servidor. No lado do cliente, é melhor usar `XMLHttpRequest` com `xhr.upload.onprogress =`
 
 ```js
 form.on('progress', (bytesReceived, bytesExpected) => {});
@@ -632,7 +615,7 @@ form.on('progress', (bytesReceived, bytesExpected) => {});
 
 #### `'field'`
 
-Emitted whenever a field / value pair has been received.
+Emitido sempre que um par campo/valor é recebido.
 
 ```js
 form.on('field', (name, value) => {});
@@ -640,41 +623,40 @@ form.on('field', (name, value) => {});
 
 #### `'fileBegin'`
 
-Emitted whenever a new file is detected in the upload stream. Use this event if
-you want to stream the file to somewhere else while buffering the upload on the
-file system.
+Emitido sempre que um novo arquivo é detectado no fluxo de upload. 
+Use este evento se desejar transmitir o arquivo para outro lugar enquanto armazena o upload no sistema de arquivos.
 
 ```js
 form.on('fileBegin', (formName, file) => {
-    // accessible here 
-    // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
-    // file.originalFilename http filename or null if there was a parsing error
-    // file.newFilename generated hexoid or what options.filename returned
-    // file.filepath default pathname as per options.uploadDir and options.filename
-    // file.filepath = CUSTOM_PATH // to change the final path
+     // acessível aqui
+     // formName o nome no formulário (<input name="thisname" type="file">) ou http filename para octetstream
+     // file.originalFilename http filename ou null se houver um erro de análise
+     // file.newFilename gerou hexoid ou o que options.filename retornou
+     // file.filepath nome do caminho padrão de acordo com options.uploadDir e options.filename
+     // file.filepath = CUSTOM_PATH // para alterar o caminho final
 });
 ```
 
 #### `'file'`
 
-Emitted whenever a field / file pair has been received. `file` is an instance of
+Emitido sempre que um par campo/arquivo é recebido. `file` é uma instância de
 `File`.
 
 ```js
 form.on('file', (formname, file) => {
-    // same as fileBegin, except
-    // it is too late to change file.filepath
-    // file.hash is available if options.hash was used
+     // o mesmo que fileBegin, exceto
+     // é muito tarde para alterar file.filepath
+     // file.hash está disponível se options.hash foi usado
 });
 ```
 
 #### `'error'`
 
-Emitted when there is an error processing the incoming form. A request that
-experiences an error is automatically paused, you will have to manually call
-`request.resume()` if you want the request to continue firing `'data'` events.
+Emitido quando há um erro no processamento do formulário recebido. Uma solicitação que 
+apresenta um erro é pausada automaticamente, você terá que chamar manualmente
+`request.resume()` se você quiser que a requisição continue disparando eventos `'data'`.
 
-May have `error.httpCode` and `error.code` attached.
+Pode ter `error.httpCode` e `error.code` anexados.
 
 ```js
 form.on('error', (err) => {});
@@ -682,10 +664,10 @@ form.on('error', (err) => {});
 
 #### `'aborted'`
 
-Emitted when the request was aborted by the user. Right now this can be due to a
-'timeout' or 'close' event on the socket. After this event is emitted, an
-`error` event will follow. In the future there will be a separate 'timeout'
-event (needs a change in the node core).
+Emitido quando a requisição foi abortada pelo usuário. Agora isso pode ser devido a um
+evento 'timeout' ou 'close' no soquete. Após este evento ser emitido, um
+O evento `error` seguirá. No futuro, haverá um 'timeout' separado
+evento (precisa de uma mudança no núcleo do nó).
 
 ```js
 form.on('aborted', () => {});
@@ -693,8 +675,8 @@ form.on('aborted', () => {});
 
 #### `'end'`
 
-Emitted when the entire request has been received, and all contained files have
-finished flushing to disk. This is a great place for you to send your response.
+Emitido quando toda a solicitação foi recebida e todos os arquivos contidos foram 
+liberados para o disco. Este é um ótimo lugar para você enviar sua resposta.
 
 ```js
 form.on('end', () => {});
@@ -705,7 +687,8 @@ form.on('end', () => {});
 
 #### firstValues
 
-Gets first values of fields, like pre 3.0.0 without multiples pass in a list of optional exceptions where arrays of strings is still wanted (`<select multiple>` for example)
+Obtém os primeiros valores dos campos, como pré 3.0.0 sem passar múltiplos em uma
+lista de exceções opcionais onde arrays de strings ainda são desejados (`<select multiple>` por exemplo)
 
 ```js
 import { firstValues } from 'formidable/src/helpers/firstValues.js';
@@ -722,8 +705,8 @@ form.parse(request, async (error, fieldsMultiple, files) => {
 
 #### readBooleans
 
-Html form input type="checkbox" only send the value "on" if checked,
-convert it to booleans for each input that is expected to be sent as a checkbox, only use after firstValues or similar was called.
+Html form input type="checkbox" envia apenas o valor "on" se marcado,
+converta-o em booleanos para cada entrada que deve ser enviada como uma caixa de seleção, use somente após a chamada de firstValues ou similar.
 
 ```js
 import { firstValues } from 'formidable/src/helpers/firstValues.js';
@@ -745,22 +728,20 @@ form.parse(request, async (error, fieldsMultiple, files) => {
 
 [./CHANGELOG.md](./CHANGELOG.md)
 
-## Ports & Credits
+## Ports & Créditos
 
-- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++
-  parser based on formidable
-- [Ryan Dahl](http://twitter.com/ryah) for his work on
-  [http-parser](http://github.com/ry/http-parser) which heavily inspired the
-  initial `multipart_parser.js`.
+- [multipart-parser](http://github.com/FooBarWidget/multipart-parser): um analisador C++ baseado em formidável
+- [Ryan Dahl](http://twitter.com/ryah) por seu trabalho em
+  [http-parser](http://github.com/ry/http-parser) que inspirou fortemente o `multipart_parser.js` inicial.
 
-## Contributing
+## Contribuindo
 
-If the documentation is unclear or has a typo, please click on the page's `Edit`
-button (pencil icon) and suggest a correction. If you would like to help us fix
-a bug or add a new feature, please check our [Contributing
-Guide][contributing-url]. Pull requests are welcome!
+Se a documentação não estiver clara ou tiver um erro de digitação, clique no botão `Edit` da página (ícone de lápis) e sugira uma correção. 
+Se você gostaria de nos ajudar a corrigir
+um bug ou adicionar um novo recurso, verifique nosso [Contributing
+Guide][contribuindo-url]. Pull requests são bem-vindos!
 
-Thanks goes to these wonderful people
+Agradecimentos vão para essas pessoas maravilhosas
 ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
@@ -797,16 +778,16 @@ Thanks goes to these wonderful people
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-From a [Felix blog post](https://felixge.de/2013/03/11/the-pull-request-hack/):
+De uma [postagem do blog Felix](https://felixge.de/2013/03/11/the-pull-request-hack/):
 
-- [Sven Lito](https://github.com/svnlto) for fixing bugs and merging patches
-- [egirshov](https://github.com/egirshov) for contributing many improvements to the node-formidable multipart parser
-- [Andrew Kelley](https://github.com/superjoe30) for also helping with fixing bugs and making improvements
-- [Mike Frey](https://github.com/mikefrey) for contributing JSON support
+- [Sven Lito](https://github.com/svnlto) por corrigir bugs e mesclar patches
+- [egirshov](https://github.com/egirshov) por contribuir com muitas melhorias para o analisador multipartes formidável de nós
+- [Andrew Kelley](https://github.com/superjoe30) por também ajudar a corrigir bugs e fazer melhorias
+- [Mike Frey](https://github.com/mikefrey) por contribuir com suporte JSON
 
-## License
+## Licença
 
-Formidable is licensed under the [MIT License][license-url].
+Formidable é licenciado sob a [MIT License][license-url].
 
 <!-- badges -->
 <!-- prettier-ignore-start -->

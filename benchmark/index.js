@@ -1,8 +1,6 @@
-'use strict';
+import assert from "node:assert";
+import MultipartParser from '../src/parsers/Multipart.js';
 
-const assert = require('assert');
-
-const MultipartParser = require('../src/parsers/Multipart');
 
 const parser = new MultipartParser();
 const customBoundary = '-----------------------------168072824752491622650073';
@@ -20,7 +18,7 @@ const calls = {
   end: 0,
 };
 
-const start = Date.now();
+const start = performance.now();
 
 parser.initWithBoundary(customBoundary);
 parser.on('data', ({ name }) => {
@@ -29,7 +27,7 @@ parser.on('data', ({ name }) => {
 
 parser.write(buf);
 
-const duration = Date.now() - start;
+const duration = performance.now() - start;
 const mbPerSec = (mb / (duration / 1000)).toFixed(2);
 
 console.log(`${mbPerSec} mb/sec`);
@@ -51,10 +49,10 @@ process.on('exit', () => {
   assert.deepStrictEqual(calls, {
     partBegin: 1,
     headerField: 1,
-    headerValue: 2,
+    headerValue: 1,
     headerEnd: 1,
     headersEnd: 1,
-    partData: 2,
+    partData: 1,
     partEnd: 1,
     end: 1,
   });
