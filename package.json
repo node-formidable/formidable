@@ -30,10 +30,10 @@
     "test:jest": "jest --coverage"
   },
   "dependencies": {
-    "dezalgo": "1.0.3",
-    "hexoid": "1.0.0",
-    "once": "1.4.0",
-    "qs": "6.9.3"
+    "dezalgo": "^1.0.4",
+    "hexoid": "^1.0.0",
+    "once": "^1.4.0",
+    "qs": "^6.11.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
@@ -60,6 +60,16 @@
   "jest": {
     "verbose": true
   },
+  "keywords": [
+    "multipart",
+    "form",
+    "data",
+    "querystring",
+    "www",
+    "json",
+    "ulpoad",
+    "file"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "git status --porcelain && yarn lint-staged",
@@ -84,15 +94,5 @@
       "@tunnckocore",
       ":pinAllExceptPeerDependencies"
     ]
-  },
-  "keywords": [
-    "multipart",
-    "form",
-    "data",
-    "querystring",
-    "www",
-    "json",
-    "ulpoad",
-    "file"
-  ]
+  }
 }
