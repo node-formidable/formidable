@@ -19,6 +19,7 @@ const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
 
 test('fixtures', (done) => {
   const server = http.createServer();
+  server.once('error', done);
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
@@ -69,7 +70,10 @@ test('fixtures', (done) => {
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.originalFilename, expectedPart.originalFilename);
+          assert.strictEqual(
+            file.originalFilename,
+            expectedPart.originalFilename,
+          );
 
           if (expectedPart.sha1) {
             assert.strictEqual(

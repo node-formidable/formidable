@@ -13,7 +13,6 @@ const file = new PersistentFile({
   mimetype: 'image/png',
 });
 
-
 jest.mock('fs', () => {
   const fs = jest.requireActual('fs');
   return {
@@ -25,7 +24,6 @@ jest.mock('fs', () => {
 describe('PersistentFile', () => {
   test('toJSON()', () => {
     const obj = file.toJSON();
-    const len = Object.keys(obj).length;
 
     expect(obj.filepath).toBe('/tmp/cat.png');
     expect(obj.mimetype).toBe('image/png');

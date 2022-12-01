@@ -20,11 +20,10 @@ const server = http.createServer((req, res) => {
       //   return 'yo.txt'; // or completly different name
       //   // return 'z/yo.txt'; // subdirectory
       // },
-      filter: function ({name, originalFilename, mimetype}) {
+      filter({ /* name, originalFilename, */ mimetype }) {
         // keep only images
-        return mimetype && mimetype.includes("image");
-      }
-
+        return mimetype && mimetype.includes('image');
+      },
     });
 
     form.parse(req, (err, fields, files) => {

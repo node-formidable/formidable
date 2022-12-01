@@ -27,7 +27,7 @@ const DEFAULT_OPTIONS = {
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
-  filter: function () {
+  filter() {
     return true;
   },
 };
@@ -541,8 +541,6 @@ class IncomingForm extends EventEmitter {
     return basename.slice(firstDot, lastDot) + extname;
   }
 
-
-
   _joinDirectoryName(name) {
     const newPath = path.join(this.uploadDir, name);
 
@@ -574,12 +572,13 @@ class IncomingForm extends EventEmitter {
         const name = toHexoId();
 
         if (part && this.options.keepExtensions) {
-          const originalFilename = typeof part === 'string' ? part : part.originalFilename;
+          const originalFilename =
+            typeof part === 'string' ? part : part.originalFilename;
           return `${name}${this._getExtension(originalFilename)}`;
         }
-    
+
         return name;
-      }
+      };
     }
   }
 

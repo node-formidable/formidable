@@ -35,7 +35,7 @@ const additionalChanges = {
   // http://eslint.org/docs/rules/max-params
   'max-params': ['error', { max: 3 }],
   // http://eslint.org/docs/rules/max-statements
-  'max-statements': ['error', { max: 20 }],
+  'max-statements': ['error', { max: 25 }],
   // http://eslint.org/docs/rules/max-statements-per-line
   'max-statements-per-line': ['error', { max: 1 }],
   // http://eslint.org/docs/rules/max-nested-callbacks
