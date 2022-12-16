@@ -35,7 +35,7 @@ const DEFAULT_OPTIONS: IFormidableOptions = {
   enabledPlugins: [octetstream, querystring, multipart, json],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
-  filter(_part) {
+  filter(_part: IPart) {
     return true;
   },
   filename: undefined,
@@ -71,10 +71,10 @@ class IncomingForm extends EventEmitter {
   uploadDir: string;
   error: any;
   headers: http.IncomingHttpHeaders | null;
-  type: string | null;
+  type: string | null | undefined;
   bytesExpected: number | null;
   bytesReceived: number | null;
-  _parser: JSONParser | DummyParser | MultipartParser | OctetStreamParser | QueryStringParser;
+  _parser: JSONParser | DummyParser | MultipartParser | OctetStreamParser | QueryStringParser | null;
   req: http.IncomingMessage | null;
   _flushing: number;
   _fieldsSize: number;
@@ -144,8 +144,6 @@ class IncomingForm extends EventEmitter {
         errors.pluginFunction,
       );
     }
-    const a = plugin.bind(this);
-    type b = typeof a;
     this._plugins.push(plugin.bind(this));
     return this;
   }
@@ -179,7 +177,7 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
-  parse(req: http.IncomingMessage, cb: (err: Error, fields: IFields, files: IFiles) => void) {
+  parse(req: http.IncomingMessage, cb: (err: Error | null, fields: IFields, files: IFiles) => void) {
     this.req = req;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
@@ -202,18 +200,6 @@ class IncomingForm extends EventEmitter {
         } else {
           this.fields[name] = value;
         }
-
-        /*
-        if (this.type === 'multipart' || this.type === 'urlencoded') {
-          if (!hasOwnProp(this.fields, name)) {
-            this.fields[name] = [value];
-          } else {
-            this.fields[name].push(value);
-          }
-        } else {
-          this.fields[name] = value;
-        }
-        */
       });
       this.on('file', (name: string, file: IFile) => {
         if (!hasOwnProp(files, name)) {

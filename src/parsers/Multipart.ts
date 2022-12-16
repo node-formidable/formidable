@@ -42,6 +42,24 @@ function lower(c: any) {
 
 export const STATES = Object.assign({}, STATE);
 
+export type MultipartParserContext = {
+  name: string;
+  buffer?: Buffer;
+  start?: number;
+  end?: number;
+}
+
+interface MultipartParser {
+  push(context: MultipartParserContext, encoding?: BufferEncoding): boolean;
+
+  on(event: 'close', listener: () => void): this;
+  on(event: 'data', listener: (context: {}) => void): this;
+  on(event: 'end', listener: () => void): this;
+  on(event: 'readable', listener: () => void): this;
+  on(event: 'error', listener: (err: Error) => void): this;
+  on(event: string | symbol, listener: (...args: any[]) => void): this;
+}
+
 class MultipartParser extends Transform {
   boundary: Buffer | null;
   boundaryChars: any;

@@ -18,7 +18,7 @@ class PersistentFile extends EventEmitter implements IFile {
   mimetype: IFile['mimetype'];
   hashAlgorithm: IFile['hashAlgorithm'];
 
-  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }: Partial<IFile>) {
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }: Pick<IFile, "filepath" | "newFilename" | "originalFilename" | "mimetype" | "hashAlgorithm">) {
     super();
 
     this.lastModifiedDate = null;

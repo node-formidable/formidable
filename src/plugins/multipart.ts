@@ -2,6 +2,7 @@
 
 import { Stream } from 'node:stream';
 import MultipartParser from '../parsers/Multipart';
+import type { MultipartParserContext } from '../parsers/Multipart';
 import * as errors from '../FormidableError';
 import FormidableError from '../FormidableError';
 import type { Formidable, IFormidableOptions, IPart } from '../types'
@@ -51,7 +52,7 @@ function createInitMultipart(boundary: string) {
     parser.initWithBoundary(boundary);
 
     // eslint-disable-next-line max-statements, consistent-return
-    parser.on('data', ({ name, buffer, start, end }) => {
+    parser.on('data', ({ name, buffer, start, end }: MultipartParserContext) => {
       if (name === 'partBegin') {
         part = new Stream();
         part.readable = true;
@@ -87,25 +88,6 @@ function createInitMultipart(boundary: string) {
         } else if (headerField === 'content-type') {
           part.mimetype = headerValue;
         } else if (headerField === 'content-transfer-encoding') {
-          /*
-          const lowercaseContentTransferEncoding = headerValue.toLowerCase();
-          if (lowercaseContentTransferEncoding === 'binary' ||
-            lowercaseContentTransferEncoding === '7bit' ||
-            lowercaseContentTransferEncoding === '8bit' ||
-            lowercaseContentTransferEncoding === 'utf-8' ||
-            lowercaseContentTransferEncoding === 'base64'
-          ) {
-            part.transferEncoding = lowercaseContentTransferEncoding;
-          } else {
-            return this._error(
-              new FormidableError(
-                'unknown transfer-encoding1',
-                errors.unknownTransferEncoding,
-                501,
-              ),
-            );
-          }
-          */
           part.transferEncoding = headerValue.toLowerCase();
         }
 
@@ -117,24 +99,28 @@ function createInitMultipart(boundary: string) {
           case '7bit':
           case '8bit':
           case 'utf-8': {
-            const dataPropagation = (ctx: any) => {
+            const dataPropagation = (ctx: MultipartParserContext) => {
               if (ctx.name === 'partData') {
                 part.emit('data', ctx.buffer.slice(ctx.start, ctx.end));
               }
             };
-            const dataStopPropagation = (ctx: any) => {
+            const dataStopPropagation = (ctx: MultipartParserContext) => {
               if (ctx.name === 'partEnd') {
                 part.emit('end');
                 parser.off('data', dataPropagation);
                 parser.off('data', dataStopPropagation);
               }
             };
-            parser.on('data', dataPropagation);
+            parser.on('data', (ctx: MultipartParserContext) => {
+              if (ctx.name === 'partData') {
+                part.emit('data', ctx.buffer.slice(ctx.start, ctx.end));
+              }
+            });
             parser.on('data', dataStopPropagation);
             break;
           }
           case 'base64': {
-            const dataPropagation = (ctx: any) => {
+            const dataPropagation = (ctx: MultipartParserContext) => {
               if (ctx.name === 'partData') {
                 part.transferBuffer += ctx.buffer
                   .slice(ctx.start, ctx.end)
@@ -157,7 +143,7 @@ function createInitMultipart(boundary: string) {
                 part.transferBuffer = part.transferBuffer.substring(offset);
               }
             };
-            const dataStopPropagation = (ctx: any) => {
+            const dataStopPropagation = (ctx: MultipartParserContext) => {
               if (ctx.name === 'partEnd') {
                 part.emit('data', Buffer.from(part.transferBuffer, 'base64'));
                 part.emit('end');

@@ -23,7 +23,7 @@ export interface IFormidableOptions {
   enabledPlugins: FormidablePlugin[];
   fileWriteStreamHandler: (() => Writable) | null;
   defaultInvalidName: string;
-  filter(_part: any): boolean;
+  filter(_part: IPart): boolean;
   filename: ((name: string, ext: string, part: Pick<IPart, 'originalFilename' | 'mimetype'>, form: Formidable) => string) | undefined;
 }
 
@@ -41,7 +41,7 @@ export interface IPart extends Stream {
   name?: string | null;
   originalFilename?: string | null;
   mimetype?: string | null;
-  transferEncoding?: BufferEncoding | '7bit' | '8bit';
+  transferEncoding?: BufferEncoding;
   transferBuffer?: string
 }
 
@@ -55,7 +55,7 @@ export interface IFile {
   /**
    * Unknown
    */
-  length: null;
+  length: number | null;
 
   /**
    * The path this file is being written to. You can modify this in the `'fileBegin'` event in case
@@ -117,8 +117,7 @@ export interface IFile {
   on(event: "end", listener: () => void): this;
 }
 
-interface FileJSON extends Pick<IFile, "size" | "originalFilename" | "mimetype" | "hash">, Partial<Pick<IFile, "filepath">> {
-  length: number;
+interface FileJSON extends Pick<IFile, "size" | "length" | "originalFilename" | "newFilename" | "mimetype" | "hash">, Partial<Pick<IFile, "filepath">> {
   mimetype: string | null;
   mtime?: Date | null;
 }

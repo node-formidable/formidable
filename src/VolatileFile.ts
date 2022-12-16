@@ -18,7 +18,7 @@ class VolatileFile extends EventEmitter implements IFile {
   hashAlgorithm: IFile['hashAlgorithm'];
   createFileWriteStream: IFile['createFileWriteStream'];
 
-  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }: Partial<IFile>) {
+  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }: Pick<IFile, "filepath" | "newFilename" | "originalFilename" | "mimetype" | "hashAlgorithm" | "createFileWriteStream">) {
     super();
 
     this.lastModifiedDate = null;
