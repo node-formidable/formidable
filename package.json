@@ -1,19 +1,20 @@
 {
   "name": "formidable",
   "version": "3.2.5",
-  "license": "MIT",
-  "description": "A node.js module for parsing form data, especially file uploads.",
-  "homepage": "https://github.com/node-formidable/formidable",
-  "funding": "https://ko-fi.com/tunnckoCore/commissions",
-  "repository": "node-formidable/formidable",
+  "license": "UNLICENSED",
+  "description": "fork of formidable",
+  "homepage": "https://github.com/Coradine/formidable",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coradine/formidable.git"
+  },
   "type": "module",
   "main": "./src/index.js",
   "files": [
     "src"
   ],
   "publishConfig": {
-    "access": "public",
-    "tag": "v3"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "bench": "node benchmark",

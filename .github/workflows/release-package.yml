@@ -1,0 +1,27 @@
+name: Node.js Package
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  publish-gpr:
+    name: Publish to GitHub Package Repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install modules
+        run: npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Publish NPM module
+        working-directory: .
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
