@@ -93,6 +93,13 @@ function createInitMultipart(boundary) {
         headerField = '';
         headerValue = '';
       } else if (name === 'headersEnd') {
+        // if filename exists but mimetype is undetermined, 
+        // use file-extension to determine the mimetype
+        // works for zip, pdf, json
+        if (!part.mimetype && typeof part.originalFilename === 'string') {
+          const extension = part.originalFilename.split('.').slice(-1)[0];
+          part.mimetype = `application/${extension}`;
+        }
         switch (part.transferEncoding) {
           case 'binary':
           case '7bit':
