@@ -7,6 +7,6 @@ Content-Length: 189
 Content-Disposition: form-data; name="upload"; filename="plain.txt"
 Content-Type: text/plain
 
-I am a simple plain text file!
+I am a simple plain text file
 
 ------TLV0SrKD4z1TRxRhAPUvZ
