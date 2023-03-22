@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { connect } from 'node:net';
 import formidable from '../../src/index.js';
 
-const PORT = 13539;
+const PORT = 13540;
 
 test('connection aborted', (done) => {
   const server = createServer((req) => {
@@ -15,7 +15,6 @@ test('connection aborted', (done) => {
     });
     form.on('error', () => {
       assert(abortedReceived, 'Error event should follow aborted');
-      server.close();
     });
     form.on('end', () => {
       throw new Error('Unexpected "end" event');
