@@ -1,0 +1,34 @@
+<?php
+if(isset($_POST['download'])) {
+  // Get the remote file URL from input field
+  $remote_url = $_POST['remote_url'];
+  
+  // Define the local file path and name
+  $local_file_path = 'downloads/'.basename($remote_url);
+  
+  // Download remote file and save it locally
+  $ch = curl_init($remote_url);
+  $fp = fopen($local_file_path, 'wb');
+  curl_setopt($ch, CURLOPT_FILE, $fp);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+  $result = curl_exec($ch);
+  curl_close($ch);
+  fclose($fp);
+  
+  // Output success or error message to the user
+  if ($result) {
+    echo "File downloaded successfully!";
+  } else {
+    echo "There was an error downloading the file.";
+  }
+}
+?>
+
+<!-- HTML form with input field for remote file URL -->
+<form method="post" action="">
+  <label for="remote_url">Remote file URL:</label>
+  <input type="text" name="remote_url" id="remote_url">
+  <input type="submit" name="download" value="Download">
+</form>
