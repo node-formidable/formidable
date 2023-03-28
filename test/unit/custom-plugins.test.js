@@ -101,7 +101,7 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
 test('.parse throw error when some plugin fail', async () => {
   const server = createServer(
     { enabledPlugins: [octetstream, json] },
-    (ctx, form) => {
+    async (ctx, form) => {
       // const failedIsOkay = false;
       // ! not emitted?
       // form.on('file', () => {
@@ -124,7 +124,7 @@ test('.parse throw error when some plugin fail', async () => {
 
       let res = null;
       try {
-        form.parse(ctx.req);
+        await form.parse(ctx.req);
       } catch (err) {
         expect(err.message).toMatch(/custom plugin err/);
         expect(err.message).toMatch(/plugin on index 2 failed/);
