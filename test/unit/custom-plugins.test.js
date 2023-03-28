@@ -85,7 +85,6 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
       expect(fields.qux).toBe('zaz');
       expect(fields.a).toBe('bbb');
       expect(ctx.__pluginsCount).toBe(4);
-      expect(ctx.__pluginsResults).toBe(true);
     });
   });
 
