@@ -24,6 +24,8 @@
 
 !**/test
 !**/test/**
+!**/test-node
+!**/test-node/**
 
 !**/*tests*
 !**/*tests*/**

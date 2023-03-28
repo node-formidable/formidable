@@ -25,7 +25,8 @@
     "postreinstall": "yarn setup",
     "setup": "yarn",
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
-    "test": "node  --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+    "test-node": "node --test test-node/",
     "pretest:ci": "yarn run pretest",
     "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --coverage"
   },
