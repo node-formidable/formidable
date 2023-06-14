@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import Koa from 'koa';
 import request from 'supertest';
 
-import { formidable, json, octetstream, multipart } from '../../src/index.js';
+import { formidable, json, octetstream, multipart, errors } from '../../src/index.js';
 
 function createServer(options, handler) {
   const app = new Koa();
@@ -125,8 +125,8 @@ test('.parse throw error when some plugin fail', async () => {
       try {
         await form.parse(ctx.req);
       } catch (err) {
-        expect(err.message).toMatch(/custom plugin err/);
-        expect(err.message).toMatch(/plugin on index 2 failed/);
+        expect(err.code).toBe(errors.pluginFailed);
+        expect(err.httpCode).toBe(500);
 
         expect(form._plugins.length).toBe(3);
         expect(ctx.__pluginsCount).toBe(2);
@@ -143,12 +143,18 @@ test('.parse throw error when some plugin fail', async () => {
     },
   );
 
-  await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     request(server.callback())
       .post('/')
       .type('application/octet-stream')
       .attach('bin', fromFixtures('file', 'binaryfile.tar.gz'))
-      .end((err) => (err ? reject(err) : resolve()));
+      .end((err) => {
+        if (err.code === 'ECONNRESET') {
+          resolve();
+        } else {
+          reject(err);
+        }
+      });
   });
 });
 
