@@ -100,25 +100,26 @@ Parse an incoming file upload, with the
 import http from 'node:http';
 import formidable, {errors as formidableErrors} from 'formidable';
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({});
-
-    form.parse(req, (err, fields, files) => {
-      if (err) {
+    let fields;
+    let files;
+    try {
+        [fields, files] = await form.parse(req);
+    } catch (err) {
         // example to check for a very specific error
         if (err.code === formidableErrors.maxFieldsExceeded) {
 
         }
+        console.error(err);
         res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
         res.end(String(err));
         return;
-      }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ fields, files }, null, 2));
-    });
-
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ fields, files }, null, 2));
     return;
   }
 
