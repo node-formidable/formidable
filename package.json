@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "3.2.5",
+  "version": "3.3.2",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
@@ -17,6 +17,8 @@
   },
   "scripts": {
     "bench": "node benchmark",
+    "bench2prep": "node benchmark/server.js",
+    "bench2": "bombardier --body-file=\"./README.md\" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload",
     "fmt": "yarn run fmt:prepare '**/*'",
     "fmt:prepare": "prettier --write",
     "lint": "yarn run lint:prepare .",
