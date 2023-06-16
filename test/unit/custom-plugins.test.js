@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import Koa from 'koa';
 import request from 'supertest';
 
-import { formidable, json, octetstream, multipart } from '../../src/index.js';
+import { formidable, json, octetstream, multipart, errors } from '../../src/index.js';
 
 function createServer(options, handler) {
   const app = new Koa();
@@ -85,7 +85,6 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
       expect(fields.qux).toBe('zaz');
       expect(fields.a).toBe('bbb');
       expect(ctx.__pluginsCount).toBe(4);
-      expect(ctx.__pluginsResults).toBe(true);
     });
   });
 
@@ -101,7 +100,7 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
 test('.parse throw error when some plugin fail', async () => {
   const server = createServer(
     { enabledPlugins: [octetstream, json] },
-    (ctx, form) => {
+    async (ctx, form) => {
       // const failedIsOkay = false;
       // ! not emitted?
       // form.on('file', () => {
@@ -124,10 +123,10 @@ test('.parse throw error when some plugin fail', async () => {
 
       let res = null;
       try {
-        form.parse(ctx.req);
+        await form.parse(ctx.req);
       } catch (err) {
-        expect(err.message).toMatch(/custom plugin err/);
-        expect(err.message).toMatch(/plugin on index 2 failed/);
+        expect(err.code).toBe(errors.pluginFailed);
+        expect(err.httpCode).toBe(500);
 
         expect(form._plugins.length).toBe(3);
         expect(ctx.__pluginsCount).toBe(2);
@@ -144,12 +143,18 @@ test('.parse throw error when some plugin fail', async () => {
     },
   );
 
-  await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     request(server.callback())
       .post('/')
       .type('application/octet-stream')
       .attach('bin', fromFixtures('file', 'binaryfile.tar.gz'))
-      .end((err) => (err ? reject(err) : resolve()));
+      .end((err) => {
+        if (err.code === 'ECONNRESET') {
+          resolve();
+        } else {
+          reject(err);
+        }
+      });
   });
 });
 

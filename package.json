@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "3.2.5",
+  "version": "3.3.2",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
@@ -13,10 +13,12 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "v3"
+    "tag": "latest"
   },
   "scripts": {
     "bench": "node benchmark",
+    "bench2prep": "node benchmark/server.js",
+    "bench2": "bombardier --body-file=\"./README.md\" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload",
     "fmt": "yarn run fmt:prepare '**/*'",
     "fmt:prepare": "prettier --write",
     "lint": "yarn run lint:prepare .",
@@ -25,14 +27,16 @@
     "postreinstall": "yarn setup",
     "setup": "yarn",
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
-    "test": "node  --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "test": "npm run test-jest && npm run test-node",
+    "test-jest": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+    "test-node": "node --test test-node/",
     "pretest:ci": "yarn run pretest",
-    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --coverage"
+    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },
   "dependencies": {
-    "dezalgo": "1.0.3",
-    "hexoid": "1.0.0",
-    "once": "1.4.0"
+    "dezalgo": "^1.0.4",
+    "hexoid": "^1.0.0",
+    "once": "^1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.3.5",

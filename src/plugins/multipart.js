@@ -51,7 +51,7 @@ function createInitMultipart(boundary) {
     parser.initWithBoundary(boundary);
 
     // eslint-disable-next-line max-statements, consistent-return
-    parser.on('data', ({ name, buffer, start, end }) => {
+    parser.on('data', async ({ name, buffer, start, end }) => {
       if (name === 'partBegin') {
         part = new Stream();
         part.readable = true;
@@ -159,8 +159,9 @@ function createInitMultipart(boundary) {
               ),
             );
         }
-
-        this.onPart(part);
+        this._parser.pause();
+        await this.onPart(part);
+        this._parser.resume();
       } else if (name === 'end') {
         this.ended = true;
         this._maybeEnd();

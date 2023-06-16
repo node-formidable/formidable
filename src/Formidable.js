@@ -3,6 +3,7 @@
 
 import os from 'node:os';
 import path from 'node:path';
+import fsPromises from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { StringDecoder } from 'node:string_decoder';
 import hexoid from 'hexoid';
@@ -25,6 +26,7 @@ const DEFAULT_OPTIONS = {
   maxTotalFileSize: undefined,
   minFileSize: 1,
   allowEmptyFiles: false,
+  createDirsFromUploads: false,
   keepExtensions: false,
   encoding: 'utf-8',
   hashAlgorithm: false,
@@ -41,6 +43,32 @@ const DEFAULT_OPTIONS = {
 function hasOwnProp(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
+
+
+const decorateForceSequential = function (promiseCreator) {
+  /* forces a function that returns a promise to be sequential
+  useful for fs  for example */
+  let lastPromise = Promise.resolve();
+  return async function (...x) {
+      const promiseWeAreWaitingFor = lastPromise;
+      let currentPromise;
+      let callback;
+      // we need to change lastPromise before await anything,
+      // otherwise 2 calls might wait the same thing
+      lastPromise = new Promise(function (resolve) {
+          callback = resolve;
+      });
+      await promiseWeAreWaitingFor;
+      currentPromise = promiseCreator(...x);
+      currentPromise.then(callback).catch(callback);
+      return currentPromise;
+  };
+};
+
+const createNecessaryDirectoriesAsync = decorateForceSequential(function (filePath) {
+  const directoryname = path.dirname(filePath);
+  return fsPromises.mkdir(directoryname, { recursive: true });
+});
 
 const invalidExtensionChar = (c) => {
   const code = c.charCodeAt(0);
@@ -150,7 +178,7 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
-  parse(req, cb) {
+  async parse(req, cb) {
     this.req = req;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
@@ -186,7 +214,7 @@ class IncomingForm extends EventEmitter {
     }
 
     // Parse headers and setup the parser, ready to start listening for data.
-    this.writeHeaders(req.headers);
+    await this.writeHeaders(req.headers);
 
     // Start listening for data.
     req
@@ -216,10 +244,10 @@ class IncomingForm extends EventEmitter {
     return this;
   }
 
-  writeHeaders(headers) {
+  async writeHeaders(headers) {
     this.headers = headers;
     this._parseContentLength();
-    this._parseContentType();
+    await this._parseContentType();
 
     if (!this._parser) {
       this._error(
@@ -258,10 +286,10 @@ class IncomingForm extends EventEmitter {
 
   onPart(part) {
     // this method can be overwritten by the user
-    this._handlePart(part);
+    return this._handlePart(part);
   }
 
-  _handlePart(part) {
+  async _handlePart(part) {
     if (part.originalFilename && typeof part.originalFilename !== 'string') {
       this._error(
         new FormidableError(
@@ -318,7 +346,7 @@ class IncomingForm extends EventEmitter {
     let fileSize = 0;
     const newFilename = this._getNewName(part);
     const filepath = this._joinDirectoryName(newFilename);
-    const file = this._newFile({
+    const file = await this._newFile({
       newFilename,
       filepath,
       originalFilename: part.originalFilename,
@@ -396,7 +424,7 @@ class IncomingForm extends EventEmitter {
   }
 
   // eslint-disable-next-line max-statements
-  _parseContentType() {
+  async _parseContentType() {
     if (this.bytesExpected === 0) {
       this._parser = new DummyParser(this, this.options);
       return;
@@ -417,10 +445,10 @@ class IncomingForm extends EventEmitter {
     new DummyParser(this, this.options);
 
     const results = [];
-    this._plugins.forEach((plugin, idx) => {
+    await Promise.all(this._plugins.map(async (plugin, idx) => {
       let pluginReturn = null;
       try {
-        pluginReturn = plugin(this, this.options) || this;
+        pluginReturn = await plugin(this, this.options) || this;
       } catch (err) {
         // directly throw from the `form.parse` method;
         // there is no other better way, except a handle through options
@@ -436,7 +464,7 @@ class IncomingForm extends EventEmitter {
 
       // todo: use Set/Map and pass plugin name instead of the `idx` index
       this.emit('plugin', idx, pluginReturn);
-    });
+    }));
     this.emit('pluginsResults', results);
   }
 
@@ -471,23 +499,35 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  _newFile({ filepath, originalFilename, mimetype, newFilename }) {
-    return this.options.fileWriteStreamHandler
-      ? new VolatileFile({
-          newFilename,
-          filepath,
-          originalFilename,
-          mimetype,
-          createFileWriteStream: this.options.fileWriteStreamHandler,
-          hashAlgorithm: this.options.hashAlgorithm,
-        })
-      : new PersistentFile({
-          newFilename,
-          filepath,
-          originalFilename,
-          mimetype,
-          hashAlgorithm: this.options.hashAlgorithm,
-        });
+  async _newFile({ filepath, originalFilename, mimetype, newFilename }) {
+    if (this.options.fileWriteStreamHandler) {
+      return new VolatileFile({
+        newFilename,
+        filepath,
+        originalFilename,
+        mimetype,
+        createFileWriteStream: this.options.fileWriteStreamHandler,
+        hashAlgorithm: this.options.hashAlgorithm,
+      });
+    }
+    if (this.options.createDirsFromUploads) {
+      try {
+        await createNecessaryDirectoriesAsync(filepath);
+      } catch (errorCreatingDir) {
+        this._error(new FormidableError(
+          `cannot create directory`,
+          errors.cannotCreateDir,
+          409,
+        ));
+      }
+    }
+    return new PersistentFile({
+      newFilename,
+      filepath,
+      originalFilename,
+      mimetype,
+      hashAlgorithm: this.options.hashAlgorithm,
+    });
   }
 
   _getFileName(headerValue) {

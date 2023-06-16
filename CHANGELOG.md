@@ -1,5 +1,13 @@
 # Changelog
 
+### 3.3.2
+
+ * feature: ([#855](https://github.com/node-formidable/formidable/pull/855))add options.createDirsFromUploads, see README for usage
+ * form.parse is an async function (ignore the promise)
+ * benchmarks: add e2e becnhmark with as many request as possible per second
+    * npm run to display all the commands
+ * mark as latest on npm
+
 ### 3.2.5
 
  * fix: ([#881](https://github.com/node-formidable/formidable/pull/881)) fail earlier when maxFiles is exceeded

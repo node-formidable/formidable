@@ -16,6 +16,7 @@ const unknownTransferEncoding = 1014;
 const maxFilesExceeded = 1015;
 const biggerThanMaxFileSize = 1016;
 const pluginFailed = 1017;
+const cannotCreateDir = 1018;
 
 const FormidableError = class extends Error {
   constructor(message, internalCode, httpCode = 500) {
@@ -44,6 +45,7 @@ export {
   unknownTransferEncoding,
   biggerThanTotalMaxFileSize,
   pluginFailed,
+  cannotCreateDir,
 };
 
 export default FormidableError;
