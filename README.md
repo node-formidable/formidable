@@ -77,14 +77,14 @@ already be included. Check the examples below and the [examples/](https://github
 
 ```
 # v2
-npm install formidable
 npm install formidable@v2
 
 # v3
+npm install formidable
 npm install formidable@v3
 ```
 
-_**Note:** In the near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
+_**Note:** Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
 
 
 ## Examples

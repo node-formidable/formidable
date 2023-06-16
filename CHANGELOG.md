@@ -6,6 +6,7 @@
  * form.parse is an async function (ignore the promise)
  * benchmarks: add e2e becnhmark with as many request as possible per second
     * npm run to display all the commands
+ * mark as latest on npm
 
 ### 3.2.5
 
