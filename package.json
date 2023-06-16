@@ -34,9 +34,9 @@
     "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },
   "dependencies": {
-    "dezalgo": "1.0.3",
-    "hexoid": "1.0.0",
-    "once": "1.4.0"
+    "dezalgo": "^1.0.4",
+    "hexoid": "^1.0.0",
+    "once": "^1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
