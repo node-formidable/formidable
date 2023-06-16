@@ -9,6 +9,14 @@ import path from 'node:path';
 import formidable from '../../src/index.js';
 import * as mod from '../../src/index.js';
 
+
+function requestStub() {
+  return Object.assign(new Stream (), {
+    pause() {},
+    resume() {},
+  });
+}
+
 function getForm(name, opts) {
   return name === 'formidable' ? formidable(opts) : new mod[name](opts);
 }
@@ -188,6 +196,7 @@ function makeHeader(originalFilename) {
           const form = getForm(name, {
             allowEmptyFiles: false,
           });
+          form.req = requestStub();
 
           const part = new Stream();
           part.mimetype = 'text/plain';
@@ -198,8 +207,10 @@ function makeHeader(originalFilename) {
             );
             done();
           });
-          form.onPart(part);
-          part.emit('end');
+          form.onPart(part).then (function () {
+            part.emit('end');
+            form.emit('end');
+          });
         });
       });
 
@@ -214,6 +225,8 @@ function makeHeader(originalFilename) {
           part.mimetype = 'text/plain';
           form.onPart(part);
           part.emit('data', Buffer.alloc(1));
+          part.emit('end');
+          form.emit('end');
           expect(formEmitSpy).not.toBeCalledWith('error');
         });
       });
@@ -228,6 +241,7 @@ function makeHeader(originalFilename) {
         part.mimetype = 'text/plain';
         form.onPart(part);
         part.emit('end');
+        form.emit('end');
         expect(formEmitSpy).not.toBeCalledWith('error');
       });
     });
@@ -237,6 +251,7 @@ function makeHeader(originalFilename) {
         const form = getForm(name, { minFileSize: 5 });
 
         const part = new Stream();
+        const req = requestStub();
         part.mimetype = 'text/plain';
         form.on('error', (error) => {
           expect(error.message).toBe(
@@ -244,8 +259,13 @@ function makeHeader(originalFilename) {
           );
           done();
         });
-        form.onPart(part);
-        part.emit('data', Buffer.alloc(4));
+        form.req = req;
+        form.onPart(part).then(function () {
+          part.emit('data', Buffer.alloc(4));
+          part.emit('end');
+          form.emit('end');
+        });
+
       });
     });
 
@@ -258,6 +278,8 @@ function makeHeader(originalFilename) {
         part.mimetype = 'text/plain';
         form.onPart(part);
         part.emit('data', Buffer.alloc(11));
+        part.emit('end');
+        form.emit('end');
         expect(formEmitSpy).not.toBeCalledWith('error');
       });
     });

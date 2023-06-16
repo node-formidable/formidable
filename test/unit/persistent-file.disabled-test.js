@@ -1,6 +1,8 @@
 import {jest} from '@jest/globals';
+import fs from 'node:fs';
 import PersistentFile from '../../src/PersistentFile.js';
 
+const mockFs = fs;
 const now = new Date();
 const file = new PersistentFile({
   size: 1024,
@@ -13,12 +15,11 @@ const file = new PersistentFile({
   mimetype: 'image/png',
 });
 
-
+const mockFn = jest.fn();
 jest.mock('fs', () => {
-  const fs = jest.requireActual('fs');
   return {
-    ...fs,
-    unlink: jest.fn(),
+    ...mockFs,
+    unlink: mockFn,
   };
 });
 
@@ -41,6 +42,6 @@ describe('PersistentFile', () => {
     file.open();
     file.destroy();
     // eslint-disable-next-line global-require
-    expect(require('fs').unlink).toBeCalled();
+    expect(mockFn).toBeCalled();
   });
 });

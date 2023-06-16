@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [14.x]
+        node: [20.x]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -56,7 +56,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [12.x, 14.x]
+        node: [18.x, 20.x]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -77,5 +77,5 @@ jobs:
       - name: Testing
         run: yarn test:ci
       - name: Sending test coverage to CodeCov
-        if: matrix.os == 'ubuntu-latest' && matrix.node == '14.x'
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '20.x'
         run: echo ${{ matrix.node }} && bash <(curl -s https://codecov.io/bash)

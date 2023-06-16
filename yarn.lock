@@ -660,6 +660,21 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@sindresorhus/slugify@^2.1.0":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/slugify/-/slugify-2.2.1.tgz#fa2e2e25d6e1e74a2eeb5e2c37f5ccc516ed2c4b"
+  integrity sha512-MkngSCRZ8JdSOCHRaYd+D01XhvU3Hjy6MGl06zhOk614hp9EOAp5gIkBeQg7wtmxpitU6eAL4kdiRMcJa2dlrw==
+  dependencies:
+    "@sindresorhus/transliterate" "^1.0.0"
+    escape-string-regexp "^5.0.0"
+
+"@sindresorhus/transliterate@^1.0.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/transliterate/-/transliterate-1.6.0.tgz#2309fff65a868047e6d2dd70dec747c5b36a8327"
+  integrity sha512-doH1gimEu3A46VX6aVxpHTeHrytJAG6HgdxntYnCFiIFHEM/ZGpG8KiZGBChchjQmG0XFIBL552kBTjVcMZXwQ==
+  dependencies:
+    escape-string-regexp "^5.0.0"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -1730,10 +1745,10 @@ detect-newline@3.1.0, detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-dezalgo@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/dezalgo/-/dezalgo-1.0.3.tgz#7f742de066fc748bc8db820569dddce49bf0d456"
-  integrity sha1-f3Qt4Gb8dIvI24IFad3c5Jvw1FY=
+dezalgo@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/dezalgo/-/dezalgo-1.0.4.tgz#751235260469084c132157dfa857f386d4c33d81"
+  integrity sha512-rXSP0bf+5n0Qonsb+SVVfNfIsimO4HEtmnIpPHY8Q1UCzKlQrDMfdobr8nJOOsRgWCyMRqeSBQzmWUMq7zvVig==
   dependencies:
     asap "^2.0.0"
     wrappy "1"
@@ -1890,6 +1905,11 @@ escape-string-regexp@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
   integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
+
+escape-string-regexp@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-5.0.0.tgz#4683126b500b61762f2dbebace1806e8be31b1c8"
+  integrity sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==
 
 escodegen@^2.0.0:
   version "2.0.0"
@@ -2542,7 +2562,7 @@ hasha@^5.0.0:
     is-stream "^2.0.0"
     type-fest "^0.8.0"
 
-hexoid@1.0.0:
+hexoid@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/hexoid/-/hexoid-1.0.0.tgz#ad10c6573fb907de23d9ec63a711267d9dc9bc18"
   integrity sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==
@@ -4022,7 +4042,7 @@ on-finished@^2.3.0, on-finished@~2.3.0:
   dependencies:
     ee-first "1.1.1"
 
-once@1.4.0, once@^1.3.0, once@^1.3.1, once@^1.4.0:
+once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=

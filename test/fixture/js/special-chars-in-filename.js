@@ -18,7 +18,7 @@ function expect(originalFilename, fixtureName) {
 }
 
 const osx_chrome_13_http = expect(' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'osx-chrome-13');
-const osx_firefox_3_6_http = expect(' ? % * | " < > . ? ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'osx-firefox-3.6');
+const osx_firefox_3_6_http = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'osx-firefox-3.6');
 
 const xp_ie_7_http = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'xp-ie-7');
 const xp_ie_8_http = expect(' ? % * | " < > . ☃ ; \' @ # $ ^ & ( ) - _ = + { } [ ] ` ~.txt', 'xp-ie-8');

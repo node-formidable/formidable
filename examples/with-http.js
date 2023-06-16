@@ -12,22 +12,35 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     // parse a file upload
     const form = formidable({
-      // uploadDir: `uploads`,
+      defaultInvalidName: 'invalid',
+      uploadDir: `uploads`,
       keepExtensions: true,
+      createDirsFromUploads: true,
+      allowEmptyFiles: true,
+      minFileSize: 0,
       filename(name, ext, part, form) {
         /* name basename of the http originalFilename
           ext with the dot ".txt" only if keepExtensions is true
          */
-        // slugify to avoid invalid filenames
-        // substr to define a maximum 
-        return `${slugify(name)}.${slugify(ext, {separator: ''})}`.substr(0, 100);
-        // return 'yo.txt'; // or completely different name
+        // originalFilename will have slashes with relative path if a
+        // directory was uploaded
+        const {originalFilename} = part;
+        if (!originalFilename) {
+          return 'invalid';
+        }
+        
+        // return 'yo.txt'; // or completly different name
         // return 'z/yo.txt'; // subdirectory
+        return originalFilename.split("/").map((subdir) => {
+          return slugify(subdir, {separator: ''});  // slugify to avoid invalid filenames
+        }).join("/").substr(0, 100); // substr to define a maximum 
       },
-      // filter: function ({name, originalFilename, mimetype}) {
-      //   // keep only images
-      //   return mimetype && mimetype.includes("image");
-      // }
+      filter: function ({name, originalFilename, mimetype}) {
+        return Boolean(originalFilename);
+        // keep only images
+        // return mimetype?.includes("image");
+      }
+
       // maxTotalFileSize: 4000,
       // maxFileSize: 1000,
 
@@ -53,7 +66,8 @@ const server = http.createServer((req, res) => {
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
       <div>Text field title: <input type="text" name="title" /></div>
-      <div>File: <input type="file" name="multipleFiles" multiple="multiple" /></div>
+      <div>File: <input type="file" name="multipleFiles" multiple /></div>
+      <div>Folders: <input type="file" name="folders" webkitdirectory directory multiple /></div>
       <input type="submit" value="Upload" />
     </form>
 

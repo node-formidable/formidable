@@ -77,14 +77,14 @@ already be included. Check the examples below and the [examples/](https://github
 
 ```
 # v2
-npm install formidable
 npm install formidable@v2
 
 # v3
+npm install formidable
 npm install formidable@v3
 ```
 
-_**Note:** In the near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
+_**Note:** Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
 
 
 ## Examples
@@ -343,6 +343,8 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 
 - `options.filter` **{function}** - default function that always returns true.
   Use it to filter files before they are uploaded. Must return a boolean.
+
+- `options.createDirsFromUploads` **{boolean}** - default false. If true, makes direct folder uploads possible. Use `<input type="file" name="folders" webkitdirectory directory multiple>` to create a form to upload folders. Has to be used with the options `options.uploadDir` and `options.filename` where `options.filename` has to return a string with the character `/` for folders to be created. The base will be `options.uploadDir`.
 
 
 #### `options.filename`  **{function}** function (name, ext, part, form) -> string
