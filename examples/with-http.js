@@ -28,12 +28,12 @@ const server = http.createServer((req, res) => {
         if (!originalFilename) {
           return 'invalid';
         }
-        return originalFilename.split("/").map((subdir) => {
-          return slugify(subdir, {separator: ''});  // slugify to avoid invalid filenames
-        }).join("/").substr(0, 100); // substr to define a maximum 
         
         // return 'yo.txt'; // or completly different name
         // return 'z/yo.txt'; // subdirectory
+        return originalFilename.split("/").map((subdir) => {
+          return slugify(subdir, {separator: ''});  // slugify to avoid invalid filenames
+        }).join("/").substr(0, 100); // substr to define a maximum 
       },
       filter: function ({name, originalFilename, mimetype}) {
         return Boolean(originalFilename);

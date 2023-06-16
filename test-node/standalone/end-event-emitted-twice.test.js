@@ -1,7 +1,7 @@
 import {strictEqual} from 'node:assert';
 import { createServer, request } from 'node:http';
 import formidable from '../../src/index.js';
-import test from 'node:test'
+import test from 'node:test';
 
 const PORT = 13539;
 
@@ -18,7 +18,7 @@ test('end event emitted twice', (t,done) => {
       try {
         strictEqual(i, 1, 'end should be emitted once (callback)');
       } catch (e) {
-        done();
+        done(e);
       }
       res.writeHead(200);
       res.end("ok")
