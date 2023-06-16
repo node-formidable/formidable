@@ -27,10 +27,11 @@
     "postreinstall": "yarn setup",
     "setup": "yarn",
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+    "test": "npm run test-jest && npm run test-node",
+    "test-jest": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
     "test-node": "node --test test-node/",
     "pretest:ci": "yarn run pretest",
-    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --coverage"
+    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },
   "dependencies": {
     "dezalgo": "1.0.3",
