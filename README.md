@@ -383,10 +383,9 @@ const options = {
 ```
 
 
-### .parse(request, callback)
+### .parse(request, ?callback)
 
-Parses an incoming Node.js `request` containing form data. If `callback` is
-provided, all fields and files are collected and passed to the callback.
+Parses an incoming Node.js `request` containing form data. If `callback` is not provided a promise is returned.
 
 ```js
 const form = formidable({ uploadDir: __dirname });
@@ -395,6 +394,9 @@ form.parse(req, (err, fields, files) => {
   console.log('fields:', fields);
   console.log('files:', files);
 });
+
+// with Promise
+const [fields, files] = await form.parse(req);
 ```
 
 You may overwrite this method if you are interested in directly accessing the
