@@ -1,8 +1,14 @@
 # Changelog
 
+### 3.4.0
+
+ * feature: ([#940](https://github.com/node-formidable/formidable/pull/940)) form.parse returns a promise if no callback is provided
+ * it resolves with and array `[fields, files]`
+
+
 ### 3.3.2
 
- * feature: ([#855](https://github.com/node-formidable/formidable/pull/855))add options.createDirsFromUploads, see README for usage
+ * feature: ([#855](https://github.com/node-formidable/formidable/pull/855)) add options.createDirsFromUploads, see README for usage
  * form.parse is an async function (ignore the promise)
  * benchmarks: add e2e becnhmark with as many request as possible per second
     * npm run to display all the commands

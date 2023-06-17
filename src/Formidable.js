@@ -178,40 +178,55 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
+  // returns a promise if no callback is provided
   async parse(req, cb) {
     this.req = req;
+    let promise;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
-    if (cb) {
-      const callback = once(dezalgo(cb));
-      this.fields = {};
-      const files = {};
-
-      this.on('field', (name, value) => {
-        if (this.type === 'multipart' || this.type === 'urlencoded') {
-          if (!hasOwnProp(this.fields, name)) {
-            this.fields[name] = [value];
-          } else {
-            this.fields[name].push(value);
-          }
+    if (!cb) {
+      let resolveRef;
+      let rejectRef;
+      promise = new Promise((resolve, reject) => {     
+        resolveRef = resolve;
+        rejectRef = reject;
+      });
+      cb = (err, fields, files) => {
+        if (err) {
+          rejectRef(err);
         } else {
-          this.fields[name] = value;
+          resolveRef([fields, files]);
         }
-      });
-      this.on('file', (name, file) => {
-        if (!hasOwnProp(files, name)) {
-          files[name] = [file];
-        } else {
-          files[name].push(file);
-        }
-      });
-      this.on('error', (err) => {
-        callback(err, this.fields, files);
-      });
-      this.on('end', () => {
-        callback(null, this.fields, files);
-      });
+      }
     }
+    const callback = once(dezalgo(cb));
+    this.fields = {};
+    const files = {};
+
+    this.on('field', (name, value) => {
+      if (this.type === 'multipart' || this.type === 'urlencoded') {
+        if (!hasOwnProp(this.fields, name)) {
+          this.fields[name] = [value];
+        } else {
+          this.fields[name].push(value);
+        }
+      } else {
+        this.fields[name] = value;
+      }
+    });
+    this.on('file', (name, file) => {
+      if (!hasOwnProp(files, name)) {
+        files[name] = [file];
+      } else {
+        files[name].push(file);
+      }
+    });
+    this.on('error', (err) => {
+      callback(err, this.fields, files);
+    });
+    this.on('end', () => {
+      callback(null, this.fields, files);
+    });
 
     // Parse headers and setup the parser, ready to start listening for data.
     await this.writeHeaders(req.headers);
@@ -240,7 +255,9 @@ class IncomingForm extends EventEmitter {
           this._parser.end();
         }
       });
-
+    if (promise) {
+      return promise;
+    }
     return this;
   }
 
