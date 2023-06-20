@@ -343,7 +343,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   newFilename. Must return a string. Will be joined with options.uploadDir.
 
 - `options.filter` **{function}** - default function that always returns true.
-  Use it to filter files before they are uploaded. Must return a boolean.
+  Use it to filter files before they are uploaded. Must return a boolean. Will not make the form.parse error
 
 - `options.createDirsFromUploads` **{boolean}** - default false. If true, makes direct folder uploads possible. Use `<input type="file" name="folders" webkitdirectory directory multiple>` to create a form to upload folders. Has to be used with the options `options.uploadDir` and `options.filename` where `options.filename` has to return a string with the character `/` for folders to be created. The base will be `options.uploadDir`.
 
@@ -371,13 +371,32 @@ form.bytesExpected;
 
 #### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
 
-**Note:** use an outside variable to cancel all uploads upon the first error 
+Behaves like Array.filter: Returning false will simply ignore the file and go to the next.
 
 ```js
 const options = {
   filter: function ({name, originalFilename, mimetype}) {
     // keep only images
     return mimetype && mimetype.includes("image");
+  }
+};
+```
+
+**Note:** use an outside variable to cancel all uploads upon the first error
+
+**Note:** use form.emit('error') to make form.parse error
+
+```js
+let cancelUploads = false;// create variable at the same scope as form
+const options = {
+  filter: function ({name, originalFilename, mimetype}) {
+    // keep only images
+    const valid = mimetype && mimetype.includes("image");
+    if (!valid) {
+      form.emit('error', new formidableErrors.default('invalid type', 0, 400)); // optional make form.parse error
+      cancelUploads = true; //variable to make filter return false after the first problem
+    }
+    return valid && !cancelUploads;
   }
 };
 ```
