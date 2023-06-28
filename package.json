@@ -1,21 +1,51 @@
 {
   "name": "formidable",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
   "funding": "https://ko-fi.com/tunnckoCore/commissions",
   "repository": "node-formidable/formidable",
   "type": "module",
-  "main": "./src/index.js",
+  "main": "./dist/index.cjs",
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./src/index.js"
+      },
+      "require": {
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.cjs"
+    },
+    "./src/helpers/*.js": {
+      "import": {
+        "default": "./src/helpers/*.js"
+      },
+      "require": {
+        "default": "./dist/helpers/*.cjs"
+      }
+    },
+    "./src/parsers/*.js": {
+      "import": {
+        "default": "./src/parsers/*.js"
+      },
+      "require": {
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "publishConfig": {
     "access": "public",
     "tag": "latest"
   },
   "scripts": {
+    "build-package": "rollup --config ./tool/rollup.config.js",
+    "prepublishOnly": "npm t && npm run clean && npm run build",
     "bench": "node benchmark",
     "bench2prep": "node benchmark/server.js",
     "bench2": "bombardier --body-file=\"./README.md\" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload",
@@ -27,6 +57,7 @@
     "postreinstall": "yarn setup",
     "setup": "yarn",
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
+    "test-specific": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
     "test": "npm run test-jest && npm run test-node",
     "test-jest": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
     "test-node": "node --test test-node/",
@@ -41,6 +72,8 @@
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@sindresorhus/slugify": "^2.1.0",
     "@tunnckocore/prettier-config": "1.3.8",
     "del-cli": "3.0.0",
@@ -59,6 +92,7 @@
     "nyc": "15.1.0",
     "prettier": "2.0.5",
     "prettier-plugin-pkgjson": "0.2.8",
+    "rollup": "^3.25.3",
     "supertest": "6.1.6"
   },
   "jest": {
