@@ -9,10 +9,31 @@
   "type": "module",
   "main": "./dist/index.cjs",
   "exports": {
-    ".": "./src/index.js",
-    "./index.cjs": "./dist/index.cjs",
-    "./src/helpers/*.js": "./src/helpers/*.js",
-    "./src/parsers/*.js": "./src/parsers/*.js"
+    ".": {
+      "import": {
+        "default": "./src/index.js"
+      },
+      "require": {
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.cjs"
+    },
+    "./src/helpers/*.js": {
+      "import": {
+        "default": "./src/helpers/*.js"
+      },
+      "require": {
+        "default": "./dist/helpers/*.cjs"
+      }
+    },
+    "./src/parsers/*.js": {
+      "import": {
+        "default": "./src/parsers/*.js"
+      },
+      "require": {
+        "default": "./dist/index.cjs"
+      }
+    }
   },
   "files": [
     "src",
