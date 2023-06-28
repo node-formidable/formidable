@@ -8,10 +8,10 @@ import formidable from '../../src/index.js';
 let ok = 0;
 let errors = 0;
 
-const PORT = 0;
+const PORT = 89;
 
 test('keep alive error', (done) => {
-  const server = createServer((req, res) => {
+  const server = createServer(async (req, res) => {
     const form = formidable();
     form.on('error', () => {
       errors += 1;
@@ -23,13 +23,35 @@ test('keep alive error', (done) => {
       res.writeHead(200);
       res.end();
     });
-    form.parse(req);
+    try {
+      await form.parse(req);
+      // for client two
+      strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
+
+      server.close();
+      done();
+    } catch (formidableError) {
+      strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
+
+      const clientTwo = createConnection(PORT);
+
+      // correct post upload (with hyphens)
+      clientTwo.write(
+        'POST /upload-test HTTP/1.1\r\n' +
+          'Host: localhost\r\n' +
+          'Connection: keep-alive\r\n' +
+          'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
+          'Content-Length: 13\r\n\r\n' +
+          '------aaa--\r\n',
+      );
+      clientTwo.end();
+
+    }
   });
 
   server.listen(PORT, () => {
-    const chosenPort = server.address().port;
 
-    const client = createConnection(chosenPort);
+    const client = createConnection(PORT);
 
     // first send malformed (boundary / hyphens) post upload
     client.write(
@@ -47,29 +69,6 @@ test('keep alive error', (done) => {
       client.write(buf);
       client.end();
 
-      setTimeout(() => {
-        strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
-
-        const clientTwo = createConnection(chosenPort);
-
-        // correct post upload (with hyphens)
-        clientTwo.write(
-          'POST /upload-test HTTP/1.1\r\n' +
-            'Host: localhost\r\n' +
-            'Connection: keep-alive\r\n' +
-            'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
-            'Content-Length: 13\r\n\r\n' +
-            '------aaa--\r\n',
-        );
-        clientTwo.end();
-
-        setTimeout(() => {
-          strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
-
-          server.close();
-          done();
-        }, 300);
-      }, 200);
     }, 150);
   });
 });
