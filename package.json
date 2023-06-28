@@ -12,7 +12,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "v2"
+    "tag": "v2-latest"
   },
   "scripts": {
     "bench": "node benchmark",
