@@ -1,5 +1,10 @@
 # Changelog
 
+### 3.5.0
+
+ * feature: ([#944](https://github.com/node-formidable/formidable/pull/944)) Dual package: Can be imported as ES module and required as commonjs module
+
+
 ### 3.4.0
 
  * feature: ([#940](https://github.com/node-formidable/formidable/pull/940)) form.parse returns a promise if no callback is provided

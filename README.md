@@ -68,6 +68,8 @@ rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
 
 ## Install
 
+This package is a dual ESM/commonjs package.
+
 This project requires `Node.js >= 10.13`. Install it using
 [yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly
 recommend to use Yarn when you think to contribute to this project._
