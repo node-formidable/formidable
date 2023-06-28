@@ -45,7 +45,7 @@
   },
   "scripts": {
     "build-package": "rollup --config ./tool/rollup.config.js",
-    "prepublishOnly": "npm t && npm run clean && npm run build",
+    "prepublishOnly": "npm run build-package",
     "bench": "node benchmark",
     "bench2prep": "node benchmark/server.js",
     "bench2": "bombardier --body-file=\"./README.md\" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload",

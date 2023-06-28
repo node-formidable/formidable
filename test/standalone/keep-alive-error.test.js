@@ -28,8 +28,9 @@ test('keep alive error', (done) => {
       // for client two
       strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
 
-      server.close();
-      done();
+      server.close(() => {
+        done();
+      });
     } catch (formidableError) {
       strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
 

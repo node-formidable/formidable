@@ -25,8 +25,9 @@ test('connection aborted', (done) => {
         'from .parse() callback: Error event should follow aborted',
       );
 
-      server.close();
-      done();
+      server.close(() => {
+        done();
+      });
     });
   });
 
