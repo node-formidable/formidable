@@ -9,9 +9,10 @@ const UPLOAD_DIR = join(process.cwd(), 'test', 'tmp');
 // OS choosing port
 const PORT = 13530;
 test('content transfer encoding', (done) => {
-  const server = createServer((req, res) => {
-    const form = formidable();
-    form.uploadDir = UPLOAD_DIR;
+  const server = createServer(async (req, res) => {
+    const form = formidable({
+      uploadDir: UPLOAD_DIR
+    });
     form.on('end', () => {
       throw new Error('Unexpected "end" event');
     });
@@ -19,7 +20,10 @@ test('content transfer encoding', (done) => {
       res.writeHead(500);
       res.end(e.message);
     });
-    form.parse(req);
+    try {
+      await form.parse(req);
+    } catch (formidableError) {
+    }
   });
 
   server.listen(PORT, () => {

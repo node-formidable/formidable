@@ -10,13 +10,13 @@ const body = "LS1hN2E2NWI5OS04YTYxLTRlMmMtYjE0OS1mNzNhM2IzNWY5MjMNCmNvbnRlbnQtZG
 const buffer = Buffer.from(body, 'base64url');
 
 test("issue 46", (done) => {
-  const server = createServer((req, res) => {
+  const server = createServer(async (req, res) => {
     // Parse form and write results to response.
     const form = formidable();
-    form.parse(req, (err, fields, files) => {
-      ok(fields.foo, 'should have fields.foo === barry');
-      strictEqual(fields.foo[0], 'barry');
-      server.close();
+    const [fields] = await form.parse(req);
+    ok(fields.foo, 'should have fields.foo === barry');
+    strictEqual(fields.foo[0], 'barry');
+    server.close(() => {
       done();
     });
   });
@@ -35,5 +35,6 @@ test("issue 46", (done) => {
 
     req.write(buffer);
     req.end();
+    
   });
 });
