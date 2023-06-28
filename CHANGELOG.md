@@ -8,7 +8,7 @@
 ### 3.4.0
 
  * feature: ([#940](https://github.com/node-formidable/formidable/pull/940)) form.parse returns a promise if no callback is provided
- * it resolves with and array `[fields, files]`
+ * it resolves with an array `[fields, files]`
 
 
 ### 3.3.2
