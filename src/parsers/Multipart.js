@@ -75,6 +75,8 @@ class MultipartParser extends Transform {
           400,
         ),
       );
+    } else {
+      done();
     }
   }
 
@@ -136,7 +138,8 @@ class MultipartParser extends Transform {
       c = buffer[i];
       switch (state) {
         case STATE.PARSER_UNINITIALIZED:
-          return i;
+          done(i);
+          return;
         case STATE.START:
           index = 0;
           state = STATE.START_BOUNDARY;
@@ -145,7 +148,8 @@ class MultipartParser extends Transform {
             if (c === HYPHEN) {
               flags |= FBOUNDARY.LAST_BOUNDARY;
             } else if (c !== CR) {
-              return i;
+              done(i);
+              return;
             }
             index++;
             break;
@@ -159,7 +163,8 @@ class MultipartParser extends Transform {
               this._handleCallback('partBegin');
               state = STATE.HEADER_FIELD_START;
             } else {
-              return i;
+              done(i);
+              return;
             }
             break;
           }
@@ -190,7 +195,8 @@ class MultipartParser extends Transform {
           if (c === COLON) {
             if (index === 1) {
               // empty header field
-              return i;
+              done(i);
+              return;
             }
             dataCallback('headerField', true);
             state = STATE.HEADER_VALUE_START;
@@ -199,7 +205,8 @@ class MultipartParser extends Transform {
 
           cl = lower(c);
           if (cl < A || cl > Z) {
-            return i;
+            done(i);
+            return;
           }
           break;
         case STATE.HEADER_VALUE_START:
@@ -218,13 +225,15 @@ class MultipartParser extends Transform {
           break;
         case STATE.HEADER_VALUE_ALMOST_DONE:
           if (c !== LF) {
-            return i;
+            done(i);
+return;
           }
           state = STATE.HEADER_FIELD_START;
           break;
         case STATE.HEADERS_ALMOST_DONE:
           if (c !== LF) {
-            return i;
+            done(i);
+            return;
           }
 
           this._handleCallback('headersEnd');
@@ -311,7 +320,8 @@ class MultipartParser extends Transform {
         case STATE.END:
           break;
         default:
-          return i;
+          done(i);
+          return;
       }
     }
 
