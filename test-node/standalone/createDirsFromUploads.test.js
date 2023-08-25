@@ -52,7 +52,8 @@ d\r
       },
       body
     }).then(res => {
-      deepEqual(fs.readdirSync(uploads), ['x']);
+      //may also contain tests from other tests
+      deepEqual(fs.readdirSync(uploads).includes('x'), true);
       deepEqual(fs.readdirSync(`${uploads}/x`), ['y']);
       deepEqual(fs.readdirSync(`${uploads}/x/y`), ['z.txt']);
       strictEqual(res.status, 200);
