@@ -59,6 +59,14 @@ class MultipartParser extends Transform {
     this.flags = 0;
   }
 
+  _endUnexpected() {
+    return new FormidableError(
+      `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
+      errors.malformedMultipart,
+      400,
+    );
+  }
+
   _flush(done) {
     if (
       (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
@@ -68,13 +76,7 @@ class MultipartParser extends Transform {
       this._handleCallback('end');
       done();
     } else if (this.state !== STATE.END) {
-      done(
-        new FormidableError(
-          `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
-          errors.malformedMultipart,
-          400,
-        ),
-      );
+      done(this._endUnexpected());
     } else {
       done();
     }
@@ -138,7 +140,7 @@ class MultipartParser extends Transform {
       c = buffer[i];
       switch (state) {
         case STATE.PARSER_UNINITIALIZED:
-          done(i);
+          done(this._endUnexpected());
           return;
         case STATE.START:
           index = 0;
@@ -148,7 +150,7 @@ class MultipartParser extends Transform {
             if (c === HYPHEN) {
               flags |= FBOUNDARY.LAST_BOUNDARY;
             } else if (c !== CR) {
-              done(i);
+              done(this._endUnexpected());
               return;
             }
             index++;
@@ -163,7 +165,7 @@ class MultipartParser extends Transform {
               this._handleCallback('partBegin');
               state = STATE.HEADER_FIELD_START;
             } else {
-              done(i);
+              done(this._endUnexpected());
               return;
             }
             break;
@@ -195,7 +197,7 @@ class MultipartParser extends Transform {
           if (c === COLON) {
             if (index === 1) {
               // empty header field
-              done(i);
+              done(this._endUnexpected());
               return;
             }
             dataCallback('headerField', true);
@@ -205,7 +207,7 @@ class MultipartParser extends Transform {
 
           cl = lower(c);
           if (cl < A || cl > Z) {
-            done(i);
+            done(this._endUnexpected());
             return;
           }
           break;
@@ -225,14 +227,14 @@ class MultipartParser extends Transform {
           break;
         case STATE.HEADER_VALUE_ALMOST_DONE:
           if (c !== LF) {
-            done(i);
+            done(this._endUnexpected());
 return;
           }
           state = STATE.HEADER_FIELD_START;
           break;
         case STATE.HEADERS_ALMOST_DONE:
           if (c !== LF) {
-            done(i);
+            done(this._endUnexpected());
             return;
           }
 
@@ -320,7 +322,7 @@ return;
         case STATE.END:
           break;
         default:
-          done(i);
+          done(this._endUnexpected());
           return;
       }
     }
