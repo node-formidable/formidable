@@ -59,6 +59,14 @@ class MultipartParser extends Transform {
     this.flags = 0;
   }
 
+  _endUnexpected() {
+    return new FormidableError(
+      `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
+      errors.malformedMultipart,
+      400,
+    );
+  }
+
   _flush(done) {
     if (
       (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
@@ -68,13 +76,9 @@ class MultipartParser extends Transform {
       this._handleCallback('end');
       done();
     } else if (this.state !== STATE.END) {
-      done(
-        new FormidableError(
-          `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
-          errors.malformedMultipart,
-          400,
-        ),
-      );
+      done(this._endUnexpected());
+    } else {
+      done();
     }
   }
 
@@ -136,7 +140,8 @@ class MultipartParser extends Transform {
       c = buffer[i];
       switch (state) {
         case STATE.PARSER_UNINITIALIZED:
-          return i;
+          done(this._endUnexpected());
+          return;
         case STATE.START:
           index = 0;
           state = STATE.START_BOUNDARY;
@@ -145,7 +150,8 @@ class MultipartParser extends Transform {
             if (c === HYPHEN) {
               flags |= FBOUNDARY.LAST_BOUNDARY;
             } else if (c !== CR) {
-              return i;
+              done(this._endUnexpected());
+              return;
             }
             index++;
             break;
@@ -159,7 +165,8 @@ class MultipartParser extends Transform {
               this._handleCallback('partBegin');
               state = STATE.HEADER_FIELD_START;
             } else {
-              return i;
+              done(this._endUnexpected());
+              return;
             }
             break;
           }
@@ -190,7 +197,8 @@ class MultipartParser extends Transform {
           if (c === COLON) {
             if (index === 1) {
               // empty header field
-              return i;
+              done(this._endUnexpected());
+              return;
             }
             dataCallback('headerField', true);
             state = STATE.HEADER_VALUE_START;
@@ -199,7 +207,8 @@ class MultipartParser extends Transform {
 
           cl = lower(c);
           if (cl < A || cl > Z) {
-            return i;
+            done(this._endUnexpected());
+            return;
           }
           break;
         case STATE.HEADER_VALUE_START:
@@ -218,13 +227,15 @@ class MultipartParser extends Transform {
           break;
         case STATE.HEADER_VALUE_ALMOST_DONE:
           if (c !== LF) {
-            return i;
+            done(this._endUnexpected());
+return;
           }
           state = STATE.HEADER_FIELD_START;
           break;
         case STATE.HEADERS_ALMOST_DONE:
           if (c !== LF) {
-            return i;
+            done(this._endUnexpected());
+            return;
           }
 
           this._handleCallback('headersEnd');
@@ -311,7 +322,8 @@ class MultipartParser extends Transform {
         case STATE.END:
           break;
         default:
-          return i;
+          done(this._endUnexpected());
+          return;
       }
     }
 
