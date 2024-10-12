@@ -66,7 +66,7 @@
   },
   "dependencies": {
     "dezalgo": "^1.0.4",
-    "hexoid": "^1.0.0",
+    "hexoid": "^2.0.0",
     "once": "^1.4.0"
   },
   "devDependencies": {
