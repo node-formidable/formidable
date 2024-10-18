@@ -37,7 +37,10 @@
   },
   "files": [
     "src",
-    "dist"
+    "./dist",
+    "./CHANGELOG",
+    "./README.md",
+    "./README_pt_BR.md"
   ],
   "publishConfig": {
     "access": "public",
