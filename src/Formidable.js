@@ -6,7 +6,7 @@ import path from 'node:path';
 import fsPromises from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { StringDecoder } from 'node:string_decoder';
-import hexoid from 'hexoid';
+import { hexoid } from 'hexoid';
 import once from 'once';
 import dezalgo from 'dezalgo';
 import { octetstream, querystring, multipart, json } from './plugins/index.js';
@@ -187,7 +187,7 @@ class IncomingForm extends EventEmitter {
     if (!cb) {
       let resolveRef;
       let rejectRef;
-      promise = new Promise((resolve, reject) => {     
+      promise = new Promise((resolve, reject) => {
         resolveRef = resolve;
         rejectRef = reject;
       });
@@ -380,7 +380,7 @@ class IncomingForm extends EventEmitter {
     part.on('data', (buffer) => {
       this._totalFileSize += buffer.length;
       fileSize += buffer.length;
-      
+
       if (this._totalFileSize > this.options.maxTotalFileSize) {
         this._error(
           new FormidableError(
