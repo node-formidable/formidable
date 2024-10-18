@@ -1,5 +1,9 @@
 # Changelog
 
+### 3.5.2
+
+ * fix: ([#982](https://github.com/node-formidable/formidable/pull/982)) make it easier to import hexoid with webpack
+
 ### 3.5.1
 
  * fix: ([#945](https://github.com/node-formidable/formidable/pull/945)) multipart parser fix: flush or fail always (don't hang)
