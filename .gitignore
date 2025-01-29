@@ -41,6 +41,7 @@
 
 # re-ignores: add here what you want to be ignored again
 test/tmp
+test-node/tmp
 
 # !src/*.js
 # !src/*.ts
