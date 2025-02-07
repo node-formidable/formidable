@@ -7,6 +7,7 @@ import { createReadStream, constants, accessSync } from 'node:fs';
 import { createConnection } from 'node:net';
 import { join } from 'node:path';
 import { createServer } from 'node:http';
+import { pipeline } from 'node:stream';
 import formidable from '../../src/index.js';
 
 
@@ -22,12 +23,12 @@ import * as workarounds from "../fixture/js/workarounds.js";
 import * as specialCharsInFilename from "../fixture/js/special-chars-in-filename.js";
 
 const fixtures = {
-    // encoding,
+    encoding,
     // misc,
     // [`no-filename`]: noFilename,
     // preamble,
     // [`special-chars-in-filename`]: specialCharsInFilename,
-    workarounds, // todo uncomment this and make it work
+    // workarounds, // todo uncomment this and make it work
 };
 
 
@@ -122,7 +123,9 @@ test('fixtures', (testContext, done) => {
         function callback(...args) {
             const realCallback = verifyFixtureOnce;
             verifyFixtureOnce = function callbackFn() { };
-            socket.destroy()
+            if (socket.writable) {
+                socket.destroy();
+            }
             realCallback(...args);
         }
 
@@ -156,6 +159,17 @@ test('fixtures', (testContext, done) => {
         });
 
 
-        file.pipe(socket);
+        // file.pipe(socket, {end: true});
+        pipeline(
+            file,
+            socket,
+            (err) => {
+                if (err) {
+                    console.error('error');
+                } else {
+                    console.log("success")
+                }
+            },
+        );
     }
 });
