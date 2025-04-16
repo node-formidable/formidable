@@ -773,7 +773,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
 
 - [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++
   parser based on formidable
-- [Ryan Dahl](http://twitter.com/ryah) for his work on
+- [Ryan Dahl](https://x.com/rough__sea) for his work on
   [http-parser](http://github.com/ry/http-parser) which heavily inspired the
   initial `multipart_parser.js`.
 
