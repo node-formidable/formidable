@@ -731,7 +731,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
 ## Ports & Créditos
 
 - [multipart-parser](http://github.com/FooBarWidget/multipart-parser): um analisador C++ baseado em formidável
-- [Ryan Dahl](http://twitter.com/ryah) por seu trabalho em
+- [Ryan Dahl](https://x.com/rough__sea) por seu trabalho em
   [http-parser](http://github.com/ry/http-parser) que inspirou fortemente o `multipart_parser.js` inicial.
 
 ## Contribuindo
