@@ -16,6 +16,7 @@ test("issue 46", (done) => {
     const [fields] = await form.parse(req);
     ok(fields.foo, 'should have fields.foo === barry');
     strictEqual(fields.foo[0], 'barry');
+    res.end();
     server.close(() => {
       done();
     });

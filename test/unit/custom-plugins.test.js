@@ -148,13 +148,7 @@ test('.parse throw error when some plugin fail', async () => {
       .post('/')
       .type('application/octet-stream')
       .attach('bin', fromFixtures('file', 'binaryfile.tar.gz'))
-      .end((err) => {
-        if (err.code === 'ECONNRESET') {
-          resolve();
-        } else {
-          reject(err);
-        }
-      });
+      .end((err) => (err ? reject(err) : resolve()));
   });
 });
 

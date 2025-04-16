@@ -38,6 +38,7 @@ test('connection aborted', (done) => {
 
     client.write(
       'POST / HTTP/1.1\r\n' +
+        'Host: localhost\r\n' +
         'Content-Length: 70\r\n' +
         'Content-Type: multipart/form-data; boundary=foo\r\n\r\n',
     );
