@@ -1,23 +1,24 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 
+import { init as cuid2init } from '@paralleldrive/cuid2';
+import dezalgo from 'dezalgo';
+import { EventEmitter } from 'node:events';
+import fsPromises from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import fsPromises from 'node:fs/promises';
-import { EventEmitter } from 'node:events';
 import { StringDecoder } from 'node:string_decoder';
-import { hexoid } from 'hexoid';
 import once from 'once';
-import dezalgo from 'dezalgo';
-import { octetstream, querystring, multipart, json } from './plugins/index.js';
+import FormidableError, * as errors from './FormidableError.js';
 import PersistentFile from './PersistentFile.js';
 import VolatileFile from './VolatileFile.js';
 import DummyParser from './parsers/Dummy.js';
 import MultipartParser from './parsers/Multipart.js';
-import * as errors from './FormidableError.js';
-import FormidableError from './FormidableError.js';
+import { json, multipart, octetstream, querystring } from './plugins/index.js';
 
-const toHexoId = hexoid(25);
+const CUID2_FINGERPRINT = `${process.env.NODE_ENV}-${os.platform()}-${os.hostname()}-${os.machine()}`
+const createId = cuid2init({ length: 25, fingerprint: CUID2_FINGERPRINT.toLowerCase() });
+
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
@@ -622,7 +623,7 @@ class IncomingForm extends EventEmitter {
       };
     } else {
       this._getNewName = (part) => {
-        const name = toHexoId();
+        const name = createId();
 
         if (part && this.options.keepExtensions) {
           const originalFilename =

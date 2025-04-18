@@ -68,8 +68,8 @@
     "test:ci": "node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
     "dezalgo": "^1.0.4",
-    "hexoid": "^2.0.0",
     "once": "^1.4.0"
   },
   "devDependencies": {
