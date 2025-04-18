@@ -7,23 +7,22 @@
 > A Node.js module for parsing form data, especially file uploads.
 
 [![Code style][codestyle-img]][codestyle-url]
-<!-- [![codecoverage][codecov-img]][codecov-url] -->
 [![linux build status][linux-build-img]][build-url]
 [![windows build status][windows-build-img]][build-url]
-[![macos build status][macos-build-img]][build-url]
+<!-- [![codecoverage][codecov-img]][codecov-url] -->
 
 If you have any _how-to_ kind of questions, please read the [Contributing
 Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
 documents.<br /> For bugs reports and feature requests, [please create an
-issue][open-issue-url] or ping [@wgw_eth / @wgw_lol](https://twitter.com/wgw_eth)
+issue][open-issue-url] or ping [@wgw_eth / @wgw_lol][twitter-url]
 at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
 [![Tidelift Subscription][tidelift-img]][tidelift-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
-<!-- [![Renovate App Status][renovateapp-img]][renovateapp-url] -->
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+<!-- [![Renovate App Status][renovateapp-img]][renovateapp-url] -->
 
 This project is [semantically versioned](https://semver.org) and if you want support in migrating between versions you can schedule us for training or support us through donations, so we can prioritize.
 
@@ -861,8 +860,8 @@ Formidable is licensed under the [MIT License][license-url].
 [renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
 [prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
 [prs-welcome-url]: http://makeapullrequest.com
-[twitter-url]: https://twitter.com/3a1fcBx0
-[twitter-img]: https://badgen.net/twitter/follow/3a1fcBx0?icon=twitter&color=1da1f2&cache=300
+[twitter-url]: https://twitter.com/wgw_eth
+[twitter-img]: https://badgen.net/badge/twitter/follow/wgw_eth?icon=twitter&color=1da1f2&cache=30
 
 [npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
 [npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
