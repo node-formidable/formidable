@@ -8,7 +8,7 @@
 
 [![Code style][codestyle-img]][codestyle-url]
 [![linux build status][linux-build-img]][build-url]
-[![windows build status][windows-build-img]][build-url]
+[![macos build status][macos-build-img]][build-url]
 <!-- [![codecoverage][codecov-img]][codecov-url] -->
 
 If you have any _how-to_ kind of questions, please read the [Contributing
@@ -19,9 +19,9 @@ at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
-[![Tidelift Subscription][tidelift-img]][tidelift-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+<!-- [![Tidelift Subscription][tidelift-img]][tidelift-url] -->
 <!-- [![Renovate App Status][renovateapp-img]][renovateapp-url] -->
 
 This project is [semantically versioned](https://semver.org) and if you want support in migrating between versions you can schedule us for training or support us through donations, so we can prioritize.
@@ -884,8 +884,8 @@ Formidable is licensed under the [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?cache=10&label=linux%20build&icon=github
-[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?cache=10&label=macos%20build&icon=github
+[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?label=linux%20build&icon=github
+[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?label=macos%20build&icon=github
 [windows-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
 [build-url]: https://github.com/node-formidable/formidable/actions
 <!-- prettier-ignore-end -->
