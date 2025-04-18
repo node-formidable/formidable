@@ -1,17 +1,34 @@
 /* eslint-disable max-nested-callbacks */
 
-import { createConnection } from 'node:net';
+import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { strictEqual } from 'node:assert';
+import { createConnection } from 'node:net';
 import formidable from '../../src/index.js';
 
+let server;
+let port = 13539;
 let ok = 0;
 let errors = 0;
 
-const PORT = 89;
+beforeEach(() => {
+  server = createServer();
+  ok = 0;
+  errors = 0;
+  port += 1;
+});
+
+afterEach(() => {
+  return new Promise((resolve) => {
+    if (server.listening) {
+      server.close(() => resolve());
+    } else {
+      resolve();
+    }
+  });
+});
 
 test('keep alive error', (done) => {
-  const server = createServer(async (req, res) => {
+  server.on('request', async (req, res) => {
     const form = formidable();
     form.on('error', () => {
       errors += 1;
@@ -26,15 +43,12 @@ test('keep alive error', (done) => {
     try {
       await form.parse(req);
       // for client two
-      strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
-
-      server.close(() => {
-        done();
-      });
+      assert.strictEqual(ok, 1, `should "ok" count === 1, has: ${ok}`);
+      done();
     } catch (formidableError) {
-      strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
+      assert.strictEqual(errors, 1, `should "errors" === 1, has: ${errors}`);
 
-      const clientTwo = createConnection(PORT);
+      const clientTwo = createConnection(port);
 
       // correct post upload (with hyphens)
       clientTwo.write(
@@ -46,13 +60,11 @@ test('keep alive error', (done) => {
           '------aaa--\r\n',
       );
       clientTwo.end();
-
     }
   });
 
-  server.listen(PORT, () => {
-
-    const client = createConnection(PORT);
+  server.listen(port, () => {
+    const client = createConnection(port);
 
     // first send malformed (boundary / hyphens) post upload
     client.write(
@@ -69,7 +81,6 @@ test('keep alive error', (done) => {
       buf.fill('a');
       client.write(buf);
       client.end();
-
     }, 150);
   });
 });
