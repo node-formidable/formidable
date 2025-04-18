@@ -13,23 +13,17 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v4
 
-  #     - uses: oven-sh/setup-bun@v2
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
   #       with:
-  #         bun-version: latest
-
-  #     - uses: actions/cache@v4
-  #       with:
-  #         path: |
-  #           ~/.bun/install/cache
-  #         key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-bun-
+  #         node-version: '20'
+  #         cache: 'npm'
 
   #     - name: Install dependencies
-  #       run: bun install
+  #       run: npm install
 
   #     - name: Run lint
-  #       run: bun run lint
+  #       run: npm run lint
 
   test:
     name: Test on ${{ matrix.os }}
@@ -37,32 +31,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
+        node-version: ['lts/*']
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/.bun/install/cache
-          key: ${{ matrix.os }}-bun-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ matrix.os }}-bun-
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Run tests
-        run: bun run test
-
-      # - name: Upload coverage reports
-      #   if: matrix.os == 'ubuntu-latest'
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     fail_ci_if_error: true
+        run: npm test

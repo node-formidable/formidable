@@ -61,7 +61,7 @@
     "setup": "yarn",
     "pretest": "del-cli ./test/tmp && make-dir ./test/tmp",
     "test-specific": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
-    "test": "npm run test-jest && npm run test-node",
+    "test": "npm run test-specific && npm run test-jest && npm run test-node",
     "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
     "test-node": "node --disable-warning=ExperimentalWarning --test test-node/**/*.test.js",
     "pretest:ci": "yarn run pretest",
