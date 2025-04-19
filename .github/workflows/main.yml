@@ -1,32 +1,65 @@
-name: CI
+name: ci
+
+# on:
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
+
+# jobs:
+#   # lint:
+#   #   name: Lint
+#   #   runs-on: ubuntu-latest
+#   #   steps:
+#   #     - uses: actions/checkout@v4
+
+#   #     - name: Set up Node.js
+#   #       uses: actions/setup-node@v4
+#   #       with:
+#   #         node-version: '20'
+#   #         cache: 'npm'
+
+#   #     - name: Install dependencies
+#   #       run: npm install
+
+#   #     - name: Run lint
+#   #       run: npm run lint
+
+#   test:
+#     name: Test on ${{ matrix.os }}
+#     runs-on: ${{ matrix.os }}
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         os: [ubuntu-latest, macos-latest]
+#         node-version: ['lts/*']
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Set up Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#           cache: 'npm'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Run tests
+#         run: npm test
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - '*'
   pull_request:
-    branches: [ master ]
+    branches:
+      - '*'
 
 jobs:
-  # lint:
-  #   name: Lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-  #         cache: 'npm'
-
-  #     - name: Install dependencies
-  #       run: npm install
-
-  #     - name: Run lint
-  #       run: npm run lint
-
-  test:
-    name: Test on ${{ matrix.os }}
+  build-and-test:
+    name: Test on ${{ matrix.os }} with Node.js ${{matrix.node-version}}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -35,16 +68,22 @@ jobs:
         node-version: ['lts/*']
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run tests
-        run: npm test
+        run: pnpm test
