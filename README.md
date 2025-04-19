@@ -2,30 +2,47 @@
   <img alt="npm formidable package logo" src="https://raw.githubusercontent.com/node-formidable/formidable/master/logo.png" />
 </p>
 
-# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url] [![Twitter][twitter-img]][twitter-url]
+# formidable [![npm version][npmv-img]][npmv-url] [![MIT license][license-img]][license-url] [![Libera Manifesto][libera-manifesto-img]][libera-manifesto-url]
 
 > A Node.js module for parsing form data, especially file uploads.
 
+> [!CAUTION] As of April 2025, old versions like v1 and v2 are still the most
+> used, while they are deperecated for years -- they are also vulnerable to
+> attacks if you are not implementing it properly. **Please upgrade!** We are
+> here to help, and AI Editors & Agents could help a lot in such codemod-like
+> migrations.
+
+> [!TIP] If you are starting a fresh project, try `formidable@latest` (v3) or
+> you can check out the `formidable-mini` which is a super minimal version of
+> Formidable (not quite configurable yet, but when it does it could become the
+> basis for `formidable@v4`), using web standards like FormData API and File
+> API, and you can use it to stream uploads directly to S3 or other such
+> services.
+
 [![Code style][codestyle-img]][codestyle-url]
-[![codecoverage][codecov-img]][codecov-url]
 [![linux build status][linux-build-img]][build-url]
-[![windows build status][windows-build-img]][build-url]
 [![macos build status][macos-build-img]][build-url]
 
 If you have any _how-to_ kind of questions, please read the [Contributing
 Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
 documents.<br /> For bugs reports and feature requests, [please create an
-issue][open-issue-url] or ping [@tunnckoCore / @3a1FcBx0](https://twitter.com/3a1FcBx0)
-at Twitter.
+issue][open-issue-url] or ping
+[@wgw_eth / @wgw_lol](https://twitter.com/wgw_eth) at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
+[![Minimum Required Nodejs][nodejs-img]][npmv-url]
+[![Buy me a Kofi][kofi-img]][kofi-url]
+[![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+[![Twitter][twitter-img]][twitter-url]
+
+<!-- [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
 [![Tidelift Subcsription][tidelift-img]][tidelift-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
 [![Renovate App Status][renovateapp-img]][renovateapp-url]
-[![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+[![Make A Pull Request][prs-welcome-img]][prs-welcome-url] -->
 
-This project is [semantically versioned](https://semver.org) and available as
+<!-- This project is [semantically versioned](https://semver.org) and available as
 part of the [Tidelift Subscription][tidelift-url] for professional grade
 assurances, enhanced support and security.
 [Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise)
@@ -34,14 +51,16 @@ _The maintainers of `formidable` and thousands of other packages are working
 with Tidelift to deliver commercial support and maintenance for the Open Source
 dependencies you use to build your applications. Save time, reduce risk, and
 improve code health, while paying the maintainers of the exact dependencies you
-use._
+use._ -->
 
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
 
 ## Project Status: Maintained
 
-_Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
+_Check
+[VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md)
+for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
@@ -73,7 +92,9 @@ This project requires `Node.js >= 10.13`. Install it using
 recommend to use Yarn when you think to contribute to this project._
 
 This is a low-level package, and if you're using a high-level framework it _may_
-already be included. Check the examples below and the [examples/](https://github.com/node-formidable/formidable/tree/master/examples) folder.
+already be included. Check the examples below and the
+[examples/](https://github.com/node-formidable/formidable/tree/master/examples)
+folder.
 
 ```sh
 # v2
@@ -85,8 +106,8 @@ npm install formidable@v2
 npm install formidable@v3
 ```
 
-_**Note:** In near future v3 will be published on the `latest` NPM dist-tag. Future not ready releases will continue to be published on `canary` dist-tag._
-
+_**Note:** In near future v3 will be published on the `latest` NPM dist-tag.
+Future not ready releases will continue to be published on `canary` dist-tag._
 
 ## Examples
 
@@ -325,12 +346,13 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   uploaded file.
 - `options.maxFileSize` **{number}** - default `200 * 1024 * 1024` (200mb);
   limit the size of uploaded file.
-- `options.maxFields` **{number}** - default `1000`; limit the number of fields, set 0 for unlimited
+- `options.maxFields` **{number}** - default `1000`; limit the number of fields,
+  set 0 for unlimited
 - `options.maxFieldsSize` **{number}** - default `20 * 1024 * 1024` (20mb);
   limit the amount of memory all fields together (except files) can allocate in
   bytes.
-- `options.hashAlgorithm` **{string | false}** - default `false`; include checksums calculated
-  for incoming files, set this to some hash algorithm, see
+- `options.hashAlgorithm` **{string | false}** - default `false`; include
+  checksums calculated for incoming files, set this to some hash algorithm, see
   [crypto.createHash](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options)
   for available algorithms
 - `options.fileWriteStreamHandler` **{function}** - default `null`, which by
@@ -354,8 +376,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.filter` **{function}** - default function that always returns true.
   Use it to filter files before they are uploaded. Must return a boolean.
 
-
-#### `options.filename`  **{function}** function (name, ext, part, form) -> string
+#### `options.filename` **{function}** function (name, ext, part, form) -> string
 
 _**Note:** If this size of combined fields, or size of some file is exceeded, an
 `'error'` event is fired._
@@ -370,19 +391,18 @@ form.bytesReceived;
 form.bytesExpected;
 ```
 
-#### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
+#### `options.filter` **{function}** function ({name, originalFilename, mimetype}) -> boolean
 
-**Note:** use an outside variable to cancel all uploads upon the first error 
+**Note:** use an outside variable to cancel all uploads upon the first error
 
 ```js
 const options = {
-  filter: function ({name, originalFilename, mimetype}) {
+  filter: function ({ name, originalFilename, mimetype }) {
     // keep only images
-    return mimetype && mimetype.includes("image");
-  }
+    return mimetype && mimetype.includes('image');
+  },
 };
 ```
-
 
 ### .parse(request, callback)
 
@@ -405,40 +425,40 @@ multipart stream. Doing so will disable any `'field'` / `'file'` events
 processing which would occur otherwise, making you fully responsible for
 handling the processing.
 
-About `uploadDir`, given the following directory structure 
+About `uploadDir`, given the following directory structure
+
 ```
 project-name
 ├── src
 │   └── server.js
-│       
+│
 └── uploads
     └── image.jpg
 ```
 
 `__dirname` would be the same directory as the source file itself (src)
 
-
 ```js
- `${__dirname}/../uploads`
+`${__dirname}/../uploads`;
 ```
 
 to put files in uploads.
 
-Omitting `__dirname` would make the path relative to the current working directory. This would be the same if server.js is launched from src but not project-name.
-
+Omitting `__dirname` would make the path relative to the current working
+directory. This would be the same if server.js is launched from src but not
+project-name.
 
 `null` will use default which is `os.tmpdir()`
 
-Note: If the directory does not exist, the uploaded files are __silently discarded__. To make sure it exists:
+Note: If the directory does not exist, the uploaded files are **silently
+discarded**. To make sure it exists:
 
 ```js
-import {createNecessaryDirectoriesSync} from "filesac";
-
+import { createNecessaryDirectoriesSync } from 'filesac';
 
 const uploadPath = `${__dirname}/../uploads`;
 createNecessaryDirectoriesSync(`${uploadPath}/x`);
 ```
-
 
 In the example below, we listen on couple of events and direct them to the
 `data` listener, so you can do whatever you choose there, based on whether its
@@ -468,30 +488,33 @@ form.once('end', () => {
 });
 
 // If you want to customize whatever you want...
-form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) => {
-  if (name === 'partBegin') {
-  }
-  if (name === 'partData') {
-  }
-  if (name === 'headerField') {
-  }
-  if (name === 'headerValue') {
-  }
-  if (name === 'headerEnd') {
-  }
-  if (name === 'headersEnd') {
-  }
-  if (name === 'field') {
-    console.log('field name:', key);
-    console.log('field value:', value);
-  }
-  if (name === 'file') {
-    console.log('file:', formname, value);
-  }
-  if (name === 'fileBegin') {
-    console.log('fileBegin:', formname, value);
-  }
-});
+form.on(
+  'data',
+  ({ name, key, value, buffer, start, end, formname, ...more }) => {
+    if (name === 'partBegin') {
+    }
+    if (name === 'partData') {
+    }
+    if (name === 'headerField') {
+    }
+    if (name === 'headerValue') {
+    }
+    if (name === 'headerEnd') {
+    }
+    if (name === 'headersEnd') {
+    }
+    if (name === 'field') {
+      console.log('field name:', key);
+      console.log('field value:', value);
+    }
+    if (name === 'file') {
+      console.log('file:', formname, value);
+    }
+    if (name === 'fileBegin') {
+      console.log('fileBegin:', formname, value);
+    }
+  },
+);
 ```
 
 ### .use(plugin: Plugin)
@@ -603,7 +626,7 @@ export interface File {
 
   // The name this file had according to the uploading client.
   file.originalFilename: string | null;
-  
+
   // calculated based on options provided
   file.newFilename: string | null;
 
@@ -653,12 +676,12 @@ file system.
 
 ```js
 form.on('fileBegin', (formName, file) => {
-    // accessible here 
-    // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
-    // file.originalFilename http filename or null if there was a parsing error
-    // file.newFilename generated hexoid or what options.filename returned
-    // file.filepath default pathnme as per options.uploadDir and options.filename
-    // file.filepath = CUSTOM_PATH // to change the final path
+  // accessible here
+  // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
+  // file.originalFilename http filename or null if there was a parsing error
+  // file.newFilename generated hexoid or what options.filename returned
+  // file.filepath default pathnme as per options.uploadDir and options.filename
+  // file.filepath = CUSTOM_PATH // to change the final path
 });
 ```
 
@@ -669,9 +692,9 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 
 ```js
 form.on('file', (formname, file) => {
-    // same as fileBegin, except
-    // it is too late to change file.filepath
-    // file.hash is available if options.hash was used
+  // same as fileBegin, except
+  // it is too late to change file.filepath
+  // file.hash is available if options.hash was used
 });
 ```
 
@@ -766,8 +789,10 @@ Thanks goes to these wonderful people
 From a [Felix blog post](https://felixge.de/2013/03/11/the-pull-request-hack/):
 
 - [Sven Lito](https://github.com/svnlto) for fixing bugs and merging patches
-- [egirshov](https://github.com/egirshov) for contributing many improvements to the node-formidable multipart parser
-- [Andrew Kelley](https://github.com/superjoe30) for also helping with fixing bugs and making improvements
+- [egirshov](https://github.com/egirshov) for contributing many improvements to
+  the node-formidable multipart parser
+- [Andrew Kelley](https://github.com/superjoe30) for also helping with fixing
+  bugs and making improvements
 - [Mike Frey](https://github.com/mikefrey) for contributing JSON support
 
 ## License
@@ -795,8 +820,8 @@ Formidable is licensed under the [MIT License][license-url].
 [renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
 [prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
 [prs-welcome-url]: http://makeapullrequest.com
-[twitter-url]: https://twitter.com/3a1fcBx0
-[twitter-img]: https://badgen.net/twitter/follow/3a1fcBx0?icon=twitter&color=1da1f2&cache=300
+[twitter-url]: https://twitter.com/wgw_eth
+[twitter-img]: https://badgen.net/badge/twitter/follow/wgw_eth?icon=twitter&color=1da1f2&cache=30
 
 [npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
 [npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
@@ -819,8 +844,8 @@ Formidable is licensed under the [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/ubuntu?cache=300&label=linux%20build&icon=github
-[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/macos?cache=300&label=macos%20build&icon=github
+[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?label=linux%20build&icon=github
+[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?label=macos%20build&icon=github
 [windows-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
-[build-url]: https://github.com/node-formidable/formidable/actions?query=workflow%3Anodejs
+[build-url]: https://github.com/node-formidable/formidable/actions
 <!-- prettier-ignore-end -->
