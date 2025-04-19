@@ -8,17 +8,44 @@ const net = require('net');
 const path = require('path');
 const http = require('http');
 const assert = require('assert');
+const getPort = require('get-port');
 
 const formidable = require('../../src/index');
 
-const PORT = 13534;
+let server;
+const PORT = await getPort();
 const CWD = process.cwd();
 const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
 const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
 const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
 
+function randomPort(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+beforeEach(() => {
+  server = http.createServer();
+});
+
+afterEach(
+  () =>
+    new Promise((resolve) => {
+      server.close(() => {
+        server = null;
+        resolve();
+      });
+      // if (server.listening) {
+      //   server.close(() => {
+      //     server = null;
+      //     resolve();
+      //   });
+      // } else {
+      //   resolve();
+      // }
+    }),
+);
+
 test('fixtures', (done) => {
-  const server = http.createServer();
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
@@ -69,7 +96,10 @@ test('fixtures', (done) => {
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.originalFilename, expectedPart.originalFilename);
+          assert.strictEqual(
+            file.originalFilename,
+            expectedPart.originalFilename,
+          );
 
           if (expectedPart.sha1) {
             assert.strictEqual(
@@ -104,7 +134,10 @@ test('fixtures', (done) => {
 
       const parts = [];
       form
-        .on('error', callback)
+        .on('error', (er) => {
+          callback(er);
+          // done(er);
+        })
         .on('fileBegin', (name, value) => {
           parts.push({ type: 'file', name, value });
         })
@@ -114,6 +147,7 @@ test('fixtures', (done) => {
         .on('end', () => {
           res.end();
           callback(null, parts);
+          done();
         });
     });
 

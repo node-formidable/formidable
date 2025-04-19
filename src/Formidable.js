@@ -5,14 +5,21 @@
 
 const os = require('os');
 const path = require('path');
-const hexoid = require('hexoid');
+const cuid2 = require('@paralleldrive/cuid2');
 const once = require('once');
 const dezalgo = require('dezalgo');
 const { EventEmitter } = require('events');
 const { StringDecoder } = require('string_decoder');
 const qs = require('qs');
 
-const toHexoId = hexoid(25);
+const CUID2_FINGERPRINT = `${
+  process.env.NODE_ENV
+}-${os.platform()}-${os.hostname()}-${os.machine()}`;
+const createId = cuid2.init({
+  length: 25,
+  fingerprint: CUID2_FINGERPRINT.toLowerCase(),
+});
+
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
@@ -27,7 +34,7 @@ const DEFAULT_OPTIONS = {
   enabledPlugins: ['octetstream', 'querystring', 'multipart', 'json'],
   fileWriteStreamHandler: null,
   defaultInvalidName: 'invalid-name',
-  filter: function () {
+  filter() {
     return true;
   },
 };
@@ -541,8 +548,6 @@ class IncomingForm extends EventEmitter {
     return basename.slice(firstDot, lastDot) + extname;
   }
 
-
-
   _joinDirectoryName(name) {
     const newPath = path.join(this.uploadDir, name);
 
@@ -571,15 +576,16 @@ class IncomingForm extends EventEmitter {
       };
     } else {
       this._getNewName = (part) => {
-        const name = toHexoId();
+        const name = createId();
 
         if (part && this.options.keepExtensions) {
-          const originalFilename = typeof part === 'string' ? part : part.originalFilename;
+          const originalFilename =
+            typeof part === 'string' ? part : part.originalFilename;
           return `${name}${this._getExtension(originalFilename)}`;
         }
-    
+
         return name;
-      }
+      };
     }
   }
 

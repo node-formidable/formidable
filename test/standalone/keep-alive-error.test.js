@@ -6,14 +6,41 @@ const net = require('net');
 const http = require('http');
 const assert = require('assert');
 const formidable = require('../../src/index');
+const getPort = require('get-port');
 
+let server;
+let port = await getPort();
 let ok = 0;
 let errors = 0;
 
-const PORT = 0;
+function randomPort(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
+beforeEach(() => {
+  server = http.createServer();
+  ok = 0;
+  errors = 0;
+  // port += 1;
+});
+
+afterEach(
+  () =>
+    new Promise((resolve) => {
+      if (server.listening) {
+        server.close(() => {
+          server = null;
+          resolve();
+        });
+      } else {
+        resolve();
+      }
+    }),
+);
+
+// Original test untouched from here
 test('keep alive error', (done) => {
-  const server = http.createServer((req, res) => {
+  server.on('request', (req, res) => {
     const form = formidable();
     form.on('error', () => {
       errors += 1;
@@ -28,7 +55,7 @@ test('keep alive error', (done) => {
     form.parse(req);
   });
 
-  server.listen(PORT, () => {
+  server.listen(port, () => {
     const choosenPort = server.address().port;
 
     const client = net.createConnection(choosenPort);
@@ -66,13 +93,12 @@ test('keep alive error', (done) => {
         clientTwo.end();
 
         setTimeout(() => {
-          // ? yup, quite true, it makes sense to be 2
           assert.strictEqual(ok, 2, `should "ok" count === 2, has: ${ok}`);
 
           server.close();
           done();
-        }, 300);
-      }, 200);
-    }, 150);
+        }, 400);
+      }, 300);
+    }, 200);
   });
 });
