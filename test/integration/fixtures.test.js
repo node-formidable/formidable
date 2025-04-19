@@ -8,20 +8,17 @@ const net = require('net');
 const path = require('path');
 const http = require('http');
 const assert = require('assert');
-const getPort = require('get-port');
 
+const dezalgo = require('dezalgo');
+const { once } = require('process');
 const formidable = require('../../src/index');
 
 let server;
-const PORT = await getPort();
+const PORT = 13536;
 const CWD = process.cwd();
 const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
 const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
 const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
-
-function randomPort(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 
 beforeEach(() => {
   server = http.createServer();
@@ -34,18 +31,12 @@ afterEach(
         server = null;
         resolve();
       });
-      // if (server.listening) {
-      //   server.close(() => {
-      //     server = null;
-      //     resolve();
-      //   });
-      // } else {
-      //   resolve();
-      // }
     }),
 );
 
 test('fixtures', (done) => {
+  const callback = once(dezalgo(done));
+  jest.setTimeout(8000);
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
@@ -86,7 +77,9 @@ test('fixtures', (done) => {
     uploadFixture(fixtureName, (err, parts) => {
       if (err) {
         err.fixtureName = fixtureName;
-        throw err;
+        // throw err;
+        callback(err);
+        return;
       }
 
       fixture.forEach((expectedPart, i) => {
@@ -115,7 +108,7 @@ test('fixtures', (done) => {
     });
   }
 
-  function uploadFixture(fixtureName, cb) {
+  function uploadFixture(fixtureName, cback) {
     server.once('request', (req, res) => {
       const form = formidable({
         uploadDir: UPLOAD_DIR,
@@ -124,13 +117,13 @@ test('fixtures', (done) => {
       });
       form.parse(req);
 
-      function callback(...args) {
-        const realCallback = cb;
-        // eslint-disable-next-line no-param-reassign
-        cb = function calbackFn() {};
+      // function callback(...args) {
+      //   const realCallback = cb;
+      //   // eslint-disable-next-line no-param-reassign
+      //   cb = function calbackFn() {};
 
-        realCallback(...args);
-      }
+      //   realCallback(...args);
+      // }
 
       const parts = [];
       form
@@ -146,8 +139,9 @@ test('fixtures', (done) => {
         })
         .on('end', () => {
           res.end();
-          callback(null, parts);
-          done();
+          cback(null, parts);
+          callback();
+          // done();
         });
     });
 

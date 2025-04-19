@@ -6,22 +6,17 @@ const net = require('net');
 const http = require('http');
 const assert = require('assert');
 const formidable = require('../../src/index');
-const getPort = require('get-port');
 
 let server;
-let port = await getPort();
+let port = 13538;
 let ok = 0;
 let errors = 0;
-
-function randomPort(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 
 beforeEach(() => {
   server = http.createServer();
   ok = 0;
   errors = 0;
-  // port += 1;
+  port += 1;
 });
 
 afterEach(

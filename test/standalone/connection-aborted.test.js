@@ -5,7 +5,7 @@ const http = require('http');
 const net = require('net');
 const formidable = require('../../src/index');
 
-let port = 13539;
+let port = 13533;
 let server;
 
 beforeEach(() => {
