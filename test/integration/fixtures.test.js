@@ -9,16 +9,34 @@ const path = require('path');
 const http = require('http');
 const assert = require('assert');
 
+const dezalgo = require('dezalgo');
+const { once } = require('process');
 const formidable = require('../../src/index');
 
-const PORT = 13534;
+let server;
+const PORT = 13536;
 const CWD = process.cwd();
 const FIXTURES_PATH = path.join(CWD, 'test', 'fixture', 'js');
 const FIXTURES_HTTP = path.join(CWD, 'test', 'fixture', 'http');
 const UPLOAD_DIR = path.join(CWD, 'test', 'tmp');
 
+beforeEach(() => {
+  server = http.createServer();
+});
+
+afterEach(
+  () =>
+    new Promise((resolve) => {
+      server.close(() => {
+        server = null;
+        resolve();
+      });
+    }),
+);
+
 test('fixtures', (done) => {
-  const server = http.createServer();
+  const callback = once(dezalgo(done));
+  jest.setTimeout(8000);
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
@@ -59,7 +77,9 @@ test('fixtures', (done) => {
     uploadFixture(fixtureName, (err, parts) => {
       if (err) {
         err.fixtureName = fixtureName;
-        throw err;
+        // throw err;
+        callback(err);
+        return;
       }
 
       fixture.forEach((expectedPart, i) => {
@@ -69,7 +89,10 @@ test('fixtures', (done) => {
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          assert.strictEqual(file.originalFilename, expectedPart.originalFilename);
+          assert.strictEqual(
+            file.originalFilename,
+            expectedPart.originalFilename,
+          );
 
           if (expectedPart.sha1) {
             assert.strictEqual(
@@ -85,7 +108,7 @@ test('fixtures', (done) => {
     });
   }
 
-  function uploadFixture(fixtureName, cb) {
+  function uploadFixture(fixtureName, cback) {
     server.once('request', (req, res) => {
       const form = formidable({
         uploadDir: UPLOAD_DIR,
@@ -94,17 +117,20 @@ test('fixtures', (done) => {
       });
       form.parse(req);
 
-      function callback(...args) {
-        const realCallback = cb;
-        // eslint-disable-next-line no-param-reassign
-        cb = function calbackFn() {};
+      // function callback(...args) {
+      //   const realCallback = cb;
+      //   // eslint-disable-next-line no-param-reassign
+      //   cb = function calbackFn() {};
 
-        realCallback(...args);
-      }
+      //   realCallback(...args);
+      // }
 
       const parts = [];
       form
-        .on('error', callback)
+        .on('error', (er) => {
+          callback(er);
+          // done(er);
+        })
         .on('fileBegin', (name, value) => {
           parts.push({ type: 'file', name, value });
         })
@@ -113,7 +139,9 @@ test('fixtures', (done) => {
         })
         .on('end', () => {
           res.end();
-          callback(null, parts);
+          cback(null, parts);
+          callback();
+          // done();
         });
     });
 
