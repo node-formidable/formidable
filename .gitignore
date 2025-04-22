@@ -18,6 +18,7 @@
 
 !package.json
 !yarn.lock
+!pnpm-lock.yaml
 
 !**/src
 !**/src/**
@@ -67,7 +68,6 @@ test-node/tmp
 # # Package managers lockfiles
 # package-lock.json
 # shrinkwrap.json
-# pnpm-lock.json
 
 # # Logs
 # logs

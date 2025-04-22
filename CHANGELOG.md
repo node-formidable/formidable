@@ -1,5 +1,13 @@
 # Changelog
 
+### 3.5.3
+
+- update failing tests
+- update CI/CD workflows and actions;
+- update CodeQL github action for security analysis
+- update readme, links and badges
+- update to use cuid2 (battle-tested `@paralleldrive/cuid2` package) for better random names - should not be breaking anything since it's still 25 characters long, but a lot safer and faster.
+
 ### 3.5.2
 
  * fix: ([#982](https://github.com/node-formidable/formidable/pull/982)) make it easier to import hexoid with webpack
@@ -63,7 +71,7 @@
  * feat: add maxTotalFileSize, default is maxFileSize (for backwards compatibility)
  * fix: minFileSize is per file
  * fix: allowEmptyFiles fix in cases where one file is not empty
- * fix: allowEmptyFiles false option by default 
+ * fix: allowEmptyFiles false option by default
  * fix: rename wrongly named error
  * refactor: rename wrongly named maxFileSize into maxTotalFileSize
 
@@ -92,7 +100,7 @@
  * fields with [] in the name do not receive special treatment
  * remove unused qs and querystring dependency
  * feat: Use ES modules ([#727](https://github.com/node-formidable/formidable/pull/727))
- * options.enabledPlugins must contain the plugin themselves instead of the plugins names 
+ * options.enabledPlugins must contain the plugin themselves instead of the plugins names
 
 
 ### 2.0.0
@@ -126,7 +134,7 @@
  * feat: custom file (re)naming, thru options.filename ([#591](https://github.com/node-formidable/node-formidable/pull/591), [#84](https://github.com/node-formidable/node-formidable/issues/84), [#86](https://github.com/node-formidable/node-formidable/issues/86), [#94](https://github.com/node-formidable/node-formidable/issues/94), [#154](https://github.com/node-formidable/node-formidable/issues/154), [#158](https://github.com/node-formidable/node-formidable/issues/158), [#488](https://github.com/node-formidable/node-formidable/issues/488), [#595](https://github.com/node-formidable/node-formidable/issues/595))
 
 
- 
+
 ### v1.2.1 (2018-03-20)
 
  * `maxFileSize` option with default of 200MB (Charlike Mike Reagent, Nima Shahri)

@@ -3,10 +3,26 @@ import { createServer } from 'node:http';
 import { connect } from 'node:net';
 import formidable from '../../src/index.js';
 
-const PORT = 13540;
+let server;
+let port = 13540;
+
+beforeEach(() => {
+  server = createServer();
+  port += 1;
+});
+
+afterEach(() => {
+  return new Promise((resolve) => {
+    if (server.listening) {
+      server.close(() => resolve());
+    } else {
+      resolve();
+    }
+  });
+});
 
 test('connection aborted', (done) => {
-  const server = createServer((req) => {
+  server.on('request', (req) => {
     const form = formidable();
 
     let abortedReceived = false;
@@ -24,20 +40,16 @@ test('connection aborted', (done) => {
         abortedReceived,
         'from .parse() callback: Error event should follow aborted',
       );
-
-      server.close(() => {
-        done();
-      });
+      done();
     });
   });
 
-  server.listen(PORT, 'localhost', () => {
-    const chosenPort = server.address().port;
-
-    const client = connect(chosenPort);
+  server.listen(port, 'localhost', () => {
+    const client = connect(port);
 
     client.write(
       'POST / HTTP/1.1\r\n' +
+        'Host: localhost\r\n' +
         'Content-Length: 70\r\n' +
         'Content-Type: multipart/form-data; boundary=foo\r\n\r\n',
     );

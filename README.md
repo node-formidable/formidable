@@ -7,25 +7,32 @@
 > A Node.js module for parsing form data, especially file uploads.
 
 [![Code style][codestyle-img]][codestyle-url]
-[![codecoverage][codecov-img]][codecov-url]
 [![linux build status][linux-build-img]][build-url]
-[![windows build status][windows-build-img]][build-url]
 [![macos build status][macos-build-img]][build-url]
+<!-- [![codecoverage][codecov-img]][codecov-url] -->
 
 If you have any _how-to_ kind of questions, please read the [Contributing
 Guide][contributing-url] and [Code of Conduct][code_of_conduct-url]
 documents.<br /> For bugs reports and feature requests, [please create an
-issue][open-issue-url] or ping [@tunnckoCore / @3a1FcBx0](https://twitter.com/3a1FcBx0)
+issue][open-issue-url] or ping [@wgw_eth / @wgw_lol][twitter-url]
 at Twitter.
 
 [![Conventional Commits][ccommits-img]][ccommits-url]
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
-[![Tidelift Subscription][tidelift-img]][tidelift-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
-[![Renovate App Status][renovateapp-img]][renovateapp-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+<!-- [![Tidelift Subscription][tidelift-img]][tidelift-url] -->
+<!-- [![Renovate App Status][renovateapp-img]][renovateapp-url] -->
 
-This project is [semantically versioned](https://semver.org) and available as
+This project is [semantically versioned](https://semver.org) and if you want support in migrating between versions you can schedule us for training or support us through donations, so we can prioritize.
+
+> [!CAUTION]
+> As of April 2025, old versions like v1 and v2 are still the most used, while they are deperecated for years -- they are also vulnerable to attacks if you are not implementing it properly. **Please upgrade!** We are here to help, and AI Editors & Agents could help a lot in such codemod-like migrations.
+
+> [!TIP]
+> If you are starting a fresh project, you can check out the `formidable-mini` which is a super minimal version of Formidable (not quite configurable yet, but when it does it could become the basis for `formidable@v4`), using web standards like FormData API and File API, and you can use it to stream uploads directly to S3 or other such services.
+
+<!-- This project is [semantically versioned](https://semver.org) and available as
 part of the [Tidelift Subscription][tidelift-url] for professional grade
 assurances, enhanced support and security.
 [Learn more.](https://tidelift.com/subscription/pkg/npm-formidable?utm_source=npm-formidable&utm_medium=referral&utm_campaign=enterprise)
@@ -34,14 +41,15 @@ _The maintainers of `formidable` and thousands of other packages are working
 with Tidelift to deliver commercial support and maintenance for the Open Source
 dependencies you use to build your applications. Save time, reduce risk, and
 improve code health, while paying the maintainers of the exact dependencies you
-use._
+use._ -->
 
 [![][npm-weekly-img]][npmv-url] [![][npm-monthly-img]][npmv-url]
 [![][npm-yearly-img]][npmv-url] [![][npm-alltime-img]][npmv-url]
 
 ## Project Status: Maintained
 
-_Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
+> [!NOTE]
+> Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
@@ -70,9 +78,8 @@ rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
 
 This package is a dual ESM/commonjs package.
 
-This project requires `Node.js >= 10.13`. Install it using
-[yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly
-recommend to use Yarn when you think to contribute to this project._
+> [!NOTE]
+> This project requires `Node.js >= 20`. Install it using [yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly recommend to use Yarn when you think to contribute to this project._
 
 This is a low-level package, and if you're using a high-level framework it _may_
 already be included. Check the examples below and the [examples/](https://github.com/node-formidable/formidable/tree/master/examples) folder.
@@ -425,12 +432,12 @@ multipart stream. Doing so will disable any `'field'` / `'file'` events
 processing which would occur otherwise, making you fully responsible for
 handling the processing.
 
-About `uploadDir`, given the following directory structure 
+About `uploadDir`, given the following directory structure
 ```
 project-name
 ├── src
 │   └── server.js
-│       
+│
 └── uploads
     └── image.jpg
 ```
@@ -620,7 +627,7 @@ export interface File {
 
   // The name this file had according to the uploading client.
   file.originalFilename: string | null;
-  
+
   // calculated based on options provided
   file.newFilename: string | null;
 
@@ -670,7 +677,7 @@ file system.
 
 ```js
 form.on('fileBegin', (formName, file) => {
-    // accessible here 
+    // accessible here
     // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
     // file.originalFilename http filename or null if there was a parsing error
     // file.newFilename generated hexoid or what options.filename returned
@@ -759,7 +766,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
         //...
     }
     const fieldsSingle = firstValues(form, fieldsMultiple);
-    
+
     const expectedBooleans = ['checkbox1', 'wantsNewsLetter', 'hasACar'];
     const fieldsWithBooleans = readBooleans(fieldsSingle, expectedBooleans);
     // ...
@@ -773,7 +780,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
 
 - [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++
   parser based on formidable
-- [Ryan Dahl](http://twitter.com/ryah) for his work on
+- [Ryan Dahl](https://x.com/rough__sea) for his work on
   [http-parser](http://github.com/ry/http-parser) which heavily inspired the
   initial `multipart_parser.js`.
 
@@ -853,8 +860,8 @@ Formidable is licensed under the [MIT License][license-url].
 [renovateapp-img]: https://badgen.net/badge/renovate/enabled/green?cache=300
 [prs-welcome-img]: https://badgen.net/badge/PRs/welcome/green?cache=300
 [prs-welcome-url]: http://makeapullrequest.com
-[twitter-url]: https://twitter.com/3a1fcBx0
-[twitter-img]: https://badgen.net/twitter/follow/3a1fcBx0?icon=twitter&color=1da1f2&cache=300
+[twitter-url]: https://twitter.com/wgw_eth
+[twitter-img]: https://badgen.net/badge/twitter/follow/wgw_eth?icon=twitter&color=1da1f2&cache=30
 
 [npm-weekly-img]: https://badgen.net/npm/dw/formidable?icon=npm&cache=300
 [npm-monthly-img]: https://badgen.net/npm/dm/formidable?icon=npm&cache=300
@@ -877,8 +884,8 @@ Formidable is licensed under the [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/ubuntu?cache=300&label=linux%20build&icon=github
-[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/macos?cache=300&label=macos%20build&icon=github
+[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?label=linux%20build&icon=github
+[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?label=macos%20build&icon=github
 [windows-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
-[build-url]: https://github.com/node-formidable/formidable/actions?query=workflow%3Anodejs
+[build-url]: https://github.com/node-formidable/formidable/actions
 <!-- prettier-ignore-end -->

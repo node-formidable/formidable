@@ -9,7 +9,6 @@
 [![Code style][codestyle-img]][codestyle-url]
 [![codecoverage][codecov-img]][codecov-url]
 [![linux build status][linux-build-img]][build-url]
-[![windows build status][windows-build-img]][build-url]
 [![macos build status][macos-build-img]][build-url]
 
 Se você tiver qualquer tipo de pergunta sobre _como_ fazer, por favor leia o [Contributing
@@ -71,7 +70,7 @@ Este projeto requer `Node.js >= 10.13`. Instale-o usando
 [yarn](https://yarnpkg.com) ou [npm](https://npmjs.com).<br /> _Nós altamente
 recomendamos usar o Yarn quando pensar em contribuir para este projeto._
 
-Este é um pacote de baixo nível e, se você estiver usando uma estrutura de alto nível, _pode_ já estar incluído. Verifique os exemplos 
+Este é um pacote de baixo nível e, se você estiver usando uma estrutura de alto nível, _pode_ já estar incluído. Verifique os exemplos
 abaixo e a pasta [examples/](https://github.com/node-formidable/formidable/tree/master/examples).
 
 ```
@@ -83,7 +82,7 @@ npm install formidable@v2
 npm install formidable@v3
 ```
 
-_**Nota:** Em um futuro próximo, a v3 será publicada na dist-tag `latest` do NPM. 
+_**Nota:** Em um futuro próximo, a v3 será publicada na dist-tag `latest` do NPM.
 Versões futuras não prontas serão publicadas nas dist-tags `*-next` para a versão correspondente._
 
 
@@ -206,7 +205,7 @@ app.on('error', (err) => {
 app.use(async (ctx, next) => {
   if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
     const form = formidable({});
-    
+
      // não muito elegante, mas é por enquanto se você não quiser usar `koa-better-body`
      // ou outros middlewares.
     await new Promise((resolve, reject) => {
@@ -359,7 +358,7 @@ form.bytesExpected;
 
 #### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
 
-**Observação:** use uma variável externa para cancelar todos os uploads no primeiro erro 
+**Observação:** use uma variável externa para cancelar todos os uploads no primeiro erro
 
 ```js
 const options = {
@@ -385,8 +384,8 @@ form.parse(req, (err, fields, files) => {
 });
 ```
 
-Você pode substituir esse método se estiver interessado em acessar diretamente o 
-fluxo de várias partes. Fazer isso desativará qualquer processamento de eventos `'field'` / `'file'` 
+Você pode substituir esse método se estiver interessado em acessar diretamente o
+fluxo de várias partes. Fazer isso desativará qualquer processamento de eventos `'field'` / `'file'`
 que ocorreria de outra forma, tornando você totalmente responsável por lidar com o processamento.
 
 Sobre `uploadDir`, dada a seguinte estrutura de diretório
@@ -394,7 +393,7 @@ Sobre `uploadDir`, dada a seguinte estrutura de diretório
 project-name
 ├── src
 │   └── server.js
-│       
+│
 └── uploads
     └── image.jpg
 ```
@@ -424,7 +423,7 @@ createNecessaryDirectoriesSync(`${uploadPath}/x`);
 ```
 
 
-No exemplo abaixo, escutamos alguns eventos e os direcionamos para o ouvinte `data`, para 
+No exemplo abaixo, escutamos alguns eventos e os direcionamos para o ouvinte `data`, para
 que você possa fazer o que quiser lá, com base em se é antes do arquivo ser emitido, o valor do
 cabeçalho, o nome do cabeçalho, no campo , em arquivo e etc.
 
@@ -514,7 +513,7 @@ form.parse(req, (error, fields, files) => {
 `this`, para que você possa testar seu plugin mais tarde de forma independente e mais fácil.
 
 Se você quiser desabilitar alguns recursos de análise do Formidable, você pode desabilitar
-o plugin que corresponde ao analisador. Por exemplo, se você deseja desabilitar a análise de 
+o plugin que corresponde ao analisador. Por exemplo, se você deseja desabilitar a análise de
 várias partes (para que o [src/parsers/Multipart.js](./src/parsers/Multipart.js)
 que é usado em [src/plugins/multipart.js](./src/plugins/multipart.js)), então
 você pode removê-lo do `options.enabledPlugins`, assim
@@ -530,8 +529,8 @@ const form = formidable({
 **Esteja ciente** de que a ordem _PODE_ ser importante também. Os nomes correspondem 1:1 a
 arquivos na pasta [src/plugins/](./src/plugins).
 
-Solicitações pull para novos plug-ins integrados PODEM ser aceitas - por exemplo, analisador de 
-querystring mais avançado. Adicione seu plugin como um novo arquivo na pasta `src/plugins/` (em letras minúsculas) e 
+Solicitações pull para novos plug-ins integrados PODEM ser aceitas - por exemplo, analisador de
+querystring mais avançado. Adicione seu plugin como um novo arquivo na pasta `src/plugins/` (em letras minúsculas) e
 siga como os outros plugins são feitos.
 
 ### form.onPart
@@ -581,7 +580,7 @@ export interface File {
 
   // O nome que este arquivo tinha de acordo com o cliente de upload.
   file.originalFilename: string | null;
-  
+
   // calculado com base nas opções fornecidas.
   file.newFilename: string | null;
 
@@ -600,7 +599,7 @@ export interface File {
 
 #### file.toJSON()
 
-Este método retorna uma representação JSON do arquivo, permitindo que você `JSON.stringify()` 
+Este método retorna uma representação JSON do arquivo, permitindo que você `JSON.stringify()`
 o arquivo que é útil para registrar e responder a solicitações.
 
 ### Eventos
@@ -623,7 +622,7 @@ form.on('field', (name, value) => {});
 
 #### `'fileBegin'`
 
-Emitido sempre que um novo arquivo é detectado no fluxo de upload. 
+Emitido sempre que um novo arquivo é detectado no fluxo de upload.
 Use este evento se desejar transmitir o arquivo para outro lugar enquanto armazena o upload no sistema de arquivos.
 
 ```js
@@ -652,7 +651,7 @@ form.on('file', (formname, file) => {
 
 #### `'error'`
 
-Emitido quando há um erro no processamento do formulário recebido. Uma solicitação que 
+Emitido quando há um erro no processamento do formulário recebido. Uma solicitação que
 apresenta um erro é pausada automaticamente, você terá que chamar manualmente
 `request.resume()` se você quiser que a requisição continue disparando eventos `'data'`.
 
@@ -675,7 +674,7 @@ form.on('aborted', () => {});
 
 #### `'end'`
 
-Emitido quando toda a solicitação foi recebida e todos os arquivos contidos foram 
+Emitido quando toda a solicitação foi recebida e todos os arquivos contidos foram
 liberados para o disco. Este é um ótimo lugar para você enviar sua resposta.
 
 ```js
@@ -718,7 +717,7 @@ form.parse(request, async (error, fieldsMultiple, files) => {
         //...
     }
     const fieldsSingle = firstValues(form, fieldsMultiple);
-    
+
     const expectedBooleans = ['checkbox1', 'wantsNewsLetter', 'hasACar'];
     const fieldsWithBooleans = readBooleans(fieldsSingle, expectedBooleans);
     // ...
@@ -731,12 +730,12 @@ form.parse(request, async (error, fieldsMultiple, files) => {
 ## Ports & Créditos
 
 - [multipart-parser](http://github.com/FooBarWidget/multipart-parser): um analisador C++ baseado em formidável
-- [Ryan Dahl](http://twitter.com/ryah) por seu trabalho em
+- [Ryan Dahl](https://x.com/rough__sea) por seu trabalho em
   [http-parser](http://github.com/ry/http-parser) que inspirou fortemente o `multipart_parser.js` inicial.
 
 ## Contribuindo
 
-Se a documentação não estiver clara ou tiver um erro de digitação, clique no botão `Edit` da página (ícone de lápis) e sugira uma correção. 
+Se a documentação não estiver clara ou tiver um erro de digitação, clique no botão `Edit` da página (ícone de lápis) e sugira uma correção.
 Se você gostaria de nos ajudar a corrigir
 um bug ou adicionar um novo recurso, verifique nosso [Contributing
 Guide][contribuindo-url]. Pull requests são bem-vindos!
@@ -834,8 +833,7 @@ Formidable é licenciado sob a [MIT License][license-url].
 [kofi-url]: https://ko-fi.com/tunnckoCore/commissions
 [kofi-img]: https://badgen.net/badge/ko-fi/support/29abe0c2?cache=300&icon=https://rawcdn.githack.com/tunnckoCore/badgen-icons/f8264c6414e0bec449dd86f2241d50a9b89a1203/icons/kofi.svg
 
-[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/ubuntu?cache=300&label=linux%20build&icon=github
-[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/macos?cache=300&label=macos%20build&icon=github
-[windows-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master/windows?cache=300&label=windows%20build&icon=github
-[build-url]: https://github.com/node-formidable/formidable/actions?query=workflow%3Anodejs
+[linux-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?cache=30&label=linux%20build&icon=github
+[macos-build-img]: https://badgen.net/github/checks/node-formidable/formidable/master?cache=30&label=macos%20build&icon=github
+[build-url]: https://github.com/node-formidable/formidable/actions
 <!-- prettier-ignore-end -->
