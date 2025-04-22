@@ -1,0 +1,12 @@
+POST /upload HTTP/1.1
+Host: localhost:8080
+Content-Type: multipart/form-data; boundary=----TLVx0SrKD4z1TRxRhAPUvZx
+Content-Length: 209
+
+------TLVx0SrKD4z1TRxRhAPUvZx
+Content-Disposition: form-data; name="upload"; filename="second-plaintext.txt"
+Content-Type: text/plain
+
+Some another plain text file, yeah!
+
+------TLVx0SrKD4z1TRxRhAPUvZx

@@ -62,6 +62,7 @@
     "test": "pnpm audit --prod && pnpm run test-jest && pnpm run test-node",
     "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
     "test-node": "node --disable-warning=ExperimentalWarning --test test-node/**/*.test.js",
+    "test-node2": "node --test \"test-node/**/integration/**/*.test.js\" --test-concurrency 1",
     "pretest:ci": "pnpm run pretest",
     "test:ci": "node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },

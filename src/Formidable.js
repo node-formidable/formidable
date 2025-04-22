@@ -493,11 +493,11 @@ class IncomingForm extends EventEmitter {
 
     this.req = null;
     this.error = err;
-    this.emit(eventName, err);
-
     this.openedFiles.forEach((file) => {
       file.destroy();
     });
+    this.emit(eventName, err);
+
   }
 
   _parseContentLength() {
