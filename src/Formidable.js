@@ -14,7 +14,7 @@ const qs = require('qs');
 
 const CUID2_FINGERPRINT = `${
   process.env.NODE_ENV
-}-${os.platform()}-${os.hostname()}-${os.machine()}`;
+}-${os.platform()}-${os.hostname()}`;
 const createId = cuid2.init({
   length: 25,
   fingerprint: CUID2_FINGERPRINT.toLowerCase(),
