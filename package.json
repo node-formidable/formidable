@@ -60,16 +60,15 @@
 
     "test-specific": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
     "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
-    "test-node": "node --disable-warning=ExperimentalWarning --test ./test-node/**/*.test.*",
+    "test-node": "node --disable-warning=ExperimentalWarning --test ./test-node/**/*.test.js",
 
-    "test-node:ci": "node --experimental-vm-modules ./node_modules/.bin/nyc node --test ./test-node/**/*.test.*",
     "test-jest:ci": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
 
     "test:local": "pnpm run test-node && pnpm run test-jest",
 
     "audit": "pnpm audit --prod --fix",
     "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
-    "test": "pnpm run audit && pnpm run test-node:ci && pnpm run test-jest:ci"
+    "test": "pnpm run audit && node --test ./test-node/**/*.test.js && pnpm run test-jest:ci"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
