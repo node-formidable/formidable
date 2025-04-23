@@ -65,7 +65,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node-version: ['lts/*']
+        node-version: [16, 18, 20, 22, 'lts/*']
 
     steps:
       - name: Checkout

@@ -1,7 +1,13 @@
 # Changelog
 
+### 3.5.4
+
+- fix the `os.machine` breaking some dependents, fix [#994](https://github.com/node-formidable/formidable/issues/994)
+- add Node 16, 18, 20, 22 to CI/CD
+
 ### 3.5.3
 
+- security report by ZAST.AI help for some vulnerabilities addressing (primarily the random names generation)
 - update failing tests
 - update CI/CD workflows and actions;
 - update CodeQL github action for security analysis

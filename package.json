@@ -90,6 +90,9 @@
     "rollup": "^3.25.3",
     "supertest": "6.1.6"
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "jest": {
     "verbose": true
   },
