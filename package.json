@@ -70,6 +70,7 @@
     "dezalgo": "^1.0.4",
     "once": "^1.4.0"
   },
+"packageManager": "pnpm@10.8.1",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
