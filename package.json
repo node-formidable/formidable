@@ -58,12 +58,12 @@
     "lint:prepare": "eslint --cache --fix --quiet --format codeframe",
     "fresh": "rm -rf ./node_modules",
     "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
-    "test-specific": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
+    "test-specific": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
     "test": "npm audit --prod && npm run test-jest && npm run test-node",
-    "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
-    "test-node": "node --disable-warning=ExperimentalWarning --test test-node/**/*.test.js",
+    "test-jest": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+    "test-node": "node --test test-node/**/*.test.js",
     "pretest:ci": "npm run pretest",
-    "test:ci": "node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
+    "test:ci": "node --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
