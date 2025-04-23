@@ -48,21 +48,21 @@
   },
   "scripts": {
     "build-package": "rollup --config ./tool/rollup.config.js",
-    "prepublishOnly": "pnpm run build-package",
+    "prepublishOnly": "npm run build-package",
     "bench": "node benchmark",
     "bench2prep": "node benchmark/server.js",
     "bench2": "bombardier --body-file=\"./README.md\" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload",
-    "fmt": "pnpm run fmt:prepare '**/*'",
+    "fmt": "npm run fmt:prepare '**/*'",
     "fmt:prepare": "prettier --write",
-    "lint": "pnpm run lint:prepare .",
+    "lint": "npm run lint:prepare .",
     "lint:prepare": "eslint --cache --fix --quiet --format codeframe",
     "fresh": "rm -rf ./node_modules",
     "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
     "test-specific": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
-    "test": "pnpm audit --prod && pnpm run test-jest && pnpm run test-node",
+    "test": "npm audit --prod && npm run test-jest && npm run test-node",
     "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
     "test-node": "node --disable-warning=ExperimentalWarning --test test-node/**/*.test.js",
-    "pretest:ci": "pnpm run pretest",
+    "pretest:ci": "npm run pretest",
     "test:ci": "node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
   },
   "dependencies": {
@@ -96,7 +96,6 @@
   "jest": {
     "verbose": true
   },
-  "packageManager": "pnpm@10.8.1",
   "keywords": [
     "multipart",
     "form",
