@@ -57,19 +57,25 @@
     "lint": "pnpm run lint:prepare .",
     "lint:prepare": "eslint --cache --fix --quiet --format codeframe",
     "fresh": "rm -rf ./node_modules",
-    "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
+
     "test-specific": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
-    "test": "pnpm audit --prod && pnpm run test-jest && pnpm run test-node",
     "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
-    "test-node": "node --disable-warning=ExperimentalWarning --test test-node/**/*.test.js",
-    "pretest:ci": "pnpm run pretest",
-    "test:ci": "node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc jest --testPathPattern=test/ --coverage && node --disable-warning=ExperimentalWarning --experimental-vm-modules node_modules/.bin/nyc node --test test-node/"
+    "test-node": "node --disable-warning=ExperimentalWarning --test ./test-node/**/*.test.js",
+
+    "test-jest:ci": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+
+    "test:local": "pnpm run test-node && pnpm run test-jest",
+
+    "audit": "pnpm audit --prod --fix",
+    "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
+    "test": "pnpm run audit && node --test ./test-node/**/*.test.js && pnpm run test-jest:ci"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "dezalgo": "^1.0.4",
     "once": "^1.4.0"
   },
+"packageManager": "pnpm@10.8.1",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -90,10 +96,12 @@
     "rollup": "^3.25.3",
     "supertest": "6.1.6"
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "jest": {
     "verbose": true
   },
-  "packageManager": "pnpm@10.8.1",
   "keywords": [
     "multipart",
     "form",

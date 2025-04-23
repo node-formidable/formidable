@@ -16,7 +16,7 @@ import DummyParser from './parsers/Dummy.js';
 import MultipartParser from './parsers/Multipart.js';
 import { json, multipart, octetstream, querystring } from './plugins/index.js';
 
-const CUID2_FINGERPRINT = `${process.env.NODE_ENV}-${os.platform()}-${os.hostname()}-${os.machine()}`
+const CUID2_FINGERPRINT = `${process.env.NODE_ENV}-${os.platform()}-${os.hostname()}`
 const createId = cuid2init({ length: 25, fingerprint: CUID2_FINGERPRINT.toLowerCase() });
 
 const DEFAULT_OPTIONS = {
