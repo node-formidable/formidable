@@ -7,9 +7,10 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
+    # ignored job because the `xxxxx` typo. Intentional, we use Kodiak
     if:
       github.event.pull_request.user.login == 'dependabot[bot]' && github.repository ==
-      'node-formidable/formidable'
+      'node-formidable/xxxx'
     steps:
       - name: Dependabot metadata
         id: metadata
