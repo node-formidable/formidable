@@ -1,0 +1,114 @@
+{
+  "editor.rulers": [80, 100, 120],
+  "editor.defaultFormatter": "mattbrannon.prettiest-eslint",
+  "[javascript]": {
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+  },
+
+  "npm-intellisense.importES6": true,
+  "npm-intellisense.importQuotes": "'",
+  "npm-intellisense.importLinebreak": ";\r\n",
+  "npm.packageManager": "auto",
+  "editor.formatOnType": false,
+  "editor.codeLens": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always", // sometimes it's `always` sometimes it's `explicit`.. whatever tha fack these means, i want it constantly
+    "source.fixAll.eslint": "always",
+    "source.fixAll.prettier": "always",
+    "source.organizeImports": "always"
+  },
+  "editor.wordWrap": "off",
+  // "workbench.colorCustomizations": {
+  //   // The background is optional
+  //   // "terminal.background": "#282a36",
+  //   "terminal.foreground": "#eff0eb",
+  //   "terminal.ansiBlack": "#282a36",
+  //   "terminal.ansiRed": "#ff5c57",
+  //   "terminal.ansiGreen": "#5af78e",
+  //   "terminal.ansiYellow": "#f3f99d",
+  //   "terminal.ansiBlue": "#57c7ff",
+  //   "terminal.ansiMagenta": "#ff6ac1",
+  //   "terminal.ansiCyan": "#9aedfe",
+  //   "terminal.ansiWhite": "#f1f1f0",
+  //   "terminal.ansiBrightBlack": "#686868",
+  //   "terminal.ansiBrightRed": "#ff5c57",
+  //   "terminal.ansiBrightGreen": "#5af78e",
+  //   "terminal.ansiBrightYellow": "#f3f99d",
+  //   "terminal.ansiBrightBlue": "#57c7ff",
+  //   "terminal.ansiBrightMagenta": "#ff6ac1",
+  //   "terminal.ansiBrightCyan": "#9aedfe",
+  //   "terminal.ansiBrightWhite": "#eff0eb"
+  // },
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*rc": "yaml",
+    ".npmrc": "ini",
+    "*.njk": "html",
+    "*.postcss": "tailwindcss",
+    "*.mdx": "mdx"
+  },
+  // "editor.fontFamily": "Fira Code",
+  // "editor.fontLigatures": true,
+  "editor.autoClosingBrackets": "always",
+  "editor.folding": true,
+  // "extensions.ignoreRecommendations": true,
+  // "workbench.statusBar.visible": true,
+  // "workbench.colorTheme": "Catppuccin Macchiato",
+  // "workbench.iconTheme": "material-icon-theme",
+  // "workbench.sideBar.location": "right",
+  // "zenMode.hideActivityBar": false,
+  // "explorer.confirmDelete": false,
+  // "solidity.telemetry": false,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.inlineSuggest.enabled": true,
+  // "terminal.integrated.fontFamily": "monospace",
+  "git.openRepositoryInParentFolders": "never",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "explorer.compactFolders": false,
+  "errorLens.onSave": true,
+  "errorLens.messageBackgroundMode": "none",
+  "errorLens.enabledDiagnosticLevels": ["error", "info"],
+  "emmet.showExpandedAbbreviation": "never",
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false,
+    "yaml": false,
+    "javascript": true,
+    "python": true,
+    "typescript": true
+  },
+  "chat.mcp.discovery.enabled": true,
+  "mcp": {
+    "servers": {
+      "context7": {
+        "type": "stdio",
+        "command": "bunx",
+        "args": ["-y", "@upstash/context7-mcp@latest"]
+      },
+      "coincap-mcp": {
+        "type": "stdio",
+        "command": "bunx",
+        "args": ["coincap-mcp"]
+      }
+    }
+  },
+  "workbench.startupEditor": "none"
+}
