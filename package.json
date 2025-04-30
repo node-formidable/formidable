@@ -1,6 +1,6 @@
 {
   "name": "formidable",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "license": "MIT",
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
