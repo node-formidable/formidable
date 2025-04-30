@@ -3,3 +3,7 @@ packages:
   - scripts
 
 shamefullyHoist: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver

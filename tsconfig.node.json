@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "module": "ES2015",
+    "moduleResolution": "Bundler",
+    "target": "ES5",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+  },
+  // "exclude": ["node_modules", "**/dist/**"],
+  // "include": ["src/**/*.ts", "**/*.ts", "**/*.tsx", "**/*.astro", "**/*.js"],
+  // "extends": ["eslint-config-xaxa/tsconfig.json"],
+}

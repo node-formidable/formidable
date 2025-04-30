@@ -2,16 +2,16 @@
   "editor.rulers": [80, 100, 120],
   "editor.defaultFormatter": "mattbrannon.prettiest-eslint",
   "[javascript]": {
-    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint",
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint",
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "mattbrannon.prettiest-eslint"
+    "editor.defaultFormatter": "mattbrannon.prettiest-eslint",
   },
 
   "npm-intellisense.importES6": true,
@@ -27,7 +27,7 @@
     "source.fixAll": "always", // sometimes it's `always` sometimes it's `explicit`.. whatever tha fack these means, i want it constantly
     "source.fixAll.eslint": "always",
     "source.fixAll.prettier": "always",
-    "source.organizeImports": "always"
+    "source.organizeImports": "always",
   },
   "editor.wordWrap": "off",
   // "workbench.colorCustomizations": {
@@ -59,7 +59,7 @@
     ".npmrc": "ini",
     "*.njk": "html",
     "*.postcss": "tailwindcss",
-    "*.mdx": "mdx"
+    "*.mdx": "mdx",
   },
   // "editor.fontFamily": "Fira Code",
   // "editor.fontLigatures": true,
@@ -93,7 +93,7 @@
     "yaml": false,
     "javascript": true,
     "python": true,
-    "typescript": true
+    "typescript": true,
   },
   "chat.mcp.discovery.enabled": true,
   "mcp": {
@@ -101,14 +101,14 @@
       "context7": {
         "type": "stdio",
         "command": "bunx",
-        "args": ["-y", "@upstash/context7-mcp@latest"]
+        "args": ["-y", "@upstash/context7-mcp@latest"],
       },
       "coincap-mcp": {
         "type": "stdio",
         "command": "bunx",
-        "args": ["coincap-mcp"]
-      }
-    }
+        "args": ["coincap-mcp"],
+      },
+    },
   },
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
 }

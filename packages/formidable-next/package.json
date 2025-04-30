@@ -1,0 +1,84 @@
+{
+  "name": "formidable",
+  "version": "4.0.0-rc.5",
+  "license": "MIT",
+  "description": "The oldest and most popular Node.js form parsing library, with support for multipart/form-data, file uploads, and more.",
+  "author": "tunnckoCore",
+  "homepage": "https://github.com/node-formidable/formidable/tree/monorepo/packages/formidable-next",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/node-formidable/formidable.git",
+    "directory": "packages/formidable-next"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "scripts": {
+    "___X_build:node16": "pnpm run build:node16cjs && pnpm run build:node16esm",
+    "___X_build:node16cjs": "esbuild ./src/entrypoints/node16.ts --bundle --format=cjs --outfile=./dist/node16.cjs --tsconfig=../../tsconfig.node.json",
+    "___X_build:node16esm": "esbuild ./src/entrypoints/node16.ts --bundle --format=esm --outfile=./dist/node16.js --tsconfig=../../tsconfig.node.json",
+    "___X_postbuild:node16": "cp ./dist/index.d.ts ./dist/node16.d.cts && cp ./dist/index.d.ts ./dist/node16.d.ts",
+    "___Z_build:node14": "pnpm run build:node14cjs && pnpm run build:node14esm",
+    "___Z_build:node14cjs": "esbuild ./src/entrypoints/node14.ts --bundle --format=cjs --outfile=./dist/node14.cjs --tsconfig=../../tsconfig.node.json",
+    "___Z_build:node14esm": "esbuild ./src/entrypoints/node14.ts --bundle --format=esm --outfile=./dist/node14.js --tsconfig=../../tsconfig.node.json",
+    "___Z_postbuild:node14": "cp ./dist/index.d.ts ./dist/node14.d.cts && cp ./dist/index.d.ts ./dist/node14.d.ts",
+    "prebuild": "rm -rf dist",
+    "build": "tsdown",
+    "example:node14cjs": "node ./example/node14.cjs",
+    "example:node14esm": "node ./example/node14.js",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@mjackson/headers": "^0.10.0",
+    "headers-polyfill": "^4.0.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.3",
+    "tsdown": "^0.10.2",
+    "typescript": "^5.8.3",
+    "web-streams-polyfill": "^4.1.0"
+  },
+  "keywords": [
+    "form",
+    "parser",
+    "nodejs",
+    "multipart",
+    "multipart/form-data",
+    "formdata",
+    "form-data",
+    "files",
+    "file uploads"
+  ],
+  "contributors": [
+    "felixge",
+    "tunnckoCore",
+    "GrosSacASac",
+    "xarguments",
+    "charmander",
+    "fengxinming",
+    "kedarv"
+  ]
+}
