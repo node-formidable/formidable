@@ -49,7 +49,8 @@
     "build": "tsdown",
     "example:node14cjs": "node ./example/node14.cjs",
     "example:node14esm": "node ./example/node14.js",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "test": "echo no-tests-yet"
   },
   "dependencies": {
     "@mjackson/headers": "^0.10.0",

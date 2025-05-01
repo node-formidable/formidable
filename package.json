@@ -10,14 +10,21 @@
     "publish-release": "node --env-file .env ./scripts/publish-release.js",
     "publish-release-ci": "node ./scripts/publish-release.js",
     "tag-release": "node ./scripts/tag-release.js",
-    "test": "pnpm -r --workspace-concurrency 1 test"
+    "test": "workspaces-filter '*' test"
   },
   "dependencies": {
     "@types/bun": "1.2.10",
     "@types/node": "22.14.1",
     "eslint-config-xaxa": "^25.0.12",
     "prettier-plugin-pkgjson": "^0.3.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "workspaces-filter": "^0.5.3"
   },
-  "packageManager": "pnpm@10.3.0"
+  "packageManager": "pnpm@10.3.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "unrs-resolver"
+    ]
+  }
 }
