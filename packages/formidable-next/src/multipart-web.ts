@@ -1,4 +1,4 @@
-// import { SuperHeaders } from '@mjackson/headers';
+// SPDX-License-Identifier: MIT
 
 import {
   createPartialTailSearch,
@@ -8,21 +8,19 @@ import {
 } from './buffer-search.ts';
 import { SuperHeaders } from './super-headers.js';
 
-export async function* readStreamHelper(
-  stream: ReadableStream<Uint8Array>,
-): AsyncIterable<Uint8Array> {
-  const reader = stream.getReader();
+export const formidableDefaultOptions: FormidableOptions = {
+  maxAllHeadersSize: 8 * 1024, // 8kb, size for all headers combined
+  maxHeaderKeySize: 255, // size of the key per each header
+  maxHeaderValueSize: 1 * 1024, // size of the key per each header
+  maxHeaderSize: 2 * 1024, // 1kb, size of key + value of each header
+  maxFilenameSize: 255, // size of the file original filename
+  maxFileKeySize: 255, // size of the key of file fields
+  maxFileSize: 100 * 1024 * 1024, // 100MB
+  maxFieldKeySize: 255, // size of the key of text fields
+  maxFieldSize: 100 * 1024, // 100kb, size of each text field value
+  onHandlerError: (_err: FormidableError) => {},
+};
 
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      yield value;
-    }
-  } finally {
-    reader.releaseLock();
-  }
-}
 
 export type FormidableInputSource =
   | ReadableStream<Uint8Array>
@@ -48,24 +46,12 @@ export type FormidableOptions = Omit<FormidableOptionsAll, 'boundary'>;
 export type FormidableParserOptions = FormidableOptions;
 export type FormidablePartHandler = (part: FormidablePart) => void | Promise<void>;
 
-export const formidableDefaultOptions: FormidableOptions = {
-  maxAllHeadersSize: 8 * 1024, // 8kb, size for all headers combined
-  maxHeaderKeySize: 255, // size of the key per each header
-  maxHeaderValueSize: 1 * 1024, // size of the key per each header
-  maxHeaderSize: 2 * 1024, // 1kb, size of key + value of each header
-  maxFilenameSize: 255, // size of the file original filename
-  maxFileKeySize: 255, // size of the key of file fields
-  maxFileSize: 100 * 1024 * 1024, // 100MB
-  maxFieldKeySize: 255, // size of the key of text fields
-  maxFieldSize: 100 * 1024, // 100kb, size of each text field value
-  onHandlerError: (_err: FormidableError) => {},
-};
 
 /**
  * Parse a `multipart/*` buffer or stream and yield each part it finds as a `FormidablePart` object.
  *
  * ```ts
- * import { parseMultipart } from '@mjackson/multipart-parser';
+ * import { parseMultipart } from 'formidable';
  *
  * let boundary = '----WebKitFormBoundaryzv5Z4JY8k9lG0yQW';
  *
@@ -610,6 +596,22 @@ export class FormidablePart {
         [...this.headers.entries()].map(([key, value]) => [key.toLowerCase(), value.toLowerCase()]),
       ),
     };
+  }
+}
+
+export async function* readStreamHelper(
+  stream: ReadableStream<Uint8Array>,
+): AsyncIterable<Uint8Array> {
+  const reader = stream.getReader();
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      yield value;
+    }
+  } finally {
+    reader.releaseLock();
   }
 }
 
