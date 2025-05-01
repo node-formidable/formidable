@@ -2,8 +2,8 @@
 # Minimal config. version is the only required field.
 version = 1
 
-[merge] 
-automerge_label = "ship it"
+[merge]
+automerge_label = "automerge"
 require_automerge_label = true
 block_on_neutral_required_check_runs = true
 blocking_labels = ["wip", "do not merge"]
