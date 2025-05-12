@@ -3,7 +3,7 @@ import xaxa from 'eslint-config-xaxa';
 export default xaxa({
   ignores: [
     '**/super-headers.js',
-    '**/old-source/**',
+    '**/packages/formidable-v3/**',
     '**/*.cjs',
     'async-gens-with-queues-slow.ts',
   ],

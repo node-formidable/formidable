@@ -3,6 +3,9 @@ packages/formidable-next/src/super-headers.js
 packages/formidable-next/src/super-readable-stream.js
 
 **/super-headers.js
+**/CHANGELOG.md
+**/fixture/**
+**/fixtures/**
 
 # because we use ESLint for most things - both linting and formatting (with ESLint Stylistic)
 **/*.{js,jsx,ts,tsx}

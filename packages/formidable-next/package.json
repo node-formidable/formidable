@@ -69,7 +69,11 @@
     "build": "tsdown",
     "example:node14cjs": "node ./example/node14.cjs",
     "example:node14esm": "node ./example/node14.js",
-    "prepublishOnly": "bun run build",
+    "pkg:__COMMENT": "we need that because package managers do not work when multiple mononrepo packages are with the same name",
+    "pkg:name-prod": "jq \".name = \\\"formidable\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "pkg:name-dev": "jq \".name = \\\"formidable-next\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "prepublishOnly": "npm run build && npm run pkg:name-prod",
+    "postpublish": "npm run pkg:name-dev",
     "test": "echo no-tests-yet"
   },
   "dependencies": {
