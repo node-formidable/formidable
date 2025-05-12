@@ -1,7 +1,7 @@
-// not used
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable node/callback-return */
 
 import { Transform } from 'node:stream';
+
 import FormidableError, { maxFieldsSizeExceeded } from '../FormidableError.js';
 
 const AMPERSAND = 38;
@@ -48,8 +48,8 @@ class QuerystringParser extends Transform {
       }
 
       if (
-        this.maxFieldLength &&
-        i - this.sectionStart === this.maxFieldLength
+        this.maxFieldLength
+        && i - this.sectionStart === this.maxFieldLength
       ) {
         callback(
           new FormidableError(
@@ -68,7 +68,9 @@ class QuerystringParser extends Transform {
     if (len) {
       // i.e. Unless the last character was a & or =
       this.buffer = Buffer.from(this.buffer, 0, this.sectionStart);
-    } else this.buffer = null;
+    } else {
+      this.buffer = null;
+    }
 
     this.sectionStart = 0;
     callback();
@@ -93,7 +95,9 @@ class QuerystringParser extends Transform {
   }
 
   getSection(buffer, i) {
-    if (i === this.sectionStart) return '';
+    if (i === this.sectionStart) {
+      return '';
+    }
 
     return buffer.toString('ascii', this.sectionStart, i);
   }

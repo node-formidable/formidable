@@ -9,77 +9,85 @@ import os from 'node:os';
 import path from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 import once from 'once';
+
 import FormidableError, * as errors from './FormidableError.js';
-import PersistentFile from './PersistentFile.js';
-import VolatileFile from './VolatileFile.js';
 import DummyParser from './parsers/Dummy.js';
 import MultipartParser from './parsers/Multipart.js';
-import { json, multipart, octetstream, querystring } from './plugins/index.js';
+import PersistentFile from './PersistentFile.js';
+import {
+  json,
+  multipart,
+  octetstream,
+  querystring,
+} from './plugins/index.js';
+import VolatileFile from './VolatileFile.js';
 
-const CUID2_FINGERPRINT = `${process.env.NODE_ENV}-${os.platform()}-${os.hostname()}`
-const createId = cuid2init({ length: 25, fingerprint: CUID2_FINGERPRINT.toLowerCase() });
+const CUID2_FINGERPRINT = `${process.env.NODE_ENV}-${os.platform()}-${os.hostname()}`;
+const createId = cuid2init({ fingerprint: CUID2_FINGERPRINT.toLowerCase(), length: 25 });
 
 const DEFAULT_OPTIONS = {
+  allowEmptyFiles: false,
+  createDirsFromUploads: false,
+  defaultInvalidName: 'invalid-name',
+  enabledPlugins: [octetstream, querystring, multipart, json],
+  encoding: 'utf-8',
+  filename: undefined,
+  fileWriteStreamHandler: null,
+  filter(_part) {
+    return true;
+  },
+  hashAlgorithm: false,
+  keepExtensions: false,
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
   maxFiles: Infinity,
   maxFileSize: 200 * 1024 * 1024,
   maxTotalFileSize: undefined,
   minFileSize: 1,
-  allowEmptyFiles: false,
-  createDirsFromUploads: false,
-  keepExtensions: false,
-  encoding: 'utf-8',
-  hashAlgorithm: false,
   uploadDir: os.tmpdir(),
-  enabledPlugins: [octetstream, querystring, multipart, json],
-  fileWriteStreamHandler: null,
-  defaultInvalidName: 'invalid-name',
-  filter(_part) {
-    return true;
-  },
-  filename: undefined,
 };
 
 function hasOwnProp(obj, key) {
-  return Object.prototype.hasOwnProperty.call(obj, key);
+  return Object.hasOwn(obj, key);
 }
 
-
-const decorateForceSequential = function (promiseCreator) {
+function decorateForceSequential(promiseCreator) {
   /* forces a function that returns a promise to be sequential
   useful for fs  for example */
   let lastPromise = Promise.resolve();
-  return async function (...x) {
-      const promiseWeAreWaitingFor = lastPromise;
-      let currentPromise;
-      let callback;
-      // we need to change lastPromise before await anything,
-      // otherwise 2 calls might wait the same thing
-      lastPromise = new Promise(function (resolve) {
-          callback = resolve;
-      });
-      await promiseWeAreWaitingFor;
-      currentPromise = promiseCreator(...x);
-      currentPromise.then(callback).catch(callback);
-      return currentPromise;
-  };
-};
 
-const createNecessaryDirectoriesAsync = decorateForceSequential(function (filePath) {
+  return async function (...x) {
+    const promiseWeAreWaitingFor = lastPromise;
+    let currentPromise;
+    let callback;
+    // we need to change lastPromise before await anything,
+    // otherwise 2 calls might wait the same thing
+    lastPromise = new Promise((resolve) => {
+      callback = resolve;
+    });
+    await promiseWeAreWaitingFor;
+    currentPromise = promiseCreator(...x);
+    currentPromise.then(callback).catch(callback);
+    return currentPromise;
+  };
+}
+
+const createNecessaryDirectoriesAsync = decorateForceSequential((filePath) => {
   const directoryname = path.dirname(filePath);
+
   return fsPromises.mkdir(directoryname, { recursive: true });
 });
 
-const invalidExtensionChar = (c) => {
+function invalidExtensionChar(c) {
   const code = c.charCodeAt(0);
+
   return !(
-    code === 46 || // .
-    (code >= 48 && code <= 57) ||
-    (code >= 65 && code <= 90) ||
-    (code >= 97 && code <= 122)
+    code === 46 // .
+    || (code >= 48 && code <= 57)
+    || (code >= 65 && code <= 90)
+    || (code >= 97 && code <= 122)
   );
-};
+}
 
 class IncomingForm extends EventEmitter {
   constructor(options = {}) {
@@ -87,7 +95,7 @@ class IncomingForm extends EventEmitter {
 
     this.options = { ...DEFAULT_OPTIONS, ...options };
     if (!this.options.maxTotalFileSize) {
-      this.options.maxTotalFileSize = this.options.maxFileSize
+      this.options.maxTotalFileSize = this.options.maxFileSize;
     }
 
     const dir = path.resolve(
@@ -150,7 +158,7 @@ class IncomingForm extends EventEmitter {
     return this;
   }
 
-  pause () {
+  pause() {
     try {
       this.req.pause();
     } catch (err) {
@@ -164,7 +172,7 @@ class IncomingForm extends EventEmitter {
     return true;
   }
 
-  resume () {
+  resume() {
     try {
       this.req.resume();
     } catch (err) {
@@ -198,7 +206,7 @@ class IncomingForm extends EventEmitter {
         } else {
           resolveRef([fields, files]);
         }
-      }
+      };
     }
     const callback = once(dezalgo(cb));
     this.fields = {};
@@ -256,6 +264,7 @@ class IncomingForm extends EventEmitter {
           this._parser.end();
         }
       });
+
     if (promise) {
       return promise;
     }
@@ -365,10 +374,10 @@ class IncomingForm extends EventEmitter {
     const newFilename = this._getNewName(part);
     const filepath = this._joinDirectoryName(newFilename);
     const file = await this._newFile({
-      newFilename,
       filepath,
-      originalFilename: part.originalFilename,
       mimetype: part.mimetype,
+      newFilename,
+      originalFilename: part.originalFilename,
     });
     file.on('error', (err) => {
       this._error(err);
@@ -459,7 +468,6 @@ class IncomingForm extends EventEmitter {
       return;
     }
 
-
     new DummyParser(this, this.options);
 
     const results = [];
@@ -517,21 +525,26 @@ class IncomingForm extends EventEmitter {
     return new MultipartParser(this.options);
   }
 
-  async _newFile({ filepath, originalFilename, mimetype, newFilename }) {
+  async _newFile({
+    filepath,
+    mimetype,
+    newFilename,
+    originalFilename,
+  }) {
     if (this.options.fileWriteStreamHandler) {
       return new VolatileFile({
-        newFilename,
-        filepath,
-        originalFilename,
-        mimetype,
         createFileWriteStream: this.options.fileWriteStreamHandler,
+        filepath,
         hashAlgorithm: this.options.hashAlgorithm,
+        mimetype,
+        newFilename,
+        originalFilename,
       });
     }
     if (this.options.createDirsFromUploads) {
       try {
         await createNecessaryDirectoriesAsync(filepath);
-      } catch (errorCreatingDir) {
+      } catch (err) {
         this._error(new FormidableError(
           `cannot create directory`,
           errors.cannotCreateDir,
@@ -540,27 +553,26 @@ class IncomingForm extends EventEmitter {
       }
     }
     return new PersistentFile({
-      newFilename,
       filepath,
-      originalFilename,
-      mimetype,
       hashAlgorithm: this.options.hashAlgorithm,
+      mimetype,
+      newFilename,
+      originalFilename,
     });
   }
 
   _getFileName(headerValue) {
     // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
     const m = headerValue.match(
-      /\bfilename=("(.*?)"|([^()<>{}[\]@,;:"?=\s/\t]+))($|;\s)/i,
+      /\bfilename=("(.*?)"|([^()<>{}[\]@,;:"?=\s/]+))($|;\s)/i,
     );
-    if (!m) return null;
+    if (!m) 
+return null;
 
     const match = m[2] || m[3] || '';
     let originalFilename = match.substr(match.lastIndexOf('\\') + 1);
     originalFilename = originalFilename.replace(/%22/g, '"');
-    originalFilename = originalFilename.replace(/&#([\d]{4});/g, (_, code) =>
-      String.fromCharCode(code),
-    );
+    originalFilename = originalFilename.replace(/&#(\d{4});/g, (_, code) => String.fromCharCode(code));
 
     return originalFilename;
   }
@@ -579,7 +591,7 @@ class IncomingForm extends EventEmitter {
     let rawExtname = path.extname(basename);
 
     if (firstDot !== lastDot) {
-      rawExtname =  basename.slice(firstDot);
+      rawExtname = basename.slice(firstDot);
     }
 
     let filtered;
@@ -626,8 +638,9 @@ class IncomingForm extends EventEmitter {
         const name = createId();
 
         if (part && this.options.keepExtensions) {
-          const originalFilename =
-            typeof part === 'string' ? part : part.originalFilename;
+          const originalFilename
+            = typeof part === 'string' ? part : part.originalFilename;
+
           return `${name}${this._getExtension(originalFilename)}`;
         }
 

@@ -16,6 +16,7 @@ test('initWithBoundary', () => {
   const parser = new parsers.MultipartParser();
   parser.initWithBoundary(boundary);
 
+  // eslint-disable-next-line prefer-reflect
   expect(Array.prototype.slice.call(parser.boundary)).toMatchObject([
     13,
     10,

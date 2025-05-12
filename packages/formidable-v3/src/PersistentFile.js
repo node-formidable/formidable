@@ -1,15 +1,27 @@
 /* eslint-disable no-underscore-dangle */
 
-import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { EventEmitter } from 'node:events';
+import fs from 'node:fs';
 
 class PersistentFile extends EventEmitter {
-  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }) {
+  constructor({
+    filepath,
+    hashAlgorithm,
+    mimetype,
+    newFilename,
+    originalFilename,
+  }) {
     super();
 
     this.lastModifiedDate = null;
-    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm });
+    Object.assign(this, {
+      filepath,
+      hashAlgorithm,
+      mimetype,
+      newFilename,
+      originalFilename,
+    });
 
     this.size = 0;
     this._writeStream = null;
@@ -30,13 +42,13 @@ class PersistentFile extends EventEmitter {
 
   toJSON() {
     const json = {
-      size: this.size,
       filepath: this.filepath,
-      newFilename: this.newFilename,
+      length: this.length,
       mimetype: this.mimetype,
       mtime: this.lastModifiedDate,
-      length: this.length,
+      newFilename: this.newFilename,
       originalFilename: this.originalFilename,
+      size: this.size,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;
@@ -78,10 +90,10 @@ class PersistentFile extends EventEmitter {
 
   destroy() {
     this._writeStream.destroy();
-    const filepath = this.filepath; 
-    setTimeout(function () {
-        fs.unlink(filepath, () => {});
-    }, 1)
+    const filepath = this.filepath;
+    setTimeout(() => {
+      fs.unlink(filepath, () => {});
+    }, 1);
   }
 }
 

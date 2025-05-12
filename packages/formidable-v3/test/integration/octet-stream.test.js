@@ -1,8 +1,8 @@
-import { readFileSync, createReadStream } from 'node:fs';
-import { createServer, request as _request } from 'node:http';
-import path, { join, dirname } from 'node:path';
+import assert from 'node:assert/strict';
+import { createReadStream, readFileSync } from 'node:fs';
+import { createServer, request as httpRequest } from 'node:http';
+import path, { dirname, join } from 'node:path';
 import url from 'node:url';
-import assert, { strictEqual, deepStrictEqual } from 'node:assert';
 
 import formidable from '../../src/index.js';
 
@@ -21,16 +21,16 @@ test('octet stream', (done) => {
   const server = createServer((req, res) => {
     const form = formidable();
 
-    form.parse(req, (err, fields, files) => {
-      strictEqual(Object.keys(files).length, 1);
+    form.parse(req, (_, fields, files) => {
+      assert.strictEqual(Object.keys(files).length, 1);
       const file = files.file[0];
 
-      strictEqual(file.size, 301);
+      assert.strictEqual(file.size, 301);
 
       const uploaded = readFileSync(file.filepath);
       const original = readFileSync(testFilePath);
 
-      deepStrictEqual(uploaded, original);
+      assert.deepStrictEqual(uploaded, original);
 
       res.end();
       server.close();
@@ -39,16 +39,16 @@ test('octet stream', (done) => {
   });
 
   server.listen(PORT, (err) => {
-    assert(!err, 'should not have error, but be falsey');
+    assert.ok(!err, 'should not have error, but be falsey');
 
-    const request = _request({
-      port: PORT,
-      method: 'POST',
+    const req = httpRequest({
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      method: 'POST',
+      port: PORT,
     });
 
-    createReadStream(testFilePath).pipe(request);
+    createReadStream(testFilePath).pipe(req);
   });
 });

@@ -1,13 +1,13 @@
-/* eslint-disable no-underscore-dangle */
-
 import { Stream } from 'node:stream';
-import MultipartParser from '../parsers/Multipart.js';
+
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
+import MultipartParser from '../parsers/Multipart.js';
 
 export const multipartType = 'multipart';
+
 // the `options` is also available through the `options` / `formidable.options`
-export default function plugin(formidable, options) {
+export function multipart(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
   // but this allows us to customize/test each plugin
 
@@ -15,7 +15,7 @@ export default function plugin(formidable, options) {
   const self = this || formidable;
 
   // NOTE: we (currently) support both multipart/form-data and multipart/related
-  const multipart = /multipart/i.test(self.headers['content-type']);
+  const multipart = /multipart/iu.test(self.headers['content-type']);
 
   if (multipart) {
     const m = self.headers['content-type'].match(
@@ -51,7 +51,9 @@ function createInitMultipart(boundary) {
     parser.initWithBoundary(boundary);
 
     // eslint-disable-next-line max-statements, consistent-return
-    parser.on('data', async ({ name, buffer, start, end }) => {
+    parser.on('data', async ({
+      buffer, end, name, start,
+    }) => {
       if (name === 'partBegin') {
         part = new Stream();
         part.readable = true;
@@ -76,7 +78,7 @@ function createInitMultipart(boundary) {
         // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
         const m = headerValue.match(
           // eslint-disable-next-line no-useless-escape
-          /\bname=("([^"]*)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))/i,
+          /\bname=("([^"]*)"|([^()<>@,;:\\"/[\]?={}\s]+))/i,
         );
         if (headerField === 'content-disposition') {
           if (m) {

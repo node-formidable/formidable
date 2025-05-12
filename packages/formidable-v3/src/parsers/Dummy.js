@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { Transform } from 'node:stream';
 
 class DummyParser extends Transform {

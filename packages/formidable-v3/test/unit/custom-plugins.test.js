@@ -1,11 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 
-import { join } from 'node:path';
-
 import Koa from 'koa';
+import { join } from 'node:path';
 import request from 'supertest';
 
-import { formidable, plugins, errors } from '../../src/index.js';
+import { errors, formidable, plugins } from '../../src/index.js';
 
 function createServer(options, handler) {
   const app = new Koa();
@@ -92,7 +91,7 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
     request(server.callback())
       .post('/')
       .type('application/json')
-      .send({ qux: 'zaz', a: 'bbb' })
+      .send({ a: 'bbb', qux: 'zaz' })
       .end((err) => (err ? reject(err) : resolve()));
   });
 });

@@ -1,9 +1,18 @@
-import { existsSync, mkdirSync, createWriteStream, readdirSync, statSync, unlinkSync, createReadStream } from 'node:fs';
+/* eslint-disable node/handle-callback-err */
+import assert from 'node:assert/strict';
+import {
+  createReadStream,
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  statSync,
+  unlinkSync,
+} from 'node:fs';
+import { createServer, request as httpRequest } from 'node:http';
 import { tmpdir } from 'node:os';
-import { createServer, request as _request } from 'node:http';
-import path, { join, dirname } from 'node:path';
+import path, { dirname, join } from 'node:path';
 import url from 'node:url';
-import assert, { strictEqual, ok } from 'node:assert';
 
 import formidable from '../../src/index.js';
 
@@ -27,35 +36,34 @@ const testFilePath = join(
   'binaryfile.tar.gz',
 );
 
-const createDirs = (dirs) => {
+function createDirs(dirs) {
   dirs.forEach((dir) => {
     if (!existsSync(dir)) {
       mkdirSync(dir);
     }
   });
-};
+}
 
 test('file write stream handler', (done) => {
   const server = createServer((req, res) => {
     createDirs([DEFAULT_UPLOAD_DIR, CUSTOM_UPLOAD_DIR]);
     const form = formidable({
+      fileWriteStreamHandler: () => createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
       uploadDir: DEFAULT_UPLOAD_DIR,
-      fileWriteStreamHandler: () =>
-        createWriteStream(CUSTOM_UPLOAD_FILE_PATH),
     });
 
     form.parse(req, (err, fields, files) => {
-      strictEqual(Object.keys(files).length, 1);
+      assert.strictEqual(Object.keys(files).length, 1);
       const file = files.file[0];
 
-      strictEqual(file.size, 301);
-      strictEqual(typeof file.filepath, 'string');
+      assert.strictEqual(file.size, 301);
+      assert.strictEqual(typeof file.filepath, 'string');
 
       const dirFiles = readdirSync(DEFAULT_UPLOAD_DIR);
-      ok(dirFiles.length === 0);
+      assert.ok(dirFiles.length === 0);
 
       const uploadedFileStats = statSync(CUSTOM_UPLOAD_FILE_PATH);
-      ok(uploadedFileStats.size === file.size);
+      assert.ok(uploadedFileStats.size === file.size);
 
       unlinkSync(CUSTOM_UPLOAD_FILE_PATH);
       res.end();
@@ -65,16 +73,16 @@ test('file write stream handler', (done) => {
   });
 
   server.listen(PORT, (err) => {
-    assert(!err, 'should not have error, but be falsey');
+    assert.ok(!err, 'should not have error, but be falsey');
 
-    const request = _request({
-      port: PORT,
-      method: 'POST',
+    const req = httpRequest({
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      method: 'POST',
+      port: PORT,
     });
 
-    createReadStream(testFilePath).pipe(request);
+    createReadStream(testFilePath).pipe(req);
   });
 });

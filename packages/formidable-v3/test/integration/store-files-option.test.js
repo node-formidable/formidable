@@ -1,9 +1,15 @@
-import { existsSync, mkdirSync, WriteStream, statSync, unlinkSync, createReadStream } from 'node:fs';
+import { createServer, request as httpRequest } from 'http';
+import assert from 'node:assert/strict';
+import {
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  statSync,
+  unlinkSync,
+  WriteStream,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
-import { createServer, request as _request } from 'http';
-import assert, { strictEqual, ok } from 'node:assert';
-
-import path, { join, dirname } from 'node:path';
+import path, { dirname, join } from 'node:path';
 import url from 'node:url';
 
 import formidable from '../../src/index.js';
@@ -29,19 +35,19 @@ test('store files option', (done) => {
       mkdirSync(DEFAULT_UPLOAD_DIR);
     }
     const form = formidable({
-      uploadDir: DEFAULT_UPLOAD_DIR,
       fileWriteStreamHandler: () => new WriteStream(CUSTOM_UPLOAD_FILE_PATH),
+      uploadDir: DEFAULT_UPLOAD_DIR,
     });
 
-    form.parse(req, (err, fields, files) => {
-      strictEqual(Object.keys(files).length, 1);
+    form.parse(req, (_, fields, files) => {
+      assert.strictEqual(Object.keys(files).length, 1);
       const file = files.file[0];
 
-      strictEqual(file.size, 301);
-      strictEqual(typeof file.filepath, 'string');
+      assert.strictEqual(file.size, 301);
+      assert.strictEqual(typeof file.filepath, 'string');
 
       const uploadedFileStats = statSync(CUSTOM_UPLOAD_FILE_PATH);
-      ok(uploadedFileStats.size === file.size);
+      assert.ok(uploadedFileStats.size === file.size);
 
       unlinkSync(CUSTOM_UPLOAD_FILE_PATH);
       res.end();
@@ -51,14 +57,14 @@ test('store files option', (done) => {
   });
 
   server.listen(PORT, (err) => {
-    assert(!err, 'should not have error, but be falsey');
+    assert.ok(!err, 'should not have error, but be falsey');
 
-    const request = _request({
-      port: PORT,
-      method: 'POST',
+    const request = httpRequest({
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      method: 'POST',
+      port: PORT,
     });
 
     createReadStream(testFilePath).pipe(request);

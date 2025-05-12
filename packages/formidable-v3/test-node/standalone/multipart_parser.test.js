@@ -1,27 +1,26 @@
-import {Readable} from 'node:stream';
-import MultipartParser from '../../src/parsers/Multipart.js';
-import {malformedMultipart} from '../../src/FormidableError.js';
-
+import assert from 'node:assert/strict';
+import { Readable } from 'node:stream';
 import test from 'node:test';
-import assert, { deepEqual } from 'node:assert';
 
+import { malformedMultipart } from '../../src/FormidableError.js';
+import MultipartParser from '../../src/parsers/Multipart.js';
 
-
-test('MultipartParser does not hang', async (t) => {
-    const mime = `--_\r\n--_--\r\n`;
-    const parser = new MultipartParser();
-    parser.initWithBoundary('_');
-    try {
-        for await (const {name, buffer, start, end} of Readable.from(mime).pipe(parser)) {
-            console.log(name, buffer ? buffer.subarray(start, end).toString() : '');
-        }
-
-    } catch (e) {
-        deepEqual(e.code, malformedMultipart)
-        return;
-        // console.error('error');
-        // console.error(e);
-
+test('MultipartParser does not hang', async (_t, done) => {
+  const mime = `--_\r\n--_--\r\n`;
+  const parser = new MultipartParser();
+  parser.initWithBoundary('_');
+  try {
+    for await (const {
+      buffer, end, name, start,
+    } of Readable.from(mime).pipe(parser)) {
+      console.log(name, buffer ? buffer.subarray(start, end).toString() : '');
     }
-    assert(false, 'should catch error');
+  } catch (err) {
+    assert.deepEqual(err.code, malformedMultipart);
+    done();
+    return;
+    // console.error('error');
+    // console.error(e);
+  }
+  assert.ok(false, 'should catch error');
 });

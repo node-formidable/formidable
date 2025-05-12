@@ -1,15 +1,16 @@
+/* eslint-disable max-nested-callbacks */
 /* eslint-disable max-statements */
 /* eslint-disable no-underscore-dangle */
 
-import {jest} from '@jest/globals';
-import Stream from 'node:stream';
+import { jest } from '@jest/globals';
 import http from 'node:http';
 import path from 'node:path';
+import Stream from 'node:stream';
 
 import formidable from '../../src/index.js';
 
 function requestStub() {
-  return Object.assign(new Stream (), {
+  return Object.assign(new Stream(), {
     pause() {},
     resume() {},
   });
@@ -21,28 +22,28 @@ function makeHeader(originalFilename) {
 
 test(`formidable#_getFileName with regular characters`, () => {
   const originalFilename = 'foo.txt';
-  const form = formidable( );
+  const form = formidable();
 
   expect(form._getFileName(makeHeader(originalFilename))).toBe('foo.txt');
 });
 
 test(`formidable#_getFileName with unescaped quote`, () => {
   const originalFilename = 'my".txt';
-  const form = formidable( );
+  const form = formidable();
 
   expect(form._getFileName(makeHeader(originalFilename))).toBe('my".txt');
 });
 
 test(`formidable#_getFileName with escaped quote`, () => {
   const originalFilename = 'my%22.txt';
-  const form = formidable( );
+  const form = formidable();
 
   expect(form._getFileName(makeHeader(originalFilename))).toBe('my".txt');
 });
 
 test(`formidable#_getFileName with bad quote and additional sub-header`, () => {
   const originalFilename = 'my".txt';
-  const form = formidable( );
+  const form = formidable();
 
   const header = `${makeHeader(originalFilename)}; foo="bar"`;
   expect(form._getFileName(header)).toBe(originalFilename);
@@ -50,20 +51,20 @@ test(`formidable#_getFileName with bad quote and additional sub-header`, () => {
 
 test(`formidable#_getFileName with semicolon`, () => {
   const originalFilename = 'my;.txt';
-  const form = formidable( );
+  const form = formidable();
 
   expect(form._getFileName(makeHeader(originalFilename))).toBe('my;.txt');
 });
 
 test(`formidable#_getFileName with utf8 character`, () => {
   const originalFilename = 'my&#9731;.txt';
-  const form = formidable( );
+  const form = formidable();
 
   expect(form._getFileName(makeHeader(originalFilename))).toBe('my☃.txt');
 });
 
 test(`formidable#_getNewName strips harmful characters from extension when keepExtensions`, () => {
-  const form = formidable( { keepExtensions: true });
+  const form = formidable({ keepExtensions: true });
 
   const getBasename = (part) => path.basename(form._getNewName(part));
 
@@ -117,7 +118,7 @@ test(`formidable#_Array parameters support`, () => {
     'content-length': '8',
     'content-type': 'multipart/form-data; boundary=----TLVx',
   };
-  form.parse(req, (error, fields) => {
+  form.parse(req, (_, fields) => {
     expect(Array.isArray(fields.a)).toBe(true);
     expect(fields.a.length).toBe(2);
     expect(fields.a[0]).toBe('1');
@@ -129,14 +130,14 @@ test(`formidable#_Array parameters support`, () => {
 });
 
 test(`formidable#_Nested array parameters support`, () => {
-  const form = formidable( );
+  const form = formidable();
 
   const req = new http.ClientRequest();
   req.headers = {
     'content-length': '8',
     'content-type': 'multipart/form-data; boundary=----TLVx',
   };
-  form.parse(req, (error, fields) => {
+  form.parse(req, (_, fields) => {
     expect(Array.isArray(fields[`a[0]`])).toBe(true);
     expect(fields[`a[0]`][0]).toBe('a');
     expect(fields[`a[0]`][1]).toBe('b');
@@ -149,14 +150,14 @@ test(`formidable#_Nested array parameters support`, () => {
 });
 
 test(`formidable#_Object parameters support`, () => {
-  const form = formidable({  });
+  const form = formidable({ });
 
   const req = new http.ClientRequest();
   req.headers = {
     'content-length': '8',
     'content-type': 'multipart/form-data; boundary=----TLVx',
   };
-  form.parse(req, (_err, fields) => {
+  form.parse(req, (_, fields) => {
     expect(fields[`a[x]`][0]).toBe('1');
     expect(fields[`a[y]`][0]).toBe('2');
   });
@@ -191,19 +192,18 @@ describe(`formidable#_onPart`, () => {
   describe('when not allow empty files', () => {
     describe('when file is empty', () => {
       test('emits error when part is received', (done) => {
-        const form = formidable(  {    allowEmptyFiles: false,    });
+        const form = formidable({ allowEmptyFiles: false });
         form.req = requestStub();
 
         const part = new Stream();
         part.mimetype = 'text/plain';
-        // eslint-disable-next-line max-nested-callbacks
         form.on('error', (error) => {
           expect(error.message).toBe(
             'options.allowEmptyFiles is false, file size should be greater than 0',
           );
           done();
         });
-        form.onPart(part).then (function () {
+        form.onPart(part).then(() => {
           part.emit('end');
           form.emit('end');
         });
@@ -212,7 +212,7 @@ describe(`formidable#_onPart`, () => {
 
     describe('when file is not empty', () => {
       test('not emits error when part is received', () => {
-        const form = formidable(  {   allowEmptyFiles: false,     });
+        const form = formidable({ allowEmptyFiles: false });
         const formEmitSpy = jest.spyOn(form, 'emit');
 
         const part = new Stream();
@@ -228,7 +228,7 @@ describe(`formidable#_onPart`, () => {
 
   describe('when allow empty files', () => {
     test('not emits error when part is received', () => {
-      const form = formidable( );
+      const form = formidable();
       const formEmitSpy = jest.spyOn(form, 'emit');
 
       const part = new Stream();
@@ -242,7 +242,7 @@ describe(`formidable#_onPart`, () => {
 
   describe('when file uploaded size is inferior than minFileSize option', () => {
     test('emits error when part is received', (done) => {
-      const form = formidable(  { minFileSize: 5 });
+      const form = formidable({ minFileSize: 5 });
 
       const part = new Stream();
       const req = requestStub();
@@ -254,18 +254,17 @@ describe(`formidable#_onPart`, () => {
         done();
       });
       form.req = req;
-      form.onPart(part).then(function () {
+      form.onPart(part).then(() => {
         part.emit('data', Buffer.alloc(4));
         part.emit('end');
         form.emit('end');
       });
-
     });
   });
 
   describe('when file uploaded size is superior than minFileSize option', () => {
     test('not emits error when part is received', () => {
-      const form = formidable(  { minFileSize: 10 });
+      const form = formidable({ minFileSize: 10 });
       const formEmitSpy = jest.spyOn(form, 'emit');
 
       const part = new Stream();
@@ -280,7 +279,7 @@ describe(`formidable#_onPart`, () => {
 
   describe('when there are more fields than maxFields', () => {
     test('emits error', (done) => {
-      const form = formidable(  {
+      const form = formidable({
         maxFields: 1,
       });
 

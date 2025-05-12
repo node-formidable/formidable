@@ -4,11 +4,20 @@ import { createHash } from 'node:crypto';
 import { EventEmitter } from 'node:events';
 
 class VolatileFile extends EventEmitter {
-  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream }) {
+  constructor({
+    createFileWriteStream,
+    filepath,
+    hashAlgorithm,
+    mimetype,
+    newFilename,
+    originalFilename,
+  }) {
     super();
 
     this.lastModifiedDate = null;
-    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm, createFileWriteStream });
+    Object.assign(this, {
+      createFileWriteStream, filepath, hashAlgorithm, mimetype, newFilename, originalFilename,
+    });
 
     this.size = 0;
     this._writeStream = null;
@@ -33,11 +42,11 @@ class VolatileFile extends EventEmitter {
 
   toJSON() {
     const json = {
-      size: this.size,
-      newFilename: this.newFilename,
       length: this.length,
-      originalFilename: this.originalFilename,
       mimetype: this.mimetype,
+      newFilename: this.newFilename,
+      originalFilename: this.originalFilename,
+      size: this.size,
     };
     if (this.hash && this.hash !== '') {
       json.hash = this.hash;

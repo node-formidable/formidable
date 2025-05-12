@@ -1,31 +1,34 @@
+/* eslint-disable prefer-reflect */
+/* eslint-disable node/callback-return */
 /* eslint-disable no-fallthrough */
 /* eslint-disable no-bitwise */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
 
 import { Transform } from 'node:stream';
+
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
 
 let s = 0;
 const STATE = {
-  PARSER_UNINITIALIZED: s++,
-  START: s++,
-  START_BOUNDARY: s++,
-  HEADER_FIELD_START: s++,
+  END: s++,
   HEADER_FIELD: s++,
-  HEADER_VALUE_START: s++,
+  HEADER_FIELD_START: s++,
   HEADER_VALUE: s++,
   HEADER_VALUE_ALMOST_DONE: s++,
+  HEADER_VALUE_START: s++,
   HEADERS_ALMOST_DONE: s++,
-  PART_DATA_START: s++,
+  PARSER_UNINITIALIZED: s++,
   PART_DATA: s++,
+  PART_DATA_START: s++,
   PART_END: s++,
-  END: s++,
+  START: s++,
+  START_BOUNDARY: s++,
 };
 
 let f = 1;
-const FBOUNDARY = { PART_BOUNDARY: f, LAST_BOUNDARY: (f *= 2) };
+const FBOUNDARY = { LAST_BOUNDARY: (f *= 2), PART_BOUNDARY: f };
 
 const LF = 10;
 const CR = 13;
@@ -69,8 +72,8 @@ class MultipartParser extends Transform {
 
   _flush(done) {
     if (
-      (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
-      (this.state === STATE.PART_DATA && this.index === this.boundary.length)
+      (this.state === STATE.HEADER_FIELD_START && this.index === 0)
+      || (this.state === STATE.PART_DATA && this.index === this.boundary.length)
     ) {
       this._handleCallback('partEnd');
       this._handleCallback('end');
@@ -98,15 +101,17 @@ class MultipartParser extends Transform {
     if (start !== undefined && start === end) {
       return;
     }
-    this.push({ name, buffer: buf, start, end });
+    this.push({
+      buffer: buf, end, name, start,
+    });
   }
 
-  // eslint-disable-next-line max-statements
+  // eslint-disable-next-line max-statements, complexity
   _transform(buffer, _, done) {
     let i = 0;
     let prevIndex = this.index;
-    let { index, state, flags } = this;
-    const { lookbehind, boundary, boundaryChars } = this;
+    let { flags, index, state } = this;
+    const { boundary, boundaryChars, lookbehind } = this;
     const boundaryLength = boundary.length;
     const boundaryEnd = boundaryLength - 1;
     this.bufferLength = buffer.length;
@@ -139,13 +144,15 @@ class MultipartParser extends Transform {
     for (i = 0; i < this.bufferLength; i++) {
       c = buffer[i];
       switch (state) {
-        case STATE.PARSER_UNINITIALIZED:
+        case STATE.PARSER_UNINITIALIZED: {
           done(this._endUnexpected());
           return;
-        case STATE.START:
+        }
+        case STATE.START: {
           index = 0;
           state = STATE.START_BOUNDARY;
-        case STATE.START_BOUNDARY:
+        }
+        case STATE.START_BOUNDARY: {
           if (index === boundary.length - 2) {
             if (c === HYPHEN) {
               flags |= FBOUNDARY.LAST_BOUNDARY;
@@ -178,11 +185,13 @@ class MultipartParser extends Transform {
             index++;
           }
           break;
-        case STATE.HEADER_FIELD_START:
+        }
+        case STATE.HEADER_FIELD_START: {
           state = STATE.HEADER_FIELD;
           setMark('headerField');
           index = 0;
-        case STATE.HEADER_FIELD:
+        }
+        case STATE.HEADER_FIELD: {
           if (c === CR) {
             clearMarkSymbol('headerField');
             state = STATE.HEADERS_ALMOST_DONE;
@@ -211,28 +220,33 @@ class MultipartParser extends Transform {
             return;
           }
           break;
-        case STATE.HEADER_VALUE_START:
+        }
+        case STATE.HEADER_VALUE_START: {
           if (c === SPACE) {
             break;
           }
 
           setMark('headerValue');
           state = STATE.HEADER_VALUE;
-        case STATE.HEADER_VALUE:
+          break;
+        }
+        case STATE.HEADER_VALUE: {
           if (c === CR) {
             dataCallback('headerValue', true);
             this._handleCallback('headerEnd');
             state = STATE.HEADER_VALUE_ALMOST_DONE;
           }
           break;
-        case STATE.HEADER_VALUE_ALMOST_DONE:
+        }
+        case STATE.HEADER_VALUE_ALMOST_DONE: {
           if (c !== LF) {
             done(this._endUnexpected());
-return;
+            return;
           }
           state = STATE.HEADER_FIELD_START;
           break;
-        case STATE.HEADERS_ALMOST_DONE:
+        }
+        case STATE.HEADERS_ALMOST_DONE: {
           if (c !== LF) {
             done(this._endUnexpected());
             return;
@@ -241,10 +255,12 @@ return;
           this._handleCallback('headersEnd');
           state = STATE.PART_DATA_START;
           break;
-        case STATE.PART_DATA_START:
+        }
+        case STATE.PART_DATA_START: {
           state = STATE.PART_DATA;
           setMark('partData');
-        case STATE.PART_DATA:
+        }
+        case STATE.PART_DATA: {
           prevIndex = index;
 
           if (index === 0) {
@@ -319,11 +335,14 @@ return;
           }
 
           break;
-        case STATE.END:
+        }
+        case STATE.END: {
           break;
-        default:
+        }
+        default: {
           done(this._endUnexpected());
           return;
+        }
       }
     }
 
@@ -349,7 +368,9 @@ MultipartParser.stateToString = (stateNumber) => {
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const stateName in STATE) {
     const number = STATE[stateName];
-    if (number === stateNumber) return stateName;
+    if (number === stateNumber) {
+      return stateName;
+    }
   }
 };
 

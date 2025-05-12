@@ -1,29 +1,29 @@
+import Formidable, { DEFAULT_OPTIONS } from './Formidable.js';
 import PersistentFile from './PersistentFile.js';
 import VolatileFile from './VolatileFile.js';
-import Formidable, { DEFAULT_OPTIONS } from './Formidable.js';
 
 // make it available without requiring the `new` keyword
 // if you want it access `const formidable.IncomingForm` as v1
 const formidable = (...args) => new Formidable(...args);
-const {enabledPlugins} = DEFAULT_OPTIONS;
+const { enabledPlugins } = DEFAULT_OPTIONS;
 
 export default formidable;
 export {
+  DEFAULT_OPTIONS as defaultOptions,
+  enabledPlugins,
   PersistentFile as File,
-  PersistentFile,
-  VolatileFile,
   Formidable,
-
-  // alias
-  Formidable as IncomingForm,
 
   // as named
   formidable,
 
   // misc
   DEFAULT_OPTIONS as FORMIDABLE_DEFAULT_OPTIONS,
-  DEFAULT_OPTIONS as defaultOptions,
-  enabledPlugins,
+
+  // alias
+  Formidable as IncomingForm,
+  PersistentFile,
+  VolatileFile,
 };
 
 /**
@@ -34,6 +34,12 @@ export {
  * In the majority of the cases, no one is using any of this stuff anyway.
  */
 
+export * as errors from './FormidableError.js';
+
+// none of these were exported in < 3.5.4, now we have them both here and as `formidable/helpers` & `formidable/src/helpers/*.js`
+export * as helpers from './helpers/index.js';
+// export * from './helpers/index.js';
+
 // from and after >= 3.5.5
 export * as parsers from './parsers/index.js';
 // before 3.5.4 - TODO: bring back in if reports come, highly unlikely
@@ -43,9 +49,3 @@ export * as parsers from './parsers/index.js';
 export * as plugins from './plugins/index.js';
 // before 3.5.4 - TODO: bring back in if reports come, highly unlikely
 // export * from './plugins/index.js'; // old
-
-// none of these were exported in < 3.5.4, now we have them both here and as `formidable/helpers` & `formidable/src/helpers/*.js`
-export * as helpers from './helpers/index.js';
-// export * from './helpers/index.js';
-
-export * as errors from './FormidableError.js';

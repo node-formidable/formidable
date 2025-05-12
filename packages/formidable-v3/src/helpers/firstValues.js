@@ -11,4 +11,4 @@ export function firstValues(form, fields, exceptions = []) {
       return [key, value[0]];
     }),
   );
-};
+}

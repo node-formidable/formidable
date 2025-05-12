@@ -1,11 +1,12 @@
-import { ok, strictEqual } from 'node:assert';
+import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import test from 'node:test';
+
 import formidable, { errors } from '../../src/index.js';
 
-const isPromise = (x) => {
+function isPromise(x) {
   return x && typeof x === `object` && typeof x.then === `function`;
-};
+}
 
 let server;
 let port = 13540;
@@ -16,34 +17,34 @@ test.beforeEach(() => {
   server = createServer();
 });
 
-test.afterEach(() => {
-  return new Promise((resolve) => {
-    if (server.listening) {
-      server.close(() => resolve());
-    } else {
-      resolve();
-    }
-  });
-});
+test.afterEach(() => new Promise((resolve) => {
+  if (server.listening) {
+    server.close(() => resolve());
+  } else {
+    resolve();
+  }
+}));
 
-test('parse returns promise if no callback is provided', async (t) => {
+test('parse returns promise if no callback is provided', async () => {
   server.on('request', (req, res) => {
     const form = formidable();
 
     const promise = form.parse(req);
-    strictEqual(isPromise(promise), true);
+    assert.strictEqual(isPromise(promise), true);
     promise.then(([fields, files]) => {
-      ok(typeof fields === 'object');
-      ok(typeof files === 'object');
+      assert.ok(typeof fields === 'object');
+      assert.ok(typeof files === 'object');
       res.writeHead(200);
-      res.end("ok");
-    }).catch(e => {
+      res.end('ok');
+    }).catch((err) => {
       res.writeHead(500);
-      res.end(String(e));
+      res.end(String(err));
     });
   });
 
-  await new Promise(resolve => server.listen(port, resolve));
+  await new Promise((resolve) => {
+    server.listen(port, resolve);
+  });
 
   const body = `----13068458571765726332503797717\r
 Content-Disposition: form-data; name="title"\r
@@ -64,35 +65,37 @@ d\r
 `;
 
   const res = await fetch(String(new URL(`http:localhost:${port}/`)), {
-    method: 'POST',
+    body,
     headers: {
       'Content-Length': body.length,
-      Host: `localhost:${port}`,
       'Content-Type': 'multipart/form-data; boundary=--13068458571765726332503797717',
+      'Host': `localhost:${port}`,
     },
-    body
+    method: 'POST',
   });
 
-  strictEqual(res.status, 200);
+  assert.strictEqual(res.status, 200);
 });
 
-test('parse rejects with promise if it fails', async (t) => {
+test('parse rejects with promise if it fails', async () => {
   server.on('request', (req, res) => {
-    const form = formidable({minFileSize: 10 ** 6}); // create condition to fail
+    const form = formidable({ minFileSize: 10 ** 6 }); // create condition to fail
 
     const promise = form.parse(req);
-    strictEqual(isPromise(promise), true);
+    assert.strictEqual(isPromise(promise), true);
     promise.then(() => {
       res.writeHead(500);
       res.end('should have failed');
-    }).catch(e => {
-      res.writeHead(e.httpCode);
-      strictEqual(e.code, errors.smallerThanMinFileSize);
-      res.end(String(e));
+    }).catch((err) => {
+      res.writeHead(err.httpCode);
+      assert.strictEqual(err.code, errors.smallerThanMinFileSize);
+      res.end(String(err));
     });
   });
 
-  await new Promise(resolve => server.listen(port, resolve));
+  await new Promise((resolve) => {
+    server.listen(port, resolve);
+  });
 
   const body = `----13068458571765726332503797717\r
 Content-Disposition: form-data; name="title"\r
@@ -113,14 +116,14 @@ d\r
 `;
 
   const res = await fetch(String(new URL(`http:localhost:${port}/`)), {
-    method: 'POST',
+    body,
     headers: {
       'Content-Length': body.length,
-      Host: `localhost:${port}`,
       'Content-Type': 'multipart/form-data; boundary=--13068458571765726332503797717',
+      'Host': `localhost:${port}`,
     },
-    body
+    method: 'POST',
   });
 
-  strictEqual(res.status, 400);
+  assert.strictEqual(res.status, 400);
 });

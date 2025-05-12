@@ -1,32 +1,32 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 
+import assert from 'node:assert/strict';
 import { createReadStream } from 'node:fs';
+import { createServer } from 'node:http';
 import { createConnection } from 'node:net';
 import { join } from 'node:path';
-import { createServer } from 'node:http';
-import { strictEqual } from 'node:assert';
 
 import formidable from '../../src/index.js';
+import * as encoding from '../fixture/js/encoding.js';
+import * as misc from '../fixture/js/misc.js';
+import * as noFilename from '../fixture/js/no-filename.js';
+import * as preamble from '../fixture/js/preamble.js';
+import * as specialCharsInFilename from '../fixture/js/special-chars-in-filename.js';
+import * as _workarounds from '../fixture/js/workarounds.js';
 
 const PORT = 13534;
 const CWD = process.cwd();
 const FIXTURES_HTTP = join(CWD, 'test', 'fixture', 'http');
 const UPLOAD_DIR = join(CWD, 'test', 'tmp');
-import * as encoding from "../fixture/js/encoding.js";
-import * as misc from "../fixture/js/misc.js";
-import * as noFilename from "../fixture/js/no-filename.js";
-import * as preamble from "../fixture/js/preamble.js";
-import * as workarounds from "../fixture/js/workarounds.js";
-import * as specialCharsInFilename from "../fixture/js/special-chars-in-filename.js";
 
-const fixtures= {
+const fixtures = {
+  [`no-filename`]: noFilename,
+  [`special-chars-in-filename`]: specialCharsInFilename,
   encoding,
   misc,
-  [`no-filename`]: noFilename,
   preamble,
-  [`special-chars-in-filename`]: specialCharsInFilename,
-  // workarounds, // todo uncomment this and make it work
+  // _workarounds, // todo uncomment this and make it work
 };
 
 test('fixtures', (done) => {
@@ -34,17 +34,18 @@ test('fixtures', (done) => {
   server.listen(PORT, findFixtures);
 
   function findFixtures() {
-      const results = Object.entries(fixtures).map(([fixtureGroup, fixture]) => {
-        return Object.entries(fixture).map(([k, v]) => {
-          return v.map(details => {
-            return {
-              fixture: v,
-              name: `${fixtureGroup}/${details.fixture}.http`
-            };
-          });
-        });
-      }).flat(Infinity);
-      testNext(results);
+    function toFixture(name, fgroup) {
+      return Object.entries(name).map(([_, v]) => v.map((details) => ({
+        fixture: v,
+        name: `${fgroup}/${details.fixture}.http`,
+      })));
+    }
+
+    const results = Object.entries(fixtures)
+      .map(([fixtureGroup, fixture]) => toFixture(fixture, fixtureGroup))
+      .flat(Infinity);
+
+    testNext(results);
   }
 
   function testNext(results) {
@@ -65,16 +66,19 @@ test('fixtures', (done) => {
 
       fixture.forEach((expectedPart, i) => {
         const parsedPart = parts[i];
-        strictEqual(parsedPart.type, expectedPart.type);
-        strictEqual(parsedPart.name, expectedPart.name);
+        assert.strictEqual(parsedPart.type, expectedPart.type);
+        assert.strictEqual(parsedPart.name, expectedPart.name);
 
         if (parsedPart.type === 'file') {
           const file = parsedPart.value;
-          strictEqual(file.originalFilename, expectedPart.originalFilename,
-            `${JSON.stringify([expectedPart, file])}`);
+          assert.strictEqual(
+            file.originalFilename,
+            expectedPart.originalFilename,
+            `${JSON.stringify([expectedPart, file])}`,
+          );
 
           if (expectedPart.sha1) {
-            strictEqual(
+            assert.strictEqual(
               file.hash,
               expectedPart.sha1,
               `SHA1 error ${file.originalFilename} on ${file.filepath} ${JSON.stringify([expectedPart, file])}`,
@@ -90,14 +94,13 @@ test('fixtures', (done) => {
   function uploadFixture(fixtureName, cb) {
     server.once('request', (req, res) => {
       const form = formidable({
-        uploadDir: UPLOAD_DIR,
         hashAlgorithm: 'sha1',
+        uploadDir: UPLOAD_DIR,
       });
       form.parse(req);
 
       function callback(...args) {
         const realCallback = cb;
-        // eslint-disable-next-line no-param-reassign
         cb = function callbackFn() {};
 
         realCallback(...args);
@@ -107,10 +110,10 @@ test('fixtures', (done) => {
       form
         .on('error', callback)
         .on('fileBegin', (name, value) => {
-          parts.push({ type: 'file', name, value });
+          parts.push({ name, type: 'file', value });
         })
         .on('field', (name, value) => {
-          parts.push({ type: 'field', name, value });
+          parts.push({ name, type: 'field', value });
         })
         .on('end', () => {
           res.end();

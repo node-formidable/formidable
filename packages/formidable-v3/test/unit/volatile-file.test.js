@@ -1,6 +1,6 @@
-import {jest} from '@jest/globals';
-import {VolatileFile} from '../../src/index.js';
+import { jest } from '@jest/globals';
 
+import { VolatileFile } from '../../src/index.js';
 
 describe('VolatileFile', () => {
   let file;
@@ -9,18 +9,18 @@ describe('VolatileFile', () => {
 
   beforeEach(() => {
     writeStreamInstanceMock = {
-      on: jest.fn(),
       destroy: jest.fn(),
       end: jest.fn(),
+      on: jest.fn(),
       write: jest.fn(),
     };
     writeStreamMock = jest.fn(() => writeStreamInstanceMock);
 
     file = new VolatileFile({
-      xname: 'cat.png',
-      originalFilename: 'cat.png',
-      mimetype: 'image/png',
       createFileWriteStream: writeStreamMock,
+      mimetype: 'image/png',
+      originalFilename: 'cat.png',
+      xname: 'cat.png',
     });
 
     file.open();
