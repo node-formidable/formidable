@@ -60,7 +60,7 @@
     "test-jest": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest --testPathPattern=test/",
     "test-jest:cov": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest --testPathPattern=test/ --coverage",
     "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
-    "test": "npm run test-node && npm run test-jest",
+    "test": "npm run test-node && npm run test-jest && rm -rf ./test/tmp",
     "test:cov": "npm run test-node && npm run test-jest:cov",
     "pkg:__COMMENT": "we need that because package managers do not work when multiple packages in mononrepo are with the same name",
     "pkg:name-prod": "jq \".name = \\\"formidable\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
