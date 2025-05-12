@@ -1,0 +1,89 @@
+{
+  "name": "formidable",
+  "type": "module",
+  "version": "4.0.0-rc.6",
+  "description": "The oldest and most popular Node.js form parsing library, with support for multipart/form-data, file uploads, and more.",
+  "author": "tunnckoCore",
+  "contributors": [
+    "felixge",
+    "tunnckoCore",
+    "GrosSacASac",
+    "xarguments",
+    "charmander",
+    "fengxinming",
+    "kedarv"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/node-formidable/formidable/tree/monorepo/packages/formidable-next",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/node-formidable/formidable.git",
+    "directory": "packages/formidable-next"
+  },
+  "keywords": [
+    "form",
+    "parser",
+    "nodejs",
+    "multipart",
+    "multipart/form-data",
+    "formdata",
+    "form-data",
+    "files",
+    "file uploads"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "scripts": {
+    "___X_build:node16": "pnpm run build:node16cjs && pnpm run build:node16esm",
+    "___X_build:node16cjs": "esbuild ./src/entrypoints/node16.ts --bundle --format=cjs --outfile=./dist/node16.cjs --tsconfig=../../tsconfig.node.json",
+    "___X_build:node16esm": "esbuild ./src/entrypoints/node16.ts --bundle --format=esm --outfile=./dist/node16.js --tsconfig=../../tsconfig.node.json",
+    "___X_postbuild:node16": "cp ./dist/index.d.ts ./dist/node16.d.cts && cp ./dist/index.d.ts ./dist/node16.d.ts",
+    "___Z_build:node14": "pnpm run build:node14cjs && pnpm run build:node14esm",
+    "___Z_build:node14cjs": "esbuild ./src/entrypoints/node14.ts --bundle --format=cjs --outfile=./dist/node14.cjs --tsconfig=../../tsconfig.node.json",
+    "___Z_build:node14esm": "esbuild ./src/entrypoints/node14.ts --bundle --format=esm --outfile=./dist/node14.js --tsconfig=../../tsconfig.node.json",
+    "___Z_postbuild:node14": "cp ./dist/index.d.ts ./dist/node14.d.cts && cp ./dist/index.d.ts ./dist/node14.d.ts",
+    "prebuild": "rm -rf dist",
+    "build": "tsdown",
+    "example:node14cjs": "node ./example/node14.cjs",
+    "example:node14esm": "node ./example/node14.js",
+    "pkg:__COMMENT": "we need that because package managers do not work when multiple mononrepo packages are with the same name",
+    "pkg:name-prod": "jq \".name = \\\"formidable\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "pkg:name-dev": "jq \".name = \\\"formidable-next\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "prepublishOnly": "npm run build && npm run pkg:name-prod",
+    "postpublish": "npm run pkg:name-dev",
+    "test": "echo no-tests-yet"
+  },
+  "dependencies": {
+    "@mjackson/headers": "^0.10.0",
+    "headers-polyfill": "^4.0.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.4",
+    "tsdown": "0.11.4",
+    "typescript": "^5.8.3",
+    "web-streams-polyfill": "^4.1.0"
+  }
+}

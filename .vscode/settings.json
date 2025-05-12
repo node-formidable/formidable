@@ -1,0 +1,271 @@
+{
+  "[astro]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[json5]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[toml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[yaml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[yml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "chat.mcp.discovery.enabled": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.autoClosingBrackets": "always",
+  "editor.codeActions.triggerOnFocusChange": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always",
+    "source.fixAll.prettier": "always"
+  },
+  "editor.codeLens": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.detectIndentation": false,
+  "editor.folding": true,
+  "editor.fontFamily": "Fira Code",
+  "editor.fontLigatures": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnType": false,
+  "editor.inlineSuggest.enabled": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.rulers": [
+    80,
+    100,
+    120
+  ],
+  "editor.tabSize": 2,
+  "editor.wordWrap": "off",
+  "emmet.showExpandedAbbreviation": "never",
+  "errorLens.enabledDiagnosticLevels": [
+    "error"
+    // "warning"
+  ],
+  "errorLens.messageBackgroundMode": "none",
+  "errorLens.onSave": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "eslint.rules.customizations": [
+    {
+      "rule": "style/*",
+      "severity": "off"
+    },
+    {
+      "rule": "*-indent",
+      "severity": "off"
+    },
+    {
+      "rule": "*-spacing",
+      "severity": "off"
+    },
+    {
+      "rule": "*-spaces",
+      "severity": "off"
+    },
+    {
+      "rule": "*-order",
+      "severity": "off"
+    },
+    {
+      "rule": "*-dangle",
+      "severity": "off"
+    },
+    {
+      "rule": "*-newline",
+      "severity": "off"
+    },
+    {
+      "rule": "*quotes",
+      "severity": "off"
+    },
+    {
+      "rule": "*semi",
+      "severity": "off"
+    }
+  ],
+  "eslint.run": "onSave",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "markdown",
+    "json",
+    "json5",
+    "jsonc",
+    "yaml",
+    "toml",
+    "xml",
+    "gql",
+    "graphql",
+    "astro",
+    "svelte",
+    "css",
+    "less",
+    "scss",
+    "pcss",
+    "postcss"
+  ],
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "extensions.ignoreRecommendations": true,
+  "files.associations": {
+    ".npmrc": "ini",
+    "*.mdx": "mdx",
+    "*.njk": "html",
+    "*.postcss": "tailwindcss",
+    "*rc": "yaml"
+  },
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "git.openRepositoryInParentFolders": "never",
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "plaintext": false
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "mcp": {
+    "servers": {
+      "coincap-mcp": {
+        "args": [
+          "coincap-mcp"
+        ],
+        "command": "bunx",
+        "type": "stdio"
+      },
+      "context7": {
+        "args": [
+          "-y",
+          "@upstash/context7-mcp@latest"
+        ],
+        "command": "bunx",
+        "type": "stdio"
+      },
+      "openapi-mcp-slop": {
+        "args": [
+          "openapi-mcp-server@latest",
+          "run"
+        ],
+        "command": "bunx",
+        "type": "stdio"
+      },
+      "tckdev-oss-repo-docs": {
+        "type": "sse",
+        "url": "https://gitmcp.io/tunnckoCore/opensource"
+      }
+    }
+  },
+  "npm-intellisense.importES6": true,
+  "npm-intellisense.importLinebreak": ";\r\n",
+  "npm-intellisense.importQuotes": "'",
+  "npm.packageManager": "auto",
+  "prettier.enable": false,
+  "prettier.printWidth": 200,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "search.exclude": {
+    "**/.git": true,
+    "**/.github": false,
+    "**/.nuxt": true,
+    "**/.output": true,
+    "**/.pnpm": true,
+    "**/.vscode": true,
+    "**/.yarn": true,
+    "**/*.snap": true,
+    "**/*.svg": true,
+    "**/assets": true,
+    "**/bower_components": true,
+    "**/CHANGELOG*": true,
+    "**/dist/**": true,
+    "**/LICENSE*": true,
+    "**/logs": true,
+    "**/node_modules": true,
+    "**/out/**": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/public": true,
+    "**/temp": true,
+    "**/yarn.lock": true
+  },
+  "solidity.telemetry": false,
+  "svelte.enable-ts-plugin": true,
+  "terminal.integrated.fontFamily": "monospace",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "update.mode": "start",
+  "window.menuBarVisibility": "toggle",
+  "workbench.colorCustomizations": {
+    "terminal.ansiBlack": "#282a36",
+    "terminal.ansiBlue": "#57c7ff",
+    "terminal.ansiBrightBlack": "#686868",
+    "terminal.ansiBrightBlue": "#57c7ff",
+    "terminal.ansiBrightCyan": "#9aedfe",
+    "terminal.ansiBrightGreen": "#5af78e",
+    "terminal.ansiBrightMagenta": "#ff6ac1",
+    "terminal.ansiBrightRed": "#ff5c57",
+    "terminal.ansiBrightWhite": "#eff0eb",
+    "terminal.ansiBrightYellow": "#f3f99d",
+    "terminal.ansiCyan": "#9aedfe",
+    "terminal.ansiGreen": "#5af78e",
+    "terminal.ansiMagenta": "#ff6ac1",
+    "terminal.ansiRed": "#ff5c57",
+    "terminal.ansiWhite": "#f1f1f0",
+    "terminal.ansiYellow": "#f3f99d",
+    "terminal.foreground": "#eff0eb"
+  },
+  "workbench.colorTheme": "Catppuccin Macchiato",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.sideBar.location": "right",
+  "workbench.startupEditor": "none",
+  "workbench.statusBar.visible": true,
+  "zenMode.hideActivityBar": false
+}

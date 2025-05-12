@@ -1,0 +1,125 @@
+{
+  "name": "formidable-v3",
+  "version": "3.5.4",
+  "description": "A node.js module for parsing form data, especially file uploads.",
+  "license": "MIT",
+  "homepage": "https://github.com/node-formidable/formidable/tree/monorepo/packages/formidable-v3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/node-formidable/formidable.git",
+    "directory": "packages/formidable-v3"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./src/helpers/*.js": {
+      "import": "./dist/helpers/*.js",
+      "require": "./dist/helpers/*.cjs"
+    },
+    "./helpers": {
+      "import": "./dist/helpers/index.js",
+      "require": "./dist/helpers/index.cjs"
+    },
+    "./src/parsers/*.js": {
+      "import": "./dist/parsers/*.js",
+      "require": "./dist/parsers/*.cjs"
+    },
+    "./parsers": {
+      "import": "./dist/parsers/index.js",
+      "require": "./dist/parsers/index.cjs"
+    },
+    "./src/plugins/*.js": {
+      "import": "./dist/plugins/*.js",
+      "require": "./dist/plugins/*.cjs"
+    },
+    "./plugins": {
+      "import": "./dist/plugins/index.js",
+      "require": "./dist/plugins/index.cjs"
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "CHANGELOG.md",
+    "README.md",
+    "README_pt_BR.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": false,
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
+  },
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsdown",
+    "test-node": "node --test ./test-node/**/*.test.js",
+    "test-jest": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest --testPathPattern=test/",
+    "test-jest:cov": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest --testPathPattern=test/ --coverage",
+    "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
+    "test": "npm run test-node && npm run test-jest && rm -rf ./test/tmp",
+    "test:cov": "npm run test-node && npm run test-jest:cov",
+    "pkg:__COMMENT": "we need that because package managers do not work when multiple packages in mononrepo are with the same name",
+    "pkg:name-prod": "jq \".name = \\\"formidable\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "pkg:name-dev": "jq \".name = \\\"formidable-v3\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "prepublishOnly": "npm run build && npm run pkg:name-prod",
+    "postpublish": "npm run pkg:name-dev"
+  },
+  "___scripts": {
+    "build-package": "rollup --config ./tool/rollup.config.js",
+    "prepublishOnly": "pnpm run build-package",
+    "bench": "node benchmark",
+    "bench2prep": "node benchmark/server.js",
+    "bench2": "bombardier --body-file=\"./README.md\" --method=POST --duration=10s --connections=100 http://localhost:3000/api/upload",
+    "fmt": "pnpm run fmt:prepare '**/*'",
+    "fmt:prepare": "prettier --write",
+    "lint": "pnpm run lint:prepare .",
+    "lint:prepare": "eslint --cache --fix --quiet --format codeframe",
+    "fresh": "rm -rf ./node_modules",
+    "test-specific": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/standalone/keep-alive-error.test.js",
+    "test-jest": "node --disable-warning=ExperimentalWarning --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+    "test-node": "node --disable-warning=ExperimentalWarning --test ./test-node/**/*.test.js",
+    "test-jest:ci": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=test/ --coverage",
+    "test:local": "pnpm run test-node && pnpm run test-jest",
+    "pkg:__COMMENT": "we need that because package managers do not work when multiple packages in mononrepo are with the same name",
+    "pkg:name-prod": "jq \".name = \\\"formidable\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "pkg:name-dev": "jq \".name = \\\"formidable-v3\\\"\" package.json > package.tmp.json && mv package.tmp.json package.json",
+    "audit": "pnpm audit --prod --fix",
+    "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
+    "test": "pnpm run audit && node --test ./test-node/**/*.test.js && pnpm run test-jest:ci"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "dezalgo": "^1.0.4",
+    "once": "^1.4.0"
+  },
+  "devDependencies": {
+    "@sindresorhus/slugify": "^2.2.1",
+    "tsdown": "0.11.4",
+    "express": "^4.21.2",
+    "formdata-polyfill": "^4.0.10",
+    "jest": "^29.7.0",
+    "koa": "2.16.1",
+    "nyc": "15.1.0",
+    "supertest": "6.1.6"
+  },
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "jest": {
+    "verbose": true
+  },
+  "keywords": [
+    "multipart",
+    "form",
+    "data",
+    "querystring",
+    "www",
+    "json",
+    "ulpoad",
+    "file"
+  ]
+}
