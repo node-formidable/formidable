@@ -18,12 +18,12 @@ npm i formidable@next
 
 ```ts
 import {
-  parseMultipartRequest,
-  parseMultipart,
   formidableDefaultOptions,
   FormidableError,
   FormidableOptions,
   FormidablePart,
+  parseMultipart,
+  parseMultipartRequest,
 } from 'formidable';
 
 async function formidable(req: Request, options?: FormidableOptions) {
@@ -61,49 +61,66 @@ async function formidable(req: Request, options?: FormidableOptions) {
         console.log('field', part.name, await part.text());
       }
     });
-  } catch (er: FormidableError) {
-    switch (er.code) {
-      case 'ERR_INVALID_INPUT':
-        console.error(er.message);
+  } catch (err: FormidableError) {
+    switch (err.code) {
+      case 'ERR_INVALID_INPUT': {
+        console.error(err.message);
         break;
-      case 'ERR_BODY_CONSUMED':
-        console.error(er.message);
+      }
+      case 'ERR_BODY_CONSUMED': {
+        console.error(err.message);
         break;
-      case 'ERR_FAILED_TO_PARSE_TEXT':
-        console.error(er.message);
+      }
+      case 'ERR_FAILED_TO_PARSE_TEXT': {
+        console.error(err.message);
         break;
-      case 'ERR_FAILED_TO_PARSE_JSON':
-        console.error(er.message);
+      }
+      case 'ERR_FAILED_TO_PARSE_JSON': {
+        console.error(err.message);
         break;
-      case 'ERR_NO_BOUNDARY':
-        console.error(er.message);
+      }
+      case 'ERR_NO_BOUNDARY': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_FILENAME_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_FILENAME_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_FILE_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_FILE_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_FILE_KEY_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_FILE_KEY_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_FIELD_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_FIELD_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_FIELD_KEY_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_FIELD_KEY_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_HEADER_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_HEADER_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_HEADER_KEY_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_HEADER_KEY_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_HEADER_VALUE_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_HEADER_VALUE_SIZE': {
+        console.error(err.message);
         break;
-      case 'ERR_MAX_ALL_HEADERS_SIZE':
-        console.error(er.message);
+      }
+      case 'ERR_MAX_ALL_HEADERS_SIZE': {
+        console.error(err.message);
+        break;
+      }
+      default:
+        console.error('Unknown error:', err);
         break;
     }
   }
@@ -122,8 +139,8 @@ modules `require('web-streams-polyfill/ponyfill');` for CJS
 
 ```ts
 import 'web-streams-polyfill/polyfill';
-import { createServer } from 'node:http';
 import { parseMultipartRequest } from 'formidable';
+import { createServer } from 'node:http';
 
 const server = createServer((req, res) => {
   if (req.method === 'POST') {
@@ -131,10 +148,10 @@ const server = createServer((req, res) => {
     await parseMultipartRequest(
       req,
       {
-        maxFileSize: 1 * 1024 * 1024, // 1mb, defaults to 100mb
-        maxFilenameSize: 1000, // defaults to 255
-        maxFileKeySize: 1000, // defaults to 255
         maxFieldKeySize: 1000, // defaults to 255
+        maxFileKeySize: 1000, // defaults to 255
+        maxFilenameSize: 1000, // defaults to 255
+        maxFileSize: 1 * 1024 * 1024, // 1mb, defaults to 100mb
       },
       async (part) => {
         console.log('part:', part.toString());
@@ -169,10 +186,10 @@ export default {
       await parseMultipartRequest(
         req,
         {
-          maxFileSize: 1 * 1024 * 1024, // 1mb, defaults to 100mb
-          maxFilenameSize: 1000, // defaults to 255
-          maxFileKeySize: 1000, // defaults to 255
           maxFieldKeySize: 1000, // defaults to 255
+          maxFileKeySize: 1000, // defaults to 255
+          maxFilenameSize: 1000, // defaults to 255
+          maxFileSize: 1 * 1024 * 1024, // 1mb, defaults to 100mb
         },
         async (part: FormidablePart) => {
           console.log('part:', part.toString());
@@ -183,10 +200,10 @@ export default {
     }
 
     return new Response('Hello World, try POST request', {
-      status: 200,
       headers: {
         'Content-Type': 'text/plain',
       },
+      status: 200,
     });
   },
 };

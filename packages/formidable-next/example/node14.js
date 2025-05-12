@@ -1,3 +1,4 @@
+/* eslint-disable antfu/no-import-dist */
 import 'web-streams-polyfill/polyfill';
 
 import { parseMultipart } from '../dist/index.js';

@@ -1,26 +1,27 @@
 // SPDX-License-Identifier: MIT
 
+/* eslint-disable node/handle-callback-err */
 import {
   createPartialTailSearch,
   createSearch,
   type PartialTailSearchFunction,
   type SearchFunction,
 } from './buffer-search.ts';
+// eslint-disable-next-line node/no-missing-import
 import { SuperHeaders } from './super-headers.js';
 
 export const formidableDefaultOptions: FormidableOptions = {
   maxAllHeadersSize: 8 * 1024, // 8kb, size for all headers combined
-  maxHeaderKeySize: 255, // size of the key per each header
-  maxHeaderValueSize: 1 * 1024, // size of the key per each header
-  maxHeaderSize: 2 * 1024, // 1kb, size of key + value of each header
-  maxFilenameSize: 255, // size of the file original filename
-  maxFileKeySize: 255, // size of the key of file fields
-  maxFileSize: 100 * 1024 * 1024, // 100MB
   maxFieldKeySize: 255, // size of the key of text fields
   maxFieldSize: 100 * 1024, // 100kb, size of each text field value
+  maxFileKeySize: 255, // size of the key of file fields
+  maxFilenameSize: 255, // size of the file original filename
+  maxFileSize: 100 * 1024 * 1024, // 100MB
+  maxHeaderKeySize: 255, // size of the key per each header
+  maxHeaderSize: 2 * 1024, // 1kb, size of key + value of each header
+  maxHeaderValueSize: 1 * 1024, // size of the key per each header
   onHandlerError: (_err: FormidableError) => {},
 };
-
 
 export type FormidableInputSource =
   | ReadableStream<Uint8Array>
@@ -45,7 +46,6 @@ export interface FormidableOptionsAll {
 export type FormidableOptions = Omit<FormidableOptionsAll, 'boundary'>;
 export type FormidableParserOptions = FormidableOptions;
 export type FormidablePartHandler = (part: FormidablePart) => void | Promise<void>;
-
 
 /**
  * Parse a `multipart/*` buffer or stream and yield each part it finds as a `FormidablePart` object.
@@ -189,6 +189,7 @@ export class FormidableParser {
     this.#bodyLength = 0;
   }
 
+  // eslint-disable-next-line max-statements
   async write(chunk: Uint8Array, handler: FormidablePartHandler): Promise<void> {
     if (this.#state === MultipartParserStateDone) {
       throw new FormidableError(
@@ -325,10 +326,10 @@ export class FormidableParser {
   }
 
   async checkLimits(part: FormidablePart): Promise<void> {
-    const hasHeaderLimits =
-      this.options.maxHeaderSize > 0 ||
-      this.options.maxHeaderKeySize > 0 ||
-      this.options.maxHeaderValueSize > 0;
+    const hasHeaderLimits
+      = this.options.maxHeaderSize > 0
+        || this.options.maxHeaderKeySize > 0
+        || this.options.maxHeaderValueSize > 0;
 
     if (hasHeaderLimits) {
       for (const [headerKey, headerValue] of part.headers.entries()) {
@@ -466,13 +467,14 @@ export class FormidablePart {
    * True if this part originated from a file upload.
    */
   isFile(): boolean {
+    // eslint-disable-next-line eqeqeq
     return Boolean(this.filename != '' || this.type === 'application/octet-stream');
   }
 
   /**
    * Create a stream of the part's body as async iterable, the `part.body` is the raw ReadableStream
    */
-  async *stream(): AsyncIterable<Uint8Array> {
+  async* stream(): AsyncIterable<Uint8Array> {
     if (this.#bodyUsed) {
       throw new FormidableError(
         'Body is already consumed or is being consumed',
@@ -575,6 +577,7 @@ export class FormidablePart {
 
   toString(): string {
     const obj = this.toObject();
+
     return JSON.stringify(obj, null, 2);
   }
 
@@ -587,14 +590,14 @@ export class FormidablePart {
     headers: Record<string, string>;
   } {
     return {
-      isFile: this.isFile(),
-      name: this.name,
-      type: this.type,
       // size: this.size,
       filename: this.filename,
       headers: Object.fromEntries(
         [...this.headers.entries()].map(([key, value]) => [key.toLowerCase(), value.toLowerCase()]),
       ),
+      isFile: this.isFile(),
+      name: this.name,
+      type: this.type,
     };
   }
 }
@@ -607,7 +610,9 @@ export async function* readStreamHelper(
   try {
     while (true) {
       const { done, value } = await reader.read();
-      if (done) break;
+      if (done) {
+        break;
+      }
       yield value;
     }
   } finally {

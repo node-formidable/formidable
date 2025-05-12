@@ -1,3 +1,4 @@
+/* eslint-disable antfu/no-import-dist */
 import { parseMultipart } from '../dist/index.js';
 import * as messages from './messages.cjs';
 

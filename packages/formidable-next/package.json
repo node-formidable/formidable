@@ -1,16 +1,36 @@
 {
   "name": "formidable",
-  "version": "4.0.0-rc.5",
-  "license": "MIT",
+  "type": "module",
+  "version": "4.0.0-rc.6",
   "description": "The oldest and most popular Node.js form parsing library, with support for multipart/form-data, file uploads, and more.",
   "author": "tunnckoCore",
+  "contributors": [
+    "felixge",
+    "tunnckoCore",
+    "GrosSacASac",
+    "xarguments",
+    "charmander",
+    "fengxinming",
+    "kedarv"
+  ],
+  "license": "MIT",
   "homepage": "https://github.com/node-formidable/formidable/tree/monorepo/packages/formidable-next",
   "repository": {
     "type": "git",
     "url": "https://github.com/node-formidable/formidable.git",
     "directory": "packages/formidable-next"
   },
-  "type": "module",
+  "keywords": [
+    "form",
+    "parser",
+    "nodejs",
+    "multipart",
+    "multipart/form-data",
+    "formdata",
+    "form-data",
+    "files",
+    "file uploads"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -26,8 +46,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "src",
-    "dist"
+    "dist",
+    "src"
   ],
   "engines": {
     "node": ">=14.15.0"
@@ -49,7 +69,7 @@
     "build": "tsdown",
     "example:node14cjs": "node ./example/node14.cjs",
     "example:node14esm": "node ./example/node14.js",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "bun run build",
     "test": "echo no-tests-yet"
   },
   "dependencies": {
@@ -57,29 +77,9 @@
     "headers-polyfill": "^4.0.3"
   },
   "devDependencies": {
-    "esbuild": "^0.25.3",
-    "tsdown": "^0.10.2",
+    "esbuild": "^0.25.4",
+    "tsdown": "0.11.4",
     "typescript": "^5.8.3",
     "web-streams-polyfill": "^4.1.0"
-  },
-  "keywords": [
-    "form",
-    "parser",
-    "nodejs",
-    "multipart",
-    "multipart/form-data",
-    "formdata",
-    "form-data",
-    "files",
-    "file uploads"
-  ],
-  "contributors": [
-    "felixge",
-    "tunnckoCore",
-    "GrosSacASac",
-    "xarguments",
-    "charmander",
-    "fengxinming",
-    "kedarv"
-  ]
+  }
 }

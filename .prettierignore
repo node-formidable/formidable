@@ -2,6 +2,14 @@ old-source/
 packages/formidable-next/src/super-headers.js
 packages/formidable-next/src/super-readable-stream.js
 
+**/super-headers.js
+
+# because we use ESLint for most things - both linting and formatting (with ESLint Stylistic)
+**/*.{js,jsx,ts,tsx}
+**/tsconfig*.json
+**/tsconfig.*.json
+**/package.json
+
 .wrangler
 *.tsbuildinfo
 *.*cache
@@ -10,6 +18,7 @@ packages/formidable-next/src/super-readable-stream.js
 # Vercel
 .vercel
 
+.vscode
 # Build Outputs
 .next/
 out/
@@ -17,9 +26,10 @@ build
 dist
 
 # Package managers lockfiles
-#package-lock.json
+package-lock.json
 shrinkwrap.json
 pnpm-lock.json
+bun.lock
 
 # Logs
 logs
@@ -80,10 +90,4 @@ typings/
 .env*
 !.env.example
 
-# next.js build output
-.next
-
 .astro
-
-# Local Netlify folder
-.netlify

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-commonjs */
 require('web-streams-polyfill/polyfill');
 
 const { parseMultipart } = require('../dist/index.cjs');

@@ -8,6 +8,7 @@ export function createSearch(pattern: string): SearchFunction {
   let search: SearchFunction;
   if ('Buffer' in globalThis && !('Bun' in globalThis || 'Deno' in globalThis)) {
     // Use the built-in Buffer.indexOf method on Node.js for better perf.
+    // eslint-disable-next-line prefer-reflect
     search = (haystack, start = 0) => Buffer.prototype.indexOf.call(haystack, needle, start);
   } else {
     const needleEnd = needle.length - 1;
@@ -35,7 +36,9 @@ export function createSearch(pattern: string): SearchFunction {
 
       while (i < haystackLength) {
         for (let j = needleEnd, k = i; j >= 0 && haystack[k] === needle[j]; --j, --k) {
-          if (j === 0) return k;
+          if (j === 0) {
+            return k;
+          }
         }
 
         const kk = haystack[i] ?? 0;
@@ -58,11 +61,13 @@ export function createPartialTailSearch(pattern: string): PartialTailSearchFunct
 
   const byteIndexes: Record<number, number[]> = {};
   for (const [i, byte] of needle.entries()) {
-    if (byteIndexes[byte] === undefined) byteIndexes[byte] = [];
+    if (byteIndexes[byte] === undefined) {
+      byteIndexes[byte] = [];
+    }
     byteIndexes[byte].push(i);
   }
 
-  return function (haystack: Uint8Array): number {
+  return function tailSearch(haystack: Uint8Array): number {
     const haystackEnd = haystack.length - 1;
     const lastByte = haystack[haystackEnd];
 
@@ -75,7 +80,9 @@ export function createPartialTailSearch(pattern: string): PartialTailSearchFunct
         let k: number = haystackEnd;
 
         while (j >= 0 && k >= 0 && haystack[k] === needle[j]) {
-          if (j === 0) return k;
+          if (j === 0) {
+            return k;
+          }
           j--;
           k--;
         }

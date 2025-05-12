@@ -1,20 +1,24 @@
 // SPDX-License-Identifier: MIT
 
+/* eslint-disable prefer-named-capture-group */
+/* eslint-disable require-unicode-regexp */
 import {
   FormidableError,
-  parseMultipart,
   type FormidableOptions,
   type FormidablePartHandler,
+  parseMultipart,
 } from './multipart-web.ts';
 
 /**
  * Extracts the boundary string from a `multipart/*` content type.
  */
 export function getMultipartBoundary(contentType?: string | null): string | null {
-  if (!contentType) return null;
+  if (!contentType) {
+    return null;
+  }
 
-  const [_, matchOne = null, matchTwo = null] =
-    /boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType || '') || [];
+  const [_, matchOne = null, matchTwo = null]
+    = /boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType || '') || [];
 
   return matchOne || matchTwo || null;
 }
@@ -24,6 +28,7 @@ export function getMultipartBoundary(contentType?: string | null): string | null
  */
 export function isMultipartRequest(request: Request): boolean {
   const contentType = request.headers.get('Content-Type');
+
   return Boolean(contentType && contentType.startsWith('multipart/'));
 }
 

@@ -1,5 +1,7 @@
 export function concat(chunks: Uint8Array[]): Uint8Array {
-  if (chunks.length === 1) return chunks[0] as Uint8Array;
+  if (chunks.length === 1) {
+    return chunks[0] as Uint8Array;
+  }
 
   let length = 0;
   for (const chunk of chunks) {
@@ -64,7 +66,7 @@ export class MultipartMessage {
     this.content = concat(chunks);
   }
 
-  *generateChunks(chunkSize = NodeDefaultHighWaterMark): Generator<Uint8Array> {
+  * generateChunks(chunkSize = NodeDefaultHighWaterMark): Generator<Uint8Array> {
     // console.log('content size:', { chunkSize, contentSize: this.content.length });
 
     for (let i = 0; i < this.content.length; i += chunkSize) {
