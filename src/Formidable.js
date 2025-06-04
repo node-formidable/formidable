@@ -233,29 +233,42 @@ class IncomingForm extends EventEmitter {
     await this.writeHeaders(req.headers);
 
     // Start listening for data.
+    let pipe = null;
+
     req
       .on('error', (err) => {
         this._error(err);
       })
       .on('aborted', () => {
         this.emit('aborted');
-        this._error(new FormidableError('Request aborted', errors.aborted));
-      })
-      .on('data', (buffer) => {
-        try {
-          this.write(buffer);
-        } catch (err) {
-          this._error(err);
-        }
-      })
-      .on('end', () => {
-        if (this.error) {
-          return;
-        }
-        if (this._parser) {
-          this._parser.end();
-        }
-      });
+        this._error(new FormidableError('Request aborted', aborted));
+      }) 
+
+    switch (this.headers['content-encoding']) {
+      case "gzip":
+        pipe = require("zlib").createGunzip();
+        break;
+      case "deflate":
+        pipe = require("zlib").createInflate();
+        break;
+      case "br":
+        pipe = require("zlib").createBrotliDecompress();
+        break;
+      case "compress":
+        pipe = require("zlib").createUnzip();
+        break;
+      
+      default: 
+        pipe = node_stream.Transform({
+          transform: function (chunk, encoding, callback)  {
+            callback(null, chunk);
+          }
+
+        })
+    }
+    pipe.on("data", datafn).on('end', endfn);
+    req.pipe(pipe)
+    
     if (promise) {
       return promise;
     }
