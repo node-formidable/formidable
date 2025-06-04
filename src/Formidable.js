@@ -233,7 +233,6 @@ class IncomingForm extends EventEmitter {
     await this.writeHeaders(req.headers);
 
     let datafn = (buffer) => {
-      console.log("recieved Data!")
       try {
         this.write(buffer);
       } catch (err) {
@@ -241,7 +240,6 @@ class IncomingForm extends EventEmitter {
       }
     }
     let endfn = () => {
-      console.log("endfn called")
       if (this.error) {
         return;
       }
