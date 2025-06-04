@@ -232,6 +232,23 @@ class IncomingForm extends EventEmitter {
     // Parse headers and setup the parser, ready to start listening for data.
     await this.writeHeaders(req.headers);
 
+    let datafn = (buffer) => {
+      try {
+        this.write(buffer);
+      } catch (err) {
+        this._error(err);
+      }
+    }
+    let endfn = () => {
+      if (this.error) {
+        return;
+      }
+      if (this._parser) {
+        this._parser.end();
+      }
+    }
+    let pipe = null;
+    
     // Start listening for data.
     req
       .on('error', (err) => {
@@ -240,22 +257,33 @@ class IncomingForm extends EventEmitter {
       .on('aborted', () => {
         this.emit('aborted');
         this._error(new FormidableError('Request aborted', errors.aborted));
-      })
-      .on('data', (buffer) => {
-        try {
-          this.write(buffer);
-        } catch (err) {
-          this._error(err);
-        }
-      })
-      .on('end', () => {
-        if (this.error) {
-          return;
-        }
-        if (this._parser) {
-          this._parser.end();
-        }
-      });
+      }) 
+
+    switch (this.headers['content-encoding']) {
+      case "gzip":
+        pipe = require("zlib").createGunzip();
+        break;
+      case "deflate":
+        pipe = require("zlib").createInflate();
+        break;
+      case "br":
+        pipe = require("zlib").createBrotliDecompress();
+        break;
+      case "compress":
+        pipe = require("zlib").createUnzip();
+        break;
+      
+      default: 
+        pipe = node_stream.Transform({
+          transform: function (chunk, encoding, callback)  {
+            callback(null, chunk);
+          }
+
+        })
+    }
+    pipe.on("data", datafn).on('end', endfn);
+    req.pipe(pipe)
+    
     if (promise) {
       return promise;
     }
