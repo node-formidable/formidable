@@ -241,7 +241,7 @@ class IncomingForm extends EventEmitter {
       })
       .on('aborted', () => {
         this.emit('aborted');
-        this._error(new FormidableError('Request aborted', aborted));
+        this._error(new FormidableError('Request aborted', errors.aborted));
       }) 
 
     switch (this.headers['content-encoding']) {
