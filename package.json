@@ -7,7 +7,7 @@
   "funding": "https://ko-fi.com/tunnckoCore/commissions",
   "repository": {
     "type": "git",
-    "url": "node-formidable/formidable"
+    "url": "https://github.com/node-formidable/formidable"
   },
   "type": "module",
   "main": "./dist/index.cjs",
