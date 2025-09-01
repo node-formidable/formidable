@@ -15,7 +15,7 @@ export default function plugin(formidable, options) {
   const self = this || formidable;
 
   // NOTE: we (currently) support both multipart/form-data and multipart/related
-  const multipart = /multipart/i.test(self.headers['content-type']);
+  const multipart = /^[^;]*multipart/i.test(self.headers['content-type']);
 
   if (multipart) {
     const m = self.headers['content-type'].match(

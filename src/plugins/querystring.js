@@ -12,7 +12,7 @@ export default function plugin(formidable, options) {
   /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/urlencoded/i.test(self.headers['content-type'])) {
+  if (/^[^;]*urlencoded/i.test(self.headers['content-type'])) {
     init.call(self, self, options);
   }
   return self;

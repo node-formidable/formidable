@@ -11,7 +11,7 @@ export default async function plugin(formidable, options) {
   /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/octet-stream/i.test(self.headers['content-type'])) {
+  if (/^[^;]*octet-stream/i.test(self.headers['content-type'])) {
     await init.call(self, self, options);
   }
   return self;
