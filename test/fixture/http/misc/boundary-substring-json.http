@@ -1,0 +1,13 @@
+POST /upload HTTP/1.1
+Host: localhost:8080
+Content-Type: multipart/form-data; boundary=uj05Dyqd7Fd5aqAJnK1j9WeJSONmNy5vSGbM1oLf
+Content-Length: 211
+
+--uj05Dyqd7Fd5aqAJnK1j9WeJSONmNy5vSGbM1oLf
+Content-Disposition: form-data; filename="plain.txt"; name="upload"
+Content-Type: text/plain
+
+I am a plain text file
+
+--uj05Dyqd7Fd5aqAJnK1j9WeJSONmNy5vSGbM1oLf--
+

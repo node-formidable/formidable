@@ -58,30 +58,36 @@ test('fixtures', (done) => {
     const fixture = fixtureWithName.fixture;
 
     uploadFixture(fixtureName, (err, parts) => {
-      if (err) {
-        err.fixtureName = fixtureName;
-        throw err;
-      }
-
-      fixture.forEach((expectedPart, i) => {
-        const parsedPart = parts[i];
-        strictEqual(parsedPart.type, expectedPart.type);
-        strictEqual(parsedPart.name, expectedPart.name);
-
-        if (parsedPart.type === 'file') {
-          const file = parsedPart.value;
-          strictEqual(file.originalFilename, expectedPart.originalFilename,
-            `${JSON.stringify([expectedPart, file])}`);
-
-          if (expectedPart.sha1) {
-            strictEqual(
-              file.hash,
-              expectedPart.sha1,
-              `SHA1 error ${file.originalFilename} on ${file.filepath} ${JSON.stringify([expectedPart, file])}`,
-            );
-          }
+      try {
+        if (err) {
+          err.fixtureName = fixtureName;
+          throw err;
         }
-      });
+
+        fixture.forEach((expectedPart, i) => {
+          const parsedPart = parts[i];
+          strictEqual(parsedPart.type, expectedPart.type);
+          strictEqual(parsedPart.name, expectedPart.name);
+
+          if (parsedPart.type === 'file') {
+            const file = parsedPart.value;
+            strictEqual(file.originalFilename, expectedPart.originalFilename,
+              `${JSON.stringify([expectedPart, file])}`);
+
+            if (expectedPart.sha1) {
+              strictEqual(
+                file.hash,
+                expectedPart.sha1,
+                `SHA1 error ${file.originalFilename} on ${file.filepath} ${JSON.stringify([expectedPart, file])}`,
+              );
+            }
+          }
+        });
+      } catch (e) {
+        server.close();
+        done(e);
+        throw e;
+      }
 
       testNext(results);
     });
@@ -93,7 +99,6 @@ test('fixtures', (done) => {
         uploadDir: UPLOAD_DIR,
         hashAlgorithm: 'sha1',
       });
-      form.parse(req);
 
       function callback(...args) {
         const realCallback = cb;
@@ -116,6 +121,8 @@ test('fixtures', (done) => {
           res.end();
           callback(null, parts);
         });
+
+      form.parse(req);
     });
 
     const socket = createConnection(PORT);
