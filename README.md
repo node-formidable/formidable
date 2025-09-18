@@ -27,7 +27,7 @@ at Twitter.
 This project is [semantically versioned](https://semver.org) and if you want support in migrating between versions you can schedule us for training or support us through donations, so we can prioritize.
 
 > [!CAUTION]
-> As of April 2025, old versions like v1 and v2 are still the most used, while they are deperecated for years -- they are also vulnerable to attacks if you are not implementing it properly. **Please upgrade!** We are here to help, and AI Editors & Agents could help a lot in such codemod-like migrations.
+> As of April 2025, old versions like v1 and v2 are still the most used, while they are deprecated for years -- they are also vulnerable to attacks if you are not implementing it properly. **Please upgrade!** We are here to help, and AI Editors & Agents could help a lot in such codemod-like migrations.
 
 > [!TIP]
 > If you are starting a fresh project, you can check out the `formidable-mini` which is a super minimal version of Formidable (not quite configurable yet, but when it does it could become the basis for `formidable@v4`), using web standards like FormData API and File API, and you can use it to stream uploads directly to S3 or other such services.
@@ -322,7 +322,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   extensions of the original files or not
 - `options.allowEmptyFiles` **{boolean}** - default `false`; allow upload empty
   files
-- `options.minFileSize` **{number}** - default `1` (1byte); the minium size of
+- `options.minFileSize` **{number}** - default `1` (1byte); the minimum size of
   uploaded file.
 - `options.maxFiles` **{number}** - default `Infinity`;
   limit the amount of uploaded files, set Infinity for unlimited

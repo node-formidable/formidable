@@ -1,4 +1,4 @@
-// inital copy of with-http.js
+// initial copy of with-http.js
 // made a copy so that examples can be changed without impacting tests
 import http from 'node:http';
 import slugify from '@sindresorhus/slugify';

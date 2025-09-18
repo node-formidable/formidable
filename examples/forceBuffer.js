@@ -1,4 +1,4 @@
-// warning: forcing file into a Buffer elminates the benefits of using streams and may cause memory overflow
+// warning: forcing file into a Buffer eliminates the benefits of using streams and may cause memory overflow
 import http from 'node:http';
 import { Buffer } from 'node:buffer'
 import { Writable } from 'node:stream';
@@ -12,10 +12,10 @@ const server = http.createServer((req, res) => {
     const form = formidable({
       fileWriteStreamHandler: (file) => {
         const chunks = [];
-        
+
         const writable = new Writable({
           write (chunk, enc, next) {
-            chunks.push(chunk);            
+            chunks.push(chunk);
             next();
           },
           destroy() {
