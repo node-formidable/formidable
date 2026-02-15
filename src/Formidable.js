@@ -596,14 +596,17 @@ class IncomingForm extends EventEmitter {
   }
 
   _joinDirectoryName(name) {
-    const newPath = path.join(this.uploadDir, name);
+    const resolvedDir = path.resolve(this.uploadDir);
+    const resolvedPath = path.resolve(resolvedDir, name);
 
     // prevent directory traversal attacks
-    if (!newPath.startsWith(this.uploadDir)) {
+    // use resolvedDir + path.sep to avoid prefix collisions with sibling directories
+    // e.g. uploadDir "/tmp/uploads" should not allow writes to "/tmp/uploads-evil/"
+    if (resolvedPath === resolvedDir || !resolvedPath.startsWith(resolvedDir + path.sep)) {
       return path.join(this.uploadDir, this.options.defaultInvalidName);
     }
 
-    return newPath;
+    return resolvedPath;
   }
 
   _setUpRename() {
