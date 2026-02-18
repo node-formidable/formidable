@@ -307,4 +307,28 @@ function makeHeader(originalFilename) {
   //     originalFilename: (_) => path.join(__dirname, 'sasa'),
   //   });
   // });
+
+  test(`${name}#_joinDirectoryName blocks standard directory traversal`, () => {
+    const form = getForm(name, { uploadDir: '/tmp/uploads' });
+    const result = form._joinDirectoryName('../../../etc/passwd');
+    expect(result).toBe(path.join('/tmp/uploads', 'invalid-name'));
+  });
+
+  test(`${name}#_joinDirectoryName blocks sibling directory prefix collision`, () => {
+    const form = getForm(name, { uploadDir: '/tmp/uploads' });
+    const result = form._joinDirectoryName('../uploads-evil/payload.sh');
+    expect(result).toBe(path.join('/tmp/uploads', 'invalid-name'));
+  });
+
+  test(`${name}#_joinDirectoryName allows subdirectories within uploadDir`, () => {
+    const form = getForm(name, { uploadDir: '/tmp/uploads' });
+    const result = form._joinDirectoryName('images/photo.jpg');
+    expect(result).toBe(path.resolve('/tmp/uploads', 'images/photo.jpg'));
+  });
+
+  test(`${name}#_joinDirectoryName blocks name resolving to uploadDir itself`, () => {
+    const form = getForm(name, { uploadDir: '/tmp/uploads' });
+    const result = form._joinDirectoryName('.');
+    expect(result).toBe(path.join('/tmp/uploads', 'invalid-name'));
+  });
 });
