@@ -71,7 +71,7 @@
     "test": "pnpm run audit && node --test ./test-node/**/*.test.js && pnpm run test-jest:ci"
   },
   "dependencies": {
-    "@paralleldrive/cuid2": "^2.2.2",
+    "@paralleldrive/cuid2": "2.2.2",
     "dezalgo": "^1.0.4",
     "once": "^1.4.0"
   },
