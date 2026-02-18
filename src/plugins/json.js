@@ -11,7 +11,7 @@ export default function plugin(formidable, options) {
   /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/json/i.test(self.headers['content-type'])) {
+  if (/^[^;]*json/i.test(self.headers['content-type'])) {
     init.call(self, self, options);
   }
 
