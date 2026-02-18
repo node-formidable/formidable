@@ -302,6 +302,32 @@ function makeHeader(originalFilename) {
     });
   });
 
+  test(`${name}: maxFiles exceeded emits error`, (done) => {
+    const form = getForm(name, { maxFiles: 1 });
+    form.req = requestStub();
+
+    form.on('error', (error) => {
+      expect(error.message.includes('maxFiles')).toBe(true);
+      done();
+    });
+
+    const part1 = new Stream();
+    part1.mimetype = 'text/plain';
+    const part2 = new Stream();
+    part2.mimetype = 'text/plain';
+
+    form.onPart(part1).then(() => {
+      part1.emit('data', Buffer.alloc(1));
+      part1.emit('end');
+      form.onPart(part2);
+    });
+  });
+
+  test(`${name}: maxFiles defaults to 1000`, () => {
+    const form = getForm(name);
+    expect(form.options.maxFiles).toBe(1000);
+  });
+
   // test(`${name}: use custom options.originalFilename instead of form._uploadPath`, () => {
   //   const form = getForm(name, {
   //     originalFilename: (_) => path.join(__dirname, 'sasa'),
