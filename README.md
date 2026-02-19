@@ -784,6 +784,105 @@ form.parse(request, async (error, fieldsMultiple, files) => {
   [http-parser](http://github.com/ry/http-parser) which heavily inspired the
   initial `multipart_parser.js`.
 
+## Best Practices for Mitigating and Detecting Insecure File Upload Vulnerabilities
+
+### Common Errors in Implementation:
+- Relying on client-side JavaScript for security checks and file processing, which attackers can easily bypass by sending requests directly to the backend
+- Using the MIME type (Content-Type) from HTTP requests to determine file types, which can be easily spoofed by clients to match allowed types
+- Relying solely on MagicBytes (file headers) for file type validation, which can also be forged
+- Validating only the first file when multiple file uploads are supported
+- Using extension blacklists for filtering, which are prone to omissions and can be bypassed in various environments or through implementation flaws, such as:
+  - Case-insensitive comparison issues that allow bypasses (e.g., file.JSP, file.PHP)
+  - Single replacement of blacklisted keywords, enabling double-writing bypass techniques (e.g., file.jjspsp)
+  - Incorrect extension extraction using IndexOf to get the string after the first dot, allowing bypass through appended extensions (e.g., file.jpg.jsp)
+- Implementing whitelist validation with flawed logic, such as comparing file length differences with allowed extension lengths:
+```
+if (fileName.length - fileName.lastIndexOf(allowedType) !== allowedType.length){
+    try {
+        fs.unlinkSync(filePath);
+    } ...
+}
+```
+- Creating race condition vulnerabilities by using a temporary file that's renamed to the target location, with an exploitable time window between these operations
+
+---
+
+### Recommended Best Practices:
+The recommended approach includes using extension whitelists based on business requirements, with exact comparison between whitelist entries and correctly extracted file extensions, plus additional security measures:
+
+#### First Element: File Renaming Mechanism Design
+1. Obtain the original filename and split it into filename and extension parts, ensuring the extension is captured after the last dot (using path.extname() in nodejs) to prevent bypass techniques 
+2. Rename the file using an unpredictable random string; consider adding timestamps or unique IDs for tracking and auditing; use cryptographically secure random number generators such as crypto.randomBytes()
+3. Iterate through the extension whitelist, comparing whitelist entries with the correctly extracted extension for exact matches, then combine the random filename with the allowed extension: **random_string + file extension**, e.g., `random_string + ".jpg"`
+
+#### Second Element: File Content Processing Mechanism Design
+1. For common image types (jpg, jpeg, gif, png), which risk malicious script insertion if the web server or script parsing engine has parsing vulnerabilities or LFI issues:
+   - Clean image EXIF metadata to prevent privacy leaks
+   - Process images through secondary rendering, cropping, or content sanitization
+   - Consider using libraries like Sharp for image validation and processing
+   - Verify image dimensions are within reasonable limits to prevent DoS attacks
+
+2. For SVG files, which pose XSS risks:
+   - Use svg-sanitizer to cleanse file content
+   - Convert to safer image formats using svg2img
+
+3. For PDF files:
+   - Remove JavaScript to prevent XSS, referencing [sanitizePDF](https://github.com/Hopding/pdf-lib/discussions/1438)
+   - Limit the number of pages to prevent DoS attacks from malicious PDFs with excessive pages
+   - Detect malicious links and form submission functions
+   - Consider rendering PDFs in sandboxed environments or converting to image formats for preview
+
+4. For Office documents (doc/docx, xls/xlsx, ppt/pptx), which may contain XML files susceptible to XXE attacks:
+   - Use parsers with secure configurations that disable external entity processing
+   - Consider using exceljs for Excel files, mammoth for Word files, and pptx-parser for PowerPoint files
+   - Disable macros, especially when processing legacy formats (.xls and .doc)
+
+5. For compressed files (zip, gz) that require extraction in business logic:
+   - Path security: Prevent directory traversal attacks by validating all filenames before extraction, ensuring they don't contain relative paths (like ../)
+   - File size limits: Check file sizes to prevent DoS attacks (based on business needs, e.g., 10MB limit)
+   - Content sanitization: Verify compression structure and file count (based on business needs, e.g., 30 file limit)
+   - Check compression ratios to prevent zip bomb attacks
+   - Consider implementing extraction timeout mechanisms
+
+6. For HTML/HTM files, which present significant risks (XSS or Clickjacking), ideally avoid allowing these uploads or use markdown as an alternative. If HTML uploads are necessary:
+   - Consider using iframe sandbox attributes for additional security when displaying these files
+   - Consider implementing HTML sanitization libraries like DOMPurify
+   - Store HTML/HTM files on a dedicated domain for static resources
+   - Configure strict Content Security Policy on that domain, such as:
+```
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'none'; script-src 'none'; object-src 'none'; style-src 'self'; img-src 'self'; frame-src 'none';"
+  );
+  next();
+});
+```
+This middleware adds the CSP header to all HTTP responses passing through the server, instructing browsers to limit page behavior according to these policies. This is an extremely strict and secure CSP configuration that cuts off nearly all potential attack vectors, particularly suitable for displaying user-uploaded HTML content which inherently carries high risk. In practice, you may need to relax certain restrictions based on specific requirements, but this provides an excellent starting point for defending against HTML uploads that might contain XSS vectors.
+
+#### Additional Security Mechanisms to Consider
+
+**Storage Location Security:**
+- Store uploaded files outside the web root directory
+- Use separate file servers or CDNs for file storage
+
+**File Access Control:**
+- Implement role-based access control
+- Use randomized URLs or temporary access tokens to control file access
+
+**Server-Side Configuration:**
+- Ensure web servers won't execute scripts in upload directories
+- Set appropriate filesystem permissions for upload directories
+
+**Monitoring and Auditing:**
+- Log all file upload operations, including user information, file details, and timestamps
+- Implement periodic scanning of file contents, especially for high-risk file types
+
+**Upload Limitations:**
+- Add upload frequency limits based on IP or user
+- Set total file upload quotas
+
+
 ## Contributing
 
 If the documentation is unclear or has a typo, please click on the page's `Edit`
