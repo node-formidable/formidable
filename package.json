@@ -94,7 +94,7 @@
     "prettier": "2.0.5",
     "prettier-plugin-pkgjson": "0.2.8",
     "rollup": "^3.25.3",
-    "supertest": "6.1.6"
+    "supertest": "7.1.4"
   },
   "engines": {
     "node": ">=14.0.0"
