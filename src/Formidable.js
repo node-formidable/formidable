@@ -22,7 +22,7 @@ const createId = cuid2init({ length: 25, fingerprint: CUID2_FINGERPRINT.toLowerC
 const DEFAULT_OPTIONS = {
   maxFields: 1000,
   maxFieldsSize: 20 * 1024 * 1024,
-  maxFiles: Infinity,
+  maxFiles: 1000,
   maxFileSize: 200 * 1024 * 1024,
   maxTotalFileSize: undefined,
   minFileSize: 1,
