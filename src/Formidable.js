@@ -6,6 +6,7 @@ import dezalgo from 'dezalgo';
 import { EventEmitter } from 'node:events';
 import fsPromises from 'node:fs/promises';
 import os from 'node:os';
+import stream from 'node:stream';
 import path from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 import once from 'once';
@@ -201,8 +202,8 @@ class IncomingForm extends EventEmitter {
       }
     }
     const callback = once(dezalgo(cb));
-    this.fields = {};
-    const files = {};
+    this.fields = Object.create(null);
+    const files = Object.create(null);
 
     this.on('field', (name, value) => {
       if (this.type === 'multipart' || this.type === 'urlencoded') {
@@ -274,7 +275,7 @@ class IncomingForm extends EventEmitter {
         break;
       
       default: 
-        pipe = node_stream.Transform({
+        pipe = stream.Transform({
           transform: function (chunk, encoding, callback)  {
             callback(null, chunk);
           }

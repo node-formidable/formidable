@@ -27,7 +27,7 @@ function init(_self, _opts) {
   const parser = new JSONParser(this.options);
 
   parser.on('data', (fields) => {
-    this.fields = fields;
+    this.fields = Object.assign(Object.create(null), fields);
   });
 
   parser.once('end', () => {
