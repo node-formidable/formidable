@@ -20,16 +20,16 @@ test('prototype contamination', async (t) => {
 
         const [fields, files] = await form.parse(req);
 
+        res.writeHead(200);
+        res.end("ok");
+
         let a;
         try {
             a = typeof String(fields);
         } catch {
-            console.log("the toString method should not be compromised")
+            ;
         }
-        // strictEqual(a, 'string', "the toString method should not be compromised");
-
-        res.writeHead(200);
-        res.end("ok");
+        strictEqual(a, 'string', "the toString method should not be compromised");
 
     });
 
@@ -49,9 +49,9 @@ test('prototype contamination', async (t) => {
 
     strictEqual(resClient.status, 200);
 
-    // const text = await resClient.text();
+    const text = await resClient.text();
 
-    // t.ok(text);
+    t.ok(text);
 });
 
 
