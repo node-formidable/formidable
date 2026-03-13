@@ -29,7 +29,7 @@ test('prototype contamination', async (t) => {
         } catch {
             ;
         }
-        strictEqual(a, 'string', "the toString method should not be compromised");
+        strictEqual(a, undefined, "the toString method should not be used directly");
 
     });
 
@@ -51,7 +51,47 @@ test('prototype contamination', async (t) => {
 
     const text = await resClient.text();
 
-    t.ok(text);
+    ok(text);
+});
+
+test('should not use unsafe methods on user provided objects', async (t) => {
+    server.on('request', async (req, res) => {
+        const form = formidable();
+
+        const [fields, files] = await form.parse(req);
+
+        res.writeHead(200);
+        res.end("ok");
+
+        let a;
+        try {
+            a = typeof String(fields);
+        } catch {
+            ;
+        }
+        strictEqual(a, undefined, "the toString method should not be used directly");
+
+    });
+
+    await new Promise(resolve => server.listen(port, resolve));
+
+    const body = `{"a":"x","b":"x","z":5}`;
+
+    const resClient = await fetch(String(new URL(`http:localhost:${port}/`)), {
+        method: 'POST',
+        headers: {
+            'Content-Length': body.length,
+            Host: `localhost:${port}`,
+            'Content-Type': 'text/json;',
+        },
+        body
+    });
+
+    strictEqual(resClient.status, 200);
+
+    const text = await resClient.text();
+
+    ok(text);
 });
 
 
