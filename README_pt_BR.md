@@ -66,7 +66,7 @@ fechado, mas se você estiver interessado, podemos discuti-lo e adicioná-lo ap�
 
 ## Instalar
 
-Este projeto requer `Node.js >= 10.13`. Instale-o usando
+Este projeto requer `Node.js >= 18`. Instale-o usando
 [yarn](https://yarnpkg.com) ou [npm](https://npmjs.com).<br /> _Nós altamente
 recomendamos usar o Yarn quando pensar em contribuir para este projeto._
 
@@ -817,7 +817,7 @@ Formidable é licenciado sob a [MIT License][license-url].
 [npm-yearly-img]: https://badgen.net/npm/dy/formidable?icon=npm&cache=300
 [npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300&label=total%20downloads
 
-[nodejs-img]: https://badgen.net/badge/node/>=%2010.13/green?cache=300
+[nodejs-img]: https://badgen.net/badge/node/>=%2018/green?cache=300
 
 [ccommits-url]: https://conventionalcommits.org/
 [ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300

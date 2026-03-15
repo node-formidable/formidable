@@ -79,7 +79,7 @@ rules, like enabling Two-Factor Auth in your npm and GitHub accounts.
 This package is a dual ESM/commonjs package.
 
 > [!NOTE]
-> This project requires `Node.js >= 20`. Install it using [yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly recommend to use Yarn when you think to contribute to this project._
+> This project requires `Node.js >= 18`. Install it using [yarn](https://yarnpkg.com) or [npm](https://npmjs.com).<br /> _We highly recommend to use Yarn when you think to contribute to this project._
 
 This is a low-level package, and if you're using a high-level framework it _may_
 already be included. Check the examples below and the [examples/](https://github.com/node-formidable/formidable/tree/master/examples) folder.
@@ -868,7 +868,7 @@ Formidable is licensed under the [MIT License][license-url].
 [npm-yearly-img]: https://badgen.net/npm/dy/formidable?icon=npm&cache=300
 [npm-alltime-img]: https://badgen.net/npm/dt/formidable?icon=npm&cache=300&label=total%20downloads
 
-[nodejs-img]: https://badgen.net/badge/node/>=%2010.13/green?cache=300
+[nodejs-img]: https://badgen.net/badge/node/>=%2018/green?cache=300
 
 [ccommits-url]: https://conventionalcommits.org/
 [ccommits-img]: https://badgen.net/badge/conventional%20commits/v1.0.0/green?cache=300
