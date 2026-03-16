@@ -403,6 +403,12 @@ class IncomingForm extends EventEmitter {
     });
     this.emit('fileBegin', part.name, file);
 
+    // Check for error after fileBegin (e.g., maxFiles exceeded) to avoid leaking file handles
+    if (this.error) {
+      this._flushing -= 1;
+      return;
+    }
+
     file.open();
     this.openedFiles.push(file);
 
