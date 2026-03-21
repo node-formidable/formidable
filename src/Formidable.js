@@ -8,6 +8,7 @@ import fsPromises from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
+import { Transform } from 'node:stream';
 import once from 'once';
 import FormidableError, * as errors from './FormidableError.js';
 import PersistentFile from './PersistentFile.js';
@@ -273,13 +274,12 @@ class IncomingForm extends EventEmitter {
         pipe = require("zlib").createUnzip();
         break;
       
-      default: 
-        pipe = node_stream.Transform({
-          transform: function (chunk, encoding, callback)  {
+      default:
+        pipe = new Transform({
+          transform(chunk, encoding, callback) {
             callback(null, chunk);
-          }
-
-        })
+          },
+        });
     }
     pipe.on("data", datafn).on('end', endfn);
     req.pipe(pipe)
@@ -402,12 +402,6 @@ class IncomingForm extends EventEmitter {
       this._error(err);
     });
     this.emit('fileBegin', part.name, file);
-
-    // Check for error after fileBegin (e.g., maxFiles exceeded) to avoid leaking file handles
-    if (this.error) {
-      this._flushing -= 1;
-      return;
-    }
 
     file.open();
     this.openedFiles.push(file);
