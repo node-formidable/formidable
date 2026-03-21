@@ -9,6 +9,12 @@ import os from 'node:os';
 import path from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 import { Transform } from 'node:stream';
+import {
+  createGunzip,
+  createInflate,
+  createBrotliDecompress,
+  createUnzip,
+} from 'node:zlib';
 import once from 'once';
 import FormidableError, * as errors from './FormidableError.js';
 import PersistentFile from './PersistentFile.js';
@@ -262,16 +268,16 @@ class IncomingForm extends EventEmitter {
 
     switch (this.headers['content-encoding']) {
       case "gzip":
-        pipe = require("zlib").createGunzip();
+        pipe = createGunzip();
         break;
       case "deflate":
-        pipe = require("zlib").createInflate();
+        pipe = createInflate();
         break;
       case "br":
-        pipe = require("zlib").createBrotliDecompress();
+        pipe = createBrotliDecompress();
         break;
       case "compress":
-        pipe = require("zlib").createUnzip();
+        pipe = createUnzip();
         break;
       
       default:
