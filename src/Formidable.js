@@ -614,6 +614,12 @@ class IncomingForm extends EventEmitter {
     const firstInvalidIndex = Array.from(rawExtname).findIndex(invalidExtensionChar);
     if (firstInvalidIndex === -1) {
       filtered = rawExtname;
+    } else if (firstDot !== lastDot) {
+      // The multi-dot extension contains invalid characters (e.g. "test(.123).pdf").
+      // Fall back to path.extname so the actual file extension is preserved.
+      const lastExtname = path.extname(basename);
+      const lastInvalidIndex = Array.from(lastExtname).findIndex(invalidExtensionChar);
+      filtered = lastInvalidIndex === -1 ? lastExtname : lastExtname.substring(0, lastInvalidIndex);
     } else {
       filtered = rawExtname.substring(0, firstInvalidIndex);
     }

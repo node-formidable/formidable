@@ -105,14 +105,24 @@ function makeHeader(originalFilename) {
     expect(ext).toBe('.QxZs');
 
     basename = getBasename('test.pdf.jqlnn<img src=a onerror=alert(1)>.png');
-    expect(basename).toHaveLength(35);
+    expect(basename).toHaveLength(29);
     ext = path.extname(basename);
-    expect(ext).toBe('.jqlnn');
+    expect(ext).toBe('.png');
+
+    // files where the first-dot segment contains invalid chars should fall
+    // back to path.extname so the real extension is preserved (issue #980)
+    basename = getBasename({ originalFilename: 'test(.123).pdf' });
+    ext = path.extname(basename);
+    expect(ext).toBe('.pdf');
+
+    basename = getBasename({ originalFilename: 'EERS 1.1-CUR.pdf' });
+    ext = path.extname(basename);
+    expect(ext).toBe('.pdf');
 
     basename = getBasename('test.<a.png');
-    expect(basename).toHaveLength(25);
+    expect(basename).toHaveLength(29);
     ext = path.extname(basename);
-    expect(ext).toBe('');
+    expect(ext).toBe('.png');
   });
 
   test(`${name}#_Array parameters support`, () => {
