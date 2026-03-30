@@ -322,7 +322,7 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
   extensions of the original files or not
 - `options.allowEmptyFiles` **{boolean}** - default `false`; allow upload empty
   files
-- `options.minFileSize` **{number}** - default `1` (1byte); the minium size of
+- `options.minFileSize` **{number}** - default `1` (1byte); the minimum size of
   uploaded file.
 - `options.maxFiles` **{number}** - default `Infinity`;
   limit the amount of uploaded files, set Infinity for unlimited

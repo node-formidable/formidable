@@ -1,4 +1,4 @@
-// warning: forcing file into a Buffer elminates the benefits of using streams and may cause memory overflow
+// warning: forcing file into a Buffer eliminates the benefits of using streams and may cause memory overflow
 import http from 'node:http';
 import { Buffer } from 'node:buffer'
 import { Writable } from 'node:stream';

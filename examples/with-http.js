@@ -29,7 +29,7 @@ const server = http.createServer((req, res) => {
           return 'invalid';
         }
         
-        // return 'yo.txt'; // or completly different name
+        // return 'yo.txt'; // or completely different name
         // return 'z/yo.txt'; // subdirectory
         return originalFilename.split("/").map((subdir) => {
           return slugify(subdir, {separator: ''});  // slugify to avoid invalid filenames
