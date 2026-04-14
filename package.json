@@ -5,7 +5,7 @@
   "description": "A node.js module for parsing form data, especially file uploads.",
   "homepage": "https://github.com/node-formidable/formidable",
   "funding": "https://ko-fi.com/tunnckoCore/commissions",
-  "repository": "node-formidable/formidable",
+  "repository": "https://github.com/node-formidable/formidable",
   "type": "module",
   "main": "./dist/index.cjs",
   "exports": {
