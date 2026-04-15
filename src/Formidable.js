@@ -208,8 +208,8 @@ class IncomingForm extends EventEmitter {
       }
     }
     const callback = once(dezalgo(cb));
-    this.fields = {};
-    const files = {};
+    this.fields = Object.create(null);
+    const files = Object.create(null);
 
     this.on('field', (name, value) => {
       if (this.type === 'multipart' || this.type === 'urlencoded') {
