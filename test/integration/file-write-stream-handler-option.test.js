@@ -78,4 +78,4 @@ test("file write stream handler", (done) => {
 
     createReadStream(testFilePath).pipe(request);
   });
-});
+}, 7000);

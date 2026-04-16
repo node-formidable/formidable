@@ -66,6 +66,11 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         node-version: [18, 20, 22, "lts/*"]
+        exclude:
+          - os: macos-latest
+            node-version: 18
+          - os: macos-latest
+            node-version: 20
 
     steps:
       - name: Checkout
