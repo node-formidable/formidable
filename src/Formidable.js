@@ -2,7 +2,6 @@
 /* eslint-disable no-underscore-dangle */
 
 import { init as cuid2init } from "@paralleldrive/cuid2";
-import dezalgo from "dezalgo";
 import { EventEmitter } from "node:events";
 import fsPromises from "node:fs/promises";
 import os from "node:os";
@@ -15,13 +14,13 @@ import {
   createBrotliDecompress,
   createUnzip,
 } from "node:zlib";
-import once from "once";
 import FormidableError, * as errors from "./FormidableError.js";
 import PersistentFile from "./PersistentFile.js";
 import VolatileFile from "./VolatileFile.js";
 import DummyParser from "./parsers/Dummy.js";
 import MultipartParser from "./parsers/Multipart.js";
 import { json, multipart, octetstream, querystring } from "./plugins/index.js";
+import { dezalgo, once } from "./utils.js";
 
 const CUID2_FINGERPRINT = `${
   process.env.NODE_ENV
