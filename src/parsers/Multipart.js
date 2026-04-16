@@ -3,9 +3,9 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'node:stream';
-import * as errors from '../FormidableError.js';
-import FormidableError from '../FormidableError.js';
+import { Transform } from "node:stream";
+import * as errors from "../FormidableError.js";
+import FormidableError from "../FormidableError.js";
 
 let s = 0;
 const STATE = {
@@ -63,7 +63,7 @@ class MultipartParser extends Transform {
     return new FormidableError(
       `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
       errors.malformedMultipart,
-      400,
+      400
     );
   }
 
@@ -72,8 +72,8 @@ class MultipartParser extends Transform {
       (this.state === STATE.HEADER_FIELD_START && this.index === 0) ||
       (this.state === STATE.PART_DATA && this.index === this.boundary.length)
     ) {
-      this._handleCallback('partEnd');
-      this._handleCallback('end');
+      this._handleCallback("partEnd");
+      this._handleCallback("end");
       done();
     } else if (this.state !== STATE.END) {
       done(this._endUnexpected());
@@ -114,7 +114,7 @@ class MultipartParser extends Transform {
     let cl = null;
 
     const setMark = (name, idx) => {
-      this[`${name}Mark`] = typeof idx === 'number' ? idx : i;
+      this[`${name}Mark`] = typeof idx === "number" ? idx : i;
     };
 
     const clearMarkSymbol = (name) => {
@@ -157,12 +157,12 @@ class MultipartParser extends Transform {
             break;
           } else if (index - 1 === boundary.length - 2) {
             if (flags & FBOUNDARY.LAST_BOUNDARY && c === HYPHEN) {
-              this._handleCallback('end');
+              this._handleCallback("end");
               state = STATE.END;
               flags = 0;
             } else if (!(flags & FBOUNDARY.LAST_BOUNDARY) && c === LF) {
               index = 0;
-              this._handleCallback('partBegin');
+              this._handleCallback("partBegin");
               state = STATE.HEADER_FIELD_START;
             } else {
               done(this._endUnexpected());
@@ -180,11 +180,11 @@ class MultipartParser extends Transform {
           break;
         case STATE.HEADER_FIELD_START:
           state = STATE.HEADER_FIELD;
-          setMark('headerField');
+          setMark("headerField");
           index = 0;
         case STATE.HEADER_FIELD:
           if (c === CR) {
-            clearMarkSymbol('headerField');
+            clearMarkSymbol("headerField");
             state = STATE.HEADERS_ALMOST_DONE;
             break;
           }
@@ -200,7 +200,7 @@ class MultipartParser extends Transform {
               done(this._endUnexpected());
               return;
             }
-            dataCallback('headerField', true);
+            dataCallback("headerField", true);
             state = STATE.HEADER_VALUE_START;
             break;
           }
@@ -216,19 +216,19 @@ class MultipartParser extends Transform {
             break;
           }
 
-          setMark('headerValue');
+          setMark("headerValue");
           state = STATE.HEADER_VALUE;
         case STATE.HEADER_VALUE:
           if (c === CR) {
-            dataCallback('headerValue', true);
-            this._handleCallback('headerEnd');
+            dataCallback("headerValue", true);
+            this._handleCallback("headerEnd");
             state = STATE.HEADER_VALUE_ALMOST_DONE;
           }
           break;
         case STATE.HEADER_VALUE_ALMOST_DONE:
           if (c !== LF) {
             done(this._endUnexpected());
-return;
+            return;
           }
           state = STATE.HEADER_FIELD_START;
           break;
@@ -238,12 +238,12 @@ return;
             return;
           }
 
-          this._handleCallback('headersEnd');
+          this._handleCallback("headersEnd");
           state = STATE.PART_DATA_START;
           break;
         case STATE.PART_DATA_START:
           state = STATE.PART_DATA;
-          setMark('partData');
+          setMark("partData");
         case STATE.PART_DATA:
           prevIndex = index;
 
@@ -260,7 +260,7 @@ return;
           if (index < boundary.length) {
             if (boundary[index] === c) {
               if (index === 0) {
-                dataCallback('partData', true);
+                dataCallback("partData", true);
               }
               index++;
             } else {
@@ -283,15 +283,15 @@ return;
               if (c === LF) {
                 // unset the PART_BOUNDARY flag
                 flags &= ~FBOUNDARY.PART_BOUNDARY;
-                this._handleCallback('partEnd');
-                this._handleCallback('partBegin');
+                this._handleCallback("partEnd");
+                this._handleCallback("partBegin");
                 state = STATE.HEADER_FIELD_START;
                 break;
               }
             } else if (flags & FBOUNDARY.LAST_BOUNDARY) {
               if (c === HYPHEN) {
-                this._handleCallback('partEnd');
-                this._handleCallback('end');
+                this._handleCallback("partEnd");
+                this._handleCallback("end");
                 state = STATE.END;
                 flags = 0;
               } else {
@@ -309,9 +309,9 @@ return;
           } else if (prevIndex > 0) {
             // if our boundary turned out to be rubbish, the captured lookbehind
             // belongs to partData
-            this._handleCallback('partData', lookbehind, 0, prevIndex);
+            this._handleCallback("partData", lookbehind, 0, prevIndex);
             prevIndex = 0;
-            setMark('partData');
+            setMark("partData");
 
             // reconsider the current character even so it interrupted the sequence
             // it could be the beginning of a new sequence
@@ -327,9 +327,9 @@ return;
       }
     }
 
-    dataCallback('headerField');
-    dataCallback('headerValue');
-    dataCallback('partData');
+    dataCallback("headerField");
+    dataCallback("headerValue");
+    dataCallback("partData");
 
     this.index = index;
     this.state = state;

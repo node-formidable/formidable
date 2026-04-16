@@ -1,20 +1,32 @@
 /* eslint-disable no-underscore-dangle */
 
-import fs from 'node:fs';
-import crypto from 'node:crypto';
-import { EventEmitter } from 'node:events';
+import fs from "node:fs";
+import crypto from "node:crypto";
+import { EventEmitter } from "node:events";
 
 class PersistentFile extends EventEmitter {
-  constructor({ filepath, newFilename, originalFilename, mimetype, hashAlgorithm }) {
+  constructor({
+    filepath,
+    newFilename,
+    originalFilename,
+    mimetype,
+    hashAlgorithm,
+  }) {
     super();
 
     this.lastModifiedDate = null;
-    Object.assign(this, { filepath, newFilename, originalFilename, mimetype, hashAlgorithm });
+    Object.assign(this, {
+      filepath,
+      newFilename,
+      originalFilename,
+      mimetype,
+      hashAlgorithm,
+    });
 
     this.size = 0;
     this._writeStream = null;
 
-    if (typeof this.hashAlgorithm === 'string') {
+    if (typeof this.hashAlgorithm === "string") {
       this.hash = crypto.createHash(this.hashAlgorithm);
     } else {
       this.hash = null;
@@ -23,8 +35,8 @@ class PersistentFile extends EventEmitter {
 
   open() {
     this._writeStream = fs.createWriteStream(this.filepath);
-    this._writeStream.on('error', (err) => {
-      this.emit('error', err);
+    this._writeStream.on("error", (err) => {
+      this.emit("error", err);
     });
   }
 
@@ -38,7 +50,7 @@ class PersistentFile extends EventEmitter {
       length: this.length,
       originalFilename: this.originalFilename,
     };
-    if (this.hash && this.hash !== '') {
+    if (this.hash && this.hash !== "") {
       json.hash = this.hash;
     }
     return json;
@@ -61,27 +73,27 @@ class PersistentFile extends EventEmitter {
     this._writeStream.write(buffer, () => {
       this.lastModifiedDate = new Date();
       this.size += buffer.length;
-      this.emit('progress', this.size);
+      this.emit("progress", this.size);
       cb();
     });
   }
 
   end(cb) {
     if (this.hash) {
-      this.hash = this.hash.digest('hex');
+      this.hash = this.hash.digest("hex");
     }
     this._writeStream.end(() => {
-      this.emit('end');
+      this.emit("end");
       cb();
     });
   }
 
   destroy() {
     this._writeStream.destroy();
-    const filepath = this.filepath; 
-    setTimeout(function () {
-        fs.unlink(filepath, () => {});
-    }, 1)
+    const { filepath } = this;
+    setTimeout(() => {
+      fs.unlink(filepath, () => {});
+    }, 1);
   }
 }
 

@@ -1,8 +1,8 @@
 // not used
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'node:stream';
-import FormidableError, { maxFieldsSizeExceeded } from '../FormidableError.js';
+import { Transform } from "node:stream";
+import FormidableError, { maxFieldsSizeExceeded } from "../FormidableError.js";
 
 const AMPERSAND = 38;
 const EQUALS = 61;
@@ -13,10 +13,10 @@ class QuerystringParser extends Transform {
 
     const { maxFieldSize } = options;
     this.maxFieldLength = maxFieldSize;
-    this.buffer = Buffer.from('');
+    this.buffer = Buffer.from("");
     this.fieldCount = 0;
     this.sectionStart = 0;
-    this.key = '';
+    this.key = "";
     this.readingKey = true;
   }
 
@@ -54,11 +54,11 @@ class QuerystringParser extends Transform {
         callback(
           new FormidableError(
             `${
-              this.readingKey ? 'Key' : `Value for ${this.key}`
-            } longer than maxFieldLength`,
+              this.readingKey ? "Key" : `Value for ${this.key}`
+            } longer than maxFieldLength`
           ),
           maxFieldsSizeExceeded,
-          413,
+          413
         );
       }
     }
@@ -79,29 +79,29 @@ class QuerystringParser extends Transform {
     if (this.readingKey) {
       // we only have a key if there's something in the buffer. We definitely have no value
       if (this.buffer && this.buffer.length) {
-        this.emitField(this.buffer.toString('ascii'));
+        this.emitField(this.buffer.toString("ascii"));
       }
     } else {
       // We have a key, we may or may not have a value
       this.emitField(
         this.key,
-        this.buffer && this.buffer.length && this.buffer.toString('ascii'),
+        this.buffer && this.buffer.length && this.buffer.toString("ascii")
       );
     }
-    this.buffer = '';
+    this.buffer = "";
     callback();
   }
 
   getSection(buffer, i) {
-    if (i === this.sectionStart) return '';
+    if (i === this.sectionStart) return "";
 
-    return buffer.toString('ascii', this.sectionStart, i);
+    return buffer.toString("ascii", this.sectionStart, i);
   }
 
   emitField(key, val) {
-    this.key = '';
+    this.key = "";
     this.readingKey = true;
-    this.push({ key, value: val || '' });
+    this.push({ key, value: val || "" });
   }
 }
 

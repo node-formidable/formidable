@@ -1,15 +1,14 @@
-import Koa from 'koa';
-import formidable from '../src/index.js';
-
+import Koa from "koa";
+import formidable from "../src/index.js";
 
 const app = new Koa();
 
-app.on('error', (err) => {
-  console.error('server error', err);
+app.on("error", (err) => {
+  console.error("server error", err);
 });
 
 app.use(async (ctx, next) => {
-  if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
+  if (ctx.url === "/api/upload" && ctx.method.toLowerCase() === "post") {
     let i = 0;
     const form = formidable({
       keepExtensions: true,
@@ -29,7 +28,7 @@ app.use(async (ctx, next) => {
           return;
         }
 
-        ctx.set('Content-Type', 'application/json');
+        ctx.set("Content-Type", "application/json");
         ctx.status = 200;
         ctx.state = { fields, files };
         ctx.body = JSON.stringify(ctx.state, null, 2);
@@ -41,7 +40,7 @@ app.use(async (ctx, next) => {
   }
 
   // show a file upload form
-  ctx.set('Content-Type', 'text/html');
+  ctx.set("Content-Type", "text/html");
   ctx.status = 200;
   ctx.body = `
     <h2>With <code>"koa"</code> npm package</h2>
@@ -54,10 +53,10 @@ app.use(async (ctx, next) => {
 });
 
 app.use((ctx) => {
-  console.log('The next middleware is called');
-  console.log('Results:', ctx.state);
+  console.log("The next middleware is called");
+  console.log("Results:", ctx.state);
 });
 
 app.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });

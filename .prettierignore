@@ -8,6 +8,8 @@
 !*.md*
 !*.y*ml
 
+pnpm-lock.yaml
+
 !**/src
 !**/src/**
 

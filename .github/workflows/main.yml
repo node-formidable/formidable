@@ -52,10 +52,10 @@ name: ci
 on:
   push:
     branches:
-      - '*'
+      - "*"
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   build-and-test:
@@ -65,7 +65,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node-version: [18, 20, 22, 'lts/*']
+        node-version: [18, 20, 22, "lts/*"]
 
     steps:
       - name: Checkout

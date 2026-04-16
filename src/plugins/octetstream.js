@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
-import OctetStreamParser from '../parsers/OctetStream.js';
+import OctetStreamParser from "../parsers/OctetStream.js";
 
-export const octetStreamType = 'octet-stream';
+export const octetStreamType = "octet-stream";
 // the `options` is also available through the `options` / `formidable.options`
 export default async function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
@@ -11,7 +11,7 @@ export default async function plugin(formidable, options) {
   /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/^[^;]*octet-stream/i.test(self.headers['content-type'])) {
+  if (/^[^;]*octet-stream/i.test(self.headers["content-type"])) {
     await init.call(self, self, options);
   }
   return self;
@@ -22,8 +22,8 @@ export default async function plugin(formidable, options) {
 // to test the plugin you can pass custom `this` context to it (and so `this.options`)
 async function init(_self, _opts) {
   this.type = octetStreamType;
-  const originalFilename = this.headers['x-file-name'];
-  const mimetype = this.headers['content-type'];
+  const originalFilename = this.headers["x-file-name"];
+  const mimetype = this.headers["content-type"];
 
   const thisPart = {
     originalFilename,
@@ -38,7 +38,7 @@ async function init(_self, _opts) {
     mimetype,
   });
 
-  this.emit('fileBegin', originalFilename, file);
+  this.emit("fileBegin", originalFilename, file);
   file.open();
   this.openedFiles.push(file);
   this._flushing += 1;
@@ -48,7 +48,7 @@ async function init(_self, _opts) {
   // Keep track of writes that haven't finished so we don't emit the file before it's done being written
   let outstandingWrites = 0;
 
-  this._parser.on('data', (buffer) => {
+  this._parser.on("data", (buffer) => {
     this.pause();
     outstandingWrites += 1;
 
@@ -57,18 +57,18 @@ async function init(_self, _opts) {
       this.resume();
 
       if (this.ended) {
-        this._parser.emit('doneWritingFile');
+        this._parser.emit("doneWritingFile");
       }
     });
   });
 
-  this._parser.on('end', () => {
+  this._parser.on("end", () => {
     this._flushing -= 1;
     this.ended = true;
 
     const done = () => {
       file.end(() => {
-        this.emit('file', 'file', file);
+        this.emit("file", "file", file);
         this._maybeEnd();
       });
     };
@@ -76,7 +76,7 @@ async function init(_self, _opts) {
     if (outstandingWrites === 0) {
       done();
     } else {
-      this._parser.once('doneWritingFile', done);
+      this._parser.once("doneWritingFile", done);
     }
   });
 

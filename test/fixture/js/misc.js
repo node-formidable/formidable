@@ -1,9 +1,9 @@
 const boundary_substring_json = [
   {
-    type: 'file',
-    name: 'upload',
-    originalFilename: 'plain.txt',
-    fixture: 'boundary-substring-json',
+    type: "file",
+    name: "upload",
+    originalFilename: "plain.txt",
+    fixture: "boundary-substring-json",
   },
 ];
 

@@ -1,18 +1,17 @@
-import http from 'node:http';
-import slugify from '@sindresorhus/slugify';
-import formidable, {errors as formidableErrors} from '../src/index.js';
+import http from "node:http";
+import slugify from "@sindresorhus/slugify";
+import formidable, { errors as formidableErrors } from "../src/index.js";
 
 const server = http.createServer((req, res) => {
   // handle common internet errors
   // to avoid server crash
-  req.on('error', console.error);
-  res.on('error', console.error);
+  req.on("error", console.error);
+  res.on("error", console.error);
 
-
-  if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
+  if (req.url === "/api/upload" && req.method.toLowerCase() === "post") {
     // parse a file upload
     const form = formidable({
-      defaultInvalidName: 'invalid',
+      defaultInvalidName: "invalid",
       uploadDir: `uploads`,
       keepExtensions: true,
       createDirsFromUploads: true,
@@ -24,36 +23,39 @@ const server = http.createServer((req, res) => {
          */
         // originalFilename will have slashes with relative path if a
         // directory was uploaded
-        const {originalFilename} = part;
+        const { originalFilename } = part;
         if (!originalFilename) {
-          return 'invalid';
+          return "invalid";
         }
-        
+
         // return 'yo.txt'; // or completly different name
         // return 'z/yo.txt'; // subdirectory
-        return originalFilename.split("/").map((subdir) => {
-          return slugify(subdir, {separator: ''});  // slugify to avoid invalid filenames
-        }).join("/").substr(0, 100); // substr to define a maximum 
+        return originalFilename
+          .split("/")
+          .map(
+            (subdir) => slugify(subdir, { separator: "" }) // slugify to avoid invalid filenames
+          )
+          .join("/")
+          .substr(0, 100); // substr to define a maximum
       },
-      filter: function ({name, originalFilename, mimetype}) {
+      filter({ name, originalFilename, mimetype }) {
         return Boolean(originalFilename);
         // keep only images
         // return mimetype?.includes("image");
-      }
+      },
 
       // maxTotalFileSize: 4000,
       // maxFileSize: 1000,
-
     });
 
     form.parse(req, (err, fields, files) => {
       if (err) {
         console.error(err);
-        res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+        res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
         res.end(String(err));
         return;
       }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ fields, files }, null, 2));
     });
 
@@ -61,7 +63,7 @@ const server = http.createServer((req, res) => {
   }
 
   // else show a file upload form
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.writeHead(200, { "Content-Type": "text/html" });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -81,5 +83,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });

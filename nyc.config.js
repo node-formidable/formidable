@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 module.exports = {
   statements: 70,
@@ -6,8 +6,8 @@ module.exports = {
   functions: 70,
   lines: 70,
 
-  'check-coverage': true,
-  exclude: ['test'],
-  include: ['src'],
-  reporter: ['text', 'text-summary', 'lcov', 'clover'],
+  "check-coverage": true,
+  exclude: ["test"],
+  include: ["src"],
+  reporter: ["text", "text-summary", "lcov", "clover"],
 };

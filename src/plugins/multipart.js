@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 
-import { Stream } from 'node:stream';
-import MultipartParser from '../parsers/Multipart.js';
-import * as errors from '../FormidableError.js';
-import FormidableError from '../FormidableError.js';
+import { Stream } from "node:stream";
+import MultipartParser from "../parsers/Multipart.js";
+import * as errors from "../FormidableError.js";
+import FormidableError from "../FormidableError.js";
 
-export const multipartType = 'multipart';
+export const multipartType = "multipart";
 // the `options` is also available through the `options` / `formidable.options`
 export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
@@ -15,20 +15,20 @@ export default function plugin(formidable, options) {
   const self = this || formidable;
 
   // NOTE: we (currently) support both multipart/form-data and multipart/related
-  const multipart = /^[^;]*multipart/i.test(self.headers['content-type']);
+  const multipart = /^[^;]*multipart/i.test(self.headers["content-type"]);
 
   if (multipart) {
-    const m = self.headers['content-type'].match(
-      /boundary=(?:"([^"]+)"|([^;]+))/i,
+    const m = self.headers["content-type"].match(
+      /boundary=(?:"([^"]+)"|([^;]+))/i
     );
     if (m) {
       const initMultipart = createInitMultipart(m[1] || m[2]);
       initMultipart.call(self, self, options); // lgtm [js/superfluous-trailing-arguments]
     } else {
       const err = new FormidableError(
-        'bad content-type header, no multipart boundary',
+        "bad content-type header, no multipart boundary",
         errors.missingMultipartBoundary,
-        400,
+        400
       );
       self._error(err);
     }
@@ -51,8 +51,8 @@ function createInitMultipart(boundary) {
     parser.initWithBoundary(boundary);
 
     // eslint-disable-next-line max-statements, consistent-return
-    parser.on('data', async ({ name, buffer, start, end }) => {
-      if (name === 'partBegin') {
+    parser.on("data", async ({ name, buffer, start, end }) => {
+      if (name === "partBegin") {
         part = new Stream();
         part.readable = true;
         part.headers = {};
@@ -61,65 +61,65 @@ function createInitMultipart(boundary) {
         part.mimetype = null;
 
         part.transferEncoding = this.options.encoding;
-        part.transferBuffer = '';
+        part.transferBuffer = "";
 
-        headerField = '';
-        headerValue = '';
-      } else if (name === 'headerField') {
+        headerField = "";
+        headerValue = "";
+      } else if (name === "headerField") {
         headerField += buffer.toString(this.options.encoding, start, end);
-      } else if (name === 'headerValue') {
+      } else if (name === "headerValue") {
         headerValue += buffer.toString(this.options.encoding, start, end);
-      } else if (name === 'headerEnd') {
+      } else if (name === "headerEnd") {
         headerField = headerField.toLowerCase();
         part.headers[headerField] = headerValue;
 
         // matches either a quoted-string or a token (RFC 2616 section 19.5.1)
         const m = headerValue.match(
           // eslint-disable-next-line no-useless-escape
-          /\bname=("([^"]*)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))/i,
+          /\bname=("([^"]*)"|([^\(\)<>@,;:\\"\/\[\]\?=\{\}\s\t/]+))/i
         );
-        if (headerField === 'content-disposition') {
+        if (headerField === "content-disposition") {
           if (m) {
-            part.name = m[2] || m[3] || '';
+            part.name = m[2] || m[3] || "";
           }
 
           part.originalFilename = this._getFileName(headerValue);
-        } else if (headerField === 'content-type') {
+        } else if (headerField === "content-type") {
           part.mimetype = headerValue;
-        } else if (headerField === 'content-transfer-encoding') {
+        } else if (headerField === "content-transfer-encoding") {
           part.transferEncoding = headerValue.toLowerCase();
         }
 
-        headerField = '';
-        headerValue = '';
-      } else if (name === 'headersEnd') {
+        headerField = "";
+        headerValue = "";
+      } else if (name === "headersEnd") {
         switch (part.transferEncoding) {
-          case 'binary':
-          case '7bit':
-          case '8bit':
-          case 'utf-8': {
+          case "binary":
+          case "7bit":
+          case "8bit":
+          case "utf-8": {
             const dataPropagation = (ctx) => {
-              if (ctx.name === 'partData') {
-                part.emit('data', ctx.buffer.slice(ctx.start, ctx.end));
+              if (ctx.name === "partData") {
+                part.emit("data", ctx.buffer.slice(ctx.start, ctx.end));
               }
             };
             const dataStopPropagation = (ctx) => {
-              if (ctx.name === 'partEnd') {
-                part.emit('end');
-                parser.off('data', dataPropagation);
-                parser.off('data', dataStopPropagation);
+              if (ctx.name === "partEnd") {
+                part.emit("end");
+                parser.off("data", dataPropagation);
+                parser.off("data", dataStopPropagation);
               }
             };
-            parser.on('data', dataPropagation);
-            parser.on('data', dataStopPropagation);
+            parser.on("data", dataPropagation);
+            parser.on("data", dataStopPropagation);
             break;
           }
-          case 'base64': {
+          case "base64": {
             const dataPropagation = (ctx) => {
-              if (ctx.name === 'partData') {
+              if (ctx.name === "partData") {
                 part.transferBuffer += ctx.buffer
                   .slice(ctx.start, ctx.end)
-                  .toString('ascii');
+                  .toString("ascii");
 
                 /*
                   four bytes (chars) in base64 converts to three bytes in binary
@@ -129,40 +129,40 @@ function createInitMultipart(boundary) {
                   */
                 const offset = parseInt(part.transferBuffer.length / 4, 10) * 4;
                 part.emit(
-                  'data',
+                  "data",
                   Buffer.from(
                     part.transferBuffer.substring(0, offset),
-                    'base64',
-                  ),
+                    "base64"
+                  )
                 );
                 part.transferBuffer = part.transferBuffer.substring(offset);
               }
             };
             const dataStopPropagation = (ctx) => {
-              if (ctx.name === 'partEnd') {
-                part.emit('data', Buffer.from(part.transferBuffer, 'base64'));
-                part.emit('end');
-                parser.off('data', dataPropagation);
-                parser.off('data', dataStopPropagation);
+              if (ctx.name === "partEnd") {
+                part.emit("data", Buffer.from(part.transferBuffer, "base64"));
+                part.emit("end");
+                parser.off("data", dataPropagation);
+                parser.off("data", dataStopPropagation);
               }
             };
-            parser.on('data', dataPropagation);
-            parser.on('data', dataStopPropagation);
+            parser.on("data", dataPropagation);
+            parser.on("data", dataStopPropagation);
             break;
           }
           default:
             return this._error(
               new FormidableError(
-                'unknown transfer-encoding',
+                "unknown transfer-encoding",
                 errors.unknownTransferEncoding,
-                501,
-              ),
+                501
+              )
             );
         }
         this._parser.pause();
         await this.onPart(part);
         this._parser.resume();
-      } else if (name === 'end') {
+      } else if (name === "end") {
         this.ended = true;
         this._maybeEnd();
       }

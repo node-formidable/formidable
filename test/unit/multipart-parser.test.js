@@ -1,6 +1,6 @@
-import { MultipartParser } from '../../src/index.js';
+import { MultipartParser } from "../../src/index.js";
 
-test('on constructor', () => {
+test("on constructor", () => {
   const parser = new MultipartParser();
   expect(parser.boundary).toBeNull();
   expect(parser.state).toBe(0);
@@ -8,11 +8,11 @@ test('on constructor', () => {
   expect(parser.boundaryChars).toBeNull();
   expect(parser.index).toBeNull();
   expect(parser.lookbehind).toBeNull();
-  expect(parser.constructor.name).toBe('MultipartParser');
+  expect(parser.constructor.name).toBe("MultipartParser");
 });
 
-test('initWithBoundary', () => {
-  const boundary = 'abc';
+test("initWithBoundary", () => {
+  const boundary = "abc";
   const parser = new MultipartParser();
   parser.initWithBoundary(boundary);
 
@@ -37,22 +37,22 @@ test('initWithBoundary', () => {
   });
 });
 
-test('initWithBoundary failing', () => {
+test("initWithBoundary failing", () => {
   const parser = new MultipartParser();
-  const boundary = 'abc';
+  const boundary = "abc";
   const buffer = Buffer.alloc(5);
 
   parser.initWithBoundary(boundary);
-  buffer.write('--ad', 0);
+  buffer.write("--ad", 0);
   expect(parser.bufferLength).toBe(0);
 
   parser.write(buffer);
   expect(parser.bufferLength).toBe(5);
 });
 
-test('on .end() throwing', () => {
+test("on .end() throwing", () => {
   const parser = new MultipartParser();
-  parser.once('error', () => {});
+  parser.once("error", () => {});
 
   const res = parser.end();
   expect(res.state).toBe(0);
@@ -62,7 +62,7 @@ test('on .end() throwing', () => {
   // expect(() => { parser.end() }).toThrow(parser.explain());
 });
 
-test('on .end() successful', () => {
+test("on .end() successful", () => {
   const parser = new MultipartParser();
   parser.state = MultipartParser.STATES.END;
 
