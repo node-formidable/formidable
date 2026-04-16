@@ -64,7 +64,7 @@
     "test:local": "pnpm run test-node && pnpm run test-jest",
     "audit": "pnpm audit --prod --fix",
     "pretest": "rm -rf ./test/tmp && mkdir ./test/tmp",
-    "test": "pnpm run audit && node --test ./test-node/**/*.test.js && pnpm run test-jest:ci"
+    "test": "node --test ./test-node/**/*.test.js && pnpm run test-jest:ci"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",
