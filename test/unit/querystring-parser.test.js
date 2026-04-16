@@ -1,8 +1,8 @@
-import { QuerystringParser } from '../../src/index.js';
+import { QuerystringParser } from "../../src/index.js";
 
-test('on constructor', () => {
+test("on constructor", () => {
   const parser = new QuerystringParser();
-  expect(parser.constructor.name).toBe('QuerystringParser');
+  expect(parser.constructor.name).toBe("QuerystringParser");
 });
 
 // ! skip

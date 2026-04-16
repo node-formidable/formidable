@@ -1,9 +1,9 @@
 /* eslint-disable max-nested-callbacks */
 
-import assert from 'node:assert/strict';
-import { createServer } from 'node:http';
-import { createConnection } from 'node:net';
-import formidable from '../../src/index.js';
+import assert from "node:assert/strict";
+import { createServer } from "node:http";
+import { createConnection } from "node:net";
+import formidable from "../../src/index.js";
 
 let server;
 let port = 13539;
@@ -17,25 +17,26 @@ beforeEach(() => {
   port += 1;
 });
 
-afterEach(() => {
-  return new Promise((resolve) => {
-    if (server.listening) {
-      server.close(() => resolve());
-    } else {
-      resolve();
-    }
-  });
-});
+afterEach(
+  () =>
+    new Promise((resolve) => {
+      if (server.listening) {
+        server.close(() => resolve());
+      } else {
+        resolve();
+      }
+    })
+);
 
-test('keep alive error', (done) => {
-  server.on('request', async (req, res) => {
+test("keep alive error", (done) => {
+  server.on("request", async (req, res) => {
     const form = formidable();
-    form.on('error', () => {
+    form.on("error", () => {
       errors += 1;
       res.writeHead(500);
       res.end();
     });
-    form.on('end', () => {
+    form.on("end", () => {
       ok += 1;
       res.writeHead(200);
       res.end();
@@ -52,12 +53,12 @@ test('keep alive error', (done) => {
 
       // correct post upload (with hyphens)
       clientTwo.write(
-        'POST /upload-test HTTP/1.1\r\n' +
-          'Host: localhost\r\n' +
-          'Connection: keep-alive\r\n' +
-          'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
-          'Content-Length: 13\r\n\r\n' +
-          '------aaa--\r\n',
+        "POST /upload-test HTTP/1.1\r\n" +
+          "Host: localhost\r\n" +
+          "Connection: keep-alive\r\n" +
+          "Content-Type: multipart/form-data; boundary=----aaa\r\n" +
+          "Content-Length: 13\r\n\r\n" +
+          "------aaa--\r\n"
       );
       clientTwo.end();
     }
@@ -68,17 +69,17 @@ test('keep alive error', (done) => {
 
     // first send malformed (boundary / hyphens) post upload
     client.write(
-      'POST /upload-test HTTP/1.1\r\n' +
-        'Host: localhost\r\n' +
-        'Connection: keep-alive\r\n' +
-        'Content-Type: multipart/form-data; boundary=----aaa\r\n' +
-        'Content-Length: 10011\r\n\r\n' +
-        '------XXX\n\r',
+      "POST /upload-test HTTP/1.1\r\n" +
+        "Host: localhost\r\n" +
+        "Connection: keep-alive\r\n" +
+        "Content-Type: multipart/form-data; boundary=----aaa\r\n" +
+        "Content-Length: 10011\r\n\r\n" +
+        "------XXX\n\r"
     );
 
     setTimeout(() => {
       const buf = Buffer.alloc(10000);
-      buf.fill('a');
+      buf.fill("a");
       client.write(buf);
       client.end();
     }, 150);

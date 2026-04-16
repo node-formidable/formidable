@@ -1,9 +1,8 @@
 import assert from "node:assert";
-import MultipartParser from '../src/parsers/Multipart.js';
-
+import MultipartParser from "../src/parsers/Multipart.js";
 
 const parser = new MultipartParser();
-const customBoundary = '-----------------------------168072824752491622650073';
+const customBoundary = "-----------------------------168072824752491622650073";
 const mb = 1000; // 1GB
 const buf = createMultipartBuffer(customBoundary, mb * 1024 * 1024);
 
@@ -21,7 +20,7 @@ const calls = {
 const start = performance.now();
 
 parser.initWithBoundary(customBoundary);
-parser.on('data', ({ name }) => {
+parser.on("data", ({ name }) => {
   calls[name] += 1;
 });
 
@@ -40,12 +39,12 @@ function createMultipartBuffer(boundary, size) {
   const tail = `\r\n--${boundary}--\r\n`;
   const buffer = Buffer.alloc(size);
 
-  buffer.write(head, 0, 'ascii');
-  buffer.write(tail, buffer.length - tail.length, 'ascii');
+  buffer.write(head, 0, "ascii");
+  buffer.write(tail, buffer.length - tail.length, "ascii");
   return buffer;
 }
 
-process.on('exit', () => {
+process.on("exit", () => {
   assert.deepStrictEqual(calls, {
     partBegin: 1,
     headerField: 1,

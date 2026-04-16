@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
-import JSONParser from '../parsers/JSON.js';
+import JSONParser from "../parsers/JSON.js";
 
-export const jsonType = 'json';
+export const jsonType = "json";
 // the `options` is also available through the `this.options` / `formidable.options`
 export default function plugin(formidable, options) {
   // the `this` context is always formidable, as the first argument of a plugin
@@ -11,12 +11,12 @@ export default function plugin(formidable, options) {
   /* istanbul ignore next */
   const self = this || formidable;
 
-  if (/^[^;]*json/i.test(self.headers['content-type'])) {
+  if (/^[^;]*json/i.test(self.headers["content-type"])) {
     init.call(self, self, options);
   }
 
   return self;
-};
+}
 
 // Note that it's a good practice (but it's up to you) to use the `this.options` instead
 // of the passed `options` (second) param, because when you decide
@@ -26,11 +26,11 @@ function init(_self, _opts) {
 
   const parser = new JSONParser(this.options);
 
-  parser.on('data', (fields) => {
-    this.fields = fields;
+  parser.on("data", (fields) => {
+    this.fields = Object.assign(Object.create(null), fields);
   });
 
-  parser.once('end', () => {
+  parser.once("end", () => {
     this.ended = true;
     this._maybeEnd();
   });

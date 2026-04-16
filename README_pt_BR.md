@@ -58,7 +58,7 @@ fechado, mas se você estiver interessado, podemos discuti-lo e adicioná-lo ap�
 
 - [Rápido (~ 900-2500 mb/seg)](#benchmarks) e analisador multiparte de streaming
 - Gravar uploads de arquivos automaticamente no disco (opcional, consulte
-   [`options.fileWriteStreamHandler`](#options))
+  [`options.fileWriteStreamHandler`](#options))
 - [API de plug-ins](#useplugin-plugin) - permitindo analisadores e plug-ins personalizados
 - Baixo consumo de memória
 - Tratamento de erros gracioso
@@ -85,7 +85,6 @@ npm install formidable@v3
 _**Nota:** Em um futuro próximo, a v3 será publicada na dist-tag `latest` do NPM.
 Versões futuras não prontas serão publicadas nas dist-tags `*-next` para a versão correspondente._
 
-
 ## Exemplos
 
 Para mais exemplos veja o diretório `examples/`.
@@ -96,11 +95,11 @@ Analisar um upload de arquivo de entrada, com o
 [Módulo `http` integrado do Node.js](https://nodejs.org/api/http.html).
 
 ```js
-import http from 'node:http';
-import formidable, {errors as formidableErrors} from 'formidable';
+import http from "node:http";
+import formidable, { errors as formidableErrors } from "formidable";
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
+  if (req.url === "/api/upload" && req.method.toLowerCase() === "post") {
     // analisar um upload de arquivo
     const form = formidable({});
 
@@ -108,13 +107,12 @@ const server = http.createServer((req, res) => {
       if (err) {
         // exemplo para verificar um erro muito específico
         if (err.code === formidableErrors.maxFieldsExceeded) {
-
         }
-        res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+        res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
         res.end(String(err));
         return;
       }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ fields, files }, null, 2));
     });
 
@@ -122,7 +120,7 @@ const server = http.createServer((req, res) => {
   }
 
   // mostrar um formulário de upload de arquivo
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.writeHead(200, { "Content-Type": "text/html" });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -134,7 +132,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(8080, () => {
-  console.log('Server listening on http://localhost:8080/ ...');
+  console.log("Server listening on http://localhost:8080/ ...");
 });
 ```
 
@@ -147,12 +145,12 @@ Ou tente o
 [examples/with-express.js](https://github.com/node-formidable/formidable/blob/master/examples/with-express.js)
 
 ```js
-import express from 'express';
-import formidable from 'formidable';
+import express from "express";
+import formidable from "formidable";
 
 const app = express();
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send(`
     <h2>With <code>"express"</code> npm package</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -163,7 +161,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.post('/api/upload', (req, res, next) => {
+app.post("/api/upload", (req, res, next) => {
   const form = formidable({});
 
   form.parse(req, (err, fields, files) => {
@@ -176,7 +174,7 @@ app.post('/api/upload', (req, res, next) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });
 ```
 
@@ -193,21 +191,21 @@ que é a solicitação do Node.js e **NÃO** o `ctx.request` que é a solicitaç
 objeto - há uma diferença._
 
 ```js
-import Koa from 'Koa';
-import formidable from 'formidable';
+import Koa from "Koa";
+import formidable from "formidable";
 
 const app = new Koa();
 
-app.on('error', (err) => {
-  console.error('server error', err);
+app.on("error", (err) => {
+  console.error("server error", err);
 });
 
 app.use(async (ctx, next) => {
-  if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
+  if (ctx.url === "/api/upload" && ctx.method.toLowerCase() === "post") {
     const form = formidable({});
 
-     // não muito elegante, mas é por enquanto se você não quiser usar `koa-better-body`
-     // ou outros middlewares.
+    // não muito elegante, mas é por enquanto se você não quiser usar `koa-better-body`
+    // ou outros middlewares.
     await new Promise((resolve, reject) => {
       form.parse(ctx.req, (err, fields, files) => {
         if (err) {
@@ -215,7 +213,7 @@ app.use(async (ctx, next) => {
           return;
         }
 
-        ctx.set('Content-Type', 'application/json');
+        ctx.set("Content-Type", "application/json");
         ctx.status = 200;
         ctx.state = { fields, files };
         ctx.body = JSON.stringify(ctx.state, null, 2);
@@ -227,7 +225,7 @@ app.use(async (ctx, next) => {
   }
 
   // mostrar um formulário de upload de arquivo
-  ctx.set('Content-Type', 'text/html');
+  ctx.set("Content-Type", "text/html");
   ctx.status = 200;
   ctx.body = `
     <h2>With <code>"koa"</code> npm package</h2>
@@ -240,12 +238,12 @@ app.use(async (ctx, next) => {
 });
 
 app.use((ctx) => {
-  console.log('The next middleware is called');
-  console.log('Results:', ctx.state);
+  console.log("The next middleware is called");
+  console.log("Results:", ctx.state);
 });
 
 app.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });
 ```
 
@@ -293,7 +291,7 @@ _Por favor, passe [`options`](#options) para a função/construtor, não atribui
 eles para a instância `form`_
 
 ```js
-import formidable from 'formidable';
+import formidable from "formidable";
 const form = formidable(options);
 ```
 
@@ -334,13 +332,12 @@ Veja seus padrões em [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 - `options.filter` **{function}** - função padrão que sempre retorna verdadeiro.
   Use-o para filtrar arquivos antes de serem carregados. Deve retornar um booleano.
 
-
-#### `options.filename`  **{function}** function (name, ext, part, form) -> string
+#### `options.filename` **{function}** function (name, ext, part, form) -> string
 
 onde a parte pode ser decomposta como
 
 ```js
-const { originalFilename, mimetype} = part;
+const { originalFilename, mimetype } = part;
 ```
 
 _**Observação:** Se este tamanho de campos combinados, ou tamanho de algum arquivo for excedido, um
@@ -356,19 +353,18 @@ form.bytesReceived;
 form.bytesExpected;
 ```
 
-#### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
+#### `options.filter` **{function}** function ({name, originalFilename, mimetype}) -> boolean
 
 **Observação:** use uma variável externa para cancelar todos os uploads no primeiro erro
 
 ```js
 const options = {
-  filter: function ({name, originalFilename, mimetype}) {
+  filter: function ({ name, originalFilename, mimetype }) {
     // manter apenas imagens
     return mimetype && mimetype.includes("image");
-  }
+  },
 };
 ```
-
 
 ### .parse(request, callback)
 
@@ -379,8 +375,8 @@ fornecido, todos os campos e arquivos são coletados e passados para o retorno d
 const form = formidable({ uploadDir: __dirname });
 
 form.parse(req, (err, fields, files) => {
-  console.log('fields:', fields);
-  console.log('files:', files);
+  console.log("fields:", fields);
+  console.log("files:", files);
 });
 ```
 
@@ -389,6 +385,7 @@ fluxo de várias partes. Fazer isso desativará qualquer processamento de evento
 que ocorreria de outra forma, tornando você totalmente responsável por lidar com o processamento.
 
 Sobre `uploadDir`, dada a seguinte estrutura de diretório
+
 ```
 project-name
 ├── src
@@ -400,28 +397,24 @@ project-name
 
 `__dirname` seria o mesmo diretório que o próprio arquivo de origem (src)
 
-
 ```js
- `${__dirname}/../uploads`
+`${__dirname}/../uploads`;
 ```
 
 para colocar arquivos em uploads.
 
 Omitir `__dirname` tornaria o caminho relativo ao diretório de trabalho atual. Isso seria o mesmo se server.js fosse iniciado a partir de src, mas não de project-name.
 
-
 `null` usará o padrão que é `os.tmpdir()`
 
-Nota: Se o diretório não existir, os arquivos carregados são __silenciosamente descartados__. Para ter certeza de que existe:
+Nota: Se o diretório não existir, os arquivos carregados são **silenciosamente descartados**. Para ter certeza de que existe:
 
 ```js
-import {createNecessaryDirectoriesSync} from "filesac";
-
+import { createNecessaryDirectoriesSync } from "filesac";
 
 const uploadPath = `${__dirname}/../uploads`;
 createNecessaryDirectoriesSync(`${uploadPath}/x`);
 ```
-
 
 No exemplo abaixo, escutamos alguns eventos e os direcionamos para o ouvinte `data`, para
 que você possa fazer o que quiser lá, com base em se é antes do arquivo ser emitido, o valor do
@@ -431,49 +424,52 @@ Ou a outra maneira poderia ser apenas substituir o `form.onPart` como é mostrad
 mais tarde.
 
 ```js
-form.once('error', console.error);
+form.once("error", console.error);
 
-form.on('fileBegin', (formname, file) => {
-  form.emit('data', { name: 'fileBegin', formname, value: file });
+form.on("fileBegin", (formname, file) => {
+  form.emit("data", { name: "fileBegin", formname, value: file });
 });
 
-form.on('file', (formname, file) => {
-  form.emit('data', { name: 'file', formname, value: file });
+form.on("file", (formname, file) => {
+  form.emit("data", { name: "file", formname, value: file });
 });
 
-form.on('field', (fieldName, fieldValue) => {
-  form.emit('data', { name: 'field', key: fieldName, value: fieldValue });
+form.on("field", (fieldName, fieldValue) => {
+  form.emit("data", { name: "field", key: fieldName, value: fieldValue });
 });
 
-form.once('end', () => {
-  console.log('Done!');
+form.once("end", () => {
+  console.log("Done!");
 });
 
 // Se você quiser personalizar o que quiser...
-form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) => {
-  if (name === 'partBegin') {
+form.on(
+  "data",
+  ({ name, key, value, buffer, start, end, formname, ...more }) => {
+    if (name === "partBegin") {
+    }
+    if (name === "partData") {
+    }
+    if (name === "headerField") {
+    }
+    if (name === "headerValue") {
+    }
+    if (name === "headerEnd") {
+    }
+    if (name === "headersEnd") {
+    }
+    if (name === "field") {
+      console.log("field name:", key);
+      console.log("field value:", value);
+    }
+    if (name === "file") {
+      console.log("file:", formname, value);
+    }
+    if (name === "fileBegin") {
+      console.log("fileBegin:", formname, value);
+    }
   }
-  if (name === 'partData') {
-  }
-  if (name === 'headerField') {
-  }
-  if (name === 'headerValue') {
-  }
-  if (name === 'headerEnd') {
-  }
-  if (name === 'headersEnd') {
-  }
-  if (name === 'field') {
-    console.log('field name:', key);
-    console.log('field value:', value);
-  }
-  if (name === 'file') {
-    console.log('file:', formname, value);
-  }
-  if (name === 'fileBegin') {
-    console.log('fileBegin:', formname, value);
-  }
-});
+);
 ```
 
 ### .use(plugin: Plugin)
@@ -500,14 +496,15 @@ const form = formidable({ keepExtensions: true });
 
 form.use((self, options) => {
   // self === this === form
-  console.log('woohoo, custom plugin');
+  console.log("woohoo, custom plugin");
   // faça suas coisas; verifique `src/plugins` para inspiração
 });
 
 form.parse(req, (error, fields, files) => {
-  console.log('done!');
+  console.log("done!");
 });
 ```
+
 **Importante observar**, é que dentro do plugin `this.options`, `self.options` e
 `options` PODEM ou NÃO ser iguais. A melhor prática geral é sempre usar o
 `this`, para que você possa testar seu plugin mais tarde de forma independente e mais fácil.
@@ -519,9 +516,9 @@ que é usado em [src/plugins/multipart.js](./src/plugins/multipart.js)), então
 você pode removê-lo do `options.enabledPlugins`, assim
 
 ```js
-import formidable, {octetstream, querystring, json} from "formidable";
+import formidable, { octetstream, querystring, json } from "formidable";
 const form = formidable({
-  hashAlgorithm: 'sha1',
+  hashAlgorithm: "sha1",
   enabledPlugins: [octetstream, querystring, json],
 });
 ```
@@ -544,7 +541,7 @@ inspiração, você pode, por exemplo, validar o tipo mime.
 const form = formidable();
 
 form.onPart = (part) => {
-  part.on('data', (buffer) => {
+  part.on("data", (buffer) => {
     // faça o que quiser aqui
   });
 };
@@ -558,7 +555,7 @@ const form = formidable();
 
 form.onPart = function (part) {
   // deixe formidável lidar apenas com partes não arquivadas
-  if (part.originalFilename === '' || !part.mimetype) {
+  if (part.originalFilename === "" || !part.mimetype) {
     // usado internamente, por favor, não substitua!
     form._handlePart(part);
   }
@@ -605,11 +602,12 @@ o arquivo que é útil para registrar e responder a solicitações.
 ### Eventos
 
 #### `'progress'`
+
 Emitido após cada bloco de entrada de dados que foi analisado. Pode ser usado para rolar sua própria barra de progresso. **Aviso** Use isso
 apenas para a barra de progresso do lado do servidor. No lado do cliente, é melhor usar `XMLHttpRequest` com `xhr.upload.onprogress =`
 
 ```js
-form.on('progress', (bytesReceived, bytesExpected) => {});
+form.on("progress", (bytesReceived, bytesExpected) => {});
 ```
 
 #### `'field'`
@@ -617,7 +615,7 @@ form.on('progress', (bytesReceived, bytesExpected) => {});
 Emitido sempre que um par campo/valor é recebido.
 
 ```js
-form.on('field', (name, value) => {});
+form.on("field", (name, value) => {});
 ```
 
 #### `'fileBegin'`
@@ -626,13 +624,13 @@ Emitido sempre que um novo arquivo é detectado no fluxo de upload.
 Use este evento se desejar transmitir o arquivo para outro lugar enquanto armazena o upload no sistema de arquivos.
 
 ```js
-form.on('fileBegin', (formName, file) => {
-     // acessível aqui
-     // formName o nome no formulário (<input name="thisname" type="file">) ou http filename para octetstream
-     // file.originalFilename http filename ou null se houver um erro de análise
-     // file.newFilename gerou hexoid ou o que options.filename retornou
-     // file.filepath nome do caminho padrão de acordo com options.uploadDir e options.filename
-     // file.filepath = CUSTOM_PATH // para alterar o caminho final
+form.on("fileBegin", (formName, file) => {
+  // acessível aqui
+  // formName o nome no formulário (<input name="thisname" type="file">) ou http filename para octetstream
+  // file.originalFilename http filename ou null se houver um erro de análise
+  // file.newFilename gerou hexoid ou o que options.filename retornou
+  // file.filepath nome do caminho padrão de acordo com options.uploadDir e options.filename
+  // file.filepath = CUSTOM_PATH // para alterar o caminho final
 });
 ```
 
@@ -642,10 +640,10 @@ Emitido sempre que um par campo/arquivo é recebido. `file` é uma instância de
 `File`.
 
 ```js
-form.on('file', (formname, file) => {
-     // o mesmo que fileBegin, exceto
-     // é muito tarde para alterar file.filepath
-     // file.hash está disponível se options.hash foi usado
+form.on("file", (formname, file) => {
+  // o mesmo que fileBegin, exceto
+  // é muito tarde para alterar file.filepath
+  // file.hash está disponível se options.hash foi usado
 });
 ```
 
@@ -658,7 +656,7 @@ apresenta um erro é pausada automaticamente, você terá que chamar manualmente
 Pode ter `error.httpCode` e `error.code` anexados.
 
 ```js
-form.on('error', (err) => {});
+form.on("error", (err) => {});
 ```
 
 #### `'aborted'`
@@ -669,7 +667,7 @@ O evento `error` seguirá. No futuro, haverá um 'timeout' separado
 evento (precisa de uma mudança no núcleo do nó).
 
 ```js
-form.on('aborted', () => {});
+form.on("aborted", () => {});
 ```
 
 #### `'end'`
@@ -678,9 +676,8 @@ Emitido quando toda a solicitação foi recebida e todos os arquivos contidos fo
 liberados para o disco. Este é um ótimo lugar para você enviar sua resposta.
 
 ```js
-form.on('end', () => {});
+form.on("end", () => {});
 ```
-
 
 ### Helpers
 

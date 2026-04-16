@@ -1,5 +1,5 @@
-import { multipartType } from '../plugins/multipart.js';
-import { querystringType } from '../plugins/querystring.js';
+import { multipartType } from "../plugins/multipart.js";
+import { querystringType } from "../plugins/querystring.js";
 
 const firstValues = (form, fields, exceptions = []) => {
   if (form.type !== querystringType && form.type !== multipartType) {
@@ -12,7 +12,7 @@ const firstValues = (form, fields, exceptions = []) => {
         return [key, value];
       }
       return [key, value[0]];
-    }),
+    })
   );
 };
 

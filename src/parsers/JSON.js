@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import { Transform } from 'node:stream';
+import { Transform } from "node:stream";
 
 class JSONParser extends Transform {
   constructor(options = {}) {
@@ -16,7 +16,7 @@ class JSONParser extends Transform {
 
   _flush(callback) {
     try {
-      const fields = JSON.parse(this.chunks.join(''));
+      const fields = JSON.parse(this.chunks.join(""));
       this.push(fields);
     } catch (e) {
       callback(e);

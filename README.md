@@ -9,6 +9,7 @@
 [![Code style][codestyle-img]][codestyle-url]
 [![linux build status][linux-build-img]][build-url]
 [![macos build status][macos-build-img]][build-url]
+
 <!-- [![codecoverage][codecov-img]][codecov-url] -->
 
 If you have any _how-to_ kind of questions, please read the [Contributing
@@ -21,6 +22,7 @@ at Twitter.
 [![Minimum Required Nodejs][nodejs-img]][npmv-url]
 [![Buy me a Kofi][kofi-img]][kofi-url]
 [![Make A Pull Request][prs-welcome-img]][prs-welcome-url]
+
 <!-- [![Tidelift Subscription][tidelift-img]][tidelift-url] -->
 <!-- [![Renovate App Status][renovateapp-img]][renovateapp-url] -->
 
@@ -49,7 +51,7 @@ use._ -->
 ## Project Status: Maintained
 
 > [!NOTE]
-> Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches._
+> Check [VERSION NOTES](https://github.com/node-formidable/formidable/blob/master/VERSION_NOTES.md) for more information on v1, v2, and v3 plans, NPM dist-tags and branches.\_
 
 This module was initially developed by
 [**@felixge**](https://github.com/felixge) for
@@ -95,7 +97,6 @@ npm install formidable@v3
 
 _**Note:** Future not ready releases will be published on `*-next` dist-tags for the corresponding version._
 
-
 ## Examples
 
 For more examples look at the `examples/` directory.
@@ -106,34 +107,33 @@ Parse an incoming file upload, with the
 [Node.js's built-in `http` module](https://nodejs.org/api/http.html).
 
 ```js
-import http from 'node:http';
-import formidable, {errors as formidableErrors} from 'formidable';
+import http from "node:http";
+import formidable, { errors as formidableErrors } from "formidable";
 
 const server = http.createServer(async (req, res) => {
-  if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
+  if (req.url === "/api/upload" && req.method.toLowerCase() === "post") {
     // parse a file upload
     const form = formidable({});
     let fields;
     let files;
     try {
-        [fields, files] = await form.parse(req);
+      [fields, files] = await form.parse(req);
     } catch (err) {
-        // example to check for a very specific error
-        if (err.code === formidableErrors.maxFieldsExceeded) {
-
-        }
-        console.error(err);
-        res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
-        res.end(String(err));
-        return;
+      // example to check for a very specific error
+      if (err.code === formidableErrors.maxFieldsExceeded) {
+      }
+      console.error(err);
+      res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
+      res.end(String(err));
+      return;
     }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ fields, files }, null, 2));
     return;
   }
 
   // show a file upload form
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.writeHead(200, { "Content-Type": "text/html" });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -145,7 +145,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(8080, () => {
-  console.log('Server listening on http://localhost:8080/ ...');
+  console.log("Server listening on http://localhost:8080/ ...");
 });
 ```
 
@@ -159,12 +159,12 @@ Or try the
 [examples/with-express.js](https://github.com/node-formidable/formidable/blob/master/examples/with-express.js)
 
 ```js
-import express from 'express';
-import formidable from 'formidable';
+import express from "express";
+import formidable from "formidable";
 
 const app = express();
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send(`
     <h2>With <code>"express"</code> npm package</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -175,7 +175,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.post('/api/upload', (req, res, next) => {
+app.post("/api/upload", (req, res, next) => {
   const form = formidable({});
 
   form.parse(req, (err, fields, files) => {
@@ -188,7 +188,7 @@ app.post('/api/upload', (req, res, next) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });
 ```
 
@@ -205,17 +205,17 @@ which is Node.js's Request, and **NOT** the `ctx.request` which is Koa's Request
 object - there is a difference._
 
 ```js
-import Koa from 'Koa';
-import formidable from 'formidable';
+import Koa from "Koa";
+import formidable from "formidable";
 
 const app = new Koa();
 
-app.on('error', (err) => {
-  console.error('server error', err);
+app.on("error", (err) => {
+  console.error("server error", err);
 });
 
 app.use(async (ctx, next) => {
-  if (ctx.url === '/api/upload' && ctx.method.toLowerCase() === 'post') {
+  if (ctx.url === "/api/upload" && ctx.method.toLowerCase() === "post") {
     const form = formidable({});
 
     // not very elegant, but that's for now if you don't want to use `koa-better-body`
@@ -227,7 +227,7 @@ app.use(async (ctx, next) => {
           return;
         }
 
-        ctx.set('Content-Type', 'application/json');
+        ctx.set("Content-Type", "application/json");
         ctx.status = 200;
         ctx.state = { fields, files };
         ctx.body = JSON.stringify(ctx.state, null, 2);
@@ -239,7 +239,7 @@ app.use(async (ctx, next) => {
   }
 
   // show a file upload form
-  ctx.set('Content-Type', 'text/html');
+  ctx.set("Content-Type", "text/html");
   ctx.status = 200;
   ctx.body = `
     <h2>With <code>"koa"</code> npm package</h2>
@@ -252,12 +252,12 @@ app.use(async (ctx, next) => {
 });
 
 app.use((ctx) => {
-  console.log('The next middleware is called');
-  console.log('Results:', ctx.state);
+  console.log("The next middleware is called");
+  console.log("Results:", ctx.state);
 });
 
 app.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });
 ```
 
@@ -305,7 +305,7 @@ _Please pass [`options`](#options) to the function/constructor, not by assigning
 them to the instance `form`_
 
 ```js
-import formidable from 'formidable';
+import formidable from "formidable";
 const form = formidable(options);
 ```
 
@@ -356,13 +356,12 @@ See it's defaults in [src/Formidable.js DEFAULT_OPTIONS](./src/Formidable.js)
 
 - `options.createDirsFromUploads` **{boolean}** - default false. If true, makes direct folder uploads possible. Use `<input type="file" name="folders" webkitdirectory directory multiple>` to create a form to upload folders. Has to be used with the options `options.uploadDir` and `options.filename` where `options.filename` has to return a string with the character `/` for folders to be created. The base will be `options.uploadDir`.
 
-
-#### `options.filename`  **{function}** function (name, ext, part, form) -> string
+#### `options.filename` **{function}** function (name, ext, part, form) -> string
 
 where part can be decomposed as
 
 ```js
-const { originalFilename, mimetype} = part;
+const { originalFilename, mimetype } = part;
 ```
 
 _**Note:** If this size of combined fields, or size of some file is exceeded, an
@@ -378,16 +377,16 @@ form.bytesReceived;
 form.bytesExpected;
 ```
 
-#### `options.filter`  **{function}** function ({name, originalFilename, mimetype}) -> boolean
+#### `options.filter` **{function}** function ({name, originalFilename, mimetype}) -> boolean
 
 Behaves like Array.filter: Returning false will simply ignore the file and go to the next.
 
 ```js
 const options = {
-  filter: function ({name, originalFilename, mimetype}) {
+  filter: function ({ name, originalFilename, mimetype }) {
     // keep only images
     return mimetype && mimetype.includes("image");
-  }
+  },
 };
 ```
 
@@ -396,20 +395,19 @@ const options = {
 **Note:** use form.emit('error') to make form.parse error
 
 ```js
-let cancelUploads = false;// create variable at the same scope as form
+let cancelUploads = false; // create variable at the same scope as form
 const options = {
-  filter: function ({name, originalFilename, mimetype}) {
+  filter: function ({ name, originalFilename, mimetype }) {
     // keep only images
     const valid = mimetype && mimetype.includes("image");
     if (!valid) {
-      form.emit('error', new formidableErrors.default('invalid type', 0, 400)); // optional make form.parse error
+      form.emit("error", new formidableErrors.default("invalid type", 0, 400)); // optional make form.parse error
       cancelUploads = true; //variable to make filter return false after the first problem
     }
     return valid && !cancelUploads;
-  }
+  },
 };
 ```
-
 
 ### .parse(request, ?callback)
 
@@ -419,8 +417,8 @@ Parses an incoming Node.js `request` containing form data. If `callback` is not 
 const form = formidable({ uploadDir: __dirname });
 
 form.parse(req, (err, fields, files) => {
-  console.log('fields:', fields);
-  console.log('files:', files);
+  console.log("fields:", fields);
+  console.log("files:", files);
 });
 
 // with Promise
@@ -433,6 +431,7 @@ processing which would occur otherwise, making you fully responsible for
 handling the processing.
 
 About `uploadDir`, given the following directory structure
+
 ```
 project-name
 ├── src
@@ -444,28 +443,24 @@ project-name
 
 `__dirname` would be the same directory as the source file itself (src)
 
-
 ```js
- `${__dirname}/../uploads`
+`${__dirname}/../uploads`;
 ```
 
 to put files in uploads.
 
 Omitting `__dirname` would make the path relative to the current working directory. This would be the same if server.js is launched from src but not project-name.
 
-
 `null` will use default which is `os.tmpdir()`
 
-Note: If the directory does not exist, the uploaded files are __silently discarded__. To make sure it exists:
+Note: If the directory does not exist, the uploaded files are **silently discarded**. To make sure it exists:
 
 ```js
-import {createNecessaryDirectoriesSync} from "filesac";
-
+import { createNecessaryDirectoriesSync } from "filesac";
 
 const uploadPath = `${__dirname}/../uploads`;
 createNecessaryDirectoriesSync(`${uploadPath}/x`);
 ```
-
 
 In the example below, we listen on couple of events and direct them to the
 `data` listener, so you can do whatever you choose there, based on whether its
@@ -476,49 +471,52 @@ Or the other way could be to just override the `form.onPart` as it's shown a bit
 later.
 
 ```js
-form.once('error', console.error);
+form.once("error", console.error);
 
-form.on('fileBegin', (formname, file) => {
-  form.emit('data', { name: 'fileBegin', formname, value: file });
+form.on("fileBegin", (formname, file) => {
+  form.emit("data", { name: "fileBegin", formname, value: file });
 });
 
-form.on('file', (formname, file) => {
-  form.emit('data', { name: 'file', formname, value: file });
+form.on("file", (formname, file) => {
+  form.emit("data", { name: "file", formname, value: file });
 });
 
-form.on('field', (fieldName, fieldValue) => {
-  form.emit('data', { name: 'field', key: fieldName, value: fieldValue });
+form.on("field", (fieldName, fieldValue) => {
+  form.emit("data", { name: "field", key: fieldName, value: fieldValue });
 });
 
-form.once('end', () => {
-  console.log('Done!');
+form.once("end", () => {
+  console.log("Done!");
 });
 
 // If you want to customize whatever you want...
-form.on('data', ({ name, key, value, buffer, start, end, formname, ...more }) => {
-  if (name === 'partBegin') {
+form.on(
+  "data",
+  ({ name, key, value, buffer, start, end, formname, ...more }) => {
+    if (name === "partBegin") {
+    }
+    if (name === "partData") {
+    }
+    if (name === "headerField") {
+    }
+    if (name === "headerValue") {
+    }
+    if (name === "headerEnd") {
+    }
+    if (name === "headersEnd") {
+    }
+    if (name === "field") {
+      console.log("field name:", key);
+      console.log("field value:", value);
+    }
+    if (name === "file") {
+      console.log("file:", formname, value);
+    }
+    if (name === "fileBegin") {
+      console.log("fileBegin:", formname, value);
+    }
   }
-  if (name === 'partData') {
-  }
-  if (name === 'headerField') {
-  }
-  if (name === 'headerValue') {
-  }
-  if (name === 'headerEnd') {
-  }
-  if (name === 'headersEnd') {
-  }
-  if (name === 'field') {
-    console.log('field name:', key);
-    console.log('field value:', value);
-  }
-  if (name === 'file') {
-    console.log('file:', formname, value);
-  }
-  if (name === 'fileBegin') {
-    console.log('fileBegin:', formname, value);
-  }
-});
+);
 ```
 
 ### .use(plugin: Plugin)
@@ -546,12 +544,12 @@ const form = formidable({ keepExtensions: true });
 
 form.use((self, options) => {
   // self === this === form
-  console.log('woohoo, custom plugin');
+  console.log("woohoo, custom plugin");
   // do your stuff; check `src/plugins` for inspiration
 });
 
 form.parse(req, (error, fields, files) => {
-  console.log('done!');
+  console.log("done!");
 });
 ```
 
@@ -566,9 +564,9 @@ which is used in [src/plugins/multipart.js](./src/plugins/multipart.js)), then
 you can remove it from the `options.enabledPlugins`, like so
 
 ```js
-import formidable, {octetstream, querystring, json} from "formidable";
+import formidable, { octetstream, querystring, json } from "formidable";
 const form = formidable({
-  hashAlgorithm: 'sha1',
+  hashAlgorithm: "sha1",
   enabledPlugins: [octetstream, querystring, json],
 });
 ```
@@ -591,7 +589,7 @@ inspiration, you can for example validate the mime-type.
 const form = formidable();
 
 form.onPart = (part) => {
-  part.on('data', (buffer) => {
+  part.on("data", (buffer) => {
     // do whatever you want here
   });
 };
@@ -605,7 +603,7 @@ const form = formidable();
 
 form.onPart = function (part) {
   // let formidable handle only non-file parts
-  if (part.originalFilename === '' || !part.mimetype) {
+  if (part.originalFilename === "" || !part.mimetype) {
     // used internally, please do not override!
     form._handlePart(part);
   }
@@ -658,7 +656,7 @@ Emitted after each incoming chunk of data that has been parsed. Can be used to
 roll your own progress bar. **Warning** Use this only for server side progress bar. On the client side better use `XMLHttpRequest` with `xhr.upload.onprogress =`
 
 ```js
-form.on('progress', (bytesReceived, bytesExpected) => {});
+form.on("progress", (bytesReceived, bytesExpected) => {});
 ```
 
 #### `'field'`
@@ -666,7 +664,7 @@ form.on('progress', (bytesReceived, bytesExpected) => {});
 Emitted whenever a field / value pair has been received.
 
 ```js
-form.on('field', (name, value) => {});
+form.on("field", (name, value) => {});
 ```
 
 #### `'fileBegin'`
@@ -676,13 +674,13 @@ you want to stream the file to somewhere else while buffering the upload on the
 file system.
 
 ```js
-form.on('fileBegin', (formName, file) => {
-    // accessible here
-    // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
-    // file.originalFilename http filename or null if there was a parsing error
-    // file.newFilename generated hexoid or what options.filename returned
-    // file.filepath default pathname as per options.uploadDir and options.filename
-    // file.filepath = CUSTOM_PATH // to change the final path
+form.on("fileBegin", (formName, file) => {
+  // accessible here
+  // formName the name in the form (<input name="thisname" type="file">) or http filename for octetstream
+  // file.originalFilename http filename or null if there was a parsing error
+  // file.newFilename generated hexoid or what options.filename returned
+  // file.filepath default pathname as per options.uploadDir and options.filename
+  // file.filepath = CUSTOM_PATH // to change the final path
 });
 ```
 
@@ -692,10 +690,10 @@ Emitted whenever a field / file pair has been received. `file` is an instance of
 `File`.
 
 ```js
-form.on('file', (formname, file) => {
-    // same as fileBegin, except
-    // it is too late to change file.filepath
-    // file.hash is available if options.hash was used
+form.on("file", (formname, file) => {
+  // same as fileBegin, except
+  // it is too late to change file.filepath
+  // file.hash is available if options.hash was used
 });
 ```
 
@@ -708,7 +706,7 @@ experiences an error is automatically paused, you will have to manually call
 May have `error.httpCode` and `error.code` attached.
 
 ```js
-form.on('error', (err) => {});
+form.on("error", (err) => {});
 ```
 
 #### `'aborted'`
@@ -719,7 +717,7 @@ Emitted when the request was aborted by the user. Right now this can be due to a
 event (needs a change in the node core).
 
 ```js
-form.on('aborted', () => {});
+form.on("aborted", () => {});
 ```
 
 #### `'end'`
@@ -728,9 +726,8 @@ Emitted when the entire request has been received, and all contained files have
 finished flushing to disk. This is a great place for you to send your response.
 
 ```js
-form.on('end', () => {});
+form.on("end", () => {});
 ```
-
 
 ### Helpers
 

@@ -52,10 +52,10 @@ name: ci
 on:
   push:
     branches:
-      - '*'
+      - "*"
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   build-and-test:
@@ -65,13 +65,18 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node-version: [18, 20, 22, 'lts/*']
+        node-version: [18, 20, 22, "lts/*"]
+        exclude:
+          - os: macos-latest
+            node-version: 18
+          - os: macos-latest
+            node-version: 20
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         name: Install pnpm
         with:
           run_install: false
