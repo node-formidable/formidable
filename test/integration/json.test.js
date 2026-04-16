@@ -1,5 +1,5 @@
 import { createServer, request as _request } from "node:http";
-import assert, { deepStrictEqual } from "node:assert";
+import assert, { deepStrictEqual, strictEqual } from "node:assert";
 import formidable from "../../src/index.js";
 
 const testData = {
@@ -13,7 +13,8 @@ test("json", (done) => {
     const form = formidable({});
 
     form.parse(req, (err, fields) => {
-      deepStrictEqual(fields, {
+      strictEqual(Object.getPrototypeOf(fields), null);
+      deepStrictEqual({ ...fields }, {
         numbers: [1, 2, 3, 4, 5],
         nested: { key: "val" },
       });
