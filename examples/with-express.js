@@ -1,9 +1,9 @@
-import express from 'express';
-import formidable from '../src/index.js';
+import express from "express";
+import formidable from "../src/index.js";
 
 const app = express();
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send(`
     <h2>With <code>"express"</code> npm package</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -14,8 +14,8 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.post('/api/upload', (req, res, next) => {
-  const form = formidable({ });
+app.post("/api/upload", (req, res, next) => {
+  const form = formidable({});
 
   form.parse(req, (err, fields, files) => {
     if (err) {
@@ -27,5 +27,5 @@ app.post('/api/upload', (req, res, next) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });

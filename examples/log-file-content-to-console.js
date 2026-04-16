@@ -1,10 +1,9 @@
-import http from 'node:http';
-import { Writable } from 'node:stream';
-import formidable from '../src/index.js';
-
+import http from "node:http";
+import { Writable } from "node:stream";
+import formidable from "../src/index.js";
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
+  if (req.url === "/api/upload" && req.method.toLowerCase() === "post") {
     // parse a file upload
     const form = formidable({
       fileWriteStreamHandler: (/* file */) => {
@@ -27,7 +26,7 @@ const server = http.createServer((req, res) => {
   }
 
   // show a file upload form
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.writeHead(200, { "Content-Type": "text/html" });
   res.end(`
     <h2>With Node.js <code>"http"</code> module</h2>
     <form action="/api/upload" enctype="multipart/form-data" method="post">
@@ -39,5 +38,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000 ...');
+  console.log("Server listening on http://localhost:3000 ...");
 });

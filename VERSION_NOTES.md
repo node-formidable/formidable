@@ -1,4 +1,3 @@
-
 # Important Notes for v1, v2, and v3
 
 For more info, check the [CHANGELOG](https://github.com/node-formidable/formidable/blob/master/CHANGELOG.md) on the master branch.
@@ -11,14 +10,14 @@ We highly recommend to use `v2` or `v3`. Both are already in use by many, especi
 - **Status: Not Maintained!**
 - We won't provide support or accept reports on that version.
 - **No Backporting:** bugfixes, security fixes, or new features WILL NOT happen!
-- Please move to at least **v2**! 
+- Please move to at least **v2**!
 - Try with installing `formidable@v2` and if still have the problem - report!
 
 ## v2 is going to be deprecated
 
 The `v2` is available as `formidable@v2`.
 The source code is available **only** on [v2 branch][v2branch].
-If you want to use v2, it's recommended to lock and use the v2 dist-tag `formidable@v2-latest`. 
+If you want to use v2, it's recommended to lock and use the v2 dist-tag `formidable@v2-latest`.
 
 **Main Differences from v1:**
 

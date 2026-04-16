@@ -1,21 +1,21 @@
-import { createServer, request as _request } from 'node:http';
-import assert, { deepStrictEqual } from 'node:assert';
-import formidable from '../../src/index.js';
+import { createServer, request as _request } from "node:http";
+import assert, { deepStrictEqual } from "node:assert";
+import formidable from "../../src/index.js";
 
 const testData = {
   numbers: [1, 2, 3, 4, 5],
-  nested: { key: 'val' },
+  nested: { key: "val" },
 };
 
 const PORT = 13535;
-test('json', (done) => {
+test("json", (done) => {
   const server = createServer((req, res) => {
-    const form = formidable({ });
+    const form = formidable({});
 
     form.parse(req, (err, fields) => {
       deepStrictEqual(fields, {
         numbers: [1, 2, 3, 4, 5],
-        nested: { key: 'val' },
+        nested: { key: "val" },
       });
 
       res.end();
@@ -25,13 +25,13 @@ test('json', (done) => {
   });
 
   server.listen(PORT, (err) => {
-    assert(!err, 'should not have error, but be falsey');
+    assert(!err, "should not have error, but be falsey");
 
     const request = _request({
       port: PORT,
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 

@@ -1,11 +1,17 @@
 /* eslint-disable no-underscore-dangle */
 
-import { join } from 'node:path';
+import { join } from "node:path";
 
-import Koa from 'koa';
-import request from 'supertest';
+import Koa from "koa";
+import request from "supertest";
 
-import { formidable, json, octetstream, multipart, errors } from '../../src/index.js';
+import {
+  formidable,
+  json,
+  octetstream,
+  multipart,
+  errors,
+} from "../../src/index.js";
 
 function createServer(options, handler) {
   const app = new Koa();
@@ -20,7 +26,7 @@ function createServer(options, handler) {
 }
 
 function fromFixtures(...args) {
-  return join(process.cwd(), 'test', 'fixture', ...args);
+  return join(process.cwd(), "test", "fixture", ...args);
 }
 
 // function makeRequest(server, options) {
@@ -54,13 +60,13 @@ function fromFixtures(...args) {
 
 // ! tests
 
-test('should call 3 custom and 1 builtin plugins, when .parse() is called', async () => {
+test("should call 3 custom and 1 builtin plugins, when .parse() is called", async () => {
   const server = createServer({ enabledPlugins: [json] }, (ctx, form) => {
-    form.on('plugin', () => {
+    form.on("plugin", () => {
       ctx.__pluginsCount = ctx.__pluginsCount || 0;
       ctx.__pluginsCount += 1;
     });
-    form.on('end', () => {
+    form.on("end", () => {
       ctx.__ends = 1;
       expect(ctx.__customPlugin1).toBe(111);
       expect(ctx.__customPlugin2).toBe(222);
@@ -82,22 +88,22 @@ test('should call 3 custom and 1 builtin plugins, when .parse() is called', asyn
     });
 
     form.parse(ctx.req, (err, fields) => {
-      expect(fields.qux).toBe('zaz');
-      expect(fields.a).toBe('bbb');
+      expect(fields.qux).toBe("zaz");
+      expect(fields.a).toBe("bbb");
       expect(ctx.__pluginsCount).toBe(4);
     });
   });
 
   await new Promise((resolve, reject) => {
     request(server.callback())
-      .post('/')
-      .type('application/json')
-      .send({ qux: 'zaz', a: 'bbb' })
+      .post("/")
+      .type("application/json")
+      .send({ qux: "zaz", a: "bbb" })
       .end((err) => (err ? reject(err) : resolve()));
   });
 });
 
-test('.parse throw error when some plugin fail', async () => {
+test(".parse throw error when some plugin fail", async () => {
   const server = createServer(
     { enabledPlugins: [octetstream, json] },
     async (ctx, form) => {
@@ -108,17 +114,17 @@ test('.parse throw error when some plugin fail', async () => {
       //   ctx.__onFileCalled += 1;
       // });
 
-      form.on('plugin', () => {
+      form.on("plugin", () => {
         ctx.__pluginsCount = ctx.__pluginsCount || 0;
         ctx.__pluginsCount += 1;
       });
 
-      form.once('error', () => {
-        throw new Error('error event should not be fired when plugin throw');
+      form.once("error", () => {
+        throw new Error("error event should not be fired when plugin throw");
       });
 
       form.use(() => {
-        throw new Error('custom plugin err');
+        throw new Error("custom plugin err");
       });
 
       let res = null;
@@ -137,28 +143,28 @@ test('.parse throw error when some plugin fail', async () => {
 
       if (!res) {
         throw new Error(
-          '^ .parse should throw & be caught with the try/catch ^',
+          "^ .parse should throw & be caught with the try/catch ^"
         );
       }
-    },
+    }
   );
 
   return new Promise((resolve, reject) => {
     request(server.callback())
-      .post('/')
-      .type('application/octet-stream')
-      .attach('bin', fromFixtures('file', 'binaryfile.tar.gz'))
+      .post("/")
+      .type("application/octet-stream")
+      .attach("bin", fromFixtures("file", "binaryfile.tar.gz"))
       .end((err) => (err ? reject(err) : resolve()));
   });
 });
 
-test('multipart plugin fire `error` event when malformed boundary', async () => {
+test("multipart plugin fire `error` event when malformed boundary", async () => {
   const server = createServer(
     { enabledPlugins: [json, multipart] },
     (ctx, form) => {
       let failedIsOkay = false;
 
-      form.once('error', (err) => {
+      form.once("error", (err) => {
         expect(form._plugins.length).toBe(2);
         expect(err).toBeTruthy();
         expect(err.message).toMatch(/bad content-type header/);
@@ -167,15 +173,15 @@ test('multipart plugin fire `error` event when malformed boundary', async () => 
       });
 
       // Should never be called when `error`
-      form.on('end', () => {
-        throw new Error('should not fire `end` event when error');
+      form.on("end", () => {
+        throw new Error("should not fire `end` event when error");
       });
 
       form.parse(ctx.req, (err) => {
         expect(err).toBeTruthy();
         expect(failedIsOkay).toBe(true);
       });
-    },
+    }
   );
 
   // 'Content-Length': 1111111,
@@ -183,16 +189,16 @@ test('multipart plugin fire `error` event when malformed boundary', async () => 
   // 'Content-Type': 'multipart/form-data; bouZndary=',
   await new Promise((resolve, reject) => {
     request(server.callback())
-      .post('/')
-      .type('multipart/form-data')
-      .set('Content-Length', 11111111)
-      .set('Content-Disposition', 'form-data; bouZndary=')
-      .set('Content-Type', 'multipart/form-data; bouZndary=')
+      .post("/")
+      .type("multipart/form-data")
+      .set("Content-Length", 11111111)
+      .set("Content-Disposition", "form-data; bouZndary=")
+      .set("Content-Type", "multipart/form-data; bouZndary=")
       .end((err) => (err ? reject(err) : resolve()));
   });
 });
 
-test('formidable() throw if not at least 1 built-in plugin in options.enabledPlugins', () => {
+test("formidable() throw if not at least 1 built-in plugin in options.enabledPlugins", () => {
   try {
     formidable({ enabledPlugins: [] });
   } catch (err) {
