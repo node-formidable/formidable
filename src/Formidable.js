@@ -192,6 +192,13 @@ class IncomingForm extends EventEmitter {
   // returns a promise if no callback is provided
   async parse(req, cb) {
     this.req = req;
+    // Pause the request while writeHeaders is awaited. Without this, if a
+    // caller has already attached a 'data' listener (e.g. for
+    // content-length accounting) the request stream is in flowing mode and
+    // any chunk arriving during the await is emitted and lost before
+    // req.pipe(pipe) is invoked below. The pipe() call resumes the stream
+    // so no explicit resume is needed here.
+    req.pause();
     let promise;
 
     // Setup callback first, so we don't miss anything from data events emitted immediately.
