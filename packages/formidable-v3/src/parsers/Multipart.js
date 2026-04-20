@@ -4,31 +4,28 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-underscore-dangle */
-
-import { Transform } from 'node:stream';
+/* eslint-disable perfectionist/sort-objects */
 
 import * as errors from '../FormidableError.js';
 import FormidableError from '../FormidableError.js';
 
-let s = 0;
 const STATE = {
-  END: s++,
-  HEADER_FIELD: s++,
-  HEADER_FIELD_START: s++,
-  HEADER_VALUE: s++,
-  HEADER_VALUE_ALMOST_DONE: s++,
-  HEADER_VALUE_START: s++,
-  HEADERS_ALMOST_DONE: s++,
-  PARSER_UNINITIALIZED: s++,
-  PART_DATA: s++,
-  PART_DATA_START: s++,
-  PART_END: s++,
-  START: s++,
-  START_BOUNDARY: s++,
+  START_BOUNDARY: 1,
+  HEADER_FIELD_START: 2,
+  HEADER_FIELD: 3,
+  HEADER_VALUE_START: 4,
+  HEADER_VALUE: 5,
+  HEADER_VALUE_ALMOST_DONE: 6,
+  HEADERS_ALMOST_DONE: 7,
+  PART_DATA_START: 8,
+  PART_DATA: 9,
+  END: 10,
 };
 
-let f = 1;
-const FBOUNDARY = { LAST_BOUNDARY: (f *= 2), PART_BOUNDARY: f };
+const FBOUNDARY = {
+  PART_BOUNDARY: 1,
+  LAST_BOUNDARY: 2,
+};
 
 const LF = 10;
 const CR = 13;
@@ -38,227 +35,229 @@ const COLON = 58;
 const A = 97;
 const Z = 122;
 
+function noop() {}
 function lower(c) {
   return c | 0x20;
 }
 
-export const STATES = {};
+export class FormidableParser {
+  constructor(boundary, hooks = {}) {
+    if (!boundary) {
+      throw new FormidableError(
+        'FormidableParser: boundary is required',
+        errors.missingMultipartBoundary,
+        500,
+      );
+    }
 
-Object.keys(STATE).forEach((stateName) => {
-  STATES[stateName] = STATE[stateName];
-});
-
-class MultipartParser extends Transform {
-  constructor(options = {}) {
-    super({ readableObjectMode: true });
-    this.boundary = null;
-    this.boundaryChars = null;
-    this.lookbehind = null;
-    this.bufferLength = 0;
-    this.state = STATE.PARSER_UNINITIALIZED;
-
-    this.globalOptions = { ...options };
-    this.index = null;
+    this.index = 0;
     this.flags = 0;
+    this.boundaryChars = {};
+
+    this.onHeaderEnd = hooks.onHeaderEnd || noop;
+    this.onHeaderField = hooks.onHeaderField || noop;
+    this.onHeadersDone = hooks.onHeadersDone || noop;
+    this.onHeaderValue = hooks.onHeaderValue || noop;
+    this.onPartStart = hooks.onPartStart || noop;
+    this.onPartData = hooks.onPartData || noop;
+    this.onPartEnd = hooks.onPartEnd || noop;
+    this.onFinish = hooks.onFinish || noop;
+    this.onError = hooks.onError; // ?NOTE: intentionally without noop; we throw if hooks.onError is not set
+
+    const fullBoundary = `\r\n--${boundary}`;
+    const ui8a = new Uint8Array(fullBoundary.length);
+    for (let i = 0; i < fullBoundary.length; i++) {
+      ui8a[i] = fullBoundary.charCodeAt(i);
+      this.boundaryChars[ui8a[i]] = true;
+    }
+
+    this.boundary = ui8a;
+    this.lookbehind = new Uint8Array(this.boundary.length + 8);
+    this.state = STATE.START_BOUNDARY;
+  }
+
+  async _onError(err) {
+    // this.state = STATE.END;
+    // this.flags = 0;
+    // this.index = 0;
+
+    if (this.hooks.onError) {
+      await this.hooks.onError?.(err);
+    } else {
+      throw err;
+    }
   }
 
   _endUnexpected() {
     return new FormidableError(
-      `MultipartParser.end(): stream ended unexpectedly: ${this.explain()}`,
+      `FormidableParser: unexpected error - ${this.explain()}`,
       errors.malformedMultipart,
       400,
     );
   }
 
-  _flush(done) {
-    if (
-      (this.state === STATE.HEADER_FIELD_START && this.index === 0)
-      || (this.state === STATE.PART_DATA && this.index === this.boundary.length)
-    ) {
-      this._handleCallback('partEnd');
-      this._handleCallback('end');
-      done();
-    } else if (this.state !== STATE.END) {
-      done(this._endUnexpected());
-    } else {
-      done();
-    }
-  }
-
-  initWithBoundary(str) {
-    this.boundary = Buffer.from(`\r\n--${str}`);
-    this.lookbehind = Buffer.alloc(this.boundary.length + 8);
-    this.state = STATE.START;
-    this.boundaryChars = {};
-
-    for (let i = 0; i < this.boundary.length; i++) {
-      this.boundaryChars[this.boundary[i]] = true;
-    }
-  }
-
-  // eslint-disable-next-line max-params
-  _handleCallback(name, buf, start, end) {
-    if (start !== undefined && start === end) {
-      return;
-    }
-    this.push({
-      buffer: buf, end, name, start,
-    });
-  }
-
   // eslint-disable-next-line max-statements, complexity
-  _transform(buffer, _, done) {
+  async write(chunk) {
     let i = 0;
     let prevIndex = this.index;
     let { flags, index, state } = this;
     const { boundary, boundaryChars, lookbehind } = this;
     const boundaryLength = boundary.length;
     const boundaryEnd = boundaryLength - 1;
-    this.bufferLength = buffer.length;
-    let c = null;
+    const bufferLength = chunk.byteLength;
+
+    let char = null;
     let cl = null;
 
     const setMark = (name, idx) => {
       this[`${name}Mark`] = typeof idx === 'number' ? idx : i;
     };
 
-    const clearMarkSymbol = (name) => {
+    const clearMark = (name) => {
       delete this[`${name}Mark`];
     };
 
-    const dataCallback = (name, shouldClear) => {
+    const hookFn = async (name, start, end, ui8a) => {
+      if (start === undefined || start !== end) {
+        try {
+          await this[name]?.(ui8a && ui8a.subarray ? ui8a.subarray(start, end) : new Uint8Array(0), start, end, ui8a);
+        } catch (err) {
+          await this._onError(err);
+        }
+      }
+    };
+
+    const dataHookFn = async (name, shouldClear) => {
       const markSymbol = `${name}Mark`;
       if (!(markSymbol in this)) {
         return;
       }
 
-      if (!shouldClear) {
-        this._handleCallback(name, buffer, this[markSymbol], buffer.length);
-        setMark(name, 0);
+      if (shouldClear) {
+        await hookFn(name, this[markSymbol], i, chunk);
+        clearMark(name);
       } else {
-        this._handleCallback(name, buffer, this[markSymbol], i);
-        clearMarkSymbol(name);
+        await hookFn(name, this[markSymbol], chunk.length, chunk);
+        setMark(name, 0);
       }
     };
 
-    for (i = 0; i < this.bufferLength; i++) {
-      c = buffer[i];
+    for (i = 0; i < bufferLength; i++) {
+      char = chunk[i];
+
       switch (state) {
-        case STATE.PARSER_UNINITIALIZED: {
-          done(this._endUnexpected());
-          return;
-        }
         case STATE.START: {
           index = 0;
           state = STATE.START_BOUNDARY;
         }
         case STATE.START_BOUNDARY: {
           if (index === boundary.length - 2) {
-            if (c === HYPHEN) {
+            if (char === HYPHEN) {
               flags |= FBOUNDARY.LAST_BOUNDARY;
-            } else if (c !== CR) {
-              done(this._endUnexpected());
+            } else if (char !== CR) {
+              await this._onError(this._endUnexpected());
               return;
             }
             index++;
             break;
           } else if (index - 1 === boundary.length - 2) {
-            if (flags & FBOUNDARY.LAST_BOUNDARY && c === HYPHEN) {
-              this._handleCallback('end');
+            if (flags & FBOUNDARY.LAST_BOUNDARY && char === HYPHEN) {
+              await hookFn('onFinish');
               state = STATE.END;
               flags = 0;
-            } else if (!(flags & FBOUNDARY.LAST_BOUNDARY) && c === LF) {
+            } else if (!(flags & FBOUNDARY.LAST_BOUNDARY) && char === LF) {
               index = 0;
-              this._handleCallback('partBegin');
+              await hookFn('onPartStart');
               state = STATE.HEADER_FIELD_START;
             } else {
-              done(this._endUnexpected());
+              await this._onError(this._endUnexpected());
               return;
             }
             break;
           }
 
-          if (c !== boundary[index + 2]) {
+          if (char !== boundary[index + 2]) {
             index = -2;
           }
-          if (c === boundary[index + 2]) {
+          if (char === boundary[index + 2]) {
             index++;
           }
           break;
         }
         case STATE.HEADER_FIELD_START: {
           state = STATE.HEADER_FIELD;
-          setMark('headerField');
+          setMark('onHeaderField');
           index = 0;
         }
         case STATE.HEADER_FIELD: {
-          if (c === CR) {
-            clearMarkSymbol('headerField');
+          if (char === CR) {
+            clearMark('onHeaderField');
             state = STATE.HEADERS_ALMOST_DONE;
             break;
           }
 
           index++;
-          if (c === HYPHEN) {
+          if (char === HYPHEN) {
             break;
           }
 
-          if (c === COLON) {
+          if (char === COLON) {
             if (index === 1) {
               // empty header field
-              done(this._endUnexpected());
+              await this._onError(this._endUnexpected());
               return;
             }
-            dataCallback('headerField', true);
+            await dataHookFn('onHeaderField', true);
             state = STATE.HEADER_VALUE_START;
             break;
           }
 
-          cl = lower(c);
+          cl = lower(char);
           if (cl < A || cl > Z) {
-            done(this._endUnexpected());
+            await this._onError(this._endUnexpected());
             return;
           }
           break;
         }
         case STATE.HEADER_VALUE_START: {
-          if (c === SPACE) {
+          if (char === SPACE) {
             break;
           }
 
-          setMark('headerValue');
+          setMark('onHeaderValue');
           state = STATE.HEADER_VALUE;
           break;
         }
         case STATE.HEADER_VALUE: {
-          if (c === CR) {
-            dataCallback('headerValue', true);
-            this._handleCallback('headerEnd');
+          if (char === CR) {
+            await dataHookFn('onHeaderValue', true);
+            await hookFn('onHeaderEnd');
             state = STATE.HEADER_VALUE_ALMOST_DONE;
           }
           break;
         }
         case STATE.HEADER_VALUE_ALMOST_DONE: {
-          if (c !== LF) {
-            done(this._endUnexpected());
+          if (char !== LF) {
+            await this._onError(this._endUnexpected());
             return;
           }
           state = STATE.HEADER_FIELD_START;
           break;
         }
         case STATE.HEADERS_ALMOST_DONE: {
-          if (c !== LF) {
-            done(this._endUnexpected());
+          if (char !== LF) {
+            await this._onError(this._endUnexpected());
             return;
           }
 
-          this._handleCallback('headersEnd');
+          await hookFn('onHeadersDone');
           state = STATE.PART_DATA_START;
           break;
         }
         case STATE.PART_DATA_START: {
           state = STATE.PART_DATA;
-          setMark('partData');
+          setMark('onPartData');
+          // ! fallthrough !!!!!!!!!!!!!
         }
         case STATE.PART_DATA: {
           prevIndex = index;
@@ -266,17 +265,17 @@ class MultipartParser extends Transform {
           if (index === 0) {
             // boyer-moore derived algorithm to safely skip non-boundary data
             i += boundaryEnd;
-            while (i < this.bufferLength && !(buffer[i] in boundaryChars)) {
+            while (i < this.bufferLength && !(chunk[i] in boundaryChars)) {
               i += boundaryLength;
             }
             i -= boundaryEnd;
-            c = buffer[i];
+            char = chunk[i];
           }
 
           if (index < boundary.length) {
-            if (boundary[index] === c) {
+            if (boundary[index] === char) {
               if (index === 0) {
-                dataCallback('partData', true);
+                await dataHookFn('onPartData', true);
               }
               index++;
             } else {
@@ -284,10 +283,10 @@ class MultipartParser extends Transform {
             }
           } else if (index === boundary.length) {
             index++;
-            if (c === CR) {
+            if (char === CR) {
               // CR = part boundary
               flags |= FBOUNDARY.PART_BOUNDARY;
-            } else if (c === HYPHEN) {
+            } else if (char === HYPHEN) {
               // HYPHEN = end boundary
               flags |= FBOUNDARY.LAST_BOUNDARY;
             } else {
@@ -296,18 +295,19 @@ class MultipartParser extends Transform {
           } else if (index - 1 === boundary.length) {
             if (flags & FBOUNDARY.PART_BOUNDARY) {
               index = 0;
-              if (c === LF) {
+              if (char === LF) {
                 // unset the PART_BOUNDARY flag
                 flags &= ~FBOUNDARY.PART_BOUNDARY;
-                this._handleCallback('partEnd');
-                this._handleCallback('partBegin');
+
+                await hookFn('onPartEnd');
+                await hookFn('onPartStart');
                 state = STATE.HEADER_FIELD_START;
                 break;
               }
             } else if (flags & FBOUNDARY.LAST_BOUNDARY) {
-              if (c === HYPHEN) {
-                this._handleCallback('partEnd');
-                this._handleCallback('end');
+              if (char === HYPHEN) {
+                await hookFn('onPartEnd');
+                await hookFn('onFinish');
                 state = STATE.END;
                 flags = 0;
               } else {
@@ -321,13 +321,14 @@ class MultipartParser extends Transform {
           if (index > 0) {
             // when matching a possible boundary, keep a lookbehind reference
             // in case it turns out to be a false lead
-            lookbehind[index - 1] = c;
+            lookbehind[index - 1] = char;
           } else if (prevIndex > 0) {
             // if our boundary turned out to be rubbish, the captured lookbehind
             // belongs to partData
-            this._handleCallback('partData', lookbehind, 0, prevIndex);
+            const _lookbehind = new Uint8Array(lookbehind.buffer, lookbehind.byteOffset, lookbehind.byteLength);
+            await hookFn('onPartData', 0, prevIndex, _lookbehind);
             prevIndex = 0;
-            setMark('partData');
+            setMark('onPartData');
 
             // reconsider the current character even so it interrupted the sequence
             // it could be the beginning of a new sequence
@@ -340,38 +341,23 @@ class MultipartParser extends Transform {
           break;
         }
         default: {
-          done(this._endUnexpected());
-          return;
+          await this._onError(this._endUnexpected());
         }
       }
     }
 
-    dataCallback('headerField');
-    dataCallback('headerValue');
-    dataCallback('partData');
+    await dataHookFn('onHeaderField');
+    await dataHookFn('onHeaderValue');
+    await dataHookFn('onPartData');
 
     this.index = index;
     this.state = state;
     this.flags = flags;
 
-    done();
-    return this.bufferLength;
+    return bufferLength;
   }
 
   explain() {
-    return `state = ${MultipartParser.stateToString(this.state)}`;
+    return `state = ${Object.entries(STATE).find(([_k, v]) => v === this.state)[0]} (${this.state}), index = ${this.index}`;
   }
 }
-
-// eslint-disable-next-line consistent-return
-MultipartParser.stateToString = (stateNumber) => {
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (const stateName in STATE) {
-    const number = STATE[stateName];
-    if (number === stateNumber) {
-      return stateName;
-    }
-  }
-};
-
-export default Object.assign(MultipartParser, { STATES });

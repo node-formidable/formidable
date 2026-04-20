@@ -10,7 +10,6 @@ export default xaxa({
   wgw: {
     'import/exports-last': 'off',
     'no-undefined': 'off',
-
     // super buggy... :facepalm:
     'no-use-before-define': ['off', {
       allowNamedExports: true,
@@ -18,6 +17,9 @@ export default xaxa({
       functions: false,
       variables: true,
     }],
+
+    // ! SUPER DISTRUCTIVE AND DANGEROUS !!!!!!!!!!!!
+    'perfectionist/sort-objects': 'off',
   },
 }, {
   files: ['**/*.test.js', '**/*.test.ts'],

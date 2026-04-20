@@ -17,6 +17,7 @@ export const maxFilesExceeded = 1015;
 export const biggerThanMaxFileSize = 1016;
 export const pluginFailed = 1017;
 export const cannotCreateDir = 1018;
+export const general = 2000;
 
 export const FormidableError = class extends Error {
   constructor(message, internalCode, httpCode = 500) {

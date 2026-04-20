@@ -17,7 +17,7 @@ test('content transfer encoding', (done) => {
       throw new Error('Unexpected "end" event');
     });
     form.on('error', (e) => {
-      assert.strictEqual(e.message, 'Expected error message');
+      assert.strictEqual(e.message, 'unknown transfer-encoding');
       res.writeHead(500);
       res.end(e.message);
     });
@@ -36,8 +36,8 @@ test('content transfer encoding', (done) => {
         + 'Content-Type: application/octet-stream\r\n'
         + '\r\nThis is the first file\r\n'
         + '--foo\r\n'
-        + 'Content-Type: application/octet-stream\r\n'
         + 'Content-Disposition: form-data; name="file2"; filename="file2"\r\n'
+        + 'Content-Type: application/octet-stream\r\n'
         + 'Content-Transfer-Encoding: unknown\r\n'
         + '\r\nThis is the second file\r\n'
         + '--foo--\r\n';
@@ -45,7 +45,7 @@ test('content transfer encoding', (done) => {
     const req = request({
       headers: {
         'Content-Length': body.length,
-        'Content-Type': 'multipart/form-data; boundary=foo',
+        'Content-Type': 'multipart/form-data; boundary=--foo',
       },
       method: 'POST',
       port: chosenPort,

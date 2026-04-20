@@ -39,12 +39,14 @@
       },
       "devDependencies": {
         "@sindresorhus/slugify": "^2.2.1",
+        "asia": "^3.3.0",
         "express": "^4.21.2",
         "formdata-polyfill": "^4.0.10",
         "jest": "^29.7.0",
         "koa": "2.16.1",
         "nyc": "15.1.0",
         "supertest": "6.1.6",
+        "tsdown": "0.11.4",
       },
     },
   },
@@ -377,6 +379,8 @@
 
     "@tunnckocore/execa": ["@tunnckocore/execa@6.0.0", "", { "dependencies": { "execa": "^6.1.0", "p-map": "^5.5.0" } }, "sha512-2WZnizGtLgiFVZTTC9PtAW/zojuw9KtK5DY2b6d8rsL416K9QeswAA+M5f72RyYuUZYdQ0+lM/gkWf6Of6YeFQ=="],
 
+    "@tunnckocore/p-all": ["@tunnckocore/p-all@0.2.0", "", {}, "sha512-6dJziz1RPe3302E4xfW8Cc5mXBO3Wn4f8mBVxYE/wWApANZ0VrqkDO08lKXaU1o+5jAgwu0NBYZCAs5SKoZ6Xg=="],
+
     "@tybys/wasm-util": ["@tybys/wasm-util@0.9.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw=="],
 
     "@types/babel__core": ["@types/babel__core@7.20.5", "", { "dependencies": { "@babel/parser": "^7.20.7", "@babel/types": "^7.20.7", "@types/babel__generator": "*", "@types/babel__template": "*", "@types/babel__traverse": "*" } }, "sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA=="],
@@ -528,6 +532,10 @@
     "array-flatten": ["array-flatten@1.1.1", "", {}, "sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg=="],
 
     "asap": ["asap@2.0.6", "", {}, "sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA=="],
+
+    "asia": ["asia@3.3.0", "", { "dependencies": { "asia-core": "*" } }, "sha512-9f0Ggy0SlOdUeEmVyv0ASs01QML9x3mUrK9suBd41iJrsx2AXhhuMk8mY4u/KqvPBJ7ZQ5PH+L0SbaAmS5miAw=="],
+
+    "asia-core": ["asia-core@3.3.0", "", { "dependencies": { "@tunnckocore/p-all": "*" } }, "sha512-6KOqMI4b4/yQm3hYUVb34qs+gkf1QNYtdTozCkyQqEehKZ5NoqJoV6K7RPTec4F7hlY+gJVm5OyWcd4WTOzl0A=="],
 
     "ast-kit": ["ast-kit@2.0.0", "", { "dependencies": { "@babel/parser": "^7.27.2", "pathe": "^2.0.3" } }, "sha512-P63jzlYNz96MF9mCcprU+a7I5/ZQ5QAn3y+mZcPWEcGV3CHF/GWnkFPj3oCrWLUjL47+PD9PNiCUdXxw0cWdsg=="],
 
