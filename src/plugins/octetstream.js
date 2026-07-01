@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
 import OctetStreamParser from "../parsers/OctetStream.js";
+import * as errors from "../FormidableError.js";
+import FormidableError from "../FormidableError.js";
 
 export const octetStreamType = "octet-stream";
 // the `options` is also available through the `options` / `formidable.options`
@@ -47,8 +49,33 @@ async function init(_self, _opts) {
 
   // Keep track of writes that haven't finished so we don't emit the file before it's done being written
   let outstandingWrites = 0;
+  let fileSize = 0;
 
   this._parser.on("data", (buffer) => {
+    fileSize += buffer.length;
+    this._totalFileSize += buffer.length;
+
+    if (fileSize > this.options.maxFileSize) {
+      this._error(
+        new FormidableError(
+          `options.maxFileSize (${this.options.maxFileSize} bytes), received ${fileSize} bytes of file data`,
+          errors.biggerThanMaxFileSize,
+          413
+        )
+      );
+      return;
+    }
+    if (this._totalFileSize > this.options.maxTotalFileSize) {
+      this._error(
+        new FormidableError(
+          `options.maxTotalFileSize (${this.options.maxTotalFileSize} bytes) exceeded, received ${this._totalFileSize} bytes of file data`,
+          errors.biggerThanTotalMaxFileSize,
+          413
+        )
+      );
+      return;
+    }
+
     this.pause();
     outstandingWrites += 1;
 
