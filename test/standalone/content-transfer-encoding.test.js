@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { createServer, request } from "node:http";
 import { strictEqual } from "node:assert";
+import { PassThrough, Writable } from "node:stream";
 
 import formidable from "../../src/index.js";
 
@@ -59,4 +60,36 @@ test("content transfer encoding", (done) => {
     });
     req.end(body);
   });
+});
+
+test("base64 transfer encoding ignores line breaks", async () => {
+  const body =
+    "--foo\r\n" +
+    'Content-Disposition: form-data; name="file"; filename="file"\r\n' +
+    "Content-Type: application/octet-stream\r\n" +
+    "Content-Transfer-Encoding: base64\r\n" +
+    "\r\n" +
+    "YWJj\r\nZGVm\r\nZ2hp\r\namts\r\n" +
+    "--foo--\r\n";
+  const req = new PassThrough();
+  req.headers = {
+    "content-type": "multipart/form-data; boundary=foo",
+    "content-length": Buffer.byteLength(body),
+  };
+  const chunks = [];
+  const form = formidable({
+    fileWriteStreamHandler: () =>
+      new Writable({
+        write(chunk, _, done) {
+          chunks.push(chunk);
+          done();
+        },
+      }),
+  });
+
+  const parsed = form.parse(req);
+  req.end(body);
+  await parsed;
+
+  strictEqual(Buffer.concat(chunks).toString(), "abcdefghijkl");
 });
