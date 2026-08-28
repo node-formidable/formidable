@@ -65,7 +65,7 @@ class PersistentFile extends EventEmitter {
       this.hash.update(buffer);
     }
 
-    if (this._writeStream.closed) {
+    if (this._writeStream.closed || this._writeStream.destroyed) {
       cb();
       return;
     }
