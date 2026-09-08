@@ -332,6 +332,18 @@ class IncomingForm extends EventEmitter {
     }
 
     this.bytesReceived += buffer.length;
+
+    if (this.bytesReceived > this.options.maxTotalFileSize) {
+      this._error(
+        new FormidableError(
+          `options.maxTotalFileSize (${this.options.maxTotalFileSize} bytes) exceeded, received ${this.bytesReceived} bytes of data`,
+          errors.biggerThanTotalMaxFileSize,
+          413
+        )
+      );
+      return null;
+    }
+
     this.emit("progress", this.bytesReceived, this.bytesExpected);
 
     this._parser.write(buffer);
