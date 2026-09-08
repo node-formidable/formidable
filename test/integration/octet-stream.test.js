@@ -52,3 +52,35 @@ test("octet stream", (done) => {
     createReadStream(testFilePath).pipe(request);
   });
 });
+
+test("octet stream enforces maxFileSize", (done) => {
+  const PORT2 = PORT + 1;
+  const server = createServer((req, res) => {
+    const form = formidable({ maxFileSize: 1024, maxTotalFileSize: 2048 });
+
+    form.parse(req, (err, fields, files) => {
+      // a 256KB octet-stream body must be rejected, not written to disk
+      assert(err, "expected an error for over-sized octet-stream upload");
+      strictEqual(err.code, 1016); // biggerThanMaxFileSize
+      strictEqual(Object.keys(files).length, 0);
+
+      res.end();
+      server.close();
+      done();
+    });
+  });
+
+  server.listen(PORT2, (err) => {
+    assert(!err, "should not have error, but be falsey");
+
+    const request = _request({
+      port: PORT2,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/octet-stream",
+      },
+    });
+
+    request.end(Buffer.alloc(256 * 1024, 0x42));
+  });
+});
