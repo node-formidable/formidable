@@ -119,7 +119,9 @@ function createInitMultipart(boundary) {
               if (ctx.name === "partData") {
                 part.transferBuffer += ctx.buffer
                   .slice(ctx.start, ctx.end)
-                  .toString("ascii");
+                  .toString("ascii")
+                  .replaceAll("\r", "")
+                  .replaceAll("\n", "");
 
                 /*
                   four bytes (chars) in base64 converts to three bytes in binary
