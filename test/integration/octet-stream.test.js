@@ -5,6 +5,7 @@ import url from "node:url";
 import assert, { strictEqual, deepStrictEqual } from "node:assert";
 
 import formidable from "../../src/index.js";
+import { biggerThanMaxFileSize } from "../../src/FormidableError.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,18 +57,17 @@ test("octet stream", (done) => {
 test("octet stream enforces maxFileSize", (done) => {
   const PORT2 = PORT + 1;
   let request;
+  let parsed = false;
   const server = createServer((req, res) => {
     const form = formidable({ maxFileSize: 1024, maxTotalFileSize: 2048 });
 
     form.parse(req, (err, fields, files) => {
-      // a 256KB octet-stream body must be rejected, not written to disk
       assert(err, "expected an error for over-sized octet-stream upload");
-      strictEqual(err.code, 1016); // biggerThanMaxFileSize
+      strictEqual(err.code, biggerThanMaxFileSize);
       strictEqual(Object.keys(files).length, 0);
 
       res.end();
-      // The upload was rejected mid-body, so the connection never completes on
-      // its own; without this the socket outlives the test and Jest's worker.
+      parsed = true;
       request.destroy();
       server.close();
       done();
@@ -85,8 +85,11 @@ test("octet stream enforces maxFileSize", (done) => {
       },
     });
 
-    // Destroying the request above surfaces here as ECONNRESET.
-    request.on("error", () => {});
+    request.on("error", (error) => {
+      if (parsed) return;
+      server.close();
+      done(error);
+    });
     request.end(Buffer.alloc(256 * 1024, 0x42));
   });
 });
