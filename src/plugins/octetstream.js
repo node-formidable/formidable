@@ -1,8 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import OctetStreamParser from "../parsers/OctetStream.js";
-import * as errors from "../FormidableError.js";
-import FormidableError from "../FormidableError.js";
+import FormidableError, * as errors from "../FormidableError.js";
 
 export const octetStreamType = "octet-stream";
 // the `options` is also available through the `options` / `formidable.options`
