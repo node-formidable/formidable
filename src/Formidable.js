@@ -372,15 +372,7 @@ class IncomingForm extends EventEmitter {
       );
 
       part.on("data", (buffer) => {
-        this._fieldsSize += buffer.length;
-        if (this._fieldsSize > this.options.maxFieldsSize) {
-          this._error(
-            new FormidableError(
-              `options.maxFieldsSize (${this.options.maxFieldsSize} bytes) exceeded, received ${this._fieldsSize} bytes of field data`,
-              errors.maxFieldsSizeExceeded,
-              413 // Payload Too Large
-            )
-          );
+        if (!this._addFieldSize(buffer.length)) {
           return;
         }
         value += decoder.write(buffer);
@@ -682,6 +674,27 @@ class IncomingForm extends EventEmitter {
         return name;
       };
     }
+  }
+
+  /**
+   * Account `size` bytes of field data against `options.maxFieldsSize`.
+   * Shared by the multipart field parser and the buffering JSON/urlencoded
+   * plugins so the option applies to every built-in parser, not just multipart.
+   * Returns false (after emitting the error) when the limit is exceeded.
+   */
+  _addFieldSize(size) {
+    this._fieldsSize += size;
+    if (this._fieldsSize > this.options.maxFieldsSize) {
+      this._error(
+        new FormidableError(
+          `options.maxFieldsSize (${this.options.maxFieldsSize} bytes) exceeded, received ${this._fieldsSize} bytes of field data`,
+          errors.maxFieldsSizeExceeded,
+          413 // Payload Too Large
+        )
+      );
+      return false;
+    }
+    return true;
   }
 
   _setUpMaxFields() {

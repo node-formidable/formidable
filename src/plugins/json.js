@@ -27,7 +27,18 @@ function init(_self, _opts) {
   const parser = new JSONParser(this.options);
 
   parser.on("data", (fields) => {
-    this.fields = Object.assign(Object.create(null), fields);
+    // Emit each field through the regular `field` path instead of assigning
+    // `this.fields` wholesale, so the shared field accounting (maxFieldsSize)
+    // and the maxFields listener apply to the JSON parser as well.
+    Object.entries(fields).every(([name, value]) => {
+      const serialized =
+        typeof value === "string" ? value : JSON.stringify(value);
+      if (!this._addFieldSize(Buffer.byteLength(serialized || ""))) {
+        return false;
+      }
+      this.emit("field", name, value);
+      return !this.error;
+    });
   });
 
   parser.once("end", () => {
