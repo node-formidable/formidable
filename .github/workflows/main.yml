@@ -14,7 +14,7 @@ name: ci
 #   #     - uses: actions/checkout@v5
 
 #   #     - name: Set up Node.js
-#   #       uses: actions/setup-node@v5
+#   #       uses: actions/setup-node@v7
 #   #       with:
 #   #         node-version: '20'
 #   #         cache: 'npm'
@@ -38,7 +38,7 @@ name: ci
 #       - uses: actions/checkout@v5
 
 #       - name: Set up Node.js ${{ matrix.node-version }}
-#         uses: actions/setup-node@v5
+#         uses: actions/setup-node@v7
 #         with:
 #           node-version: ${{ matrix.node-version }}
 #           cache: 'npm'
@@ -82,7 +82,7 @@ jobs:
           run_install: false
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
