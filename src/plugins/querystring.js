@@ -26,6 +26,9 @@ function init(_self, _opts) {
   const parser = new QuerystringParser(this.options);
 
   parser.on("data", ({ key, value }) => {
+    if (!this._addFieldSize(Buffer.byteLength(value))) {
+      return;
+    }
     this.emit("field", key, value);
   });
 
