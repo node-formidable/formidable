@@ -165,3 +165,68 @@ test('urlencoded fields are still parsed and collected when under the limits', a
   strictEqual(outcome.err, null);
   deepStrictEqual({ ...outcome.fields }, { a: ['b'], c: ['d'] });
 });
+
+test('maxFieldsSize counts JSON fields together, not one at a time', async () => {
+  const half = MAX_FIELDS_SIZE / 2;
+  const atLimit = await parseBody(
+    limits,
+    'application/json',
+    json({ a: 'a'.repeat(half), b: 'b'.repeat(half) }),
+  );
+  strictEqual(atLimit.err, null);
+
+  const overLimit = await parseBody(
+    limits,
+    'application/json',
+    json({ a: 'a'.repeat(half), b: 'b'.repeat(half + 1) }),
+  );
+  assertRejected(overLimit, errors.maxFieldsSizeExceeded);
+});
+
+test('maxFieldsSize counts urlencoded fields together, not one at a time', async () => {
+  const half = MAX_FIELDS_SIZE / 2;
+  const atLimit = await parseBody(
+    limits,
+    'application/x-www-form-urlencoded',
+    urlenc([
+      ['a', 'a'.repeat(half)],
+      ['b', 'b'.repeat(half)],
+    ]),
+  );
+  strictEqual(atLimit.err, null);
+
+  const overLimit = await parseBody(
+    limits,
+    'application/x-www-form-urlencoded',
+    urlenc([
+      ['a', 'a'.repeat(half)],
+      ['b', 'b'.repeat(half + 1)],
+    ]),
+  );
+  assertRejected(overLimit, errors.maxFieldsSizeExceeded);
+});
+
+// 10,000 nested arrays: JSON.parse accepts this depth, but JSON.stringify
+// recurses per level and throws RangeError on Node 18/20/22 at this size.
+const DEEP = 10000;
+const deeplyNested = (depth) => `${'['.repeat(depth)}${']'.repeat(depth)}`;
+const deepBody = (depth) => Buffer.from(`{"deep":${deeplyNested(depth)}}`);
+
+test('a deeply nested JSON value is measured without overflowing the stack', async () => {
+  const outcome = await parseBody(
+    { maxFieldsSize: 4 * DEEP, maxFields: 10 },
+    'application/json',
+    deepBody(DEEP),
+  );
+  strictEqual(outcome.err, null);
+  strictEqual(Array.isArray(outcome.fields.deep), true);
+});
+
+test('a deeply nested JSON value over the limit is rejected, not a RangeError', async () => {
+  const outcome = await parseBody(
+    { maxFieldsSize: MAX_FIELDS_SIZE, maxFields: 10 },
+    'application/json',
+    deepBody(DEEP),
+  );
+  assertRejected(outcome, errors.maxFieldsSizeExceeded);
+});
