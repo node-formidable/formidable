@@ -5,6 +5,10 @@ import url from "node:url";
 import assert, { strictEqual, deepStrictEqual } from "node:assert";
 
 import formidable from "../../src/index.js";
+import {
+  biggerThanMaxFileSize,
+  biggerThanTotalMaxFileSize,
+} from "../../src/FormidableError.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,5 +54,88 @@ test("octet stream", (done) => {
     });
 
     createReadStream(testFilePath).pipe(request);
+  });
+});
+
+test("octet stream enforces maxFileSize", (done) => {
+  const PORT2 = 13550;
+  let request;
+  let parsed = false;
+  const server = createServer((req, res) => {
+    const form = formidable({ maxFileSize: 1024, maxTotalFileSize: 2048 });
+
+    form.parse(req, (err, fields, files) => {
+      assert(err, "expected an error for over-sized octet-stream upload");
+      strictEqual(err.code, biggerThanMaxFileSize);
+      strictEqual(Object.keys(files).length, 0);
+
+      res.end();
+      parsed = true;
+      request.destroy();
+      server.close();
+      done();
+    });
+  });
+
+  server.listen(PORT2, (err) => {
+    assert(!err, "should not have error, but be falsey");
+
+    request = _request({
+      port: PORT2,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/octet-stream",
+      },
+    });
+
+    request.on("error", (error) => {
+      if (parsed) return;
+      server.close();
+      done(error);
+    });
+    request.end(Buffer.alloc(256 * 1024, 0x42));
+  });
+});
+
+test("octet stream enforces maxTotalFileSize", (done) => {
+  const PORT3 = 13551;
+  let request;
+  let parsed = false;
+  const server = createServer((req, res) => {
+    const form = formidable({ maxFileSize: 4096, maxTotalFileSize: 2048 });
+
+    form.parse(req, (err, fields, files) => {
+      assert(
+        err,
+        "expected an error for an octet-stream upload over the total limit"
+      );
+      strictEqual(err.code, biggerThanTotalMaxFileSize);
+      strictEqual(Object.keys(files).length, 0);
+
+      res.end();
+      parsed = true;
+      request.destroy();
+      server.close();
+      done();
+    });
+  });
+
+  server.listen(PORT3, (err) => {
+    assert(!err, "should not have error, but be falsey");
+
+    request = _request({
+      port: PORT3,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/octet-stream",
+      },
+    });
+
+    request.on("error", (error) => {
+      if (parsed) return;
+      server.close();
+      done(error);
+    });
+    request.end(Buffer.alloc(3000, 0x42));
   });
 });
