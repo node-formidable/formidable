@@ -58,7 +58,7 @@ test("octet stream", (done) => {
 });
 
 test("octet stream enforces maxFileSize", (done) => {
-  const PORT2 = PORT + 1;
+  const PORT2 = 13550;
   let request;
   let parsed = false;
   const server = createServer((req, res) => {
@@ -98,7 +98,7 @@ test("octet stream enforces maxFileSize", (done) => {
 });
 
 test("octet stream enforces maxTotalFileSize", (done) => {
-  const PORT3 = PORT + 2;
+  const PORT3 = 13551;
   let request;
   let parsed = false;
   const server = createServer((req, res) => {
