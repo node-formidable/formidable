@@ -1,3 +1,4 @@
+import { unlinkSync } from "node:fs";
 import { createServer, request as _request } from "node:http";
 import assert, { strictEqual, deepStrictEqual } from "node:assert";
 
@@ -23,6 +24,10 @@ function upload({ port, options, headers, body }, check, done) {
         done();
       } catch (error) {
         done(error);
+      } finally {
+        Object.values(files)
+          .flat()
+          .forEach((file) => unlinkSync(file.filepath));
       }
     });
   });
