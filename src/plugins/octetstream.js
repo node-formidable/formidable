@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import OctetStreamParser from "../parsers/OctetStream.js";
+import FormidableError, * as errors from "../FormidableError.js";
 
 export const octetStreamType = "octet-stream";
 // the `options` is also available through the `options` / `formidable.options`
@@ -29,6 +30,11 @@ async function init(_self, _opts) {
     originalFilename,
     mimetype,
   };
+
+  if (!this.options.filter({ name: "file", ...thisPart })) {
+    return ignoreFile.call(this);
+  }
+
   const newFilename = this._getNewName(thisPart);
   const filepath = this._joinDirectoryName(newFilename);
   const file = await this._newFile({
@@ -63,6 +69,28 @@ async function init(_self, _opts) {
   });
 
   this._parser.on("end", () => {
+    const bodySize = this.bytesReceived;
+    if (!this.options.allowEmptyFiles && bodySize === 0) {
+      this._error(
+        new FormidableError(
+          `options.allowEmptyFiles is false, file size should be greater than 0`,
+          errors.noEmptyFiles,
+          400
+        )
+      );
+      return;
+    }
+    if (bodySize < this.options.minFileSize) {
+      this._error(
+        new FormidableError(
+          `options.minFileSize (${this.options.minFileSize} bytes) inferior, received ${bodySize} bytes of file data`,
+          errors.smallerThanMinFileSize,
+          400
+        )
+      );
+      return;
+    }
+
     this._flushing -= 1;
     this.ended = true;
 
@@ -80,5 +108,15 @@ async function init(_self, _opts) {
     }
   });
 
+  return this;
+}
+
+function ignoreFile() {
+  this._parser = new OctetStreamParser(this.options);
+  this._parser.on("end", () => {
+    this.ended = true;
+    this._maybeEnd();
+  });
+  this._parser.resume();
   return this;
 }
